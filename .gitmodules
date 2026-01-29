@@ -1,0 +1,3 @@
+[submodule "co_repo/picorv32_al"]
+	path = co_repo/picorv32_al
+	url = git@github.com:albertc9/picorv32_al.git
