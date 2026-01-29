@@ -1,3 +1,6 @@
 [submodule "co_repo/picorv32_al"]
 	path = co_repo/picorv32_al
 	url = git@github.com:albertc9/picorv32_al.git
+[submodule "co_repo/CNN4HW"]
+	path = co_repo/CNN4HW
+	url = git@github.com:albertc9/CNN4HW.git
