@@ -4,3 +4,6 @@
 [submodule "co_repo/CNN4HW"]
 	path = co_repo/CNN4HW
 	url = git@github.com:albertc9/CNN4HW.git
+[submodule "co_repo/axi"]
+	path = co_repo/axi
+	url = git@github.com:albertc9/axi.git
