@@ -7,3 +7,6 @@
 [submodule "co_repo/axi"]
 	path = co_repo/axi
 	url = git@github.com:albertc9/axi.git
+[submodule "co_repo/iDMA"]
+	path = co_repo/iDMA
+	url = git@github.com:albertc9/iDMA.git
