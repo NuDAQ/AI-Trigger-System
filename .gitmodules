@@ -1,6 +1,3 @@
-[submodule "co_repo/picorv32_al"]
-	path = co_repo/picorv32_al
-	url = git@github.com:albertc9/picorv32_al.git
 [submodule "co_repo/CNN4HW"]
 	path = co_repo/CNN4HW
 	url = git@github.com:albertc9/CNN4HW.git
@@ -10,3 +7,6 @@
 [submodule "co_repo/iDMA"]
 	path = co_repo/iDMA
 	url = git@github.com:albertc9/iDMA.git
+[submodule "co_repo/pico4NuDAQ"]
+	path = co_repo/pico4NuDAQ
+	url = https://github.com/NuDAQ/pico4NuDAQ
