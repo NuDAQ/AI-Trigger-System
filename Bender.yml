@@ -1,0 +1,16 @@
+# Package metadata. Required.
+package:
+  # The name of the package. Required.
+  name: ai-trigger-system
+
+  # The list of package authors and contributors. Optional.
+  # By convention, authors should be listed in the form shown below.
+  authors: ["Albert Cheung <albert.cheung@cern.ch>"]
+
+  # A short description of the package. Optional.
+  description: "This is an AI trigger system for NuRadioDAQ."
+
+  # Other packages this package depends on. Optional.
+dependencies:
+  # Path dependency.
+  cnn-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "^1.0.0" }
