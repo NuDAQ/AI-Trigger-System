@@ -1,6 +1,0 @@
-[submodule "co_repo/CNN-Core-Wrapper"]
-	path = co_repo/CNN-Core-Wrapper
-	url = git@github.com:NuDAQ/CNN-Core-Wrapper.git
-[submodule "co_repo/gateware"]
-	path = co_repo/gateware
-	url = git@gitlab.com:NuRadioDAQ/gateware.git
