@@ -13,8 +13,8 @@ packages:
     dependencies:
     - cnn-core
   gateware:
-    revision: cb05ada0ae27b6c9142e629d0e845f0f086e9d76
-    version: 1.0.3
+    revision: null
+    version: null
     source:
-      Git: git@gitlab.com:NuRadioDAQ/gateware.git
+      Path: HDL/PreTrigger
     dependencies: []
