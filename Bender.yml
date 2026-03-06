@@ -14,5 +14,5 @@ package:
 dependencies:
   # Path dependency.
   cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "^1.0.0" }
-  gateware: { git: "git@gitlab.com:NuRadioDAQ/gateware.git", version: "1.0.2" }
+  gateware: { git: "git@gitlab.com:NuRadioDAQ/gateware.git", rev: "cb05ada0ae27b6c9142e629d0e845f0f086e9d76" }
 

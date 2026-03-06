@@ -1,14 +1,20 @@
 packages:
   cnn-core:
-    revision: 9484b6a6b0f172db65e6f8bdc475c3e58ea7006e
-    version: 1.0.2
+    revision: 20dcddadde520214d3889c7f8a81fba00df3a37c
+    version: 1.0.4
     source:
       Git: git@github.com:NuDAQ/CNN-Core-Generator.git
     dependencies: []
   cnn-core-wrapper:
-    revision: 0411dda503f241f56bfabb5f10e148d99aab56f4
-    version: 1.0.0
+    revision: 36fc94bcde9e8705615538698235729a352f2ea3
+    version: 1.0.1
     source:
       Git: git@github.com:NuDAQ/CNN-Core-Wrapper.git
     dependencies:
     - cnn-core
+  gateware:
+    revision: cb05ada0ae27b6c9142e629d0e845f0f086e9d76
+    version: 1.0.3
+    source:
+      Git: git@gitlab.com:NuRadioDAQ/gateware.git
+    dependencies: []
