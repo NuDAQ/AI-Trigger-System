@@ -137,28 +137,23 @@ begin
 	end process;
 
 
-gen_ila: if (CH < 1 and SET_PRE_TRIGGER_ILA = 1) generate
-
-    ila_pre_trig_ch : ila_1
-    PORT MAP (
-        clk        => clk,
-        probe0     => ADC_DATA(0) & ADC_DATA(1) & ADC_DATA(2) & ADC_DATA(3) & ADC_DATA(4) & ADC_DATA(5) & ADC_DATA(6) & ADC_DATA(7) & ADC_DATA(8) & ADC_DATA(9) & ADC_DATA(10) & ADC_DATA(11) & ADC_DATA(12) & ADC_DATA(13) & ADC_DATA(14) & ADC_DATA(15), 
-        probe1     => GATE, 
-        probe2     => THRESH, 
-        probe3     => WINDOW, 
-        probe4     => std_logic_vector(time_window_d),
-        probe5     => std_logic_vector(time_window(0))  & std_logic_vector(time_window(1))  & std_logic_vector(time_window(2)) & 
-                      std_logic_vector(time_window(3))  & std_logic_vector(time_window(4))  & std_logic_vector(time_window(5)) & 
-                      std_logic_vector(time_window(6))  & std_logic_vector(time_window(7))  & std_logic_vector(time_window(8)) & 
-                      std_logic_vector(time_window(9))  & std_logic_vector(time_window(10)) & std_logic_vector(time_window(11)) & 
-                      std_logic_vector(time_window(12)) & std_logic_vector(time_window(13)) & std_logic_vector(time_window(14)) & 
-                      std_logic_vector(time_window(15)), 
-        probe6     => ot,
-        probe7(0)  => DATA_STR,
-        probe8(0)  => RESET	
-    );
-
-end generate;
+    -- gen_ila: if (CH < 1 and SET_PRE_TRIGGER_ILA = 1) generate
+    -- 
+    --     ila_pre_trig_ch : ila_1
+    --     PORT MAP (
+    --         clk        => clk,
+    --         probe0     => ADC_DATA(0) & ADC_DATA(1) & ...
+    --         probe1     => GATE, 
+    --         probe2     => THRESH, 
+    --         probe3     => WINDOW, 
+    --         probe4     => std_logic_vector(time_window_d),
+    --         probe5     => std_logic_vector(time_window(0)) ...
+    --         probe6     => ot,
+    --         probe7(0)  => DATA_STR,
+    --         probe8(0)  => RESET	
+    --     );
+    -- 
+    -- end generate;
 
 end behav;
 			

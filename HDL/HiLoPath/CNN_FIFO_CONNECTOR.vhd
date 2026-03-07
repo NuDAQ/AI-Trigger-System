@@ -40,7 +40,7 @@ architecture rtl of CNN_FIFO_CONNECTOR is
             din      : in  std_logic_vector(1023 downto 0);
             wr_en    : in  std_logic;
             rd_en    : in  std_logic;
-            dout     : out std_logic_vector(63 downto 0);
+            dout     : out std_logic_vector(127 downto 0); -- Changed to 128
             full     : out std_logic;
             empty    : out std_logic
         );
@@ -51,6 +51,9 @@ architecture rtl of CNN_FIFO_CONNECTOR is
     signal fifo_rd_en    : std_logic;
     signal fifo_empty    : std_logic;
     signal cap_cnt       : integer range 0 to 15 := 0;
+
+    signal fifo_dout     : std_logic_vector(127 downto 0); -- Changed to 128
+    signal word_sel      : std_logic := '0';               -- 2:1 Mux selector
 
     type state_type is (ST_IDLE, ST_STREAM, ST_WAIT_DONE);
     signal cnn_state     : state_type := ST_IDLE;
@@ -66,7 +69,7 @@ begin
             din      => fifo_din,
             wr_en    => fifo_wr_en,
             rd_en    => fifo_rd_en,
-            dout     => CNN_IN_DATA,
+            dout     => fifo_dout,
             full     => open,
             empty    => fifo_empty
         );
@@ -103,7 +106,7 @@ begin
         end if;
     end process;
 
-    -- Slow Domain: CNN Interface FSM
+    -- Slow Domain: CNN Interface FSM with 2:1 Mux
     process(CLK_SLOW)
     begin
         if rising_edge(CLK_SLOW) then
@@ -113,11 +116,13 @@ begin
                 fifo_rd_en   <= '0';
                 CNN_IN_VALID <= '0';
                 stream_cnt   <= 0;
+                word_sel     <= '0';
             else
                 case cnn_state is
                     when ST_IDLE =>
                         CNN_START  <= '0';
                         fifo_rd_en <= '0';
+                        word_sel   <= '0';
                         if fifo_empty = '0' and CNN_IDLE = '1' then
                             CNN_START  <= '1';
                             stream_cnt <= 256;
@@ -126,11 +131,29 @@ begin
 
                     when ST_STREAM =>
                         CNN_START <= '0';
+                        
                         if fifo_empty = '0' then
                             CNN_IN_VALID <= '1';
+                            
+                            -- Multiplex the 128-bit FIFO output into two 64-bit CNN inputs
+                            if word_sel = '0' then
+                                CNN_IN_DATA <= fifo_dout(63 downto 0);
+                            else
+                                CNN_IN_DATA <= fifo_dout(127 downto 64);
+                            end if;
+
                             if CNN_IN_READY = '1' then
-                                fifo_rd_en <= '1';
                                 stream_cnt <= stream_cnt - 1;
+                                
+                                -- Toggle the selector. Only pop the FIFO when we finish the upper 64 bits.
+                                if word_sel = '0' then
+                                    word_sel   <= '1';
+                                    fifo_rd_en <= '0';
+                                else
+                                    word_sel   <= '0';
+                                    fifo_rd_en <= '1'; -- Pop next 128-bit word
+                                end if;
+
                                 if stream_cnt = 1 then
                                     cnn_state <= ST_WAIT_DONE;
                                 end if;
