@@ -35,6 +35,15 @@ module tb_TEMP_SYS_TOP;
     reg         cnn_out_ready;
 
     // -------------------------------------------------------------------------
+    // Simulation Logging
+    // -------------------------------------------------------------------------
+    integer    f_wave, f_trig, f_cnn;   // file handles
+    integer    cur_test_num  = -1;       // current injection index (0-4)
+    integer    cur_event_idx = -1;       // current dataset event index
+    integer    cur_label     = -1;       // ground-truth label
+    reg [11:0] wave_log [0:3];           // per-sample channel capture buffer
+
+    // -------------------------------------------------------------------------
     // Event Memory Load
     // -------------------------------------------------------------------------
     // 1000 events, 256 timesteps per event = 256,000 lines
@@ -87,11 +96,40 @@ module tb_TEMP_SYS_TOP;
     end
 
     // -------------------------------------------------------------------------
+    // Logging Monitors
+    // -------------------------------------------------------------------------
+
+    // Log every rising edge of L0_PRE_TRIG
+    always @(posedge l0_pre_trig) begin
+        $fwrite(f_trig, "%0d %0d %0d %0d\n",
+                $time, cur_test_num, cur_event_idx, cur_label);
+        $fflush(f_trig);
+    end
+
+    // Log every CNN output handshake (valid & ready)
+    always @(posedge clk_slow) begin
+        if (cnn_out_valid && cnn_out_ready) begin
+            $fwrite(f_cnn, "%0d %0d %0d %0d %0d\n",
+                    cur_test_num, cur_event_idx, cur_label, cnn_out_data, $time);
+            $fflush(f_cnn);
+        end
+    end
+
+    // -------------------------------------------------------------------------
     // Main Test Stimulus & Injection Engine
     // -------------------------------------------------------------------------
     initial begin
         $display("[%0t] Starting Dynamic Event Simulation...", $time);
-        
+
+        // Open output log files (written to data/analysis/ for ROOT)
+        f_wave = $fopen("/home/work1/Works/AI-Trigger-System/data/analysis/sim_waveforms.txt",   "w");
+        f_trig = $fopen("/home/work1/Works/AI-Trigger-System/data/analysis/sim_triggers.txt",    "w");
+        f_cnn  = $fopen("/home/work1/Works/AI-Trigger-System/data/analysis/sim_cnn_results.txt", "w");
+        // Column headers (prefixed with # so ROOT scripts can skip them)
+        $fwrite(f_wave, "# test_num event_idx label time_ps sample ch0 ch1 ch2 ch3\n");
+        $fwrite(f_trig, "# time_ps test_num event_idx label\n");
+        $fwrite(f_cnn,  "# test_num event_idx label cnn_score time_ps\n");
+
         sys_rst         = 1;
         data_str        = 0;
         cnn_out_ready   = 1;
@@ -131,7 +169,10 @@ module tb_TEMP_SYS_TOP;
             
             // 2. Pick a random event from the 1000 loaded datasets
             rand_event_idx = {$random} % 1000;
-            
+            cur_test_num   = test_ev;
+            cur_event_idx  = rand_event_idx;
+            cur_label      = label_mem[rand_event_idx];
+
             $display("===================================================================");
             $display("[%0t] INJECTING EVENT #%0d (Truth Label: %0d)", $time, rand_event_idx, label_mem[rand_event_idx]);
             $display("===================================================================");
@@ -160,16 +201,24 @@ module tb_TEMP_SYS_TOP;
                         else if (c == 2) pure_sig = mem_line[35:24];
                         else             pure_sig = mem_line[47:36];
                         
-                        // 3C. Superimpose signal onto noise 
+                        // 3C. Superimpose signal onto noise
                         // Standard binary addition natively handles the two's complement offset
                         combined_signal = noise + pure_sig;
-                        
+
+                        // Capture for waveform log (all 4 channels collected before fwrite)
+                        wave_log[c] = combined_signal;
+
                         // 3D. Apply to the primary channels (0-3) for the CNN
                         adc_data_tb[c][s] <= combined_signal;
-                        
+
                         // 3E. Mirror to the upper channels (4-7) for the storage backend path
                         adc_data_tb[c+4][s] <= combined_signal;
                     end
+                    // Log one row per ADC sample (all 4 channels)
+                    $fwrite(f_wave, "%0d %0d %0d %0d %0d %0d %0d %0d %0d\n",
+                            cur_test_num, cur_event_idx, cur_label, $time,
+                            batch * 16 + s,
+                            wave_log[0], wave_log[1], wave_log[2], wave_log[3]);
                 end
             end
             
@@ -195,6 +244,11 @@ module tb_TEMP_SYS_TOP;
         // Flush out the rest of the simulation
         repeat(100) @(posedge clk_slow);
         $display("[%0t] All test injections complete.", $time);
+
+        // Close log files before finishing
+        $fclose(f_wave);
+        $fclose(f_trig);
+        $fclose(f_cnn);
         $finish;
     end
 endmodule
