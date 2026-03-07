@@ -70,6 +70,12 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param checkpoint.writeSynthRtdsInDcp 1
+set_param chipscope.maxJobs 8
+set_param synth.incrementalSynthesisCache ./.Xil/Vivado-1075045-AlbertsUbuntu/incrSyn
+set_msg_config -id {Common 17-41} -limit 10000000
+set_msg_config -id {Synth 8-256} -limit 10000
+set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xcku5p-ffvb676-2-e
 
@@ -169,6 +175,8 @@ foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
 set_param ips.enableIPCacheLiteLoad 1
+
+read_checkpoint -auto_incremental -incremental /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.srcs/utils_1/imports/synth_1/TEMP_SYS_TOP.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
