@@ -257,12 +257,8 @@ TCanvas* MakeCnnSummaryCanvas(const std::vector<CnnResult>& cnns,
                                 "CNN Output Score per Injected Event"
                                 ";Injection Index;CNN Score (raw 32-bit)",
                                 nev, -0.5, nev - 0.5);
-        for (auto& r : cnns) {
+        for (auto& r : cnns)
             hScore->SetBinContent(r.test_num + 1, r.cnn_score);
-            // Color by label
-            if (r.label == 1)
-                hScore->SetBinColor(r.test_num + 1, kRed);
-        }
 
         // Draw bar-by-bar as individual histograms for color support
         hScore->SetMaximum(scoreMax * 1.25);
