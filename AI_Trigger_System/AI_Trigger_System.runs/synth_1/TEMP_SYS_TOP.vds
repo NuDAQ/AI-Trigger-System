@@ -1066,3 +1066,25 @@ Netlist sorting complete. Time (s): cpu = 00:00:00.67 ; elapsed = 00:00:00.67 . 
 INFO: [Netlist 29-17] Analyzing 6295 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3996.117 ; gain = 0.000 ; free physical = 6373 ; free virtual = 30529
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2064 instances were transformed.
+  BUFG => BUFGCE: 2 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 205 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 1541 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 1 instance 
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 315 instances
+
+Synth Design complete | Checksum: a7c31fee
+INFO: [Common 17-83] Releasing license: Synthesis
+188 Infos, 219 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:05 ; elapsed = 00:01:25 . Memory (MB): peak = 3996.152 ; gain = 2563.164 ; free physical = 6286 ; free virtual = 30464
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 8270.043; main = 2447.280; forked = 7572.559
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 16037.195; main = 3996.121; forked = 12239.016
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.29 ; elapsed = 00:00:00.09 . Memory (MB): peak = 4020.129 ; gain = 0.000 ; free physical = 6273 ; free virtual = 30475
+INFO: [Common 17-1381] The checkpoint '/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/TEMP_SYS_TOP.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 4020.129 ; gain = 23.977 ; free physical = 5893 ; free virtual = 30339
+INFO: [runtcl-4] Executing : report_utilization -file TEMP_SYS_TOP_utilization_synth.rpt -pb TEMP_SYS_TOP_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Mar  6 17:44:42 2026...
