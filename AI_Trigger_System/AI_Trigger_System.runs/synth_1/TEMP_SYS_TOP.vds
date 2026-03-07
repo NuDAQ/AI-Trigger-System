@@ -779,3 +779,290 @@ Finished Renaming Generated Instances : Time (s): cpu = 00:00:41 ; elapsed = 00:
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:47 ; elapsed = 00:01:06 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 326 ; free virtual = 22916
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:47 ; elapsed = 00:01:07 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 327 ; free virtual = 22917
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:48 ; elapsed = 00:01:07 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 329 ; free virtual = 22920
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:48 ; elapsed = 00:01:08 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 327 ; free virtual = 22919
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name                                                                    | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 18     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 18     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A'*B        | 30     | 6      | -      | -      | 19     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 19     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A'*B        | 30     | 7      | -      | -      | 20     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 20     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB0    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB3    | (A''*B)'    | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++------+----------------------+----------+
+|      |BlackBox name         |Instances |
++------+----------------------+----------+
+|1     |fifo_async_1024_to_64 |         1|
++------+----------------------+----------+
+
+Report Cell Usage: 
++------+-------------------+------+
+|      |Cell               |Count |
++------+-------------------+------+
+|1     |fifo_async_1024_to |     1|
+|2     |BUFG               |     2|
+|3     |CARRY8             |  4197|
+|4     |DSP_ALU            |   205|
+|5     |DSP_A_B_DATA       |   205|
+|7     |DSP_C_DATA         |   205|
+|9     |DSP_MULTIPLIER     |   205|
+|10    |DSP_M_DATA         |   205|
+|11    |DSP_OUTPUT         |   205|
+|13    |DSP_PREADD         |   205|
+|14    |DSP_PREADD_DATA    |   205|
+|15    |LUT1               |  1555|
+|16    |LUT2               | 20683|
+|17    |LUT3               |  5285|
+|18    |LUT4               |  6906|
+|19    |LUT5               |  1762|
+|20    |LUT6               |  7077|
+|21    |MUXF7              |    34|
+|22    |RAM32M             |     1|
+|23    |RAM32M16           |   315|
+|24    |RAMB18E2           |     3|
+|25    |RAMB36E2           |     5|
+|26    |FDCE               |   192|
+|27    |FDRE               | 59803|
+|28    |FDSE               |    35|
+|29    |IBUF               |  1541|
+|30    |OBUF               |    34|
++------+-------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:48 ; elapsed = 00:01:08 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 324 ; free virtual = 22916
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 4 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:43 ; elapsed = 00:01:05 . Memory (MB): peak = 3802.086 ; gain = 1176.734 ; free physical = 6565 ; free virtual = 30687
+Synthesis Optimization Complete : Time (s): cpu = 00:00:50 ; elapsed = 00:01:10 . Memory (MB): peak = 3802.086 ; gain = 1401.605 ; free physical = 6569 ; free virtual = 30691
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.67 ; elapsed = 00:00:00.67 . Memory (MB): peak = 3802.086 ; gain = 0.000 ; free physical = 6582 ; free virtual = 30707
+INFO: [Netlist 29-17] Analyzing 6295 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
