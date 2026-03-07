@@ -1,5 +1,5 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  --include "../../../../AI_Trigger_System.ip_user_files/ipstatic" -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+verilog xil_defaultlib  --include "../../../../AI_Trigger_System.ip_user_files/ipstatic" -d "TARGET_FPGA=" -d "TARGET_SYNTHESIS=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
 "../../../../AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/sim/fifo_async_1024_to_64.v" \
 "../../../../../.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core.v" \
 "../../../../../.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s.v" \
@@ -57,7 +57,7 @@ verilog xil_defaultlib  --include "../../../../AI_Trigger_System.ip_user_files/i
 "../../../../../.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3.v" \
 "../../../../../.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v" \
 
-sv xil_defaultlib  --include "../../../../AI_Trigger_System.ip_user_files/ipstatic" -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+sv xil_defaultlib  --include "../../../../AI_Trigger_System.ip_user_files/ipstatic" -d "TARGET_FPGA=" -d "TARGET_SYNTHESIS=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
 "../../../../../HDL/HiLoPath/sim/tb_temp_sys_top.sv" \
 
 # compile glbl module

@@ -73,6 +73,7 @@ add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd \
     $ROOT/HDL/HiLoPath/HILO_PATH_WRAPPER.vhd \
     $ROOT/HDL/HiLoPath/TEMP_SYS_TOP.vhd \
+    $ROOT/HDL/HiLoPath/sim/TEMP_SYS_TOP_TB_WRAP.vhd \
 ]
 
 set_property verilog_define [list \
