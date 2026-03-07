@@ -1,7 +1,5 @@
 # This script was generated automatically by bender.
-set ROOT "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System"
-
-# Package(cnn-core) Target(*)
+set ROOT "/home/work1/Works/AI-Trigger-System"
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s.v \
@@ -19,26 +17,7 @@ add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detection_unit.v \
-]
-
-# Package(cnn-core) Target(*)
-add_files -norecurse -fileset [current_fileset] [list \
-    $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detector.vh \
-]
-
-# Package(cnn-core) Target(*)
-add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_idx0_monitor.v \
-]
-
-# Package(cnn-core) Target(*)
-add_files -norecurse -fileset [current_fileset] [list \
-    $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_kernel_monitor_top.vh \
-    $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_report_unit.vh \
-]
-
-# Package(cnn-core) Target(*)
-add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_6s_18_1_0.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7ns_19_1_0.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7s_19_1_0.v \
@@ -77,43 +56,23 @@ add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_16_1.v \
     $ROOT/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3.v \
 ]
-
-# Package(cnn-core-wrapper) Target(*)
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v \
 ]
-
-# Package(cnn-core-wrapper) Target(all(fpga, synthesis))
-add_files -norecurse -fileset [current_fileset] [list \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/01_clocks.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/02_io_delays.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/03_clock_groups.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/04_uncertainty.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/05_multicycle_falsepaths.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/10_io_standards.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/20_pins.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/21_diff_pairs.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/22_interface_adc.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/23_interface_spi.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/24_interface_axi.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/30_timing_extras.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/40_debug_ila.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/50_power_thermal.xdc \
-    $ROOT/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/xdc/99_local_override.xdc \
-]
-
-# Package(gateware) Target(*)
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/PreTrigger/ila_pkg.sv \
 ]
-
-# Package(gateware) Target(*)
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/PreTrigger/Mult_to_bin.vhd \
     $ROOT/HDL/PreTrigger/PRE_TRIGGER_PKG.vhd \
     $ROOT/HDL/PreTrigger/Pre_trigger.vhd \
     $ROOT/HDL/PreTrigger/Pre_trigger_1ch.vhd \
     $ROOT/HDL/PreTrigger/ila_pkg.vhd \
+]
+add_files -norecurse -fileset [current_fileset] [list \
+    $ROOT/HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd \
+    $ROOT/HDL/HiLoPath/HILO_PATH_WRAPPER.vhd \
+    $ROOT/HDL/HiLoPath/TEMP_SYS_TOP.vhd \
 ]
 
 set_property verilog_define [list \
