@@ -1,7 +1,5 @@
 `timescale 1ns / 10ps
 
-import pre_trigger_pkg::*;
-
 module tb_TEMP_SYS_TOP;
 
     parameter FAST_CLK_PERIOD = 16.0; // 62.5 MHz (1GHz ADC / 16 samples)
@@ -32,8 +30,8 @@ module tb_TEMP_SYS_TOP;
     initial begin
         // Load the pure signal hex files
         // (Use absolute paths if Vivado complains it cannot find them)
-        $readmemh("real_events.hex", event_mem);
-        $readmemh("real_labels.hex", label_mem);
+        $readmemh("/home/work1/Works/AI-Trigger-System/data/real_events.hex", event_mem);
+        $readmemh("/home/work1/Works/AI-Trigger-System/data/real_labels.hex", label_mem);
     end
 
     // -------------------------------------------------------------------------
