@@ -8,6 +8,7 @@ vhdl xil_defaultlib  \
 "../../../../../HDL/PreTrigger/Pre_trigger.vhd" \
 "../../../../../HDL/HiLoPath/HILO_PATH_WRAPPER.vhd" \
 "../../../../../HDL/HiLoPath/TEMP_SYS_TOP.vhd" \
+"../../../../../HDL/HiLoPath/sim/TEMP_SYS_TOP_TB_WRAP.vhd" \
 
 # Do not sort compile order
 nosort

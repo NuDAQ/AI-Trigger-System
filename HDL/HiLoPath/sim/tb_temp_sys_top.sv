@@ -52,16 +52,16 @@ module tb_TEMP_SYS_TOP;
     // -------------------------------------------------------------------------
     // Device Under Test
     // -------------------------------------------------------------------------
-    TEMP_SYS_TOP uut (
-        .CLK_FAST      (clk_fast),
-        .CLK_SLOW      (clk_slow),
-        .SYS_RST       (sys_rst),
-        .DATA_STR      (data_str),
-        .ADC_DATA8     (adc_data_flat),
-        .L0_PRE_TRIG   (l0_pre_trig),
-        .CNN_OUT_DATA  (cnn_out_data),
-        .CNN_OUT_VALID (cnn_out_valid),
-        .CNN_OUT_READY (cnn_out_ready)
+    TEMP_SYS_TOP_TB_WRAP uut (
+        .CLK_FAST       (clk_fast),
+        .CLK_SLOW       (clk_slow),
+        .SYS_RST        (sys_rst),
+        .DATA_STR       (data_str),
+        .ADC_DATA8_FLAT (adc_data_flat),
+        .L0_PRE_TRIG    (l0_pre_trig),
+        .CNN_OUT_DATA   (cnn_out_data),
+        .CNN_OUT_VALID  (cnn_out_valid),
+        .CNN_OUT_READY  (cnn_out_ready)
     );
 
     // Clocks
