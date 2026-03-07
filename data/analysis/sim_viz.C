@@ -276,13 +276,6 @@ TCanvas* MakeCnnSummaryCanvas(const std::vector<CnnResult>& cnns,
             hBar->SetFillColor(r.label == 1 ? kRed-4 : kAzure+7);
             hBar->SetLineColor(r.label == 1 ? kRed+1  : kBlue+2);
             hBar->Draw("B SAME");
-
-            // Label on bar: event idx + label
-            TLatex tl;
-            tl.SetTextSize(0.030); tl.SetTextAlign(22);
-            tl.DrawLatex(r.test_num, r.cnn_score * 1.06,
-                         Form("Ev#%d\n%s", r.event_idx,
-                              r.label == 1 ? "(SIG)" : "(BKG)"));
         }
 
         // Draw a threshold indicator at 65536 (0x10000) as a rough midpoint
@@ -361,22 +354,32 @@ TCanvas* MakeCnnSummaryCanvas(const std::vector<CnnResult>& cnns,
 
 // ---- Trigger info text canvas -----------------------------------------------
 
+// page: 0-based page index; rowsPerPage: rows per page
 TCanvas* MakeSummaryTable(const std::vector<CnnResult>&  cnns,
-                           const std::vector<TrigEntry>&  trigs)
+                           const std::vector<TrigEntry>&  trigs,
+                           int page = 0, int rowsPerPage = 10)
 {
-    auto* c = new TCanvas("cTable", "Simulation Results Summary",
+    int startRow = page * rowsPerPage;
+    int endRow   = std::min(startRow + rowsPerPage, (int)cnns.size());
+    if (startRow >= (int)cnns.size()) return nullptr;
+    int nPages = ((int)cnns.size() + rowsPerPage - 1) / rowsPerPage;
+
+    auto* c = new TCanvas(Form("cTable_%d", page), "Simulation Results Summary",
                           300, 200, 900, 500);
     c->cd();
 
     TLatex tl;
     tl.SetNDC(); tl.SetTextFont(42);
 
-    // Title
+    // Title (with page indicator when multi-page)
     tl.SetTextSize(0.055); tl.SetTextFont(62); tl.SetTextAlign(22);
-    tl.DrawLatex(0.5, 0.93, "Simulation Results Summary");
+    TString title = "Simulation Results Summary";
+    if (nPages > 1) title += Form("  (Page %d / %d)", page + 1, nPages);
+    tl.DrawLatex(0.5, 0.93, title.Data());
 
     // Header
-    double y = 0.82, dy = 0.095;
+    double dy = 0.072;
+    double y  = 0.84;
     tl.SetTextSize(0.035); tl.SetTextFont(62); tl.SetTextAlign(12);
     tl.DrawLatex(0.05, y, "Test");
     tl.DrawLatex(0.15, y, "EvIdx");
@@ -390,15 +393,16 @@ TCanvas* MakeSummaryTable(const std::vector<CnnResult>&  cnns,
     ldiv->SetLineWidth(2); ldiv->Draw();
 
     tl.SetTextFont(42); tl.SetTextSize(0.033);
-    for (auto& r : cnns) {
+    for (int i = startRow; i < endRow; i++) {
+        const auto& r = cnns[i];
         y -= dy;
         // Count triggers for this test
         int ntrig = 0;
         for (auto& t : trigs) if (t.test_num == r.test_num) ++ntrig;
 
-        // Decide pass/fail: high score (> 65536) → CNN says signal
-        bool cnn_says_signal = (r.cnn_score > 65536);
-        bool correct = (cnn_says_signal == (r.label == 1));
+        // "Correct" = L0_PRE_TRIG fired for a genuine signal event (true positive).
+        // Background events that trigger are false alarms → Wrong.
+        bool correct = (r.label == 1);
 
         tl.SetTextColor(kBlack);
         tl.DrawLatex(0.05, y, Form("%d", r.test_num));
@@ -487,13 +491,17 @@ void sim_viz(bool interactive = false)
         }
     }
 
-    // Text summary table
+    // Text summary table (paginated: 10 rows per page)
     {
-        TCanvas* c = MakeSummaryTable(cnns, trigs);
-        if (c) {
-            c->Print(kOutPDF);
-            c->Write("cTable");
-            delete c;
+        int rowsPerPage = 10;
+        int nPages = ((int)cnns.size() + rowsPerPage - 1) / rowsPerPage;
+        for (int pg = 0; pg < nPages; pg++) {
+            TCanvas* c = MakeSummaryTable(cnns, trigs, pg, rowsPerPage);
+            if (c) {
+                c->Print(kOutPDF);
+                c->Write(Form("cTable_%d", pg));
+                delete c;
+            }
         }
     }
 

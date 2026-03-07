@@ -38,7 +38,7 @@ module tb_TEMP_SYS_TOP;
     // Simulation Logging
     // -------------------------------------------------------------------------
     integer    f_wave, f_trig, f_cnn;   // file handles
-    integer    cur_test_num  = -1;       // current injection index (0-4)
+    integer    cur_test_num  = -1;       // current injection index (0-19)
     integer    cur_event_idx = -1;       // current dataset event index
     integer    cur_label     = -1;       // ground-truth label
     reg [11:0] wave_log [0:3];           // per-sample channel capture buffer
@@ -50,12 +50,26 @@ module tb_TEMP_SYS_TOP;
     // Each line is 48 bits (4 channels * 12 bits)
     reg [47:0] event_mem [0:255999];
     reg [31:0] label_mem [0:999];
-    
+
+    // Pre-scanned pool of signal event indices (label == 1)
+    integer    sig_pool [0:999];
+    integer    n_sigs = 0;
+
     initial begin
         // Load the pure signal hex files
         // (Use absolute paths if Vivado complains it cannot find them)
         $readmemh("/home/work1/Works/AI-Trigger-System/data/real_events.hex", event_mem);
         $readmemh("/home/work1/Works/AI-Trigger-System/data/real_labels.hex", label_mem);
+
+        // Pre-scan labels to build the signal pool for guaranteed injection
+        n_sigs = 0;
+        for (int i = 0; i < 1000; i++) begin
+            if (label_mem[i] == 32'h1) begin
+                sig_pool[n_sigs] = i;
+                n_sigs++;
+            end
+        end
+        $display("[%0t] Pre-scan: %0d signal events found in dataset", $time, n_sigs);
     end
 
     // -------------------------------------------------------------------------
@@ -156,8 +170,9 @@ module tb_TEMP_SYS_TOP;
         // ---------------------------------------------------------
         // Dynamic Injection Loop
         // ---------------------------------------------------------
-        // Simulate 5 random events from the dataset
-        for (int test_ev = 0; test_ev < 5; test_ev++) begin
+        // Simulate 20 events: even test indices inject guaranteed signals,
+        // odd test indices inject random picks (natural mix of BG and SIG).
+        for (int test_ev = 0; test_ev < 20; test_ev++) begin
             integer delay_cycles;
             integer rand_event_idx;
             integer mem_idx;
@@ -167,8 +182,11 @@ module tb_TEMP_SYS_TOP;
             delay_cycles = 100 + ({$random} % 400); 
             repeat(delay_cycles) @(posedge clk_fast);
             
-            // 2. Pick a random event from the 1000 loaded datasets
-            rand_event_idx = {$random} % 1000;
+            // 2. Pick event: guaranteed signal on even test indices, random on odd
+            if (test_ev % 2 == 0 && n_sigs > 0)
+                rand_event_idx = sig_pool[(test_ev / 2) % n_sigs];
+            else
+                rand_event_idx = {$random} % 1000;
             cur_test_num   = test_ev;
             cur_event_idx  = rand_event_idx;
             cur_label      = label_mem[rand_event_idx];
