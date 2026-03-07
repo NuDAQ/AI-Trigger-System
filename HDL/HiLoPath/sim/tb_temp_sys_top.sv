@@ -13,7 +13,22 @@ module tb_TEMP_SYS_TOP;
     
     // Multi-dimensional array mirroring the VHDL adc_data8_type
     reg [11:0] adc_data_tb [0:7][0:15];
-    
+
+    // Flat packed wire for VHDL port adc_data8_type (8 * 16 * 12 = 1536 bits).
+    // Vivado xsim mixed-language: VHDL user-defined array ports must connect as
+    // an equivalent-width flat vector from the SV side.
+    // Packing convention (MSB-first, matching VHDL array(0 to N)):
+    //   adc_data_tb[ch][s]  ->  adc_data_flat[1535 - (ch*16+s)*12  -: 12]
+    wire [1535:0] adc_data_flat;
+    genvar gi, gj;
+    generate
+        for (gi = 0; gi < 8; gi++) begin : gen_ch
+            for (gj = 0; gj < 16; gj++) begin : gen_s
+                assign adc_data_flat[1535 - (gi*16+gj)*12 -: 12] = adc_data_tb[gi][gj];
+            end
+        end
+    endgenerate
+
     wire        l0_pre_trig;
     wire [31:0] cnn_out_data;
     wire        cnn_out_valid;
@@ -42,7 +57,7 @@ module tb_TEMP_SYS_TOP;
         .CLK_SLOW      (clk_slow),
         .SYS_RST       (sys_rst),
         .DATA_STR      (data_str),
-        .ADC_DATA8     (adc_data_tb),
+        .ADC_DATA8     (adc_data_flat),
         .L0_PRE_TRIG   (l0_pre_trig),
         .CNN_OUT_DATA  (cnn_out_data),
         .CNN_OUT_VALID (cnn_out_valid),
