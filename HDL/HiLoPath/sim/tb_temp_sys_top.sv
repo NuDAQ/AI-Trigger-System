@@ -103,7 +103,7 @@ module tb_TEMP_SYS_TOP;
                 for (int s = 0; s < 16; s++) begin
                     // Max noise is 2047 (0x7FF). 
                     // Stays just below the 0x800 trigger threshold to prevent false firing!
-                    adc_data_tb[c][s] <= 12'(2040 + ({$random} % 8));
+                    adc_data_tb[c][s] <= 12'(1800 + ({$random} % 40));
                 end
             end
         end
@@ -211,7 +211,7 @@ module tb_TEMP_SYS_TOP;
                         logic [11:0] combined_signal;
                         
                         // 3A. Generate algorithmic baseline noise
-                        noise = 12'(2040 + ({$random} % 8)); 
+                        noise = 12'(1800 + ({$random} % 40)); 
                         
                         // 3B. Extract the pure 12-bit two's complement signal
                         if      (c == 0) pure_sig = mem_line[11:0];

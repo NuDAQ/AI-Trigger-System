@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="fifo_async_1024_to_64_synth_1" LaunchPart="xcku5p-ffvb676-2-e" LaunchTime="1772845447">
-  <File Type="VDS-TIMING-PB" Name="fifo_async_1024_to_64_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="fifo_async_1024_to_64_timing_summary_synth.rpt"/>
   <File Type="RDS-RDS" Name="fifo_async_1024_to_64.vds"/>
   <File Type="REPORTS-TCL" Name="fifo_async_1024_to_64_reports.tcl"/>
   <File Type="PA-TCL" Name="fifo_async_1024_to_64.tcl"/>
   <File Type="RDS-DCP" Name="fifo_async_1024_to_64.dcp"/>
-  <File Type="RDS-PROPCONSTRS" Name="fifo_async_1024_to_64_drc_synth.rpt"/>
   <File Type="RDS-UTIL" Name="fifo_async_1024_to_64_utilization_synth.rpt"/>
   <File Type="RDS-UTIL-PB" Name="fifo_async_1024_to_64_utilization_synth.pb"/>
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/fifo_async_1024_to_64" RelGenDir="$PGENDIR/fifo_async_1024_to_64">
@@ -42,9 +39,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

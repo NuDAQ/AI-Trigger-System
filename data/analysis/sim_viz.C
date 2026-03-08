@@ -11,6 +11,56 @@
 //   root -l -b -q sim_viz.C          // batch: generate sim_results.pdf + .root
 //   root -l 'sim_viz.C(true)'        // interactive mode
 // =============================================================================
+//
+// ---- Simulation Configuration (tb_temp_sys_top.sv + TEMP_SYS_TOP.vhd) ------
+//
+// ADC & Clock:
+//   Fast clock (ADC sampling): 62.5 MHz  (period = 16 ns)
+//   Slow clock (CNN inference): 200 MHz  (period =  5 ns)
+//   ADC resolution: 12-bit (unsigned, 0–4095 counts)
+//
+// Noise Baseline (testbench stimulus):
+//   Formula : noise = 1800 + $random[0..39]
+//   Range   : 1800 – 1839 ADC counts  (~44.0 % of full scale)
+//   Both background periods (idle) AND event injection use the same noise model.
+//   For signal events the injected waveform is:
+//     combined = noise + pure_sig
+//   where pure_sig is a 12-bit two's complement deviation (scale factor = 64)
+//   loaded from real_events.hex. pure_sig ≈ 0 for background, non-zero for signal.
+//
+// Pre-Trigger Threshold (TEMP_SYS_TOP.vhd  C_THRESH):
+//   Value   : 0x730 = 1840 ADC counts
+//   Gap     : threshold − noise_max = 1840 − 1839 = 1 count
+//   Meaning : a channel must exceed 1840 for L0_PRE_TRIG to assert.
+//             Pure noise alone (max 1839) just barely misses the threshold.
+//             Any positive pure_sig (even = 1) can fire the trigger.
+//             This is the maximum-sensitivity (test) configuration.
+//
+// Event Injection Scheme (20 events per run):
+//   Even test indices (0,2,4,...,18) : guaranteed SIGNAL events,
+//     drawn sequentially from a pre-scanned pool of label=1 indices.
+//   Odd  test indices (1,3,5,...,19) : randomly sampled from all 1000 events
+//     (natural mix of background and signal based on dataset composition).
+//   Between injections: random idle gap of 100–499 fast-clock cycles during
+//     which the background noise generator drives all ADC channels.
+//
+// Expected Trigger Behaviour after threshold/noise adjustment:
+//   Pure background (pure_sig ≈ 0) : combined ≈ 1820 << 2304 → no trigger
+//   Weak signal     (pure_sig < 465): combined < 2304          → no trigger
+//   Strong signal   (pure_sig > 465): combined > 2304          → L0_PRE_TRIG fires
+//                                      → FIFO feeds CNN → CNN_OUT_VALID asserted
+//
+// Result Classification used in this script:
+//   "Correct" = L0_PRE_TRIG fired for a genuine signal event (label == 1).
+//   "Wrong"   = L0_PRE_TRIG fired for a background event  (label == 0) → false alarm.
+//   Note: events where no CNN result appears were not triggered (missed or timed out).
+//
+// Previous run summary (noise 2040–2047, threshold 0x800):
+//   All 20 events triggered → high false-positive rate (background also crossing 2048).
+// Current run summary (noise 1800–1839, threshold 0x730 = 1840):
+//   Maximum-sensitivity test mode: gap = 1 count, any positive pure_sig fires.
+//   All signal events and background events with any positive deviation will trigger.
+// =============================================================================
 
 #include <fstream>
 #include <sstream>
@@ -186,7 +236,7 @@ TCanvas* MakeWaveCanvas(int test_num,
         gr->Draw("L SAME");
 
         // Draw baseline reference line
-        TLine* lBase = new TLine(0, 2044, (int)ev.size()-1, 2044);
+        TLine* lBase = new TLine(0, 1820, (int)ev.size()-1, 1820);
         lBase->SetLineColor(kGray+1);
         lBase->SetLineStyle(2);
         lBase->SetLineWidth(1);

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_1" LaunchPart="xcku5p-ffvb676-2-e" LaunchTime="1772847780" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/TEMP_SYS_TOP.dcp">
-  <File Type="VDS-TIMING-PB" Name="TEMP_SYS_TOP_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="TEMP_SYS_TOP_timing_summary_synth.rpt"/>
-  <File Type="RDS-DCP" Name="TEMP_SYS_TOP.dcp"/>
-  <File Type="RDS-UTIL-PB" Name="TEMP_SYS_TOP_utilization_synth.pb"/>
-  <File Type="RDS-UTIL" Name="TEMP_SYS_TOP_utilization_synth.rpt"/>
-  <File Type="RDS-PROPCONSTRS" Name="TEMP_SYS_TOP_drc_synth.rpt"/>
   <File Type="RDS-RDS" Name="TEMP_SYS_TOP.vds"/>
   <File Type="REPORTS-TCL" Name="TEMP_SYS_TOP_reports.tcl"/>
   <File Type="PA-TCL" Name="TEMP_SYS_TOP.tcl"/>
+  <File Type="RDS-DCP" Name="TEMP_SYS_TOP.dcp"/>
+  <File Type="RDS-UTIL" Name="TEMP_SYS_TOP_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="TEMP_SYS_TOP_utilization_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core.v">
@@ -486,9 +483,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
     <Step Id="synth_design"/>
   </Strategy>
   <BlockFileSet Type="BlockSrcs" Name="fifo_async_1024_to_64"/>

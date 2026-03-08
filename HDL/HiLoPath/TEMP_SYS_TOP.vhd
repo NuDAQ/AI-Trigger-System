@@ -21,7 +21,7 @@ end TEMP_SYS_TOP;
 architecture rtl of TEMP_SYS_TOP is
 
     -- Hardcoded Temporary Configurations
-    constant C_THRESH  : std_logic_vector(11 downto 0) := x"800";
+    constant C_THRESH  : std_logic_vector(11 downto 0) := x"6A4"; -- 1700: max (1839)
     constant C_WINDOW  : std_logic_vector( 7 downto 0) := x"14"; -- 20 ticks
     constant C_BIN_THR : std_logic_vector( 3 downto 0) := x"2";  -- >= 2 channels
 
