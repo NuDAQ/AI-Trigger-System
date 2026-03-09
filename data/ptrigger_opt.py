@@ -1,6 +1,7 @@
 import numpy as np
 import array
 import ROOT
+import subprocess
 
 def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimization.root", output_pdf="trigger_optimization_report.pdf"):
     print("Loading data")
@@ -47,7 +48,8 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     safe_thresholds_hw = {}
     safe_thresholds_rms = {}
     safe_efficiencies = {}
-
+    crossing_stats = {}
+    
     for bin_thr in bin_thresholds_to_test:
         eff_vals, fpr_vals, rate_vals, pur_vals, thr_vals = [array.array('d') for _ in range(5)]
         
@@ -57,7 +59,7 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
         safe_eff = None
         
         for thresh in thresholds:
-            HILO_WINDOW = 5       # Intra-channel gate (e.g., 5 ns)
+            HILO_WINDOW = 5        # Intra-channel gate (e.g., 5 ns)
             COINCIDENCE_WINDOW = 32 # Inter-channel gate (e.g., 32 ns)
 
             crossed_hi = (X_8ch > thresh)
@@ -103,6 +105,17 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
                 safe_thr_rms = thresh_rms
                 safe_eff = tpr
                 found_safe = True
+                
+                crossing_stats[bin_thr] = {
+                    'HW_Thresh': thresh,
+                    'RMS_Thresh': thresh_rms,
+                    'TPR': tpr,
+                    'FPR': fpr,
+                    'Purity': purity
+                }
+                
+                trigger_log_filename = f"optimal_trigger_log_bin{bin_thr}.npy"
+                np.save(trigger_log_filename, event_triggered)
                 
             eff_vals.append(tpr)
             fpr_vals.append(fpr)
@@ -280,7 +293,46 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     ROOT.gPad.Update()
     
     c_pur.Write()
-    c_pur.Print(output_pdf + ")")
+    c_pur.Print(output_pdf)
+    
+    c_fpr_only = ROOT.TCanvas("c_fpr_only", "FPR vs Threshold", 800, 600)
+    mg_fpr_only = ROOT.TMultiGraph()
+    mg_fpr_only.SetTitle("False Alarm Rate vs Threshold;Threshold (Multiples of Noise RMS, i.e., SNR);False Alarm Rate (FPR)")
+    
+    for b in bin_thresholds_to_test: 
+        g_clone = graphs_fpr[b].Clone()
+        g_clone.SetLineStyle(1) 
+        mg_fpr_only.Add(g_clone)
+        
+    mg_fpr_only.Draw("AL")
+    
+    mg_fpr_only.SetMinimum(1e-5) 
+    mg_fpr_only.SetMaximum(1.0)
+    
+    leg_fpr_only = ROOT.TLegend(0.65, 0.65, 0.88, 0.88)
+    leg_fpr_only.SetBorderSize(1)
+    for b in bin_thresholds_to_test:
+        leg_fpr_only.AddEntry(graphs_fpr[b], f"BIN_THR = {b}", "l")
+    leg_fpr_only.Draw()
+    
+    ROOT.gPad.SetLogy() 
+    ROOT.gPad.Modified()
+    ROOT.gPad.Update()
+    
+    c_fpr_only.Write()
+    c_fpr_only.Print(output_pdf + ")")
+    
+    print(f"\n{'='*60}")
+    print(f"{'1/80 CROSSING SUMMARY':^60}")
+    print(f"{'BIN_THR':<10} | {'RMS Thresh':<12} | {'TPR (Eff)':<10} | {'FPR':<10} | {'Purity':<10}")
+    print(f"{'-'*60}")
+    for b in bin_thresholds_to_test:
+        stats = crossing_stats.get(b, {})
+        if stats:
+            print(f"{b:<10} | {stats['RMS_Thresh']:<12.3f} | {stats['TPR']:<10.4f} | {stats['FPR']:<10.6f} | {stats['Purity']:<10.4f}")
+        else:
+            print(f"{b:<10} | {'Never reached 1/80 limit':<47}")
+    print(f"{'='*60}\n")
 
     root_file.Close()
     print(f"Success! Data saved to {output_root}")
@@ -288,4 +340,13 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
 
 if __name__ == "__main__":
     optimize_trigger_config("X_test_data.npy", "y_test_labels.npy")
-    
+        
+    try:
+        subprocess.run(["python", "viz_continuous_stream.py"], check=True)
+    except FileNotFoundError:
+        print("Error: Could not find 'viz_continuous_stream.py'. Make sure it exists in the current working directory.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error: The visualization script crashed with exit code {e.returncode}.")
+    except Exception as e:
+        print(f"An unexpected error occurred while trying to run the visualization: {e}")
+        
