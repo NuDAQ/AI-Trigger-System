@@ -3,7 +3,7 @@ import array
 import ROOT
 
 def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimization.root", output_pdf="trigger_optimization_report.pdf"):
-    print("Loading data...")
+    print("Loading data")
     X_test = np.load(data_path)
     y_test = np.load(labels_path)
     
@@ -13,16 +13,11 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     signal_mask = (y_test == 1)
     noise_mask = (y_test == 0)
     
-    # ---------------------------------------------------------
-    # NEW: Calculate the true RMS of the background noise
-    # ---------------------------------------------------------
     pure_noise_waveforms = X_test[noise_mask]
     noise_rms = np.std(pure_noise_waveforms)
     print(f"Calculated Background Noise RMS: {noise_rms:.6f}")
 
-    # Scale to match VHDL fixed-point math (x64)
     X_int = (X_test * 64).astype(np.int32)
-    # Duplicate channels 0-3 to 4-7 to form 8 channels
     X_8ch = np.concatenate((X_int, X_int), axis=1)
     
     total_signals = np.sum(signal_mask)
@@ -31,8 +26,7 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
 
     MAX_TRIGGER_RATE = 1.0 / 80.0
     
-    # Get max amplitudes and convert to RMS units for the histogram
-    max_amps_per_event_hw = np.max(X_8ch, axis=(1, 2))
+    max_amps_per_event_hw = np.max(np.abs(X_8ch), axis=(1, 2))
     max_amps_per_event_rms = (max_amps_per_event_hw / 64.0) / noise_rms
     
     sig_max_amps_rms = max_amps_per_event_rms[signal_mask]
@@ -41,17 +35,15 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     max_amp_overall_hw = int(np.max(max_amps_per_event_hw))
     max_amp_overall_rms = (max_amp_overall_hw / 64.0) / noise_rms
 
-    # Sweep every single integer hardware threshold
     thresholds = np.arange(0, max_amp_overall_hw + 1, 1) 
     bin_thresholds_to_test = [4, 6, 8] 
-    WINDOW_SIZE = 32 # Emulating VHDL WINDOW = 32
+    WINDOW_SIZE = 32
 
     graphs_eff, graphs_fpr, graphs_roc, graphs_rate, graphs_pur = {}, {}, {}, {}, {}
     colors = {4: ROOT.kBlue, 6: ROOT.kOrange+1, 8: ROOT.kGreen+2}
 
-    print(f"Sweeping {len(thresholds)} individual thresholds with WINDOW={WINDOW_SIZE}...")
+    print(f"Sweeping {len(thresholds)} individual thresholds with Hi-Lo WINDOW={WINDOW_SIZE}...")
     
-    # Store intersections
     safe_thresholds_hw = {}
     safe_thresholds_rms = {}
     safe_efficiencies = {}
@@ -65,24 +57,36 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
         safe_eff = None
         
         for thresh in thresholds:
-            # ---------------------------------------------------------
-            # NEW: Vectorized VHDL emulation for exact 32-sample WINDOW
-            # ---------------------------------------------------------
-            crossed_thresh = (X_8ch > thresh)
-            gates_open = np.zeros_like(crossed_thresh)
+            HILO_WINDOW = 5       # Intra-channel gate (e.g., 5 ns)
+            COINCIDENCE_WINDOW = 32 # Inter-channel gate (e.g., 32 ns)
+
+            crossed_hi = (X_8ch > thresh)
+            crossed_lo = (X_8ch < -thresh)
             
-            # Slide and OR to stretch the True flags by exactly 32 samples
-            for shift in range(WINDOW_SIZE):
+            gates_hi = np.zeros_like(crossed_hi)
+            gates_lo = np.zeros_like(crossed_lo)
+            
+            for shift in range(HILO_WINDOW):
                 if shift == 0:
-                    gates_open |= crossed_thresh
+                    gates_hi |= crossed_hi
+                    gates_lo |= crossed_lo
                 else:
-                    gates_open[:, :, shift:] |= crossed_thresh[:, :, :-shift]
+                    gates_hi[:, :, shift:] |= crossed_hi[:, :, :-shift]
+                    gates_lo[:, :, shift:] |= crossed_lo[:, :, :-shift]
                     
-            multiplicity = np.sum(gates_open, axis=1)
-            event_triggered = np.any(multiplicity >= bin_thr, axis=1)
-            # ---------------------------------------------------------
+            bipolar_trigger = gates_hi & gates_lo
             
-            # Metrics
+            coincidence_gates = np.zeros_like(bipolar_trigger)
+            
+            for shift in range(COINCIDENCE_WINDOW):
+                if shift == 0:
+                    coincidence_gates |= bipolar_trigger
+                else:
+                    coincidence_gates[:, :, shift:] |= bipolar_trigger[:, :, :-shift]
+            
+            multiplicity = np.sum(coincidence_gates, axis=1)
+            event_triggered = np.any(multiplicity >= bin_thr, axis=1)
+            
             tp = np.sum(event_triggered & signal_mask)
             fp = np.sum(event_triggered & noise_mask)
             tot_trig = tp + fp
@@ -92,10 +96,8 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
             trig_rate = tot_trig / total_events if total_events > 0 else 0.0
             purity = tp / tot_trig if tot_trig > 0 else 1.0 
             
-            # Convert Hardware Threshold -> Physical -> RMS units
             thresh_rms = (thresh / 64.0) / noise_rms
             
-            # Check 1/80 intersection
             if not found_safe and trig_rate <= MAX_TRIGGER_RATE:
                 safe_thr_hw = thresh
                 safe_thr_rms = thresh_rms
@@ -139,10 +141,9 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     ROOT.gROOT.SetBatch(True) 
     root_file = ROOT.TFile(output_root, "RECREATE")
     
-    # --- Canvas 1: Max Amplitude Distribution (In RMS) ---
     c_hist = ROOT.TCanvas("c_hist", "Amplitude Distributions", 800, 600)
-    h_sig = ROOT.TH1F("h_sig", "Max Amplitude per Event;Maximum Amplitude (Multiples of Noise RMS);Events", 100, 0, max_amp_overall_rms)
-    h_noise = ROOT.TH1F("h_noise", "Max Amplitude per Event", 100, 0, max_amp_overall_rms)
+    h_sig = ROOT.TH1F("h_sig", "Max Absolute Amplitude per Event;Maximum Amplitude (Multiples of Noise RMS);Events", 100, 0, max_amp_overall_rms)
+    h_noise = ROOT.TH1F("h_noise", "Max Absolute Amplitude per Event", 100, 0, max_amp_overall_rms)
     
     for val in sig_max_amps_rms: h_sig.Fill(val)
     for val in noise_max_amps_rms: h_noise.Fill(val)
@@ -152,7 +153,6 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     h_sig.SetFillColorAlpha(ROOT.kBlue, 0.5)
     h_sig.SetLineColor(ROOT.kBlue)
     
-    # Prevent Log(0) error
     h_noise.SetMinimum(0.5)
     h_sig.SetMinimum(0.5)
     
@@ -169,13 +169,11 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     c_hist.Write()
     c_hist.Print(output_pdf + "(") 
 
-    # --- Canvas 2: Total Trigger Rate ---
     c_rate = ROOT.TCanvas("c_rate", "Total Trigger Rate", 800, 600)
     mg_rate = ROOT.TMultiGraph()
-    mg_rate.SetTitle("Total Trigger Rate vs Threshold")
+    mg_rate.SetTitle("Total Hi-Lo Trigger Rate vs Threshold")
     for b in bin_thresholds_to_test: mg_rate.Add(graphs_rate[b])
     
-    # Prevent Log(0) error
     mg_rate.SetMinimum(1e-5)
     mg_rate.Draw("AL")
     
@@ -219,7 +217,6 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     c_rate.Write()
     c_rate.Print(output_pdf) 
 
-    # --- Canvas 3: Efficiency & FPR ---
     c_rates = ROOT.TCanvas("c_rates", "Efficiency and FPR", 800, 600)
     mg_rates = ROOT.TMultiGraph()
     mg_rates.SetTitle("Efficiency (Solid) & FPR (Dashed) vs Threshold")
@@ -244,7 +241,6 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     c_rates.Write()
     c_rates.Print(output_pdf)
 
-    # --- Canvas 4: ROC Curve ---
     c_roc = ROOT.TCanvas("c_roc", "ROC Curve", 800, 600)
     mg_roc = ROOT.TMultiGraph()
     mg_roc.SetTitle("ROC Curve")
@@ -266,7 +262,6 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     c_roc.Write()
     c_roc.Print(output_pdf) 
     
-    # --- Canvas 5: Purity vs Threshold ---
     c_pur = ROOT.TCanvas("c_pur", "Signal Purity", 800, 600)
     mg_pur = ROOT.TMultiGraph()
     mg_pur.SetTitle("Signal Purity of Triggered Events")
@@ -293,3 +288,4 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
 
 if __name__ == "__main__":
     optimize_trigger_config("X_test_data.npy", "y_test_labels.npy")
+    
