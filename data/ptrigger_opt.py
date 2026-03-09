@@ -46,7 +46,16 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
         
         for thresh in thresholds:
             crossed_thresh = (X_8ch > thresh)
-            gates_open = np.maximum.accumulate(crossed_thresh, axis=2)
+            
+            gates_open = np.zeros_like(crossed_thresh)
+            
+            WINDOW_SIZE = 32
+            for shift in range(WINDOW_SIZE):
+                if shift == 0:
+                    gates_open |= crossed_thresh
+                else:
+                    gates_open[:, :, shift:] |= crossed_thresh[:, :, :-shift]
+                    
             multiplicity = np.sum(gates_open, axis=1)
             event_triggered = np.any(multiplicity >= bin_thr, axis=1)
             
@@ -120,6 +129,9 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     h_sig.SetFillColorAlpha(ROOT.kBlue, 0.5)
     h_sig.SetLineColor(ROOT.kBlue)
     
+    h_noise.SetMinimum(0.5) 
+    h_sig.SetMinimum(0.5)
+
     h_noise.Draw("HIST")
     h_sig.Draw("HIST SAME")
     ROOT.gPad.SetLogy()
@@ -138,6 +150,7 @@ def optimize_trigger_config(data_path, labels_path, output_root="trigger_optimiz
     mg_rate = ROOT.TMultiGraph()
     mg_rate.SetTitle("Total Trigger Rate vs Threshold")
     for b in bin_thresholds_to_test: mg_rate.Add(graphs_rate[b])
+    mg_rate.SetMinimum(1e-5) # Prevent log(0) error
     mg_rate.Draw("AL")
     
     # FORCE AXES DRAWING
