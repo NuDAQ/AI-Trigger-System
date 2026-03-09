@@ -11,11 +11,14 @@
 ##	DO NOT IGNORE THE FOLLOWING FILES
 ###########################################################################
 !Bender.*
-!co_repo/
-!co_repo/**/
+!AI_Trigger_System/
+!AI_Trigger_System/**/
 
 !HDL/
 !HDL/**
+
+!data/
+!data/**
 
 !materials/
 !materials/**

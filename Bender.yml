@@ -16,3 +16,12 @@ dependencies:
   cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "^1.0.0" }
   gateware: { git: "git@gitlab.com:NuRadioDAQ/gateware.git", rev: "cb05ada0ae27b6c9142e629d0e845f0f086e9d76" }
 
+sources:
+  - HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd
+  - HDL/HiLoPath/HILO_PATH_WRAPPER.vhd
+  - HDL/HiLoPath/TEMP_SYS_TOP.vhd
+  - HDL/HiLoPath/sim/TEMP_SYS_TOP_TB_WRAP.vhd
+  - target: sim
+    files:
+      - HDL/HiLoPath/sim/tb_temp_sys_top.sv
+

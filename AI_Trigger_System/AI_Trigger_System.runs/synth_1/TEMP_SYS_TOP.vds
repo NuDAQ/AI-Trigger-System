@@ -1,0 +1,1090 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Fri Mar  6 17:43:02 2026
+# Process ID: 1095351
+# Current directory: /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1
+# Command line: vivado -log TEMP_SYS_TOP.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source TEMP_SYS_TOP.tcl
+# Log file: /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/TEMP_SYS_TOP.vds
+# Journal file: /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/vivado.jou
+# Running On: AlbertsUbuntu, OS: Linux, CPU Frequency: 1206.511 MHz, CPU Physical cores: 24, Host memory: 16441 MB
+#-----------------------------------------------------------
+source TEMP_SYS_TOP.tcl -notrace
+Command: read_checkpoint -auto_incremental -incremental /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.srcs/utils_1/imports/synth_1/TEMP_SYS_TOP.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.srcs/utils_1/imports/synth_1/TEMP_SYS_TOP.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top TEMP_SYS_TOP -part xcku5p-ffvb676-2-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcku5p'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcku5p'
+INFO: [Device 21-403] Loading part xcku5p-ffvb676-2-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1095401
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2731.258 ; gain = 330.777 ; free physical = 1928 ; free virtual = 31393
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'TEMP_SYS_TOP' [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/TEMP_SYS_TOP.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'HILO_PATH_WRAPPER' [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/HILO_PATH_WRAPPER.vhd:24]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger.vhd:22]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 0 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized0' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 1 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized0' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized1' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 2 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized1' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized2' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 3 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized2' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized3' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 4 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized3' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized4' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 5 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized4' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized5' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 6 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized5' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'PRE_TRIGGER_1CH__parameterized6' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+	Parameter CH bound to: 7 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER_1CH__parameterized6' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'MULT2BIN' [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Mult_to_bin.vhd:14]
+WARNING: [Synth 8-614] signal 'BIN_THR' is read in the process but is not in the sensitivity list [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Mult_to_bin.vhd:32]
+INFO: [Synth 8-256] done synthesizing module 'MULT2BIN' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Mult_to_bin.vhd:14]
+INFO: [Synth 8-256] done synthesizing module 'PRE_TRIGGER' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger.vhd:22]
+INFO: [Synth 8-638] synthesizing module 'CNN_FIFO_CONNECTOR' [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd:33]
+	Parameter C_CH0 bound to: 0 - type: integer 
+	Parameter C_CH1 bound to: 1 - type: integer 
+	Parameter C_CH2 bound to: 2 - type: integer 
+	Parameter C_CH3 bound to: 3 - type: integer 
+INFO: [Synth 8-3491] module 'fifo_async_1024_to_64' declared at '/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/.Xil/Vivado-1095351-AlbertsUbuntu/realtime/fifo_async_1024_to_64_stub.v:6' bound to instance 'u_ASYNC_FIFO' of component 'fifo_async_1024_to_64' [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd:64]
+INFO: [Synth 8-6157] synthesizing module 'fifo_async_1024_to_64' [/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/.Xil/Vivado-1095351-AlbertsUbuntu/realtime/fifo_async_1024_to_64_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'fifo_async_1024_to_64' (0#1) [/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/.Xil/Vivado-1095351-AlbertsUbuntu/realtime/fifo_async_1024_to_64_stub.v:6]
+INFO: [Synth 8-256] done synthesizing module 'CNN_FIFO_CONNECTOR' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd:33]
+INFO: [Synth 8-3491] module 'WRAPPER_TOP' declared at '/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v:22' bound to instance 'u_CNN_WRAPPER' of component 'WRAPPER_TOP' [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/HILO_PATH_WRAPPER.vhd:94]
+INFO: [Synth 8-6157] synthesizing module 'WRAPPER_TOP' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v:22]
+	Parameter INPUT_WIDTH bound to: 64 - type: integer 
+	Parameter OUTPUT_WIDTH bound to: 32 - type: integer 
+	Parameter NUM_TIMESTEPS bound to: 256 - type: integer 
+	Parameter NUM_CHANNELS bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'cnn_core' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_16_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_16_1.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_flow_control_loop_pipe_sequential_init' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_flow_control_loop_pipe_sequential_init' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_16_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_16_1.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_sparsemux_9_2_12_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_9_2_12_1_1.v:9]
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 12 - type: integer 
+	Parameter din2_WIDTH bound to: 12 - type: integer 
+	Parameter din3_WIDTH bound to: 12 - type: integer 
+	Parameter def_WIDTH bound to: 12 - type: integer 
+	Parameter sel_WIDTH bound to: 2 - type: integer 
+	Parameter dout_WIDTH bound to: 12 - type: integer 
+	Parameter CASE0 bound to: 2'b00 
+	Parameter CASE1 bound to: 2'b01 
+	Parameter CASE2 bound to: 2'b10 
+	Parameter CASE3 bound to: 2'b11 
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+INFO: [Synth 8-226] default block is never used [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_9_2_12_1_1.v:54]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_sparsemux_9_2_12_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_9_2_12_1_1.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_array_ap_fixed_256u_config2_Pipeline_VITIS_LOOP_25_3.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_regslice_both' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v:11]
+	Parameter DataWidth bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_regslice_both' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s_in_databkb' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s_in_databkb.v:7]
+	Parameter DataWidth bound to: 12 - type: integer 
+	Parameter AddressWidth bound to: 8 - type: integer 
+	Parameter AddressRange bound to: 256 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s_in_databkb' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s_in_databkb.v:7]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_repack_stream_array_array_ap_fixed_1u_1024_Pipeline_VITIS_LOOP_254_4' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_array_ap_fixed_1u_1024_Pipeline_VITIS_LOOP_254_4.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_repack_stream_array_array_ap_fixed_1u_1024_Pipeline_VITIS_LOOP_254_4' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_array_ap_fixed_1u_1024_Pipeline_VITIS_LOOP_254_4.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_dense_latency_ap_fixed_12_6_5_3_0_ap_fixed_17_9_5_3_0_config4_mult_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_latency_ap_fixed_12_6_5_3_0_ap_fixed_17_9_5_3_0_config4_mult_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_8ns_20_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_8ns_20_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 8 - type: integer 
+	Parameter dout_WIDTH bound to: 20 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_8ns_20_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_8ns_20_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_7ns_19_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7ns_19_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 7 - type: integer 
+	Parameter dout_WIDTH bound to: 19 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_7ns_19_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7ns_19_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_7s_19_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7s_19_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 7 - type: integer 
+	Parameter dout_WIDTH bound to: 19 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_7s_19_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_7s_19_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_9ns_20_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_9ns_20_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 9 - type: integer 
+	Parameter dout_WIDTH bound to: 20 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_9ns_20_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_9ns_20_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_8s_20_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_8s_20_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 8 - type: integer 
+	Parameter dout_WIDTH bound to: 20 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_8s_20_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_8s_20_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_9s_20_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_9s_20_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 9 - type: integer 
+	Parameter dout_WIDTH bound to: 20 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_9s_20_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_9s_20_1_0.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_12s_6s_18_1_0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_6s_18_1_0.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 12 - type: integer 
+	Parameter din1_WIDTH bound to: 6 - type: integer 
+	Parameter dout_WIDTH bound to: 18 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_12s_6s_18_1_0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_12s_6s_18_1_0.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_dense_latency_ap_fixed_12_6_5_3_0_ap_fixed_17_9_5_3_0_config4_mult_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_latency_ap_fixed_12_6_5_3_0_ap_fixed_17_9_5_3_0_config4_mult_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_flow_control_loop_pipe' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_flow_control_loop_pipe' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_shift_line_buffer_array_ap_fixed_16_6_5_3_0_7u_config6_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_shift_line_buffer_array_ap_fixed_16_6_5_3_0_7u_config6_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_shift_line_buffer_array_ap_fixed_16_6_5_3_0_7u_config6_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_shift_line_buffer_array_ap_fixed_16_6_5_3_0_7u_config6_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_7ns_23_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_7ns_23_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 7 - type: integer 
+	Parameter dout_WIDTH bound to: 23 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_7ns_23_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_7ns_23_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_6ns_22_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_6ns_22_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 6 - type: integer 
+	Parameter dout_WIDTH bound to: 22 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_6ns_22_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_6ns_22_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_9ns_24_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_9ns_24_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 9 - type: integer 
+	Parameter dout_WIDTH bound to: 24 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_9ns_24_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_9ns_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_8ns_24_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_8ns_24_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 8 - type: integer 
+	Parameter dout_WIDTH bound to: 24 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_8ns_24_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_8ns_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_8s_24_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_8s_24_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 8 - type: integer 
+	Parameter dout_WIDTH bound to: 24 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_8s_24_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_8s_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_5s_21_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_5s_21_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 5 - type: integer 
+	Parameter dout_WIDTH bound to: 21 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_5s_21_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_5s_21_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_7s_23_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_7s_23_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 7 - type: integer 
+	Parameter dout_WIDTH bound to: 23 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_7s_23_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_7s_23_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_6s_22_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_6s_22_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 6 - type: integer 
+	Parameter dout_WIDTH bound to: 22 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_6s_22_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_6s_22_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_10ns_24_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_10ns_24_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 10 - type: integer 
+	Parameter dout_WIDTH bound to: 24 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_10ns_24_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_10ns_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_mul_16s_5ns_21_1_1' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_5ns_21_1_1.v:5]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 1 - type: integer 
+	Parameter din0_WIDTH bound to: 16 - type: integer 
+	Parameter din1_WIDTH bound to: 5 - type: integer 
+	Parameter dout_WIDTH bound to: 21 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_mul_16s_5ns_21_1_1' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_16s_5ns_21_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_regslice_both__parameterized0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v:11]
+	Parameter DataWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_regslice_both__parameterized0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w3072_d4_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w3072_d4_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w3072_d4_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w3072_d4_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 3072 - type: integer 
+	Parameter ADDR_WIDTH bound to: 2 - type: integer 
+	Parameter DEPTH bound to: 3 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w3072_d4_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w3072_d4_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w3072_d4_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w3072_d4_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w12_d1024_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w12_d1024_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w12_d1024_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w12_d1024_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 12 - type: integer 
+	Parameter ADDR_WIDTH bound to: 10 - type: integer 
+	Parameter DEPTH bound to: 1023 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w12_d1024_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w12_d1024_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w12_d1024_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w12_d1024_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w119_d336_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w119_d336_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w119_d336_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w119_d336_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 119 - type: integer 
+	Parameter ADDR_WIDTH bound to: 9 - type: integer 
+	Parameter DEPTH bound to: 335 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w119_d336_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w119_d336_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w119_d336_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w119_d336_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w112_d336_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d336_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w112_d336_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d336_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 112 - type: integer 
+	Parameter ADDR_WIDTH bound to: 9 - type: integer 
+	Parameter DEPTH bound to: 335 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w112_d336_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d336_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w112_d336_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d336_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w112_d168_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d168_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w112_d168_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d168_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 112 - type: integer 
+	Parameter ADDR_WIDTH bound to: 8 - type: integer 
+	Parameter DEPTH bound to: 167 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w112_d168_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d168_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w112_d168_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w112_d168_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w672_d28_A' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w672_d28_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_fifo_w672_d28_A_ram' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w672_d28_A.v:188]
+	Parameter MEM_STYLE bound to: auto - type: string 
+	Parameter DATA_WIDTH bound to: 672 - type: integer 
+	Parameter ADDR_WIDTH bound to: 5 - type: integer 
+	Parameter DEPTH bound to: 27 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w672_d28_A_ram' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w672_d28_A.v:188]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_fifo_w672_d28_A' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w672_d28_A.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' of module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' of module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' of module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' of module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:11]
+INFO: [Synth 8-6157] synthesizing module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:117]
+	Parameter DATA_WIDTH bound to: 1 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1 - type: integer 
+	Parameter DEPTH bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:117]
+WARNING: [Synth 8-7071] port 'reset' of module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' is unconnected for instance 'U_cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:50]
+WARNING: [Synth 8-7023] instance 'U_cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' of module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg' has 6 connections declared, but only 5 given [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:50]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'cnn_core' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-338ad22ef78c637b/cnn_core_project/cnn_core_prj/solution1/impl/verilog/cnn_core.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'WRAPPER_TOP' (0#1) [/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v:22]
+INFO: [Synth 8-256] done synthesizing module 'HILO_PATH_WRAPPER' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/HILO_PATH_WRAPPER.vhd:24]
+INFO: [Synth 8-256] done synthesizing module 'TEMP_SYS_TOP' (0#1) [/home/work1/Works/AI-Trigger-System/HDL/HiLoPath/TEMP_SYS_TOP.vhd:21]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[14] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[15] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[14] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[15] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[14] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[15] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[14] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[15] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[14] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[15] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element ot_reg was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:58]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[0] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[1] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[2] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[3] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[4] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[5] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[6] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[7] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[8] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[9] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[10] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[11] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[12] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+WARNING: [Synth 8-6014] Unused sequential element time_window_reg[13] was removed.  [/home/work1/Works/AI-Trigger-System/HDL/PreTrigger/Pre_trigger_1ch.vhd:60]
+INFO: [Common 17-14] Message 'Synth 8-6014' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_U0_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176eOg_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_U0_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6dEe_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_relu_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_relu_config5_U0_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_17_9_5_3_0_7u_config4_U0_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset in module cnn_core_start_for_repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024cud_ShiftReg is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[5] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[4] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[3] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[2] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[1] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[0] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[5] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[4] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[3] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[2] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[1] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[0] in module cnn_core_dense_array_array_ap_fixed_17_9_5_3_0_1u_config10_Pipeline_DataPrepare is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[5] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[4] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[3] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[2] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[1] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[0] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[5] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[4] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[3] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[2] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[1] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[0] in module cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_done_int in module cnn_core_flow_control_loop_pipe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[5] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[4] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[3] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[2] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[1] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[0] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[5] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[4] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[3] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[2] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[1] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[0] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[5] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[4] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[3] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[2] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[1] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_num_data_valid[0] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[5] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[4] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[3] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[2] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[1] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer13_out_fifo_cap[0] in module cnn_core_repack_stream_array_ap_fixed_42u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[8] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[7] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[6] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[5] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[4] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[3] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[2] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[1] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[0] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[8] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[7] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[6] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[5] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[4] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[3] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[2] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[1] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[0] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[5] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[4] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[3] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[2] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[1] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_num_data_valid[0] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[5] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[4] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[3] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[2] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[1] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer12_out_fifo_cap[0] in module cnn_core_repack_stream_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_42u_1176_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[8] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[7] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[6] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[5] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[4] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[3] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[2] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[1] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_num_data_valid[0] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[8] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[7] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[6] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port layer6_out_fifo_cap[5] in module cnn_core_pooling2d_cl_array_ap_fixed_7u_array_ap_fixed_16_6_5_3_0_7u_config6_s is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 3103.828 ; gain = 703.348 ; free physical = 1483 ; free virtual = 30960
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 3103.828 ; gain = 703.348 ; free physical = 1488 ; free virtual = 30965
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 3103.828 ; gain = 703.348 ; free physical = 1488 ; free virtual = 30965
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.54 ; elapsed = 00:00:00.54 . Memory (MB): peak = 3103.828 ; gain = 0.000 ; free physical = 1496 ; free virtual = 30971
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/fifo_async_1024_to_64/fifo_async_1024_to_64_in_context.xdc] for cell 'u_HILO_PATH/u_CONNECTOR/u_ASYNC_FIFO'
+Finished Parsing XDC File [/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/fifo_async_1024_to_64/fifo_async_1024_to_64_in_context.xdc] for cell 'u_HILO_PATH/u_CONNECTOR/u_ASYNC_FIFO'
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3328.664 ; gain = 0.000 ; free physical = 1460 ; free virtual = 30938
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.16 ; elapsed = 00:00:00.15 . Memory (MB): peak = 3328.699 ; gain = 0.000 ; free physical = 1460 ; free virtual = 30938
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:19 ; elapsed = 00:00:18 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 1461 ; free virtual = 30940
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcku5p-ffvb676-2-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:19 ; elapsed = 00:00:18 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 1459 ; free virtual = 30938
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for u_HILO_PATH/u_CONNECTOR/u_ASYNC_FIFO. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:19 ; elapsed = 00:00:18 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 1461 ; free virtual = 30939
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Preparing Guide Design
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Doing Graph Differ : Time (s): cpu = 00:00:20 ; elapsed = 00:00:19 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 1277 ; free virtual = 30762
+---------------------------------------------------------------------------------
+cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB5cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB6cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB3cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB7cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s__GC0cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_scnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB8cnn_core__GCB2cnn_core__GCB1HILO_PATH_WRAPPER__GC0cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB0cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB9cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4---------------------------------------------------------------------------------
+Finished Preparing Guide Design : Time (s): cpu = 00:00:21 ; elapsed = 00:00:20 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 968 ; free virtual = 30452
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 828 ; free virtual = 30314
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Mimic Skeleton from Reference
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Mimic Skeleton from Reference : Time (s): cpu = 00:00:23 ; elapsed = 00:00:22 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 463 ; free virtual = 29949
+---------------------------------------------------------------------------------
+
+
+Incremental Synthesis Report Summary:
+
+1. Incremental synthesis run: yes
+
+   Stitch points used : changed
+
+
+2. Change Summary
+
+Report Incremental Modules: 
++-+----------------+------------+----------+----------+
+| |Changed Modules |Replication |Instances |Changed % |
++-+----------------+------------+----------+----------+
++-+----------------+------------+----------+----------+
+
+
+   Full Design Size (number of cells) : 281507
+   Resynthesis Design Size (number of cells) : 0
+   Resynth % : 0.0000,  Reuse % : 100.0000
+
+3. Reference Checkpoint Information
+
++----------------------------------------------------------------------------------------------------------------------------------------+
+| DCP Location:  | /home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.srcs/utils_1/imports/synth_1/TEMP_SYS_TOP.dcp |
++----------------------------------------------------------------------------------------------------------------------------------------+
+
+
++--------------------------------+------------------------------+
+|         DCP Information        |             Value            |
++--------------------------------+------------------------------+
+| Vivado Version                 |                    v2023.2 |
+| DCP State                      |                              |
++--------------------------------+------------------------------+
+
+
+
+Report RTL Partitions: 
++------+---------------------------------------------------------------------------------------+------------+----------+
+|      |RTL Partition                                                                          |Replication |Instances |
++------+---------------------------------------------------------------------------------------+------------+----------+
+|1     |cnn_core_transpose_array_ap_fixed_4u_array_ap_fixed_12_6_5_3_0_256u_config2_s_#REUSE#  |           1|         0|
+|2     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB0_#REUSE#    |           1|         0|
+|3     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1_#REUSE#    |           1|         0|
+|4     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2_#REUSE#    |           1|         0|
+|5     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB3_#REUSE#    |           1|         0|
+|6     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4_#REUSE#    |           1|         0|
+|7     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB5_#REUSE#    |           1|         0|
+|8     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB6_#REUSE#    |           1|         0|
+|9     |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB7_#REUSE#    |           1|         0|
+|10    |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB8_#REUSE#    |           1|         0|
+|11    |cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB9_#REUSE#    |           1|         0|
+|12    |cnn_core_dense_array_ap_fixed_42u_array_ap_fixed_17_9_5_3_0_1u_config10_s__GC0_#REUSE# |           1|         0|
+|13    |cnn_core__GCB1_#REUSE#                                                                 |           1|         0|
+|14    |cnn_core__GCB2_#REUSE#                                                                 |           1|         0|
+|15    |HILO_PATH_WRAPPER__GC0_#REUSE#                                                         |           1|         0|
++------+---------------------------------------------------------------------------------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1824 (col length:96)
+BRAMs: 960 (col length: RAMB18 96 RAMB36 48)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7077] IncrSyn: subsequent runs will still be incremental as the reference run was parallel and that data is reused
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:26 ; elapsed = 00:00:41 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 336 ; free virtual = 23802
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Stitch Unchanged AreaOpt Partitions
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Stitch Unchanged AreaOpt Partitions : Time (s): cpu = 00:00:26 ; elapsed = 00:00:43 . Memory (MB): peak = 3328.699 ; gain = 928.219 ; free physical = 357 ; free virtual = 23701
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:32 ; elapsed = 00:00:51 . Memory (MB): peak = 3620.660 ; gain = 1220.180 ; free physical = 320 ; free virtual = 23212
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:32 ; elapsed = 00:00:51 . Memory (MB): peak = 3621.660 ; gain = 1221.180 ; free physical = 306 ; free virtual = 23205
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7077] IncrSyn: subsequent runs will still be incremental as the reference run was parallel and that data is reused
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:32 ; elapsed = 00:00:51 . Memory (MB): peak = 3641.168 ; gain = 1240.688 ; free physical = 385 ; free virtual = 23190
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Stitch Unchanged Partitions
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Stitch Unchanged Partitions : Time (s): cpu = 00:00:33 ; elapsed = 00:00:52 . Memory (MB): peak = 3641.168 ; gain = 1240.688 ; free physical = 311 ; free virtual = 23193
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance u_HILO_PATH/u_CNN_WRAPPER/cnn_core_inst/repack_stream_array_ap_fixed_256u_array_ap_fixed_12_6_5_3_0_1u_1024_U0/in_data16_U/ram_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_HILO_PATH/u_CNN_WRAPPER/cnn_core_inst/layer11_out_U/U_cnn_core_fifo_w12_d1024_A_ram/mem_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_HILO_PATH/u_CNN_WRAPPER/cnn_core_inst/layer4_out_U/U_cnn_core_fifo_w119_d336_A_ram/mem_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_HILO_PATH/u_CNN_WRAPPER/cnn_core_inst/layer4_out_U/U_cnn_core_fifo_w119_d336_A_ram/mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:40 ; elapsed = 00:01:00 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 362 ; free virtual = 22941
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:41 ; elapsed = 00:01:00 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 318 ; free virtual = 22929
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:47 ; elapsed = 00:01:06 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 326 ; free virtual = 22916
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:47 ; elapsed = 00:01:07 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 327 ; free virtual = 22917
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:48 ; elapsed = 00:01:07 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 329 ; free virtual = 22920
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:48 ; elapsed = 00:01:08 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 327 ; free virtual = 22919
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name                                                                    | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 18     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 18     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A'*B        | 30     | 6      | -      | -      | 19     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 6      | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 19     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 19     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A'*B        | 30     | 7      | -      | -      | 20     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 7      | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A'*B)'     | 30     | 18     | -      | -      | 20     | 1    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 18     | -      | -      | 20     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | A''*B       | 30     | 8      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_compute_output_buffer_1d_array_array_ap_fixed_17_9_5_3_0_7u_config4_s | (A''*B)'    | 30     | 18     | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 9      | -      | -      | 26     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB0    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB3    | (A''*B)'    | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB1    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB2    | A''*B       | 30     | 4      | -      | -      | 21     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 5      | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 18     | -      | -      | 22     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 6      | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 23     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 7      | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 18     | -      | -      | 24     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | (A''*B)'    | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 1    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|TEMP_SYS_TOP                                                                   | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
+|cnn_core_dense_latency_wrapper_ap_fixed_ap_fixed_17_9_5_3_0_config10_s__GB4    | A''*B       | 30     | 8      | -      | -      | 25     | 2    | 0    | -    | -    | -     | 0    | 0    | 
++-------------------------------------------------------------------------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++------+----------------------+----------+
+|      |BlackBox name         |Instances |
++------+----------------------+----------+
+|1     |fifo_async_1024_to_64 |         1|
++------+----------------------+----------+
+
+Report Cell Usage: 
++------+-------------------+------+
+|      |Cell               |Count |
++------+-------------------+------+
+|1     |fifo_async_1024_to |     1|
+|2     |BUFG               |     2|
+|3     |CARRY8             |  4197|
+|4     |DSP_ALU            |   205|
+|5     |DSP_A_B_DATA       |   205|
+|7     |DSP_C_DATA         |   205|
+|9     |DSP_MULTIPLIER     |   205|
+|10    |DSP_M_DATA         |   205|
+|11    |DSP_OUTPUT         |   205|
+|13    |DSP_PREADD         |   205|
+|14    |DSP_PREADD_DATA    |   205|
+|15    |LUT1               |  1555|
+|16    |LUT2               | 20683|
+|17    |LUT3               |  5285|
+|18    |LUT4               |  6906|
+|19    |LUT5               |  1762|
+|20    |LUT6               |  7077|
+|21    |MUXF7              |    34|
+|22    |RAM32M             |     1|
+|23    |RAM32M16           |   315|
+|24    |RAMB18E2           |     3|
+|25    |RAMB36E2           |     5|
+|26    |FDCE               |   192|
+|27    |FDRE               | 59803|
+|28    |FDSE               |    35|
+|29    |IBUF               |  1541|
+|30    |OBUF               |    34|
++------+-------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:48 ; elapsed = 00:01:08 . Memory (MB): peak = 3798.176 ; gain = 1397.695 ; free physical = 324 ; free virtual = 22916
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 4 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:43 ; elapsed = 00:01:05 . Memory (MB): peak = 3802.086 ; gain = 1176.734 ; free physical = 6565 ; free virtual = 30687
+Synthesis Optimization Complete : Time (s): cpu = 00:00:50 ; elapsed = 00:01:10 . Memory (MB): peak = 3802.086 ; gain = 1401.605 ; free physical = 6569 ; free virtual = 30691
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.67 ; elapsed = 00:00:00.67 . Memory (MB): peak = 3802.086 ; gain = 0.000 ; free physical = 6582 ; free virtual = 30707
+INFO: [Netlist 29-17] Analyzing 6295 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3996.117 ; gain = 0.000 ; free physical = 6373 ; free virtual = 30529
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2064 instances were transformed.
+  BUFG => BUFGCE: 2 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 205 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 1541 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 1 instance 
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 315 instances
+
+Synth Design complete | Checksum: a7c31fee
+INFO: [Common 17-83] Releasing license: Synthesis
+188 Infos, 219 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:05 ; elapsed = 00:01:25 . Memory (MB): peak = 3996.152 ; gain = 2563.164 ; free physical = 6286 ; free virtual = 30464
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 8270.043; main = 2447.280; forked = 7572.559
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 16037.195; main = 3996.121; forked = 12239.016
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.29 ; elapsed = 00:00:00.09 . Memory (MB): peak = 4020.129 ; gain = 0.000 ; free physical = 6273 ; free virtual = 30475
+INFO: [Common 17-1381] The checkpoint '/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.runs/synth_1/TEMP_SYS_TOP.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 4020.129 ; gain = 23.977 ; free physical = 5893 ; free virtual = 30339
+INFO: [runtcl-4] Executing : report_utilization -file TEMP_SYS_TOP_utilization_synth.rpt -pb TEMP_SYS_TOP_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Mar  6 17:44:42 2026...

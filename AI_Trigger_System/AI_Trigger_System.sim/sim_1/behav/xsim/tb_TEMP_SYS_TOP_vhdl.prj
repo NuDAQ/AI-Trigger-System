@@ -1,0 +1,14 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../../HDL/PreTrigger/PRE_TRIGGER_PKG.vhd" \
+"../../../../../HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd" \
+"../../../../../HDL/PreTrigger/ila_pkg.vhd" \
+"../../../../../HDL/PreTrigger/Pre_trigger_1ch.vhd" \
+"../../../../../HDL/PreTrigger/Mult_to_bin.vhd" \
+"../../../../../HDL/PreTrigger/Pre_trigger.vhd" \
+"../../../../../HDL/HiLoPath/HILO_PATH_WRAPPER.vhd" \
+"../../../../../HDL/HiLoPath/TEMP_SYS_TOP.vhd" \
+"../../../../../HDL/HiLoPath/sim/TEMP_SYS_TOP_TB_WRAP.vhd" \
+
+# Do not sort compile order
+nosort
