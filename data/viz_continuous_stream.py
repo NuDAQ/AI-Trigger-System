@@ -29,6 +29,20 @@ def generate_continuous_pdf(data_path, labels_path, trigger_path=None, output_pd
         print("No trigger data provided. Generating mock trigger results for visualization...")
         trigger_results = np.random.choice([0, 1], size=(num_events,), p=[0.9, 0.1])
 
+    false_alarms = np.where((y_test == 0) & (trigger_results == 1))[0]
+    true_hits = np.where((y_test == 1) & (trigger_results == 1))[0]
+    
+    print(f"\n VISUALIZATION SUMMARY")
+    print(f"Total True Hits (Green): {len(true_hits)}")
+    print(f"Total False Alarms (Blue): {len(false_alarms)}")
+    
+    if len(false_alarms) > 0:
+        print("\n[!] False Alarms (Blue) are located at these exact chunk indices:")
+        print(false_alarms)
+        print("Divide the chunk index by 10 to find the exact PDF page number!")
+    else:
+        print("\n[!] Zero False Alarms occurred at this threshold.")
+
     print(f"Generating PDF: {output_pdf}")
     with PdfPages(output_pdf) as pdf:
         num_pages = int(np.ceil(num_events / chunks_per_page))
@@ -99,7 +113,25 @@ if __name__ == "__main__":
     DATA_NPY = "X_test_data.npy"
     LABELS_NPY = "y_test_labels.npy"
     
-    TRIGGER_NPY = None 
-    OUTPUT_PDF = "continuous_trigger_evaluation.pdf"
+    bin_thresholds_to_test = [4, 6, 8]
     
-    generate_continuous_pdf(DATA_NPY, LABELS_NPY, trigger_path=TRIGGER_NPY, output_pdf=OUTPUT_PDF, chunks_per_page=10)
+    for bin_thr in bin_thresholds_to_test:
+        print(f"\n{'='*50}")
+        print(f"Processing Multiplicity (BIN_THR) = {bin_thr}")
+        print(f"{'='*50}")
+        
+        TRIGGER_NPY = f"optimal_trigger_log_bin{bin_thr}.npy" 
+        OUTPUT_PDF = f"continuous_trigger_evaluation_bin{bin_thr}.pdf"
+        
+        try:
+            generate_continuous_pdf(
+                data_path=DATA_NPY, 
+                labels_path=LABELS_NPY, 
+                trigger_path=TRIGGER_NPY, 
+                output_pdf=OUTPUT_PDF, 
+                chunks_per_page=10
+            )
+        except FileNotFoundError:
+            print(f"WARNING: Could not find {TRIGGER_NPY}. Make sure ptrigger_opt.py has generated it.")
+            
+    print("\nAll requested PDF evaluations have been generated successfully!")
