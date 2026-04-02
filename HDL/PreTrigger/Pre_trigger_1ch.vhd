@@ -71,6 +71,10 @@ begin
         variable win_int       : integer range 0 to 255;
         variable carry_hi_int  : integer range 0 to 255;
         variable carry_lo_int  : integer range 0 to 255;
+        variable last_hi_k     : integer range 0 to 31;
+        variable last_lo_k     : integer range 0 to 31;
+        variable found_hi      : std_logic;
+        variable found_lo      : std_logic;
     begin
         if RESET = '1' then
             carry_count_hi_d <= (others => '0');
@@ -133,22 +137,29 @@ begin
                 -- -------------------------------------------------------
                 --  Step 3: Carry update for next batch
                 --
-                --  Iterate k = 0..31; last crossing (largest k) wins because
-                --  k + HILO_WINDOW - 32 is monotonically increasing in k.
-                --  This forms a 32-stage MUX chain in synthesis but it runs
-                --  only once per batch and feeds a single register.
+                --  Priority-encoder approach: first find the last crossing
+                --  index (32-stage last-wins MUX chain, but feeds only one
+                --  register), then perform a SINGLE arithmetic operation.
+                --  This guarantees one adder in synthesis rather than up to
+                --  32 conditional adder paths in the original formulation.
                 -- -------------------------------------------------------
-                carry_hi_next := (others => '0');
-                carry_lo_next := (others => '0');
+                last_hi_k := 0;  last_lo_k := 0;
+                found_hi  := '0'; found_lo := '0';
 
                 for k in 0 to 31 loop
-                    if v_ot_hi(k) = '1' and (k + win_int) > 32 then
-                        carry_hi_next := to_unsigned(k + win_int - 32, 8);
-                    end if;
-                    if v_ot_lo(k) = '1' and (k + win_int) > 32 then
-                        carry_lo_next := to_unsigned(k + win_int - 32, 8);
-                    end if;
+                    if v_ot_hi(k) = '1' then last_hi_k := k; found_hi := '1'; end if;
+                    if v_ot_lo(k) = '1' then last_lo_k := k; found_lo := '1'; end if;
                 end loop;
+
+                carry_hi_next := (others => '0');
+                if found_hi = '1' and (last_hi_k + win_int) > 32 then
+                    carry_hi_next := to_unsigned(last_hi_k + win_int - 32, 8);
+                end if;
+
+                carry_lo_next := (others => '0');
+                if found_lo = '1' and (last_lo_k + win_int) > 32 then
+                    carry_lo_next := to_unsigned(last_lo_k + win_int - 32, 8);
+                end if;
 
                 carry_count_hi_d <= carry_hi_next;
                 carry_count_lo_d <= carry_lo_next;

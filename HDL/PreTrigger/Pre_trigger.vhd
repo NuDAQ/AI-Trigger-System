@@ -104,6 +104,8 @@ begin
         variable coinc_next  : carry4_type;
         variable coinc_int   : integer range 0 to 255;
         variable carry_int   : integer range 0 to 255;
+        variable last_k      : integer range 0 to 31;
+        variable found_k     : std_logic;
     begin
         if RESET = '1' then
             coinc4  <= (others => (others => '0'));
@@ -135,13 +137,18 @@ begin
                         end loop;
                     end loop;
 
-                    -- Carry update: last crossing (largest k) wins;
-                    -- carry = max(0,  k + COINC_WINDOW - 32)
+                    -- Carry update: priority encoder finds last firing index,
+                    -- then one arithmetic operation computes the carry value.
+                    last_k  := 0;
+                    found_k := '0';
                     for k in 0 to 31 loop
-                        if gate4(c)(k) = '1' and (k + coinc_int) > 32 then
-                            coinc_next(c) := to_unsigned(k + coinc_int - 32, 8);
-                        end if;
+                        if gate4(c)(k) = '1' then last_k := k; found_k := '1'; end if;
                     end loop;
+
+                    coinc_next(c) := (others => '0');
+                    if found_k = '1' and (last_k + coinc_int) > 32 then
+                        coinc_next(c) := to_unsigned(last_k + coinc_int - 32, 8);
+                    end if;
                 end loop;
 
                 coinc4  <= v_coinc;
