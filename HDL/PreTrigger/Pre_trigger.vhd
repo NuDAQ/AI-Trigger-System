@@ -50,8 +50,7 @@ architecture behav of PRE_TRIGGER is
 
     signal gate4      : gate4_type;        -- bipolar gate outputs, registered in 1CH
     signal coinc4     : gate4_type;        -- gates after coincidence-window smear
-    signal mult16     : mult4x16_type;     -- 4-ch multiplicity vector per time bin
-    signal trig32     : std_logic_vector(31 downto 0); -- per-bin trigger (combinational)
+    signal mult32     : mult4x32_type;     -- 4-ch multiplicity vector per time bin    signal trig32     : std_logic_vector(31 downto 0); -- per-bin trigger (combinational)
     signal coinc_d    : carry4_type;       -- inter-channel coincidence carry-over
     signal data_str_d : std_logic;         -- DATA_STR delayed 1 cycle (aligns with gate4)
 
@@ -165,11 +164,11 @@ begin
     --  Stage 3: multiplicity check across 4 channels per time bin
     -- ------------------------------------------------------------------
     mult_gen: for i in 0 to 31 generate
-        mult16(i) <= coinc4(0)(i) & coinc4(1)(i) & coinc4(2)(i) & coinc4(3)(i);
+        mult32(i) <= coinc4(0)(i) & coinc4(1)(i) & coinc4(2)(i) & coinc4(3)(i);
 
         U_MULT: entity work.MULT2BIN
         port map (
-            IN_VEC  => mult16(i),
+            IN_VEC  => mult32(i),
             BIN_THR => BIN_THR,
             TRIG    => trig32(i)
         );

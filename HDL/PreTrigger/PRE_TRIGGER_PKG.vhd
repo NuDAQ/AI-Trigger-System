@@ -21,8 +21,8 @@ PACKAGE PRE_TRIGGER_pkg IS
     type gate4_type       is array (0 to  3) of STD_LOGIC_VECTOR(0 to 31);  -- 4-ch Hi-Lo
 
     -- Multiplicity vectors: one bit per channel, 32 time bins
-    type mult16_type      is array (0 to 31) of STD_LOGIC_VECTOR(0 to  7);  -- 8-ch (legacy)
-    type mult4x16_type    is array (0 to 31) of STD_LOGIC_VECTOR(3 downto 0); -- 4-ch Hi-Lo
+    type mult32_type      is array (0 to 31) of STD_LOGIC_VECTOR(0 to  7);  -- 8-ch (legacy)
+    type mult4x32_type    is array (0 to 31) of STD_LOGIC_VECTOR(3 downto 0); -- 4-ch Hi-Lo
 
     -- Coincidence carry-over: one 8-bit counter per channel (4 channels)
     type carry4_type      is array (0 to  3) of unsigned(7 downto 0);
