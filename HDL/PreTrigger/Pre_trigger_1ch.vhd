@@ -4,197 +4,175 @@ use ieee.numeric_std.all;
 use work.pre_trigger_pkg.all;
 use work.ila_pkg.all;
 
-Entity PRE_TRIGGER_1CH is
+-- PRE_TRIGGER_1CH : Single-channel bipolar Hi-Lo gate
+--
+-- For each of the 32 samples in a batch the gate fires at sample i only when
+-- BOTH a positive (ADC > +THRESH) and a negative (ADC < -THRESH) threshold
+-- crossing have occurred within the last HILO_WINDOW samples.
+--
+-- *** Algorithm overview ***
+--
+--   Step 1 – Crossing detection
+--     Compute ot_hi(i) and ot_lo(i) independently for all 32 samples.
+--
+--   Step 2 – Sliding-window gate  [NO sequential dependency between samples]
+--     gate_hi(i) = 1  if  ot_hi(k)=1 for any k in [i-W+1 , i]  (within batch)
+--                     OR  i < carry_count_hi_d                   (cross-batch)
+--     Each gate bit is an independent OR-tree over at most W inputs plus one
+--     comparator.  All 32 bits are computed in parallel.
+--
+--   Step 3 – Carry update  [one sequential pass per batch, not per sample]
+--     A crossing at sample k extends the gate to k+W-1.  If that overruns
+--     the batch end (sample 31) the remainder carries into the next batch:
+--       carry = max(0,  k + HILO_WINDOW - 32)
+--     The last crossing (largest k) wins; final carry written to a register.
+--
+-- *** Timing note ***
+--   Steps 1-2 have O(log W) combinational depth (OR tree); Step 3 has a
+--   32-stage MUX chain for carry, but it feeds only one register.
+--   Both close comfortably at 62.5 MHz for HILO_WINDOW <= 32.
+--
+-- *** Constraint ***
+--   HILO_WINDOW must be <= 32 (batch size) for correct single-batch carry.
+
+entity PRE_TRIGGER_1CH is
 generic (CH : integer := 0);
-Port(
-    CLK         : IN  std_logic;
-    RESET       : IN  std_logic;
-    DATA_STR    : IN  std_logic;
-    ADC_DATA    : IN  adc_data_type;             -- sample 15 is the newest
-    THRESH      : IN  std_logic_vector(11 downto 0);
-    HILO_WINDOW : IN  std_logic_vector( 7 downto 0); -- intra-channel bipolar window length
-    GATE        : OUT std_logic_vector(0 to 31)
+port (
+    CLK         : in  std_logic;
+    RESET       : in  std_logic;
+    DATA_STR    : in  std_logic;
+    ADC_DATA    : in  adc_data_type;              -- sample 31 is the newest
+    THRESH      : in  std_logic_vector(11 downto 0);
+    HILO_WINDOW : in  std_logic_vector( 7 downto 0);
+    GATE        : out std_logic_vector(0 to 31)
 );
 end PRE_TRIGGER_1CH;
 
 architecture behav of PRE_TRIGGER_1CH is
 
-    signal ot_hi    : std_logic_vector(0 to 31);  -- Hi over-threshold flags
-    signal ot_lo    : std_logic_vector(0 to 31);  -- Lo over-threshold flags
-    signal tw_hi    : time_window_type;            -- Hi window counters (within batch)
-    signal tw_lo    : time_window_type;            -- Lo window counters (within batch)
-    signal tw_hi_d  : unsigned(7 downto 0);        -- Hi window carry-over (cross-batch)
-    signal tw_lo_d  : unsigned(7 downto 0);        -- Lo window carry-over (cross-batch)
-
-    constant no_ot  : std_logic_vector(0 to 15) := (others => '0');
+    -- Cross-batch carry: number of samples at the START of the next batch
+    -- for which the Hi (or Lo) gate should remain open because a crossing
+    -- near the end of the current batch extended beyond sample 31.
+    signal carry_count_hi_d : unsigned(7 downto 0);
+    signal carry_count_lo_d : unsigned(7 downto 0);
 
 begin
 
     process(CLK, RESET)
-        variable v_ot_hi    : std_logic_vector(0 to 31);
-        variable v_ot_lo    : std_logic_vector(0 to 31);
-        variable v_tw_hi    : time_window_type;
-        variable v_tw_lo    : time_window_type;
-        variable v_gate_hi  : std_logic_vector(0 to 31);
-        variable v_gate_lo  : std_logic_vector(0 to 31);
-        variable adc_s      : signed(11 downto 0);
-        variable thresh_pos : signed(11 downto 0);
-        variable thresh_neg : signed(11 downto 0);
+        variable v_ot_hi       : std_logic_vector(0 to 31);
+        variable v_ot_lo       : std_logic_vector(0 to 31);
+        variable v_gate_hi     : std_logic_vector(0 to 31);
+        variable v_gate_lo     : std_logic_vector(0 to 31);
+        variable carry_hi_next : unsigned(7 downto 0);
+        variable carry_lo_next : unsigned(7 downto 0);
+        variable adc_s         : signed(11 downto 0);
+        variable thresh_pos    : signed(11 downto 0);
+        variable thresh_neg    : signed(11 downto 0);
+        variable win_int       : integer range 0 to 255;
+        variable carry_hi_int  : integer range 0 to 255;
+        variable carry_lo_int  : integer range 0 to 255;
     begin
         if RESET = '1' then
-            ot_hi   <= (others => '0');
-            ot_lo   <= (others => '0');
-            tw_hi   <= (others => x"00");
-            tw_lo   <= (others => x"00");
-            tw_hi_d <= x"00";
-            tw_lo_d <= x"00";
-            GATE    <= (others => '0');
+            carry_count_hi_d <= (others => '0');
+            carry_count_lo_d <= (others => '0');
+            GATE             <= (others => '0');
 
         elsif rising_edge(CLK) then
             if DATA_STR = '1' then
 
-                v_ot_hi   := (others => '0');
-                v_ot_lo   := (others => '0');
-                v_tw_hi   := (others => x"00");
-                v_tw_lo   := (others => x"00");
+                thresh_pos   := signed(THRESH);
+                thresh_neg   := -signed(THRESH);
+                win_int      := to_integer(unsigned(HILO_WINDOW));
+                carry_hi_int := to_integer(carry_count_hi_d); -- value from prev batch
+                carry_lo_int := to_integer(carry_count_lo_d);
+
+                -- -------------------------------------------------------
+                --  Step 1: Crossing detection
+                --  All 32 samples are independent; synthesised in parallel.
+                -- -------------------------------------------------------
+                for i in 0 to 31 loop
+                    adc_s := signed(ADC_DATA(i));
+                    if adc_s > thresh_pos then
+                        v_ot_hi(i) := '1';
+                    else
+                        v_ot_hi(i) := '0';
+                    end if;
+                    if adc_s < thresh_neg then
+                        v_ot_lo(i) := '1';
+                    else
+                        v_ot_lo(i) := '0';
+                    end if;
+                end loop;
+
+                -- -------------------------------------------------------
+                --  Step 2: Sliding-window gate
+                --
+                --  After loop unrolling every (i, k) pair is an independent
+                --  combinational path — no data dependency between samples.
+                --  (i - k) is a compile-time constant per (i, k) pair, so
+                --  "(i - k) < win_int" synthesises as a threshold comparator
+                --  on the runtime port HILO_WINDOW.
+                -- -------------------------------------------------------
                 v_gate_hi := (others => '0');
                 v_gate_lo := (others => '0');
 
-                thresh_pos := signed(THRESH);
-                thresh_neg := -signed(THRESH);
+                for i in 0 to 31 loop
+                    -- (a) Cross-batch carry from the previous batch
+                    if i < carry_hi_int then v_gate_hi(i) := '1'; end if;
+                    if i < carry_lo_int then v_gate_lo(i) := '1'; end if;
 
-                -- -------------------------------------------------------
-                --  Sample 0: no within-batch predecessor, use carry-over
-                -- -------------------------------------------------------
-                adc_s := signed(ADC_DATA(0));
-
-                -- Hi gate for sample 0
-                if adc_s > thresh_pos then
-                    v_ot_hi(0)   := '1';
-                    v_tw_hi(0)   := x"01";
-                    v_gate_hi(0) := '1';
-                elsif tw_hi_d /= x"00" and tw_hi_d < unsigned(HILO_WINDOW) then
-                    v_tw_hi(0)   := tw_hi_d + 1;
-                    v_gate_hi(0) := '1';
-                end if;
-
-                -- Lo gate for sample 0
-                if adc_s < thresh_neg then
-                    v_ot_lo(0)   := '1';
-                    v_tw_lo(0)   := x"01";
-                    v_gate_lo(0) := '1';
-                elsif tw_lo_d /= x"00" and tw_lo_d < unsigned(HILO_WINDOW) then
-                    v_tw_lo(0)   := tw_lo_d + 1;
-                    v_gate_lo(0) := '1';
-                end if;
-
-                -- -------------------------------------------------------
-                --  Samples 1..31
-                -- -------------------------------------------------------
-                for i in 1 to 31 loop
-                    adc_s := signed(ADC_DATA(i));
-
-                    -- Hi gate
-                    if adc_s > thresh_pos then
-                        v_ot_hi(i)   := '1';
-                        v_tw_hi(i)   := x"01";
-                        v_gate_hi(i) := '1';
-                    else
-                        if v_ot_hi(0 to i-1) = no_ot(0 to i-1) then
-                            -- No Hi OT in this batch up to i-1: use cross-batch carry-over
-                            if tw_hi_d /= x"00" then
-                                if to_unsigned(i, 8) + tw_hi_d + 1 < unsigned(HILO_WINDOW) then
-                                    v_tw_hi(i)   := to_unsigned(i, 8) + tw_hi_d + 1;
-                                    v_gate_hi(i) := '1';
-                                end if;
-                            end if;
-                        else
-                            -- At least one Hi OT earlier in batch: find most recent (last-wins)
-                            for k in 0 to i-1 loop
-                                if v_ot_hi(k) = '1' then
-                                    if to_unsigned(i, 8) - to_unsigned(k, 8) + 1 < unsigned(HILO_WINDOW) then
-                                        v_tw_hi(i)   := to_unsigned(i, 8) - to_unsigned(k, 8) + 1;
-                                        v_gate_hi(i) := '1';
-                                    else
-                                        v_tw_hi(i)   := x"00";
-                                        v_gate_hi(i) := '0';
-                                    end if;
-                                end if;
-                            end loop;
+                    -- (b) Within-batch sliding-window OR
+                    for k in 0 to 31 loop
+                        if k <= i and (i - k) < win_int then
+                            if v_ot_hi(k) = '1' then v_gate_hi(i) := '1'; end if;
+                            if v_ot_lo(k) = '1' then v_gate_lo(i) := '1'; end if;
                         end if;
+                    end loop;
+                end loop;
+
+                -- -------------------------------------------------------
+                --  Step 3: Carry update for next batch
+                --
+                --  Iterate k = 0..31; last crossing (largest k) wins because
+                --  k + HILO_WINDOW - 32 is monotonically increasing in k.
+                --  This forms a 32-stage MUX chain in synthesis but it runs
+                --  only once per batch and feeds a single register.
+                -- -------------------------------------------------------
+                carry_hi_next := (others => '0');
+                carry_lo_next := (others => '0');
+
+                for k in 0 to 31 loop
+                    if v_ot_hi(k) = '1' and (k + win_int) > 32 then
+                        carry_hi_next := to_unsigned(k + win_int - 32, 8);
                     end if;
-
-                    -- Lo gate (same structure, mirrored for negative threshold)
-                    if adc_s < thresh_neg then
-                        v_ot_lo(i)   := '1';
-                        v_tw_lo(i)   := x"01";
-                        v_gate_lo(i) := '1';
-                    else
-                        if v_ot_lo(0 to i-1) = no_ot(0 to i-1) then
-                            -- No Lo OT in this batch up to i-1: use cross-batch carry-over
-                            if tw_lo_d /= x"00" then
-                                if to_unsigned(i, 8) + tw_lo_d + 1 < unsigned(HILO_WINDOW) then
-                                    v_tw_lo(i)   := to_unsigned(i, 8) + tw_lo_d + 1;
-                                    v_gate_lo(i) := '1';
-                                end if;
-                            end if;
-                        else
-                            -- At least one Lo OT earlier in batch: find most recent (last-wins)
-                            for k in 0 to i-1 loop
-                                if v_ot_lo(k) = '1' then
-                                    if to_unsigned(i, 8) - to_unsigned(k, 8) + 1 < unsigned(HILO_WINDOW) then
-                                        v_tw_lo(i)   := to_unsigned(i, 8) - to_unsigned(k, 8) + 1;
-                                        v_gate_lo(i) := '1';
-                                    else
-                                        v_tw_lo(i)   := x"00";
-                                        v_gate_lo(i) := '0';
-                                    end if;
-                                end if;
-                            end loop;
-                        end if;
+                    if v_ot_lo(k) = '1' and (k + win_int) > 32 then
+                        carry_lo_next := to_unsigned(k + win_int - 32, 8);
                     end if;
+                end loop;
 
-                end loop; -- samples 1..15
-
-                -- Commit variables to signals; sample-31 window count carries
-                -- into next batch via tw_hi_d / tw_lo_d
-                ot_hi   <= v_ot_hi;
-                ot_lo   <= v_ot_lo;
-                tw_hi   <= v_tw_hi;
-                tw_lo   <= v_tw_lo;
-                tw_hi_d <= v_tw_hi(31);
-                tw_lo_d <= v_tw_lo(31);
+                carry_count_hi_d <= carry_hi_next;
+                carry_count_lo_d <= carry_lo_next;
 
                 -- Bipolar gate: fire only where BOTH Hi and Lo gates are open
                 GATE <= v_gate_hi and v_gate_lo;
 
             else
-                -- No valid data: clear outputs; tw_*_d retain cross-batch carry-over
-                GATE    <= (others => '0');
-                ot_hi   <= (others => '0');
-                ot_lo   <= (others => '0');
-                tw_hi   <= (others => x"00");
-                tw_lo   <= (others => x"00");
+                -- No valid data: clear gate output.
+                -- carry registers intentionally retain state across DATA_STR gaps.
+                GATE <= (others => '0');
             end if;
         end if;
     end process;
 
-    -- gen_ila: if (CH < 1 and SET_PRE_TRIGGER_ILA = 1) generate
-    --
+    -- gen_ila: if (CH = 0 and SET_PRE_TRIGGER_ILA = 1) generate
     --     ila_pre_trig_ch : ila_1
     --     PORT MAP (
-    --         clk        => clk,
-    --         probe0     => ...,
-    --         probe1     => GATE,
-    --         probe2     => THRESH,
-    --         probe3     => HILO_WINDOW,
-    --         probe4     => std_logic_vector(tw_hi_d),
-    --         probe5     => std_logic_vector(tw_lo_d),
-    --         probe6     => ot_hi,
-    --         probe7(0)  => DATA_STR,
-    --         probe8(0)  => RESET
+    --         clk        => CLK,
+    --         probe0     => THRESH,
+    --         probe1     => HILO_WINDOW,
+    --         probe2(0)  => DATA_STR,
+    --         probe3(0)  => RESET
     --     );
-    --
     -- end generate;
 
 end behav;
