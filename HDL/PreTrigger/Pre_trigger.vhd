@@ -39,8 +39,9 @@ port (
     DATA_STR     : in  std_logic;
     ADC_DATA4    : in  adc_data4_type;
     THRESH       : in  std_logic_vector(11 downto 0);
-    HILO_WINDOW  : in  std_logic_vector( 4 downto 0); -- Configurable 0 to 16
-    COINC_WINDOW : in  std_logic_vector( 5 downto 0); -- Configurable 0 to 32    BIN_THR      : in  std_logic_vector( 3 downto 0);
+    HILO_WINDOW  : in  std_logic_vector( 7 downto 0); -- intra-channel bipolar window, <= 32
+    COINC_WINDOW : in  std_logic_vector( 7 downto 0); -- inter-channel coincidence window, <= 32
+    BIN_THR      : in  std_logic_vector( 3 downto 0);
     PRE_TRIG     : out std_logic
 );
 end PRE_TRIGGER;
@@ -49,7 +50,7 @@ architecture behav of PRE_TRIGGER is
 
     signal gate4      : gate4_type;        -- bipolar gate outputs, registered in 1CH
     signal coinc4     : gate4_type;        -- gates after coincidence-window smear
-    signal mult32     : mult4x32_type;     -- 4-ch multiplicity vector per time bin
+    signal mult32     : mult4x16_type;     -- 4-ch multiplicity vector per time bin
     signal trig32     : std_logic_vector(31 downto 0); -- per-bin trigger (combinational)
     signal coinc_d    : carry4_type;       -- inter-channel coincidence carry-over
     signal data_str_d : std_logic;         -- DATA_STR delayed 1 cycle (aligns with gate4)
