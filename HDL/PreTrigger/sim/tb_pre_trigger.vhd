@@ -313,11 +313,11 @@ begin
             report "T09 FAIL: RESET should clear all carry; PRE_TRIG must be 0" severity failure;
         report "T09 PASS  RESET clears coinc carry -> PRE_TRIG=0";
 
-        -- -----------------------------------------------------------------------
+-- -----------------------------------------------------------------------
         report "========================================";
         report "ALL PRE_TRIGGER TESTS PASSED";
         report "========================================";
-        wait;
+        std.env.finish;
     end process;
 
 end architecture;
