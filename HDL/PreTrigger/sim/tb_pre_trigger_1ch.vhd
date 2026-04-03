@@ -254,7 +254,7 @@ begin
         report "========================================";
         report "ALL PRE_TRIGGER_1CH TESTS PASSED";
         report "========================================";
-        wait;
+        std.env.finish;
     end process;
 
 end architecture;
