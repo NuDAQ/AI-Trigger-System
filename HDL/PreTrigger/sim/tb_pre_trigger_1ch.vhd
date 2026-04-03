@@ -4,7 +4,7 @@
 --
 --  Parameters under test
 --    THRESH      = 100  (x"064")  -- ±100 ADC counts
---    HILO_WINDOW =   5  (x"05")   -- gate open for 5 samples after crossing
+--    HILO_WINDOW =   5  ("00101") -- gate open for 5 samples after crossing
 --
 --  Test cases
 --    T01  Hi-only crossing              → GATE all 0
@@ -38,7 +38,7 @@ architecture sim of tb_pre_trigger_1ch is
     signal DATA_STR    : std_logic := '0';
     signal ADC_DATA    : adc_data_type := (others => (others => '0'));
     signal THRESH      : std_logic_vector(11 downto 0);
-    signal HILO_WINDOW : std_logic_vector( 7 downto 0);
+    signal HILO_WINDOW : std_logic_vector( 4 downto 0);
     signal GATE        : std_logic_vector(0 to 31);
 
     -- -------------------------------------------------------------------------
@@ -77,7 +77,7 @@ begin
     --  Stimulus
     -- -------------------------------------------------------------------------
     THRESH      <= x"064";  -- 100
-    HILO_WINDOW <= x"05";   -- 5 samples
+    HILO_WINDOW <= "00101"; -- 5 samples
 
     stimulus : process
         variable b   : adc_data_type;
