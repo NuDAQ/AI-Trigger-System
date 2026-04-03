@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.pre_trigger_pkg.all;
-use work.ila_pkg.all;
+-- use work.ila_pkg.all;
 
 -- PRE_TRIGGER_1CH : Single-channel bipolar Hi-Lo gate
 --
