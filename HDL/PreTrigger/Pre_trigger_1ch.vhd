@@ -43,7 +43,7 @@ port (
     DATA_STR    : in  std_logic;
     ADC_DATA    : in  adc_data_type;              -- sample 31 is the newest
     THRESH      : in  std_logic_vector(11 downto 0);
-    HILO_WINDOW : in  std_logic_vector( 7 downto 0);
+    HILO_WINDOW : in  std_logic_vector( 4 downto 0);
     GATE        : out std_logic_vector(0 to 31)
 );
 end PRE_TRIGGER_1CH;
@@ -86,7 +86,14 @@ begin
 
                 thresh_pos   := signed(THRESH);
                 thresh_neg   := -signed(THRESH);
-                win_int      := to_integer(unsigned(HILO_WINDOW));
+                
+                -- Hardware clamp: Force max value of 16
+                if unsigned(HILO_WINDOW) > 16 then
+                    win_int := 16;
+                else
+                    win_int := to_integer(unsigned(HILO_WINDOW));
+                end if;
+                
                 carry_hi_int := to_integer(carry_count_hi_d); -- value from prev batch
                 carry_lo_int := to_integer(carry_count_lo_d);
 
