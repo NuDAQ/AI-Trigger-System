@@ -6,7 +6,7 @@ def main():
     input_data_path = os.path.join(base_dir, "X_test_data.npy")
     output_txt_path = os.path.join(base_dir, "stimulus.txt")
     
-    scale = 1.0 
+    scale = 64.0 
     
     print("=== Starting Co-Simulation Phase 1: Python Export ===")
     
