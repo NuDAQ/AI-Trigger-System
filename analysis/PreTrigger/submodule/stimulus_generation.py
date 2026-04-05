@@ -36,7 +36,6 @@ def format_to_128_int_chunks(data):
             # (Ch0_0...Ch0_31, Ch1_0...Ch1_31, etc.)
             flat_chunk = chunk.flatten()
             
-            # Convert to space-separated string for VHDL TEXTIO
             line = " ".join(map(str, flat_chunk))
             formatted_lines.append(line)
             

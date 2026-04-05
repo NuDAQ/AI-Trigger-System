@@ -7,16 +7,12 @@ def main():
     output_txt_path = os.path.join(base_dir, "stimulus.txt")
     
     scale = 64.0 
-    
-    print("=== Starting Co-Simulation Phase 1: Python Export ===")
-    
+        
     generate_stimulus_file(
         input_npy_path=input_data_path, 
         output_txt_path=output_txt_path,
         scale_factor=scale
     )
     
-    print("=== Phase 1 Complete ===")
-
 if __name__ == "__main__":
     main()

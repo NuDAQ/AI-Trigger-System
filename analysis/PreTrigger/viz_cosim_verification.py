@@ -19,15 +19,12 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     total_noise = np.sum(noise_mask)
     total_events = total_signals + total_noise
 
-    # Calculate noise RMS for RMS thresholds
     pure_noise_waveforms = X_test[noise_mask]
     noise_rms = np.std(pure_noise_waveforms)
     print(f"Calculated Background Noise RMS: {noise_rms:.6f}")
 
-    # Scale to hardware integer representation (NO 8-channel concatenation here)
     X_int = (X_test * 64).astype(np.int32)
     
-    # Calculate Max Amplitudes for the Histogram
     max_amps_per_event_hw = np.max(np.abs(X_int), axis=(1, 2))
     max_amp_overall_hw = int(np.max(max_amps_per_event_hw))
     
@@ -36,7 +33,6 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     noise_max_amps_rms = max_amps_per_event_rms[noise_mask]
     max_amp_overall_rms = (max_amp_overall_hw / 64.0) / noise_rms
     
-    # --- PHASE 1: PROCESS HARDWARE LOGS ---
     hw_thresholds_int = [128, 160, 192, 224, 256, 288, 320]
     
     hw_thr_rms_vals = array.array('d')
@@ -44,9 +40,7 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     hw_fpr_vals = array.array('d')
     hw_rate_vals = array.array('d')
 
-    print("\n" + "="*60)
-    print(" HARDWARE LOG EXTRACTION (Latency Corrected)")
-    print("="*60)
+    print(" HARDWARE LOG EXTRACTION ")
     print(f"{'Int Thr':<8} | {'RMS Thr':<8} | {'TPR (Eff)':<10} | {'FPR':<10} | {'Total Rate':<10}")
     print("-" * 60)
 
@@ -56,21 +50,16 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
             print(f"WARNING: {log_file} not found. Skipping this hardware point.")
             continue
             
-        # 1. Load log and slice off the 2-cycle VHDL pipeline latency
         raw_hw_resp = np.loadtxt(log_file, dtype=int)
         aligned_hw_resp = raw_hw_resp[2:]
         
-        # Ensure it matches the expected 8000 clocks (1000 events * 8 clocks)
         if len(aligned_hw_resp) > 8000:
             aligned_hw_resp = aligned_hw_resp[:8000]
             
-        # 2. Reshape to map back to original events: (1000 events, 8 clocks)
         hw_events = aligned_hw_resp.reshape(total_events, 8)
         
-        # 3. Collapse the time axis: If the hardware triggered on ANY clock cycle within the event
         event_triggered_hw = np.any(hw_events == 1, axis=1)
         
-        # 4. Calculate stats
         tp_hw = np.sum(event_triggered_hw & signal_mask)
         fp_hw = np.sum(event_triggered_hw & noise_mask)
         tot_trig_hw = tp_hw + fp_hw
@@ -86,13 +75,7 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
         hw_rate_vals.append(rate_hw)
         
         print(f"{hw_thr:<8} | {thr_rms_hw:<8.2f} | {tpr_hw:<10.4f} | {fpr_hw:<10.6f} | {rate_hw:<10.6f}")
-
-    # --- PHASE 2: PROCESS PYTHON EMULATION (N=2) ---
-    print("\n" + "="*60)
-    print(" RUNNING PYTHON EMULATION SWEEP (N=2) ")
-    print("="*60)
     
-    # We sweep by integers to generate a smooth line graph
     thresholds_to_sweep = np.arange(0, min(max_amp_overall_hw + 1, 400), 1) 
     
     py_thr_rms_vals = array.array('d')
@@ -128,7 +111,6 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
             else:
                 coincidence_gates[:, :, shift:] |= bipolar_trigger[:, :, :-shift]
         
-        # Sum across the 4 native channels
         multiplicity = np.sum(coincidence_gates, axis=1)
         event_triggered = np.any(multiplicity >= BIN_THR, axis=1)
         
@@ -148,12 +130,10 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
 
     print(f"Completed {len(thresholds_to_sweep)} threshold emulation steps.")
 
-    # --- PHASE 3: ROOT VISUALIZATION (OVERLAY) ---
     print("\nOpening ROOT file and generating overlay plots...")
     ROOT.gROOT.SetBatch(True) 
     root_file = ROOT.TFile(output_root, "RECREATE")
     
-    # Create Python Line Graphs
     g_py_eff = ROOT.TGraph(len(py_thr_rms_vals), py_thr_rms_vals, py_eff_vals)
     g_py_eff.SetLineColor(ROOT.kBlue)
     g_py_eff.SetLineWidth(2)
@@ -171,7 +151,6 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     g_py_roc.SetLineColor(ROOT.kBlack)
     g_py_roc.SetLineWidth(2)
 
-    # Create Hardware Marker Graphs
     marker_style = 29 # ROOT.kFullStar
     marker_size = 2.5
     marker_color = ROOT.kRed
@@ -223,7 +202,7 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     leg_hist.Draw()
     
     c_hist.Write()
-    c_hist.Print(output_pdf + "(") # Opens the PDF with the first canvas
+    c_hist.Print(output_pdf + "(") 
 
     # --- Canvas 2: Rate vs Threshold ---
     c_rate = ROOT.TCanvas("c_rate", "Total Trigger Rate", 800, 600)
@@ -282,7 +261,7 @@ def verify_cosimulation(data_path, labels_path, output_root="cosim_verification.
     leg_roc.Draw()
     
     c_roc.Write()
-    c_roc.Print(output_pdf + ")") # Closes the PDF
+    c_roc.Print(output_pdf + ")")
 
     root_file.Close()
     print(f"\nSuccess! Co-simulation output saved to {output_root} and compiled into {output_pdf}")
