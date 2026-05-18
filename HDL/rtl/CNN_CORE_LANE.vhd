@@ -32,6 +32,10 @@ use ieee.numeric_std.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity CNN_CORE_LANE is
+    generic (
+        LANE_ID      : integer := 0;
+        DEBUG_EVENTS : integer := 80
+    );
     port (
         CLK_ADC      : in  std_logic;
         CLK_CNN      : in  std_logic;
@@ -153,6 +157,11 @@ architecture rtl of CNN_CORE_LANE is
     signal pending_count_cnn : chunk_cnt_t;
     signal stream_done_toggle_cnn : std_logic := '0';
 
+    -- synthesis translate_off
+    signal dbg_adc_events : integer := 0;
+    signal dbg_cnn_events : integer := 0;
+    -- synthesis translate_on
+
     -- FIFO read side
     signal fifo_dout  : std_logic_vector(127 downto 0);
     signal fifo_empty : std_logic;
@@ -202,6 +211,15 @@ begin
                 if stream_done_adc_ff(1) /= stream_done_seen_adc then
                     stream_done_seen_adc <= stream_done_adc_ff(1);
                     chunk_busy_adc <= '0';
+                    -- synthesis translate_off
+                    if dbg_adc_events < DEBUG_EVENTS then
+                        report "LANE" & integer'image(LANE_ID) &
+                               " ADC busy_clear stream_done_seen=" &
+                               std_logic'image(stream_done_adc_ff(1)) &
+                               " wr_count=" & integer'image(wr_count);
+                        dbg_adc_events <= dbg_adc_events + 1;
+                    end if;
+                    -- synthesis translate_on
                 end if;
 
                 if WR_EN = '1' then
@@ -210,6 +228,15 @@ begin
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
                         chunk_busy_adc  <= '1';
+                        -- synthesis translate_off
+                        if dbg_adc_events < DEBUG_EVENTS then
+                            report "LANE" & integer'image(LANE_ID) &
+                                   " ADC chunk_complete count=" &
+                                   integer'image(to_integer(chunk_count_adc + 1)) &
+                                   " fifo_full=" & std_logic'image(fifo_full_s);
+                            dbg_adc_events <= dbg_adc_events + 1;
+                        end if;
+                        -- synthesis translate_on
                     else
                         wr_count <= wr_count + 1;
                     end if;
@@ -276,6 +303,18 @@ begin
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
                     lane_valid_r <= '1';
+                    -- synthesis translate_off
+                    if dbg_cnn_events < DEBUG_EVENTS then
+                        report "LANE" & integer'image(LANE_ID) &
+                               " CNN output_valid score_raw=" &
+                               integer'image(to_integer(signed(cnn_out_data))) &
+                               " completed=" &
+                               integer'image(to_integer(chunk_count_cnn)) &
+                               " started=" &
+                               integer'image(to_integer(started_count_cnn));
+                        dbg_cnn_events <= dbg_cnn_events + 1;
+                    end if;
+                    -- synthesis translate_on
                 end if;
 
                 case cnn_state is
@@ -297,6 +336,21 @@ begin
                             cnn_in_data  <= fifo_dout(63 downto 0);
                             started_count_cnn <= started_count_cnn + 1;
                             cnn_state    <= CC_STREAM;
+                            -- synthesis translate_off
+                            if dbg_cnn_events < DEBUG_EVENTS then
+                                report "LANE" & integer'image(LANE_ID) &
+                                       " CNN launch completed=" &
+                                       integer'image(to_integer(chunk_count_cnn)) &
+                                       " started_next=" &
+                                       integer'image(to_integer(started_count_cnn + 1)) &
+                                       " pending=" &
+                                       integer'image(to_integer(pending_count_cnn)) &
+                                       " fifo_empty=" & std_logic'image(fifo_empty) &
+                                       " ready=" & std_logic'image(cnn_ready) &
+                                       " idle=" & std_logic'image(cnn_idle);
+                                dbg_cnn_events <= dbg_cnn_events + 1;
+                            end if;
+                            -- synthesis translate_on
                         end if;
 
                     -- ---------------------------------------------------------
@@ -331,6 +385,18 @@ begin
                                 cnn_in_valid <= '0';
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
                                 cnn_state    <= CC_IDLE;
+                                -- synthesis translate_off
+                                if dbg_cnn_events < DEBUG_EVENTS then
+                                    report "LANE" & integer'image(LANE_ID) &
+                                           " CNN stream_done completed=" &
+                                           integer'image(to_integer(chunk_count_cnn)) &
+                                           " started=" &
+                                           integer'image(to_integer(started_count_cnn)) &
+                                           " fifo_empty=" & std_logic'image(fifo_empty) &
+                                           " ready=" & std_logic'image(cnn_ready);
+                                    dbg_cnn_events <= dbg_cnn_events + 1;
+                                end if;
+                                -- synthesis translate_on
                             end if;
                         end if;
 

@@ -50,6 +50,12 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
 
     signal packed : std_logic_vector(N_BATCH_S*64-1 downto 0);
 
+    -- synthesis translate_off
+    constant DEBUG_EVENTS : integer := 160;
+    signal dbg_events : integer := 0;
+    signal dbg_chunk_seq : integer := 0;
+    -- synthesis translate_on
+
     function sign_ext(s : std_logic_vector(11 downto 0)) return std_logic_vector is
     begin
         return s(11) & s(11) & s(11) & s(11) & s;
@@ -90,6 +96,15 @@ begin
                     -- partially writing a chunk if a lane becomes unavailable.
                     if batch_cnt = 0 then
                         drop_chunk <= LANE_BUSY(lane_sel);
+                        -- synthesis translate_off
+                        if dbg_events < DEBUG_EVENTS then
+                            report "DIST chunk_start seq=" &
+                                   integer'image(dbg_chunk_seq) &
+                                   " lane=" & integer'image(lane_sel) &
+                                   " busy=" & std_logic'image(LANE_BUSY(lane_sel));
+                            dbg_events <= dbg_events + 1;
+                        end if;
+                        -- synthesis translate_on
                     end if;
 
                     if (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
@@ -97,6 +112,17 @@ begin
                         we_r(lane_sel) <= '1';
                     else
                         overflow_r <= '1';
+                        -- synthesis translate_off
+                        if dbg_events < DEBUG_EVENTS then
+                            report "DIST drop_batch seq=" &
+                                   integer'image(dbg_chunk_seq) &
+                                   " lane=" & integer'image(lane_sel) &
+                                   " batch=" & integer'image(batch_cnt) &
+                                   " busy_now=" & std_logic'image(LANE_BUSY(lane_sel)) &
+                                   " drop_chunk=" & std_logic'image(drop_chunk);
+                            dbg_events <= dbg_events + 1;
+                        end if;
+                        -- synthesis translate_on
                     end if;
 
                     -- Advance counters every batch
@@ -108,6 +134,9 @@ begin
                             lane_sel <= lane_sel + 1;
                         end if;
                         drop_chunk <= '0';
+                        -- synthesis translate_off
+                        dbg_chunk_seq <= dbg_chunk_seq + 1;
+                        -- synthesis translate_on
                     else
                         batch_cnt <= batch_cnt + 1;
                     end if;

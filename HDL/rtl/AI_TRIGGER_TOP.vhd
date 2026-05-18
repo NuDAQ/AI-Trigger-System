@@ -65,6 +65,9 @@ begin
 
     gen_lanes : for i in 0 to N_LANES-1 generate
         u_LANE : entity work.CNN_CORE_LANE
+            generic map (
+                LANE_ID => i
+            )
             port map (
                 CLK_ADC    => CLK_ADC,
                 CLK_CNN    => CLK_CNN,
