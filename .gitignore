@@ -17,6 +17,8 @@
 !HDL/
 !HDL/**
 
+!build/vivado_post_impl_saif/xsim/xsim.log
+
 !data/
 !data/**
 

@@ -1,0 +1,209 @@
+#-----------------------------------------------------------
+# xsim v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Mon May 18 14:26:43 2026
+# Process ID: 125146
+# Current directory: /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim
+# Command line: xsim -mode tcl -source {xsim.dir/ai_trigger_post_impl_saif/xsim_script.tcl}
+# Log file: /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/xsim.log
+# Journal file: /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/xsim.jou
+# Running On: AlbertsUbuntu, OS: Linux, CPU Frequency: 800.166 MHz, CPU Physical cores: 24, Host memory: 16441 MB
+#-----------------------------------------------------------
+source xsim.dir/ai_trigger_post_impl_saif/xsim_script.tcl
+# xsim {ai_trigger_post_impl_saif} -testplusarg TESTHEX_DIR=/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream -testplusarg OUT_CSV=/home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/ai_trigger_post_impl_results.csv -testplusarg NUM_SAMPLES=16 -testplusarg SCORE_THRESHOLD=-6.0 -testplusarg CNN_THRESH_RAW=-96 -autoloadwcfg -tclbatch {/home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/run_post_impl_saif_xsim.tcl}
+Time resolution is 1 ps
+source /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/run_post_impl_saif_xsim.tcl
+## run 2.0 us
+[0] Asserting reset...
+[616000] Starting AI_TRIGGER_TOP test
+[616000] TESTHEX_DIR: /home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream
+[616000] Samples: 16  Threshold raw: -96 (-6.0000)
+---------------------------------------------------------------------
+Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
+---------------------------------------------------------------------
+## open_saif {/home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/activity/ai_trigger_post_impl.saif}
+## set saif_total_objects 0
+## proc saif_stamp {} {
+##     return [clock format [clock seconds] -format {%H:%M:%S}]
+## }
+## proc saif_log_scope {scope recursive} {
+##     global saif_total_objects
+##     puts "[saif_stamp] SAIF get_objects begin: $scope recursive=$recursive"
+##     flush stdout
+##     set t0 [clock seconds]
+##     if {$recursive} {
+##         set objs [get_objects -r $scope]
+##     } else {
+##         set objs [get_objects $scope]
+##     }
+##     set n [llength $objs]
+##     incr saif_total_objects $n
+##     set t1 [clock seconds]
+##     puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"
+##     flush stdout
+##     if {$n > 0} {
+##         puts "[saif_stamp] SAIF first objects for $scope:"
+##         set preview_count 0
+##         foreach obj $objs {
+##             puts "    $obj"
+##             incr preview_count
+##             if {$preview_count >= 20} {
+##                 break
+##             }
+##         }
+##         flush stdout
+##         puts "[saif_stamp] SAIF log_saif begin: $scope"
+##         flush stdout
+##         set t2 [clock seconds]
+##         log_saif $objs
+##         set t3 [clock seconds]
+##         puts "[saif_stamp] SAIF log_saif done: $scope elapsed=[expr {$t3 - $t2}]s"
+##         flush stdout
+##     }
+## }
+## proc saif_log_raw_all {} {
+##     global saif_total_objects
+##     set scope {/tb_AI_TRIGGER_TOP/dut/*}
+##     puts "[saif_stamp] SAIF fallback raw-all get_objects begin: $scope recursive=1"
+##     puts "[saif_stamp] This can be slow on a post-route netlist; waiting here means xsim is enumerating the full DUT."
+##     flush stdout
+##     set t0 [clock seconds]
+##     set objs [get_objects -r $scope]
+##     set n [llength $objs]
+##     incr saif_total_objects $n
+##     set t1 [clock seconds]
+##     puts "[saif_stamp] SAIF fallback raw-all get_objects done: count=$n elapsed=[expr {$t1 - $t0}]s"
+##     flush stdout
+##     if {$n > 0} {
+##         puts "[saif_stamp] SAIF fallback raw-all log_saif begin"
+##         flush stdout
+##         set t2 [clock seconds]
+##         log_saif $objs
+##         set t3 [clock seconds]
+##         puts "[saif_stamp] SAIF fallback raw-all log_saif done elapsed=[expr {$t3 - $t2}]s"
+##         flush stdout
+##     }
+## }
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0
+14:26:49 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/* recursive=0
+14:26:49 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/* count=14 elapsed=0s
+14:26:49 SAIF first objects for /tb_AI_TRIGGER_TOP/dut/*:
+    /tb_AI_TRIGGER_TOP/dut/CNN_OUT_DATA
+    /tb_AI_TRIGGER_TOP/dut/\<const0> 
+    /tb_AI_TRIGGER_TOP/dut/ADC_DATA4_FLAT
+    /tb_AI_TRIGGER_TOP/dut/CHUNK_OVERFLOW
+    /tb_AI_TRIGGER_TOP/dut/CLK_ADC
+    /tb_AI_TRIGGER_TOP/dut/CLK_CNN
+    /tb_AI_TRIGGER_TOP/dut/\^CNN_OUT_DATA 
+    /tb_AI_TRIGGER_TOP/dut/CNN_OUT_VALID
+    /tb_AI_TRIGGER_TOP/dut/CNN_THRESH
+    /tb_AI_TRIGGER_TOP/dut/CNN_TRIG
+    /tb_AI_TRIGGER_TOP/dut/DATA_STR
+    /tb_AI_TRIGGER_TOP/dut/RST
+    /tb_AI_TRIGGER_TOP/dut/NLW_u_DUT_CNN_OUT_DATA_UNCONNECTED
+    /tb_AI_TRIGGER_TOP/dut/NLW_u_DUT_CNN_THRESH_UNCONNECTED
+14:26:49 SAIF log_saif begin: /tb_AI_TRIGGER_TOP/dut/*
+14:26:49 SAIF log_saif done: /tb_AI_TRIGGER_TOP/dut/* elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1
+14:26:49 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/u_DIST/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:49 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/u_DIST/* count=0 elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/*} 1
+14:26:49 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:49 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/* count=0 elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/*} 1
+14:26:49 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:50 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/* count=0 elapsed=1s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/*} 1
+14:26:50 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:50 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/* count=0 elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/*} 1
+14:26:50 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:50 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/* count=0 elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/*} 1
+14:26:50 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:50 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/* count=0 elapsed=0s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/*} 1
+14:26:50 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:51 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/* count=0 elapsed=1s
+## saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/*} 1
+14:26:51 SAIF get_objects begin: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/* recursive=1
+WARNING: [Simtcl 6-168] No object found for the given pattern.
+14:26:51 SAIF get_objects done: /tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/* count=0 elapsed=0s
+## puts "[saif_stamp] SAIF run all begin"
+14:26:51 SAIF run all begin
+## puts "[saif_stamp] SAIF total logged object count=$saif_total_objects"
+14:26:51 SAIF total logged object count=14
+## if {$saif_total_objects < 1000 && 1} {
+##     puts "[saif_stamp] SAIF object count $saif_total_objects is below 1000; falling back to raw full-DUT recursion"
+##     flush stdout
+##     saif_log_raw_all
+##     puts "[saif_stamp] SAIF total logged object count after fallback=$saif_total_objects"
+## }
+14:26:51 SAIF object count 14 is below 1000; falling back to raw full-DUT recursion
+14:26:51 SAIF fallback raw-all get_objects begin: /tb_AI_TRIGGER_TOP/dut/* recursive=1
+14:26:51 This can be slow on a post-route netlist; waiting here means xsim is enumerating the full DUT.
+get_objects: Time (s): cpu = 01:40:26 ; elapsed = 01:40:14 . Memory (MB): peak = 1387.496 ; gain = 8.004 ; free physical = 3409 ; free virtual = 41561
+16:07:05 SAIF fallback raw-all get_objects done: count=162789 elapsed=6014s
+16:07:05 SAIF fallback raw-all log_saif begin
+16:07:05 SAIF fallback raw-all log_saif done elapsed=0s
+16:07:05 SAIF total logged object count after fallback=162803
+## if {$saif_total_objects < 1000} {
+##     error "SAIF object count $saif_total_objects is below required minimum 1000; scope patterns likely matched too little hierarchy"
+## }
+## flush stdout
+## run all
+     0 | 0x0164        |     -9.750000 |     0 |    0 |      1.700
+     1 | 0x0166        |     -9.625000 |     0 |    0 |      1.682
+     2 | 0x0166        |     -9.625000 |     0 |    0 |      1.682
+     3 | 0x016e        |     -9.125000 |     0 |    0 |      1.682
+     4 | 0x017a        |     -8.375000 |     0 |    0 |      1.676
+     5 | 0x0174        |     -8.750000 |     0 |    0 |      1.682
+     6 | 0x016c        |     -9.250000 |     0 |    0 |      1.676
+     7 | 0x0164        |     -9.750000 |     0 |    0 |      1.688
+     8 | 0x0171        |     -8.937500 |     0 |    0 |      1.688
+     9 | 0x01ea        |     -1.375000 |     1 |    1 |      1.688
+    10 | 0x016d        |     -9.187500 |     0 |    0 |      1.688
+    11 | 0x017a        |     -8.375000 |     0 |    0 |      1.688
+    12 | 0x0154        |    -10.750000 |     0 |    0 |      1.688
+    13 | 0x016d        |     -9.187500 |     0 |    0 |      1.688
+    14 | 0x0182        |     -7.875000 |     0 |    0 |      1.688
+    15 | 0x0175        |     -8.687500 |     0 |    0 |      1.688
+
+=============================================================
+                    SIMULATION SUMMARY
+=============================================================
+Top module:       AI_TRIGGER_TOP
+CNN cores:        7 (parallel, round-robin)
+CLK_ADC:          62.5 MHz (16 ns period)
+CLK_CNN:          170.0 MHz (5.882 ns period)
+CNN_THRESH:       -96 raw (-6.0000 float)
+-------------------------------------------------------------
+Samples sent:     16
+Results received: 16
+Chunk overflows:  0 (should be 0 in normal operation)
+Correct:          16 / 16 (100.00%)
+-------------------------------------------------------------
+Avg latency:      286.6 CLK_CNN cycles  (1.686 us)
+Total sim time:   5.526 us
+Throughput:       2895403.55 samples/sec
+=============================================================
+Results saved to: /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/xsim/ai_trigger_post_impl_results.csv
+Simulation complete.
+$finish called at time : 6141660 ps : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 197
+run: Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:23 . Memory (MB): peak = 1387.496 ; gain = 0.000 ; free physical = 3255 ; free virtual = 41407
+## puts "[saif_stamp] SAIF run all done"
+16:07:28 SAIF run all done
+## flush stdout
+## close_saif
+## quit
+INFO: xsimkernel Simulation Memory Usage: 744916 KB (Peak: 753112 KB), Simulation CPU Usage: 28580 ms
+INFO: [Common 17-206] Exiting xsim at Mon May 18 16:07:29 2026...
