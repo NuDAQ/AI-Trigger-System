@@ -330,3 +330,7 @@ helps catch bad hierarchy patterns before producing a misleading power report.
 The logged object count is determined by the xsim `get_objects` scope patterns,
 not by timing constraints. The scope list is specified in
 `scripts/vivado_post_impl_saif.tcl` so the intended SAIF coverage is explicit.
+If scoped logging matches too few objects, the default flow falls back to a raw
+full-DUT recursive `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` pass and prints a
+clear message before doing so. Use `--no-saif-fallback-all` to disable that
+fallback during debugging.

@@ -38,6 +38,9 @@ if {![info exists ::RUN_SAIF_SCOPE]} {
 if {![info exists ::RUN_SAIF_MIN_OBJECTS]} {
     set ::RUN_SAIF_MIN_OBJECTS 1000
 }
+if {![info exists ::RUN_SAIF_FALLBACK_ALL]} {
+    set ::RUN_SAIF_FALLBACK_ALL 1
+}
 
 proc run_external {args} {
     puts "INFO: running: [join $args { }]"
@@ -85,6 +88,7 @@ puts "INFO: sdf_mode    = $::RUN_SAIF_SDF_MODE"
 puts "INFO: saif_start  = $::RUN_SAIF_START_US us"
 puts "INFO: saif_scope  = $::RUN_SAIF_SCOPE"
 puts "INFO: min_objects = $::RUN_SAIF_MIN_OBJECTS"
+puts "INFO: fallback_all= $::RUN_SAIF_FALLBACK_ALL"
 
 set netlist [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.v]
 set sdf     [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.sdf]
@@ -132,12 +136,46 @@ proc saif_log_scope {scope recursive} {
     puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"
     flush stdout
     if {$n > 0} {
+        puts "[saif_stamp] SAIF first objects for $scope:"
+        set preview_count 0
+        foreach obj $objs {
+            puts "    $obj"
+            incr preview_count
+            if {$preview_count >= 20} {
+                break
+            }
+        }
+        flush stdout
         puts "[saif_stamp] SAIF log_saif begin: $scope"
         flush stdout
         set t2 [clock seconds]
         log_saif $objs
         set t3 [clock seconds]
         puts "[saif_stamp] SAIF log_saif done: $scope elapsed=[expr {$t3 - $t2}]s"
+        flush stdout
+    }
+}
+
+proc saif_log_raw_all {} {
+    global saif_total_objects
+    set scope {/tb_AI_TRIGGER_TOP/dut/*}
+    puts "[saif_stamp] SAIF fallback raw-all get_objects begin: $scope recursive=1"
+    puts "[saif_stamp] This can be slow on a post-route netlist; waiting here means xsim is enumerating the full DUT."
+    flush stdout
+    set t0 [clock seconds]
+    set objs [get_objects -r $scope]
+    set n [llength $objs]
+    incr saif_total_objects $n
+    set t1 [clock seconds]
+    puts "[saif_stamp] SAIF fallback raw-all get_objects done: count=$n elapsed=[expr {$t1 - $t0}]s"
+    flush stdout
+    if {$n > 0} {
+        puts "[saif_stamp] SAIF fallback raw-all log_saif begin"
+        flush stdout
+        set t2 [clock seconds]
+        log_saif $objs
+        set t3 [clock seconds]
+        puts "[saif_stamp] SAIF fallback raw-all log_saif done elapsed=[expr {$t3 - $t2}]s"
         flush stdout
     }
 }
@@ -173,6 +211,12 @@ if {$::RUN_SAIF_SCOPE eq "top"} {
 }
 puts $fp {puts "[saif_stamp] SAIF run all begin"}
 puts $fp "puts \"\[saif_stamp\] SAIF total logged object count=\$saif_total_objects\""
+puts $fp "if {\$saif_total_objects < $::RUN_SAIF_MIN_OBJECTS && $::RUN_SAIF_FALLBACK_ALL} {"
+puts $fp "    puts \"\[saif_stamp\] SAIF object count \$saif_total_objects is below $::RUN_SAIF_MIN_OBJECTS; falling back to raw full-DUT recursion\""
+puts $fp "    flush stdout"
+puts $fp "    saif_log_raw_all"
+puts $fp "    puts \"\[saif_stamp\] SAIF total logged object count after fallback=\$saif_total_objects\""
+puts $fp "}"
 puts $fp "if {\$saif_total_objects < $::RUN_SAIF_MIN_OBJECTS} {"
 puts $fp "    error \"SAIF object count \$saif_total_objects is below required minimum $::RUN_SAIF_MIN_OBJECTS; scope patterns likely matched too little hierarchy\""
 puts $fp "}"

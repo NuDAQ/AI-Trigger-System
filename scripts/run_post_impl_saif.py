@@ -98,6 +98,7 @@ def build_saif_launcher(
         f"set ::RUN_SAIF_START_US {args.saif_start_us}",
         f"set ::RUN_SAIF_SCOPE {args.saif_scope}",
         f"set ::RUN_SAIF_MIN_OBJECTS {args.saif_min_objects}",
+        f"set ::RUN_SAIF_FALLBACK_ALL {0 if args.no_saif_fallback_all else 1}",
     ]
     if args.testhex_dir:
         testhex_dir = Path(args.testhex_dir).expanduser()
@@ -175,6 +176,11 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=1000,
         help="Fail if SAIF logging matches fewer objects than this. Default: 1000.",
+    )
+    parser.add_argument(
+        "--no-saif-fallback-all",
+        action="store_true",
+        help="Disable raw full-DUT recursive SAIF fallback when scoped logging matches too few objects.",
     )
     parser.add_argument(
         "--testhex-dir",
