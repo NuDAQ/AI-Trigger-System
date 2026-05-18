@@ -31,6 +31,17 @@
 scripts/__pycache__/
 scripts/**/*.pyc
 
+!build/
+build/*
+!build/vivado_ooc_ai_trigger/
+build/vivado_ooc_ai_trigger/*
+!build/vivado_ooc_ai_trigger/reports/
+!build/vivado_ooc_ai_trigger/reports/**
+!build/vivado_ooc_ai_trigger/checkpoints/
+!build/vivado_ooc_ai_trigger/checkpoints/*.dcp
+!build/vivado_ooc_ai_trigger/generated/
+!build/vivado_ooc_ai_trigger/generated/*.tcl
+
 # Ignore bender dependency cache (large git objects)
 .bender/
 
@@ -119,3 +130,12 @@ analysis/**/*.txt
 
 .DS_Store
 **/.DS_Store
+
+# Keep only useful outputs from the OOC timing/resource flow.
+build/vivado_ooc_ai_trigger/*
+!build/vivado_ooc_ai_trigger/reports/
+!build/vivado_ooc_ai_trigger/reports/**
+!build/vivado_ooc_ai_trigger/checkpoints/
+!build/vivado_ooc_ai_trigger/checkpoints/*.dcp
+!build/vivado_ooc_ai_trigger/generated/
+!build/vivado_ooc_ai_trigger/generated/*.tcl
