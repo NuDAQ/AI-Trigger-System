@@ -286,10 +286,34 @@ Reports are written under:
 build/vivado_ooc_ai_trigger/reports/
 ```
 
+The current committed reports should be treated as an implementation baseline,
+not as final sign-off data. They were generated before the latest 170 MHz clock
+and boundary-constraint cleanup, but they are still useful for checking that the
+seven CNN lanes are preserved through implementation.
+
+Baseline routed result summary:
+
+| Metric | Current report |
+| --- | ---: |
+| Timing | WNS 1.284 ns, TNS 0, WHS 0.027 ns |
+| LUT | 29,102 |
+| FF | 15,924 |
+| BRAM tiles | 101.5 |
+| DSP | 77 |
+| IOB | 0 |
+| Vectorless power | 1.442 W total, Medium confidence |
+
+The hierarchical utilization report shows all seven lanes present. Each lane
+contains one CNN wrapper, one async FIFO, and 11 DSPs, so the CNN datapath was
+not optimized away in the baseline implementation.
+
 The main throughput target is one 256-sample chunk every 256 ns at the ADC
 input. At seven lanes, the CNN domain should have enough margin if the single
 core transaction interval remains near 260-275 cycles and the implemented
 `CLK_CNN` frequency is at or above 170 MHz.
+
+More detailed report interpretation and the current sign-off checklist are in
+`docs/implementation.md`.
 
 ## Post-Implementation SAIF Power Flow
 

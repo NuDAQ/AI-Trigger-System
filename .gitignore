@@ -26,6 +26,9 @@
 !analysis/
 !analysis/**
 
+!docs/
+!docs/**
+
 !scripts/
 !scripts/**
 scripts/__pycache__/
