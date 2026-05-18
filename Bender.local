@@ -1,0 +1,2 @@
+overrides:
+  cnn-core: { path: "/home/work1/Works/CNN-Core-Generator"}
