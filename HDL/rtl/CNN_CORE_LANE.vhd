@@ -8,7 +8,7 @@
 --   Read port: 128-bit x 128 deep (CLK_CNN).  The FIFO is the CDC mechanism.
 --
 --   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
---   After 16 writes the chunk is complete; chunk_done_adc is set.
+--   After 16 writes the completed-chunk counter is incremented.
 --   The CNN FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel) to
 --   produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
 --
@@ -18,12 +18,12 @@
 --   This allows the ADC to write the next chunk while inference is still
 --   running, which is required for 6-lane continuous 1 Gsps operation.
 --
--- Control CDC (chunk_done / chunk_ack, 4-phase set/clear):
---   chunk_done_adc: set after 16th FIFO write, cleared by chunk_ack_adc sync.
---   chunk_done_cnn: 2-FF sync of chunk_done_adc; CNN FSM starts on rising edge.
---   chunk_ack_cnn:  set in CC_ACK (after inference done), cleared when
---                   chunk_done_cnn falls.
---   chunk_ack_adc:  2-FF sync of chunk_ack_cnn; clears chunk_done_adc.
+-- Control CDC:
+--   The FIFO carries data across domains.  A Gray-coded completion counter
+--   carries the number of fully written chunks.  The CNN side keeps its own
+--   started counter and launches whenever completed_count > started_count.
+--   This allows the FIFO to hold more than one completed chunk; a single
+--   chunk_done bit would lose completions while a previous chunk is running.
 --
 -- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
 -- =============================================================================
@@ -53,6 +53,29 @@ entity CNN_CORE_LANE is
 end entity CNN_CORE_LANE;
 
 architecture rtl of CNN_CORE_LANE is
+
+    constant CHUNK_CNT_W : integer := 4;
+    subtype chunk_cnt_t is unsigned(CHUNK_CNT_W-1 downto 0);
+
+    function bin_to_gray(b : chunk_cnt_t) return std_logic_vector is
+        variable g : chunk_cnt_t;
+        variable shifted : chunk_cnt_t;
+    begin
+        shifted := (others => '0');
+        shifted(CHUNK_CNT_W-2 downto 0) := b(CHUNK_CNT_W-1 downto 1);
+        g := b xor shifted;
+        return std_logic_vector(g);
+    end function;
+
+    function gray_to_bin(g : std_logic_vector(CHUNK_CNT_W-1 downto 0)) return chunk_cnt_t is
+        variable b : chunk_cnt_t;
+    begin
+        b(CHUNK_CNT_W-1) := g(CHUNK_CNT_W-1);
+        for i in CHUNK_CNT_W-2 downto 0 loop
+            b(i) := b(i+1) xor g(i);
+        end loop;
+        return b;
+    end function;
 
     -- -------------------------------------------------------------------------
     -- WRAPPER_TOP (Verilog, from cnn-core-wrapper dependency)
@@ -109,12 +132,9 @@ architecture rtl of CNN_CORE_LANE is
     -- CLK_ADC domain
     -- -------------------------------------------------------------------------
     signal wr_count       : integer range 0 to N_BATCHES-1 := 0;
-    signal chunk_done_adc : std_logic := '0';
+    signal chunk_count_adc : chunk_cnt_t := (others => '0');
+    signal chunk_gray_adc  : std_logic_vector(CHUNK_CNT_W-1 downto 0) := (others => '0');
     signal fifo_full_s    : std_logic;
-
-    -- 2-FF sync: chunk_ack_cnn -> CLK_ADC
-    signal chunk_ack_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
-    signal chunk_ack_adc    : std_logic;
 
     -- -------------------------------------------------------------------------
     -- CLK_CNN domain
@@ -123,11 +143,11 @@ architecture rtl of CNN_CORE_LANE is
     signal rst_cnn_ff   : std_logic_vector(1 downto 0) := "11";
     signal rst_n_cnn    : std_logic;
 
-    -- 2-FF sync: chunk_done_adc -> CLK_CNN
-    signal chunk_done_ff  : std_logic_vector(1 downto 0) := (others => '0');
-    signal chunk_done_cnn : std_logic;
-
-    signal chunk_ack_cnn  : std_logic := '0';
+    -- 2-FF sync: chunk_gray_adc -> CLK_CNN
+    signal chunk_gray_ff  : std_logic_vector(CHUNK_CNT_W*2-1 downto 0) := (others => '0');
+    signal chunk_count_cnn : chunk_cnt_t := (others => '0');
+    signal started_count_cnn : chunk_cnt_t := (others => '0');
+    signal pending_count_cnn : chunk_cnt_t;
 
     -- FIFO read side
     signal fifo_dout  : std_logic_vector(127 downto 0);
@@ -161,39 +181,28 @@ begin
     -- =========================================================================
 
     -- -------------------------------------------------------------------------
-    -- FIFO write + chunk_done_adc management
+    -- FIFO write + completed-chunk counter
     -- -------------------------------------------------------------------------
     process(CLK_ADC)
     begin
         if rising_edge(CLK_ADC) then
             if RST = '1' then
                 wr_count       <= 0;
-                chunk_done_adc <= '0';
+                chunk_count_adc <= (others => '0');
+                chunk_gray_adc  <= (others => '0');
             else
-                -- Set chunk_done after 16th write; cleared by CNN ack sync
                 if WR_EN = '1' then
                     if wr_count = N_BATCHES-1 then
-                        wr_count       <= 0;
-                        chunk_done_adc <= '1';
+                        wr_count        <= 0;
+                        chunk_count_adc <= chunk_count_adc + 1;
+                        chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
                     else
                         wr_count <= wr_count + 1;
                     end if;
                 end if;
-                if chunk_ack_adc = '1' then
-                    chunk_done_adc <= '0';
-                end if;
             end if;
         end if;
     end process;
-
-    -- 2-FF sync: chunk_ack_cnn -> CLK_ADC
-    process(CLK_ADC)
-    begin
-        if rising_edge(CLK_ADC) then
-            chunk_ack_adc_ff <= chunk_ack_adc_ff(0) & chunk_ack_cnn;
-        end if;
-    end process;
-    chunk_ack_adc <= chunk_ack_adc_ff(1);
 
     -- CHUNK_BUSY = FIFO full (write side).
     -- Falls low as soon as the CNN reads the first entry, allowing the next
@@ -213,14 +222,17 @@ begin
     end process;
     rst_n_cnn <= not rst_cnn_ff(1);
 
-    -- 2-FF sync: chunk_done_adc -> CLK_CNN
+    -- 2-FF sync: completed-chunk Gray counter -> CLK_CNN
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
-            chunk_done_ff <= chunk_done_ff(0) & chunk_done_adc;
+            chunk_gray_ff(CHUNK_CNT_W-1 downto 0) <= chunk_gray_adc;
+            chunk_gray_ff(CHUNK_CNT_W*2-1 downto CHUNK_CNT_W) <=
+                chunk_gray_ff(CHUNK_CNT_W-1 downto 0);
         end if;
     end process;
-    chunk_done_cnn <= chunk_done_ff(1);
+    chunk_count_cnn <= gray_to_bin(chunk_gray_ff(CHUNK_CNT_W*2-1 downto CHUNK_CNT_W));
+    pending_count_cnn <= chunk_count_cnn - started_count_cnn;
 
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
@@ -236,7 +248,7 @@ begin
                 fifo_rd_en   <= '0';
                 word_sel     <= '0';
                 stream_cnt   <= 0;
-                chunk_ack_cnn <= '0';
+                started_count_cnn <= (others => '0');
                 lane_valid_r  <= '0';
                 lane_score_r  <= (others => '0');
             else
@@ -247,16 +259,16 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_IDLE =>
-                        chunk_ack_cnn <= '0';
                         word_sel      <= '0';
                         stream_cnt    <= N_CHUNK_W;
 
-                        if chunk_done_cnn = '1' and fifo_empty = '0' then
+                        if pending_count_cnn /= 0 and fifo_empty = '0' then
                             -- Assert start and first word simultaneously
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
                             -- FWFT: dout already holds first 128-bit entry
                             cnn_in_data  <= fifo_dout(63 downto 0);
+                            started_count_cnn <= started_count_cnn + 1;
                             cnn_state    <= CC_STREAM;
                         end if;
 
@@ -307,7 +319,6 @@ begin
                     -- ---------------------------------------------------------
                     when CC_ACK =>
                         lane_valid_r  <= '1';
-                        chunk_ack_cnn <= '1';
                         cnn_state     <= CC_IDLE;
 
                 end case;

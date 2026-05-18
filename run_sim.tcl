@@ -4,13 +4,36 @@
 #   source run_sim.tcl
 # =============================================================================
 
-# 1. Clear the bad xsim option that puts -testplusarg into the Tcl batch file
-set_property xsim.simulate.xsim.more_options "" [get_filesets sim_1]
+# 1. Configure xsim plusargs.
+# Defaults match the interactive flow.  A batch wrapper may set any of these
+# globals before sourcing this file:
+#   RUN_SIM_TESTHEX_DIR, RUN_SIM_OUT_CSV, RUN_SIM_NUM_SAMPLES,
+#   RUN_SIM_SCORE_THRESHOLD, RUN_SIM_CNN_THRESH_RAW
+set xsim_more_options ""
+foreach {var plusarg} {
+    RUN_SIM_TESTHEX_DIR       TESTHEX_DIR
+    RUN_SIM_OUT_CSV           OUT_CSV
+    RUN_SIM_NUM_SAMPLES       NUM_SAMPLES
+    RUN_SIM_SCORE_THRESHOLD   SCORE_THRESHOLD
+    RUN_SIM_CNN_THRESH_RAW    CNN_THRESH_RAW
+} {
+    if {[info exists ::$var] && [set ::$var] ne ""} {
+        append xsim_more_options " -testplusarg $plusarg=[set ::$var]"
+    }
+}
+
+set_property xsim.simulate.xsim.more_options $xsim_more_options [get_filesets sim_1]
 set_property xsim.simulate.runtime all [get_filesets sim_1]
 
 # 2. Determine repo root from pwd (works when Vivado is opened from repo root)
-set repo_root [pwd]
+if {[info exists ::RUN_SIM_REPO_ROOT] && $::RUN_SIM_REPO_ROOT ne ""} {
+    set repo_root [file normalize $::RUN_SIM_REPO_ROOT]
+    cd $repo_root
+} else {
+    set repo_root [pwd]
+}
 puts "INFO: repo_root = $repo_root"
+puts "INFO: xsim more_options = $xsim_more_options"
 
 # 3. Find testhex_stream — look in bender checkout first, then fall back
 set bender_glob "$repo_root/.bender/git/checkouts/cnn-core-wrapper-*/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream"

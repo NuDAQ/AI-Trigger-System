@@ -26,6 +26,11 @@
 !analysis/
 !analysis/**
 
+!scripts/
+!scripts/**
+scripts/__pycache__/
+scripts/**/*.pyc
+
 # Ignore bender dependency cache (large git objects)
 .bender/
 
