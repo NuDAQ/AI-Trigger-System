@@ -102,3 +102,6 @@
 !*.elf
 !*.bmm
 !*.xmp
+
+.DS_Store
+**/.DS_Store
