@@ -99,10 +99,25 @@ synth_design \
     -top $::RUN_BUILD_TOP \
     -part $::RUN_BUILD_PART \
     -mode out_of_context \
-    -flatten_hierarchy rebuilt
+    -flatten_hierarchy none
+
+# Keep the OOC implementation from trimming CNN/FIFO internals across the block
+# boundary.  This flow is for subsystem resource/timing analysis, so preserving
+# lane hierarchy is more useful than cross-boundary optimization.
+set preserve_cells [get_cells -quiet -hierarchical -filter {
+    NAME =~ *u_WRAPPER ||
+    NAME =~ *cnn_core_inst ||
+    NAME =~ *u_FIFO
+}]
+if {[llength $preserve_cells] > 0} {
+    puts "INFO: preserving [llength $preserve_cells] CNN/FIFO hierarchy cells through implementation"
+    set_property DONT_TOUCH true $preserve_cells
+}
 
 write_checkpoint -force [file join $dcp_dir post_synth.dcp]
 report_utilization -file [file join $rpt_dir post_synth_utilization.rpt]
+report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_synth_utilization_hier.rpt]
+catch {report_methodology -file [file join $rpt_dir post_synth_methodology.rpt]}
 report_timing_summary -file [file join $rpt_dir post_synth_timing_summary.rpt]
 report_clock_interaction -file [file join $rpt_dir post_synth_clock_interaction.rpt]
 report_cdc -file [file join $rpt_dir post_synth_cdc.rpt]
@@ -111,10 +126,12 @@ if {$::RUN_BUILD_IMPL} {
     puts "INFO: running OOC implementation..."
     opt_design
     write_checkpoint -force [file join $dcp_dir post_opt.dcp]
+    report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_opt_utilization_hier.rpt]
 
     place_design
     write_checkpoint -force [file join $dcp_dir post_place.dcp]
     report_utilization -file [file join $rpt_dir post_place_utilization.rpt]
+    report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_place_utilization_hier.rpt]
     report_timing_summary -file [file join $rpt_dir post_place_timing_summary.rpt]
 
     catch {phys_opt_design}
@@ -122,6 +139,8 @@ if {$::RUN_BUILD_IMPL} {
     write_checkpoint -force [file join $dcp_dir post_route.dcp]
 
     report_utilization -file [file join $rpt_dir post_route_utilization.rpt]
+    report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_route_utilization_hier.rpt]
+    catch {report_methodology -file [file join $rpt_dir post_route_methodology.rpt]}
     report_timing_summary -file [file join $rpt_dir post_route_timing_summary.rpt]
     report_clock_interaction -file [file join $rpt_dir post_route_clock_interaction.rpt]
     report_cdc -file [file join $rpt_dir post_route_cdc.rpt]
