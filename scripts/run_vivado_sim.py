@@ -106,12 +106,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--score-threshold",
         type=float,
-        help="Pass +SCORE_THRESHOLD=<f> to the testbench checker.",
+        help="Pass +SCORE_THRESHOLD=<f> to the testbench checker. Default is -6.0 in the testbench.",
     )
     parser.add_argument(
         "--cnn-thresh-raw",
         type=int,
-        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input.",
+        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default is -96 in the testbench.",
     )
     parser.add_argument(
         "--keep-tcl",

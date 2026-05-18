@@ -8,11 +8,13 @@
 --   - CNN_CORE_LANE x N_LANES: FIFO buffer + CDC + CNN inference per lane
 --
 -- Trigger decision (CLK_CNN domain):
---   CNN_TRIG fires for one CLK_CNN cycle when any lane reports
---   a score that exceeds CNN_THRESH (signed comparison, ap_fixed<16,6>).
+--   CNN_TRIG fires for one CLK_CNN cycle when any lane reports a score that
+--   exceeds CNN_THRESH.  WRAPPER_TOP returns ap_fixed<9,5> byte-aligned into
+--   the low 9 bits of a 16-bit TDATA word, matching its reference testbench:
+--   float_score = signed(score[8:0]) / 16.
 --
--- CNN_THRESH encoding (ap_fixed<16,6>, raw / 1024 = float score):
---   0.5  -> 16'sd512    1.0 -> 16'sd1024    -0.5 -> 16'sd-512
+-- CNN_THRESH encoding (ap_fixed<9,5>, raw / 16 = float score):
+--   0.5 -> 9'sd8    1.0 -> 9'sd16    -6.0 -> 9'sd-96
 -- =============================================================================
 
 library ieee;
@@ -94,7 +96,8 @@ begin
                 if lane_valid(i) = '1' then
                     last_data  := lane_score(i);
                     last_valid := '1';
-                    if signed(lane_score(i)) > signed(CNN_THRESH) then
+                    if signed(lane_score(i)(8 downto 0)) >
+                       signed(CNN_THRESH(8 downto 0)) then
                         any_trig := '1';
                     end if;
                 end if;

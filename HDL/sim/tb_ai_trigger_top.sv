@@ -17,8 +17,11 @@
 //   One sample = 256 timesteps = 16 batches x 16 timesteps/batch.
 //   The testbench presents 16 timesteps per DATA_STR pulse (one CLK_ADC cycle).
 //
-// Score decoding:  float_score = $signed(CNN_OUT_DATA) / 1024.0  (ap_fixed<16,6>)
-// CNN_THRESH default: 16'sd512 = 0.5
+// Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
+//   float_score = $signed(CNN_OUT_DATA[8:0]) / 16.0
+// The core output is ap_fixed<9,5>, byte-aligned into a 16-bit TDATA word.
+// The wrapper behavioral reference run uses SCORE_THRESHOLD=-6.0, so the
+// matching CNN_THRESH default is 9'sd-96.
 //
 // Clocks:
 //   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
@@ -28,8 +31,8 @@
 //   +TESTHEX_DIR=<path>     directory containing testhex_stream files
 //   +OUT_CSV=<path>         output CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
-//   +SCORE_THRESHOLD=<f>    classification threshold (default 0.5)
-//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default 512)
+//   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
+//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -96)
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -137,9 +140,9 @@ module tb_AI_TRIGGER_TOP;
         if (!$value$plusargs("NUM_SAMPLES=%d", num_samples))
             num_samples = NUM_SAMPLES_DEFAULT;
         if (!$value$plusargs("SCORE_THRESHOLD=%f", score_threshold))
-            score_threshold = 0.5;
+            score_threshold = -6.0;
         if (!$value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw))
-            cnn_thresh_raw = 512;  // 0.5 in ap_fixed<16,6>
+            cnn_thresh_raw = -96;  // -6.0 in ap_fixed<9,5>
 
         cnn_thresh    = $signed(cnn_thresh_raw[15:0]);
         adc_data4_flat = 768'h0;
@@ -164,12 +167,15 @@ module tb_AI_TRIGGER_TOP;
         repeat(10) @(posedge clk_cnn);
         repeat(4)  @(posedge clk_adc);
         rst      = 0;
-        repeat(1)  @(posedge clk_adc);
+        // Let FIFO Generator reset-busy/full flags settle before presenting
+        // sample 0.  Otherwise the first chunk can be dropped and the monitor
+        // will wait forever for the missing final result.
+        repeat(32) @(posedge clk_adc);
 
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
-                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 1024.0);
+                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
         $display("---------------------------------------------------------------------");
         $display("Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)");
         $display("---------------------------------------------------------------------");
@@ -265,8 +271,8 @@ module tb_AI_TRIGGER_TOP;
 
                     latency_cycles = (t_end - t_start) / CLK_CNN_PERIOD;
 
-                    // Decode score: ap_fixed<16,6>, divide by 1024
-                    out_float  = $itor($signed(cnn_out_data)) / 1024.0;
+                    // Decode score: ap_fixed<9,5>, byte-aligned in [8:0].
+                    out_float  = $itor($signed(cnn_out_data[8:0])) / 16.0;
                     prediction = (out_float > score_threshold) ? 1 : 0;
                     label_val  = labels[received_count];
                     is_correct = (prediction == label_val) ? 1 : 0;
@@ -310,7 +316,7 @@ module tb_AI_TRIGGER_TOP;
             $display("CLK_CNN:          %.0f MHz (%.0f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
-                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 1024.0);
+                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
             $display("-------------------------------------------------------------");
             $display("Samples sent:     %0d", sent_count);
             $display("Results received: %0d", received_count);
