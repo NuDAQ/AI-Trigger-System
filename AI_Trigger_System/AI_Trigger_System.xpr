@@ -61,7 +61,7 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="FeatureSet" Val="FeatureSet_Classic"/>
-    <Option Name="WTXSimLaunchSim" Val="0"/>
+    <Option Name="WTXSimLaunchSim" Val="1"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -92,6 +92,13 @@
   <FileSets Version="1" Minor="32">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
       <Filter Type="Srcs"/>
+      <File Path="$PSRCDIR/sources_1/ip/fifo_async_1024_to_64/fifo_async_1024_to_64.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -346,8 +353,24 @@
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/ip/fifo_async_1024_to_64/fifo_async_1024_to_64.xci">
+      <File Path="$PPRDIR/../.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/sim/tb_stream.sv">
         <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../HDL/sim/tb_ai_trigger_top.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -357,7 +380,8 @@
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="AI_TRIGGER_TOP"/>
         <Verilog_Define Name="TARGET_FPGA"/>
-        <Verilog_Define Name="TARGET_SYNTHESIS"/>
+        <Verilog_Define Name="TARGET_SIM"/>
+        <Verilog_Define Name="TARGET_SIMULATION"/>
         <Verilog_Define Name="TARGET_VIVADO"/>
         <Verilog_Define Name="TARGET_XILINX"/>
       </Config>
@@ -371,9 +395,8 @@
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1" RelGenDir="$PGENDIR/sim_1">
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="AI_TRIGGER_TOP"/>
+        <Option Name="TopModule" Val="AI_TRIGGER_TOP_TB_WRAP"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="TransportPathDelay" Val="0"/>
         <Option Name="TransportIntDelay" Val="0"/>
         <Option Name="SelectedSimModel" Val="rtl"/>
@@ -382,8 +405,14 @@
         <Option Name="PamSignalDriverFile" Val="xil_bypass_driver"/>
         <Option Name="PamPseudoTop" Val="pseudo_tb"/>
         <Option Name="SrcSet" Val="sources_1"/>
+        <Option Name="xsim.simulate.runtime" Val="all"/>
+        <Option Name="xsim.simulate.xsim.more_options" Val="
+        -testplusarg TESTHEX_DIR=/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-.../cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream
+        -testplusarg OUT_CSV=/home/work1/Works/AI-Trigger-System/out/ai_trigger_results.csv
+    "/>
         <Verilog_Define Name="TARGET_FPGA"/>
-        <Verilog_Define Name="TARGET_SYNTHESIS"/>
+        <Verilog_Define Name="TARGET_SIM"/>
+        <Verilog_Define Name="TARGET_SIMULATION"/>
         <Verilog_Define Name="TARGET_VIVADO"/>
         <Verilog_Define Name="TARGET_XILINX"/>
       </Config>
