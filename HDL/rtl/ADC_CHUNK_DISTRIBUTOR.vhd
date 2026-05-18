@@ -7,9 +7,9 @@
 -- After N_BATCHES (16) cycles the complete 256-sample chunk is committed to the
 -- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --
--- CHUNK_BUSY feedback (CLK_ADC domain) comes from each lane's FIFO full signal.
--- If the target lane's FIFO is full when the chunk boundary arrives, the chunk
--- is dropped and CHUNK_OVERFLOW is asserted.
+-- CHUNK_BUSY feedback (CLK_ADC domain) means the selected lane cannot accept
+-- a complete 16-batch chunk.  The decision is made once at the chunk boundary:
+-- either all 16 batches are written, or the whole chunk is dropped.
 --
 -- BATCH_DATA packing (1024-bit = 16 words x 64-bit):
 --   word[i] bits [15: 0] = ch0 sample i, sign-extended 12->16 bit
@@ -44,6 +44,7 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
 
     signal batch_cnt  : integer range 0 to N_BATCHES-1 := 0;
     signal lane_sel   : integer range 0 to N_LANES-1   := 0;
+    signal drop_chunk : std_logic := '0';
     signal overflow_r : std_logic := '0';
     signal we_r       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
@@ -77,6 +78,7 @@ begin
             if RST = '1' then
                 batch_cnt  <= 0;
                 lane_sel   <= 0;
+                drop_chunk <= '0';
                 we_r       <= (others => '0');
                 overflow_r <= '0';
             else
@@ -84,8 +86,14 @@ begin
                 overflow_r <= '0';
 
                 if DATA_STR = '1' then
-                    -- Write this batch to the current lane if FIFO has space
-                    if LANE_BUSY(lane_sel) = '0' then
+                    -- Decide once at the first batch of a chunk.  This avoids
+                    -- partially writing a chunk if a lane becomes unavailable.
+                    if batch_cnt = 0 then
+                        drop_chunk <= LANE_BUSY(lane_sel);
+                    end if;
+
+                    if (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+                       (batch_cnt /= 0 and drop_chunk = '0') then
                         we_r(lane_sel) <= '1';
                     else
                         overflow_r <= '1';
@@ -99,6 +107,7 @@ begin
                         else
                             lane_sel <= lane_sel + 1;
                         end if;
+                        drop_chunk <= '0';
                     else
                         batch_cnt <= batch_cnt + 1;
                     end if;

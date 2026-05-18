@@ -12,11 +12,9 @@
 --   The CNN input FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel)
 --   to produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
 --
--- CHUNK_BUSY = fifo_full (CLK_ADC domain):
---   High while the FIFO holds an unread chunk (~640 ns at 200 MHz).
---   Falls low as soon as the CNN starts reading, long before inference ends.
---   This allows the ADC to write the next chunk while inference is still
---   running, which is required for 6-lane continuous 1 Gsps operation.
+-- CHUNK_BUSY is asserted while this lane has a complete chunk that has not
+-- yet been fully consumed by the CNN input stream.  It is cleared when the
+-- 256-word stream finishes, not when inference output is produced.
 --
 -- Control CDC:
 --   The FIFO carries data across domains.  A Gray-coded completion counter
@@ -43,7 +41,7 @@ entity CNN_CORE_LANE is
         WR_EN        : in  std_logic;
         BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
 
-        -- To distributor (CLK_ADC domain) — FIFO write-side full
+        -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
 
         -- Results (CLK_CNN domain)
@@ -134,7 +132,12 @@ architecture rtl of CNN_CORE_LANE is
     signal wr_count       : integer range 0 to N_BATCHES-1 := 0;
     signal chunk_count_adc : chunk_cnt_t := (others => '0');
     signal chunk_gray_adc  : std_logic_vector(CHUNK_CNT_W-1 downto 0) := (others => '0');
+    signal chunk_busy_adc  : std_logic := '0';
     signal fifo_full_s    : std_logic;
+
+    -- 2-FF sync: stream_done_toggle_cnn -> CLK_ADC
+    signal stream_done_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
+    signal stream_done_seen_adc : std_logic := '0';
 
     -- -------------------------------------------------------------------------
     -- CLK_CNN domain
@@ -148,6 +151,7 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_count_cnn : chunk_cnt_t := (others => '0');
     signal started_count_cnn : chunk_cnt_t := (others => '0');
     signal pending_count_cnn : chunk_cnt_t;
+    signal stream_done_toggle_cnn : std_logic := '0';
 
     -- FIFO read side
     signal fifo_dout  : std_logic_vector(127 downto 0);
@@ -192,12 +196,20 @@ begin
                 wr_count       <= 0;
                 chunk_count_adc <= (others => '0');
                 chunk_gray_adc  <= (others => '0');
+                chunk_busy_adc  <= '0';
+                stream_done_seen_adc <= '0';
             else
+                if stream_done_adc_ff(1) /= stream_done_seen_adc then
+                    stream_done_seen_adc <= stream_done_adc_ff(1);
+                    chunk_busy_adc <= '0';
+                end if;
+
                 if WR_EN = '1' then
                     if wr_count = N_BATCHES-1 then
                         wr_count        <= 0;
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
+                        chunk_busy_adc  <= '1';
                     else
                         wr_count <= wr_count + 1;
                     end if;
@@ -206,10 +218,14 @@ begin
         end if;
     end process;
 
-    -- CHUNK_BUSY = FIFO full (write side).
-    -- Falls low as soon as the CNN reads the first entry, allowing the next
-    -- chunk to be written while inference is still in progress.
-    CHUNK_BUSY <= fifo_full_s;
+    process(CLK_ADC)
+    begin
+        if rising_edge(CLK_ADC) then
+            stream_done_adc_ff <= stream_done_adc_ff(0) & stream_done_toggle_cnn;
+        end if;
+    end process;
+
+    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s;
 
     -- =========================================================================
     -- CLK_CNN DOMAIN
@@ -251,6 +267,7 @@ begin
                 word_sel     <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
+                stream_done_toggle_cnn <= '0';
                 lane_valid_r <= '0';
                 lane_score_r <= (others => '0');
             else
@@ -312,6 +329,7 @@ begin
                             if stream_cnt = 1 then
                                 cnn_start    <= '0';
                                 cnn_in_valid <= '0';
+                                stream_done_toggle_cnn <= not stream_done_toggle_cnn;
                                 cnn_state    <= CC_IDLE;
                             end if;
                         end if;
