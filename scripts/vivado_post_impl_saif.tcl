@@ -102,30 +102,35 @@ if {$::RUN_SAIF_START_US > 0.0} {
     puts $fp "run $::RUN_SAIF_START_US us"
 }
 puts $fp "open_saif {$saif}"
-puts $fp {proc saif_stamp {} {return [clock format [clock seconds] -format {%H:%M:%S}]}}
-puts $fp {proc saif_log_scope {scope recursive} {}
-puts $fp {    puts "[saif_stamp] SAIF get_objects begin: $scope recursive=$recursive"}
-puts $fp {    flush stdout}
-puts $fp {    set t0 [clock seconds]}
-puts $fp {    if {$recursive} {}
-puts $fp {        set objs [get_objects -r $scope]}
-puts $fp {    } else {}
-puts $fp {        set objs [get_objects $scope]}
-puts $fp {    }}
-puts $fp {    set n [llength $objs]}
-puts $fp {    set t1 [clock seconds]}
-puts $fp {    puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"}
-puts $fp {    flush stdout}
-puts $fp {    if {$n > 0} {}
-puts $fp {        puts "[saif_stamp] SAIF log_saif begin: $scope"}
-puts $fp {        flush stdout}
-puts $fp {        set t2 [clock seconds]}
-puts $fp {        log_saif $objs}
-puts $fp {        set t3 [clock seconds]}
-puts $fp {        puts "[saif_stamp] SAIF log_saif done: $scope elapsed=[expr {$t3 - $t2}]s"}
-puts $fp {        flush stdout}
-puts $fp {    }}
-puts $fp {}}
+puts $fp {
+proc saif_stamp {} {
+    return [clock format [clock seconds] -format {%H:%M:%S}]
+}
+
+proc saif_log_scope {scope recursive} {
+    puts "[saif_stamp] SAIF get_objects begin: $scope recursive=$recursive"
+    flush stdout
+    set t0 [clock seconds]
+    if {$recursive} {
+        set objs [get_objects -r $scope]
+    } else {
+        set objs [get_objects $scope]
+    }
+    set n [llength $objs]
+    set t1 [clock seconds]
+    puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"
+    flush stdout
+    if {$n > 0} {
+        puts "[saif_stamp] SAIF log_saif begin: $scope"
+        flush stdout
+        set t2 [clock seconds]
+        log_saif $objs
+        set t3 [clock seconds]
+        puts "[saif_stamp] SAIF log_saif done: $scope elapsed=[expr {$t3 - $t2}]s"
+        flush stdout
+    }
+}
+}
 if {$::RUN_SAIF_SCOPE eq "top"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
 } elseif {$::RUN_SAIF_SCOPE eq "lane0"} {
