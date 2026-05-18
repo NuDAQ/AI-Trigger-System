@@ -2,253 +2,291 @@
 
 [![MIT license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## Introduction
+## Overview
 
-A direct CNN trigger for ARIANNA, a neutrino experiment. This is a 4-channel trigger module
-that feeds continuous 1 Gsps ADC data through a cluster of 6 parallel CNN inference cores,
-producing real-time trigger decisions at the full sample rate with no pre-trigger requirement.
-Here are the newest releases for the
-[CNN core generator](https://github.com/NuDAQ/CNN-Core-Generator/releases) and
-[CNN core wrapper](https://github.com/NuDAQ/CNN-Core-Wrapper/releases).
+This repository contains an FPGA AI trigger path for continuous radio detector
+ADC data. The current top-level design accepts four channels of 1 Gsps ADC data,
+groups the stream into 256-sample chunks, and distributes those chunks across
+seven parallel CNN inference lanes.
 
-### The Structure
+The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
+dependencies. The local RTL handles ADC-domain batching, clock-domain crossing,
+lane scheduling, output aggregation, and the trigger threshold comparison.
 
-#### Module Hierarchy
+## Current Architecture
 
-```
-AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd        (top-level, structural)
-├── AI_TRIGGER_PKG          HDL/rtl/AI_TRIGGER_PKG.vhd        (shared type definitions)
-├── ADC_CHUNK_DISTRIBUTOR   HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd (CLK_ADC: batch accumulator + round-robin)
-└── CNN_CORE_LANE × 6       HDL/rtl/CNN_CORE_LANE.vhd
-    └── WRAPPER_TOP         [dep: cnn-core-wrapper v3.0.1]
-        └── cnn_core        [dep: cnn-core v3.0.2]
-```
+Top-level hierarchy:
 
-#### Data Flow
-
-```
-ADC_DATA4  (4 ch × 16 samples × 12-bit, CLK_ADC domain)
-    │
-    ▼
-ADC_CHUNK_DISTRIBUTOR
-    │  Counts DATA_STR pulses; after 16 pulses a 256-sample chunk is complete.
-    │  Round-robin: chunk N → lane (N mod 6).
-    │  Each lane: True Dual-Port BRAM (256 × 64-bit, 1 BRAM_18K).
-    │             4-phase CDC handshake (CLK_ADC write → CLK_CNN read).
-    │
-    ├──► CNN_CORE_LANE [0] ──► WRAPPER_TOP ──► cnn_core
-    ├──► CNN_CORE_LANE [1] ──► WRAPPER_TOP ──► cnn_core
-    ├──► CNN_CORE_LANE [2] ──► WRAPPER_TOP ──► cnn_core
-    ├──► CNN_CORE_LANE [3] ──► WRAPPER_TOP ──► cnn_core
-    ├──► CNN_CORE_LANE [4] ──► WRAPPER_TOP ──► cnn_core
-    └──► CNN_CORE_LANE [5] ──► WRAPPER_TOP ──► cnn_core
-                                    │
-                             score[0..5] (16-bit signed, ap_fixed<16,6>)
-                                    │
-                             comparator (CNN_THRESH), per lane
-                                    │
-                                    ▼
-                       CNN_TRIG ← OR of all lane triggers
-                       (CLK_CNN, 1-cycle pulse)
+```text
+AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
+  AI_TRIGGER_PKG            HDL/rtl/AI_TRIGGER_PKG.vhd
+  ADC_CHUNK_DISTRIBUTOR     HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+  CNN_CORE_LANE x 7         HDL/rtl/CNN_CORE_LANE.vhd
+    fifo_async_1024_to_64   Vivado FIFO Generator IP
+    WRAPPER_TOP             cnn-core-wrapper dependency
+      cnn_core              cnn-core dependency
 ```
 
-#### Clock Domains
+### Clock Domains
 
-| Clock     | Typical frequency | Responsibilities                                        |
-|-----------|-------------------|---------------------------------------------------------|
-| `CLK_ADC` | 62.5 MHz          | ADC ingestion (16 samples/cycle = 1 Gsps), chunk accumulation, BRAM write |
-| `CLK_CNN` | 200 MHz           | CNN inference (all 6 cores), BRAM read, AXI-S streaming, trigger comparison |
+| Clock | Nominal rate | Function |
+| --- | ---: | --- |
+| `CLK_ADC` | 62.5 MHz | Accepts 16 ADC samples per cycle per channel, equivalent to 1 Gsps per channel. |
+| `CLK_CNN` | 175 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
 
-`RST` is shared (active-high, synchronous to `CLK_ADC`).
-Each `CNN_CORE_LANE` re-times it into the `CLK_CNN` domain via a 2-FF synchronizer and drives
-the active-low `rst_n` that `WRAPPER_TOP` requires.
+The reset input `RST` is active high and generated in the ADC domain. Each
+`CNN_CORE_LANE` retimes reset into the CNN clock domain before driving the
+active-low reset expected by `WRAPPER_TOP`.
 
-#### Chunk Timing and Throughput
+### ADC Input Format
 
-| Quantity                     | Value                           | Notes                                             |
-|------------------------------|---------------------------------|---------------------------------------------------|
-| ADC sample rate              | 1 Gsps                          | 16 samples per `CLK_ADC` cycle at 62.5 MHz        |
-| Batch period                 | 16 ns                           | One `CLK_ADC` cycle                               |
-| Chunk size                   | 256 samples × 4 channels        | 256 × 64-bit words; fills in 16 batches           |
-| Chunk arrival period         | 256 ns                          | 16 batches × 16 ns                                |
-| CNN interval (single core)   | ~260 cycles @ 200 MHz ≈ 1300 ns | HLS cosim confirmed; interval dominates latency   |
-| Minimum cores required       | ⌈1300 / 256⌉ = 6               | To sustain 1 chunk per 256 ns average             |
-| Per-lane chunk cadence       | 6 × 256 ns = 1536 ns            | Each lane finishes (1300 ns) before its next chunk |
+The simulation wrapper exposes the four-channel ADC input as a flat 768-bit
+vector:
 
-64-bit word format (one sample across 4 channels):
-```
-[63:48]  ch3  (4-bit zero pad | 12-bit ADC)
-[47:32]  ch2
-[31:16]  ch1
-[15: 0]  ch0
+```text
+4 channels x 16 samples per ADC cycle x 12 bits = 768 bits
 ```
 
-#### Top-Level Port Interface (`AI_TRIGGER_TOP`)
+The SystemVerilog testbench and VHDL wrapper use this convention:
 
-**Ports**
-
-| Port            | Dir | Width      | Clock     | Description                                                                                           |
-|-----------------|-----|------------|-----------|-------------------------------------------------------------------------------------------------------|
-| `CLK_ADC`       | in  | 1          | —         | ADC batch clock (~62.5 MHz)                                                                           |
-| `CLK_CNN`       | in  | 1          | —         | CNN inference clock (~200 MHz)                                                                        |
-| `RST`           | in  | 1          | CLK_ADC   | Active-high synchronous reset                                                                         |
-| `DATA_STR`      | in  | 1          | CLK_ADC   | One pulse per 16-sample batch                                                                         |
-| `ADC_DATA4`     | in  | 4×16×12    | CLK_ADC   | ADC samples, `adc_data4_type` (defined in `AI_TRIGGER_PKG`)                                          |
-| `CNN_THRESH`    | in  | 16         | static    | Signed trigger threshold in ap_fixed\<16,6\> raw units (score = raw / 1024). See table below.        |
-| `CNN_TRIG`      | out | 1          | CLK_CNN   | 1-cycle pulse when any lane score > `CNN_THRESH`                                                      |
-| `CNN_OUT_DATA`  | out | 16         | CLK_CNN   | Most recent CNN score, ap_fixed\<16,6\> raw                                                           |
-| `CNN_OUT_VALID` | out | 1          | CLK_CNN   | Score valid strobe (one cycle, from whichever lane completed last)                                    |
-| `CHUNK_OVERFLOW`| out | 1          | CLK_ADC   | Sticky: a chunk arrived while its assigned lane BRAM was not yet drained                              |
-
-`CNN_TRIG` is in the **CLK_CNN domain**. CDC to `CLK_ADC` is the responsibility of the
-instantiating level.
-
-#### L1 CNN Trigger (`CNN_THRESH` / `CNN_TRIG`)
-
-After each CNN inference completes, a registered comparator produces a hard binary decision:
-
-```
-score  =  signed(lane_score[15:0]) / 1024.0   (ap_fixed<16,6>)
-CNN_TRIG  ←  '1'  if  signed(lane_score) > signed(CNN_THRESH),  else '0'
+```text
+ADC_DATA4_FLAT[(ch * 16 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
 ```
 
-`CNN_THRESH` uses the same 16-bit ap_fixed\<16,6\> raw encoding as `CNN_OUT_DATA`:
+The CNN test vectors store one timestep as four packed 12-bit values:
 
-| Desired threshold | `CNN_THRESH` value |
-|-------------------|--------------------|
-| 0.5               | `16'sd512`         |
-| 0.0               | `16'sd0`           |
-| 1.0               | `16'sd1024`        |
-| −0.5              | `16'sd-512`        |
+```text
+raw[11: 0] = ch0
+raw[23:12] = ch1
+raw[35:24] = ch2
+raw[47:36] = ch3
+raw[63:48] = unused
+```
 
-#### ADC_CHUNK_DISTRIBUTOR Internal State Machine
+The distributor sign-extends each 12-bit channel value to a 16-bit AXI-stream
+lane before sending data to the CNN wrapper:
 
-`ADC_CHUNK_DISTRIBUTOR` runs entirely in the `CLK_ADC` domain.
+```text
+axis_word[15: 0] = sign_extend(ch0[11:0])
+axis_word[31:16] = sign_extend(ch1[11:0])
+axis_word[47:32] = sign_extend(ch2[11:0])
+axis_word[63:48] = sign_extend(ch3[11:0])
+```
 
-| State    | Action                                                                                                     |
-|----------|------------------------------------------------------------------------------------------------------------|
-| `FILL`   | On each `DATA_STR` pulse, pack the 16 incoming samples into a 64-bit word and write to `bram[wr_lane]` at address `batch_cnt`. Increment `batch_cnt`. |
-| `COMMIT` | After 16 batches (`batch_cnt` wraps): set `chunk_ready[wr_lane]`. Advance `wr_lane` mod 6. Check next lane; if its `chunk_ready` is already set, assert `CHUNK_OVERFLOW`. Return to `FILL`. |
+## Data Flow
 
-#### CNN_CORE_LANE Internal State Machine
+`ADC_CHUNK_DISTRIBUTOR` runs in the ADC clock domain. Each `DATA_STR` cycle
+contains 16 timesteps for all four channels. A CNN chunk is 256 timesteps, so
+one chunk is complete after 16 ADC cycles.
 
-Each `CNN_CORE_LANE` contains a True Dual-Port BRAM (256 × 64-bit), a CDC handshake pair, and
-a streaming FSM in the `CLK_CNN` domain.
+For every chunk:
 
-**CDC Handshake Protocol** (4-phase set/clear, identical to HiLoGatedCNNTrigger):
+1. The distributor selects a lane in round-robin order.
+2. If the selected lane is available, all 16 ADC batches are written into that
+   lane's async FIFO as 1024-bit words.
+3. If the selected lane is busy at the start of the chunk, the whole chunk is
+   dropped and `CHUNK_OVERFLOW` is asserted for that ADC cycle.
+4. The CNN side reads the FIFO as 128-bit words and emits 256 consecutive
+   64-bit AXI-stream words to `WRAPPER_TOP`.
 
-1. ADC side sets `chunk_ready` (CLK_ADC) after BRAM write completes.
-2. `chunk_ready_cnn` is the 2-FF synchronized copy visible in CLK_CNN domain.
-3. CNN side sets `chunk_ack` (CLK_CNN) after streaming + inference completes.
-4. `chunk_ack_adc` (synchronized back to CLK_ADC) clears `chunk_ready`.
+`CNN_CORE_LANE` releases `CHUNK_BUSY` after the 256 input words have been
+accepted by the CNN input stream. It does not wait for the CNN score output.
+This allows the input side of a lane to accept a later chunk while the previous
+chunk is still propagating through the CNN pipeline.
 
-**CNN Stream FSM (CLK_CNN)**
+## Timing and Throughput
 
-| State          | Action                                                                                                  |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| `CC_IDLE`      | Wait for `chunk_ready_cnn = '1'`. Assert `ap_start`. Move to `CC_STREAM`.                              |
-| `CC_STREAM`    | Read BRAM sequentially, one word per cycle. Drive `input_data` + `input_valid` to WRAPPER_TOP. Hold `ap_start` until `ap_ready` rises. After 256 words, clear `input_valid`. Move to `CC_WAIT_DONE`. |
-| `CC_WAIT_DONE` | Wait for `ap_done`. Latch `output_data` when `output_valid` rises. Move to `CC_ACK`.                   |
-| `CC_ACK`       | Assert `lane_valid` + `lane_score` to top level. Set `chunk_ack`. Return to `CC_IDLE`.                 |
+At 1 Gsps, one 256-sample chunk arrives every:
 
-**ap_ctrl_hs protocol note**: `ap_start` must be held high until `ap_ready` rises. The first
-word of input must be presented simultaneously with `ap_start`. Any bubble in the input stream
-stalls the HLS datapath and will produce incorrect inference results.
+```text
+256 samples / 1 GHz = 256 ns
+```
 
-**RST synchronizer**: `rst_s1` and `rst_cnn` are initialized to `'1'` so that `rst_n = '0'`
-is driven to `cnn_core` before any `CLK_CNN` edge, matching the HLS reset expectation.
+With seven lanes, each lane receives a new chunk every:
 
-#### Async FIFO IP (`fifo_async_1024_to_64`)
+```text
+7 x 256 ns = 1792 ns
+```
 
-Each `CNN_CORE_LANE` instantiates one Xilinx FIFO Generator IP.
-Required configuration (Vivado IP Catalog → FIFO Generator 13.2):
+The CNN wrapper's single-core transaction interval is about 260-275 CNN clock
+cycles in the current behavioral simulation. The minimum CNN clock to sustain
+the ADC stream is therefore approximately:
 
-| Tab          | Setting                   | Value                              |
-|--------------|---------------------------|------------------------------------|
-| Basic        | Fifo Implementation       | Independent Clocks Block RAM       |
-| Basic        | Synchronization Stages    | 2                                  |
-| Native Ports | Read Mode                 | **First Word Fall Through**        |
-| Native Ports | Asymmetric Port Width     | Enabled                            |
-| Native Ports | Write Width               | 1024                               |
-| Native Ports | Write Depth               | 32  (Actual Write Depth ≈ 31)      |
-| Native Ports | Read Width                | 128 (Actual Read Depth ≈ 248)      |
-| Native Ports | Output Registers          | Off (FWFT uses embedded BRAM reg)  |
-| Native Ports | Enable Safety Circuit     | **On** (prevents BRAM corruption)  |
-| Status Flags | All flags                 | Off                                |
-| Data Counts  | All counts                | Off                                |
+```text
+f_CNN >= CNN_interval_cycles / (N_LANES x 256 ns)
+```
 
-The FSM streams all 256 CNN input words with **no bubbles** at 1 word/CLK\_CNN cycle.
-Read latency is 0 in FWFT mode; `rd_en` asserted when consuming the lower half of each
-128-bit entry causes the upper half to be valid in the same dout (unchanged), and the
-next entry appears at dout exactly one CLK\_CNN cycle later.
+Using 275 cycles and 7 lanes:
 
-#### BRAM Resource Budget
+```text
+f_CNN >= 275 / 1792 ns = 153.5 MHz
+```
 
-Per-lane FIFO (1024-bit write / 128-bit read, depth 32):
+Using the measured AI top end-to-end latency of about 288 CNN cycles as a
+conservative interval estimate:
 
-| Resource       | Per lane | Total (6 lanes) |
-|----------------|----------|-----------------|
-| BRAM_18K       | 1        | 6               |
-| BRAM_36K       | 14       | 84              |
+```text
+f_CNN >= 288 / 1792 ns = 160.7 MHz
+```
 
-CNN core resources (from HLS synthesis, per lane):
+The current 175 MHz CNN clock target leaves margin while remaining more
+conservative for implementation. For comparison, six lanes would require about
+179-188 MHz using the same assumptions, which does not leave enough margin at a
+175 MHz target.
 
-| Resource  | Per core |
-|-----------|----------|
-| BRAM_18K  | 0        |
-| DSP       | 11       |
-| FF        | ~3000    |
-| LUT       | ~26500   |
+The measured full-system simulation result after the current fixes is:
 
-Total BRAM utilisation (6 FIFOs only): 84 BRAM\_36K / 240 available ≈ 35 %.
+```text
+Samples sent:     1000
+Results received: 1000
+Chunk overflows:  0
+Accuracy:         955 / 1000 = 95.50%
+Latency:          287-288 CLK_CNN cycles
+```
+
+The reported latency is end-to-end from the start of the ADC chunk to
+`CNN_OUT_VALID`. It includes ADC batching, FIFO/CDC, CNN input streaming, CNN
+pipeline latency, and output aggregation. It is not the steady-state output
+interval. In steady state, accepted chunks are launched at the ADC chunk rate
+across the seven lanes.
+
+## Output Score and Trigger Threshold
+
+`WRAPPER_TOP` returns an `ap_fixed<9,5>` score byte-aligned into a 16-bit output
+word. The score is decoded using the same convention as the wrapper reference
+testbench:
+
+```text
+score_float = signed(CNN_OUT_DATA[8:0]) / 16.0
+```
+
+`AI_TRIGGER_TOP` compares the low 9 bits of each lane score against the low
+9 bits of `CNN_THRESH` as signed `ap_fixed<9,5>` values:
+
+```text
+CNN_TRIG = 1 when signed(score[8:0]) > signed(CNN_THRESH[8:0])
+```
+
+Common raw threshold values:
+
+| Float threshold | Raw `CNN_THRESH` |
+| ---: | ---: |
+| -6.0 | -96 |
+| -0.5 | -8 |
+| 0.0 | 0 |
+| 0.5 | 8 |
+| 1.0 | 16 |
+
+The simulation default is `SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-96`,
+matching the wrapper behavioral reference run.
+
+## Main RTL Files
+
+| File | Description |
+| --- | --- |
+| `HDL/rtl/AI_TRIGGER_PKG.vhd` | Shared constants and array types. `N_LANES` is currently 7. |
+| `HDL/rtl/AI_TRIGGER_TOP.vhd` | Structural top level, result aggregation, and threshold comparison. |
+| `HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd` | ADC-domain chunk formation and round-robin lane assignment. |
+| `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane async FIFO, CDC counters, AXI-stream input FSM, and CNN wrapper instance. |
+| `HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd` | Mixed-language simulation wrapper for the VHDL top-level input type. |
+| `HDL/sim/tb_ai_trigger_top.sv` | SystemVerilog simulation testbench. |
+| `scripts/run_vivado_sim.py` | Batch-mode Vivado simulation launcher. |
+| `run_sim.tcl` | Vivado simulation setup used by both GUI and batch flows. |
 
 ## Simulation
 
-TBD — the simulation testbench (`HDL/sim/tb_ai_trigger_top.sv`) will:
-
-1. Drive continuous ADC data (pre-recorded events from the `cnn-core` test dataset).
-2. Verify round-robin lane assignment across all 6 cores.
-3. Check that `CNN_TRIG` fires for signal events and not for thermal noise.
-4. Verify `CHUNK_OVERFLOW` behavior when a lane is artificially held busy.
-5. Confirm chunk-to-trigger latency budget (≤ 256 ns chunk period + ~1300 ns CNN inference).
-
-## Known Limitations / Design Notes
-
-1. **CHUNK_OVERFLOW**: If the ADC dispatcher reaches a lane whose BRAM is not yet drained,
-   it asserts `CHUNK_OVERFLOW` (sticky). The current design drops the overflowing chunk.
-   Under normal conditions this should not occur: each lane drains in ~1300 ns and receives
-   a new chunk only every 1536 ns. Overflows indicate either a timing violation or that
-   fewer than 6 lanes are functional.
-
-2. **Data normalization**: The CNN was trained on data normalized to approximately
-   `ADC_count / noise_σ` in ap_fixed\<12,6\> range. A pre-processing stage that divides raw
-   ADC values by the per-channel noise σ and clamps to the fixed-point range must be inserted
-   upstream of `ADC_DATA4`. This normalization is outside the scope of this module.
-
-3. **No rate blanking**: Unlike a Hi-Lo gated design, the CNN runs on every chunk
-   unconditionally. Downstream DAQ logic is responsible for handling the resulting trigger
-   rate during noise bursts.
-
-4. **CNN_TRIG pulse width**: 1 cycle at `CLK_CNN` = 5 ns at 200 MHz. Downstream logic
-   must be able to capture a 5 ns pulse, or a pulse-stretcher should be added.
-
-5. **Output ordering**: `CNN_OUT_DATA` reflects the most recently completed lane, not
-   necessarily the oldest chunk. Chunks are processed in round-robin order but lane completion
-   may vary slightly. For the binary trigger decision (`CNN_TRIG`), ordering is irrelevant.
-
-## Bender
+The recommended terminal flow is:
 
 ```bash
-cargo install bender   # if not already installed
-bender update          # fetch cnn-core-wrapper, cnn-core, gateware
+python3 scripts/run_vivado_sim.py --num-samples 1000
 ```
 
-Regenerate Vivado source scripts whenever dependencies change:
+The script opens `AI_Trigger_System/AI_Trigger_System.xpr`, sources
+`run_sim.tcl`, and runs the behavioral xsim testbench in Vivado batch mode.
+
+Useful options:
+
+```bash
+python3 scripts/run_vivado_sim.py \
+  --num-samples 1000 \
+  --score-threshold -6.0 \
+  --cnn-thresh-raw -96
+```
+
+Vivado GUI flow:
+
+```tcl
+open_project AI_Trigger_System/AI_Trigger_System.xpr
+source run_sim.tcl
+```
+
+The testbench reads `testhex_stream/test_input_sample*.hex` and
+`testhex_stream/labels.hex`. `run_sim.tcl` creates a symlink to the
+`cnn-core-wrapper` checkout's `testhex_stream` directory when the Bender
+dependency is present.
+
+Simulation output is written to:
+
+```text
+AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv
+```
+
+## Bender Dependencies
+
+Install and update dependencies:
+
+```bash
+cargo install bender
+bender update
+```
+
+Regenerate Vivado source scripts when dependencies change:
 
 ```bash
 bender script vivado -t vivado > add_files.tcl
 bender script vivado-sim -t sim > add_sim_files.tcl
 ```
 
-The committed `add_files.tcl` hardcodes `ROOT` to the build machine path. Update the
-`set ROOT` line to your local path before sourcing in Vivado, or regenerate with `bender script`.
+If the generated Tcl files contain a hardcoded `ROOT`, update it for the local
+checkout or regenerate the scripts on the target machine.
+
+## Synthesis and Implementation Notes
+
+The current design is intended to be analyzed with Vivado synthesis and
+implementation using the committed project:
+
+```text
+AI_Trigger_System/AI_Trigger_System.xpr
+```
+
+Primary checks for the next analysis step:
+
+1. Confirm `CLK_CNN` timing closure at 175 MHz.
+2. Confirm `CLK_ADC` timing closure at 62.5 MHz.
+3. Review resource use for seven CNN wrappers plus seven async FIFOs.
+4. Check FIFO Generator resource mapping and reset behavior.
+5. Review inter-clock timing constraints between `CLK_ADC` and `CLK_CNN`.
+
+The recommended OOC build command is:
+
+```bash
+python3 scripts/run_vivado_build.py --impl
+```
+
+This flow uses Bender to collect RTL sources, removes dependency board-level
+constraints, applies `HDL/constraints/ai_trigger_ooc.xdc`, and runs the block
+out-of-context. This is intentional: `AI_TRIGGER_TOP` is a DAQ subsystem block,
+not the package-level FPGA top. Running normal top-level implementation on this
+entity would map the wide ADC and score interfaces to package IO and produce
+misleading resource, timing, and IO utilization results.
+
+Reports are written under:
+
+```text
+build/vivado_ooc_ai_trigger/reports/
+```
+
+The main throughput target is one 256-sample chunk every 256 ns at the ADC
+input. At seven lanes, the CNN domain should have enough margin if the single
+core transaction interval remains near 260-275 cycles and the implemented
+`CLK_CNN` frequency is at or above 175 MHz.
