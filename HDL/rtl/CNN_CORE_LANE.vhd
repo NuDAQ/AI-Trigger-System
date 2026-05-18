@@ -265,6 +265,8 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_IDLE =>
+                        cnn_start    <= '0';
+                        cnn_in_valid <= '0';
                         word_sel      <= '0';
                         stream_cnt    <= N_CHUNK_W;
 
@@ -307,6 +309,7 @@ begin
                             end if;
 
                             if stream_cnt = 1 then
+                                cnn_start    <= '0';
                                 cnn_in_valid <= '0';
                                 cnn_state    <= CC_IDLE;
                             end if;
