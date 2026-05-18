@@ -22,8 +22,8 @@ sources:
   - HDL/rtl/CNN_CORE_LANE.vhd
   - HDL/rtl/AI_TRIGGER_TOP.vhd
 
-  # Simulation (to be added)
-  # - target: sim
-  #   files:
-  #     - HDL/sim/tb_ai_trigger_top.sv
+  - target: simulation
+    files:
+      - HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd
+      - HDL/sim/tb_ai_trigger_top.sv
 
