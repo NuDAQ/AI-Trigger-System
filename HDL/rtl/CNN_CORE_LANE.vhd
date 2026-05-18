@@ -270,9 +270,10 @@ begin
                         word_sel      <= '0';
                         stream_cnt    <= N_CHUNK_W;
 
-                        if pending_count_cnn /= 0 and fifo_empty = '0' and
-                           (cnn_idle = '1' or cnn_ready = '1') then
+                        if pending_count_cnn /= 0 and fifo_empty = '0' then
                             -- Assert start and first word simultaneously
+                            -- Hold start in CC_STREAM until WRAPPER_TOP raises
+                            -- ready, matching the ap_ctrl_hs protocol.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
                             -- FWFT: dout already holds first 128-bit entry
