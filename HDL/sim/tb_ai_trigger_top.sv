@@ -155,6 +155,7 @@ module tb_AI_TRIGGER_TOP;
         end
         $fwrite(csv_file,
             "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n");
+        $fflush(csv_file);
 
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);
@@ -290,6 +291,7 @@ module tb_AI_TRIGGER_TOP;
                             label_val, prediction, is_correct,
                             latency_cycles,
                             latency_cycles * CLK_CNN_PERIOD / 1000.0);
+                    $fflush(csv_file);
 
                     received_count = received_count + 1;
                 end

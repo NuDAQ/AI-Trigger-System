@@ -32,6 +32,9 @@ if {![info exists ::RUN_SAIF_SDF_MODE]} {
 if {![info exists ::RUN_SAIF_START_US]} {
     set ::RUN_SAIF_START_US 2.0
 }
+if {![info exists ::RUN_SAIF_SCOPE]} {
+    set ::RUN_SAIF_SCOPE all
+}
 
 proc run_external {args} {
     puts "INFO: running: [join $args { }]"
@@ -77,6 +80,7 @@ puts "INFO: testhex_dir = $testhex_dir"
 puts "INFO: samples     = $::RUN_SAIF_NUM_SAMPLES"
 puts "INFO: sdf_mode    = $::RUN_SAIF_SDF_MODE"
 puts "INFO: saif_start  = $::RUN_SAIF_START_US us"
+puts "INFO: saif_scope  = $::RUN_SAIF_SCOPE"
 
 set netlist [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.v]
 set sdf     [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.sdf]
@@ -98,8 +102,64 @@ if {$::RUN_SAIF_START_US > 0.0} {
     puts $fp "run $::RUN_SAIF_START_US us"
 }
 puts $fp "open_saif {$saif}"
-puts $fp "log_saif \[get_objects -r /tb_AI_TRIGGER_TOP/dut/*\]"
+puts $fp {proc saif_stamp {} {return [clock format [clock seconds] -format {%H:%M:%S}]}}
+puts $fp {proc saif_log_scope {scope recursive} {}
+puts $fp {    puts "[saif_stamp] SAIF get_objects begin: $scope recursive=$recursive"}
+puts $fp {    flush stdout}
+puts $fp {    set t0 [clock seconds]}
+puts $fp {    if {$recursive} {}
+puts $fp {        set objs [get_objects -r $scope]}
+puts $fp {    } else {}
+puts $fp {        set objs [get_objects $scope]}
+puts $fp {    }}
+puts $fp {    set n [llength $objs]}
+puts $fp {    set t1 [clock seconds]}
+puts $fp {    puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"}
+puts $fp {    flush stdout}
+puts $fp {    if {$n > 0} {}
+puts $fp {        puts "[saif_stamp] SAIF log_saif begin: $scope"}
+puts $fp {        flush stdout}
+puts $fp {        set t2 [clock seconds]}
+puts $fp {        log_saif $objs}
+puts $fp {        set t3 [clock seconds]}
+puts $fp {        puts "[saif_stamp] SAIF log_saif done: $scope elapsed=[expr {$t3 - $t2}]s"}
+puts $fp {        flush stdout}
+puts $fp {    }}
+puts $fp {}}
+if {$::RUN_SAIF_SCOPE eq "top"} {
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
+} elseif {$::RUN_SAIF_SCOPE eq "lane0"} {
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
+} elseif {$::RUN_SAIF_SCOPE eq "lanes2"} {
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
+} elseif {$::RUN_SAIF_SCOPE eq "lanes4"} {
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[2].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[3].u_LANE/*} 1}
+} elseif {$::RUN_SAIF_SCOPE eq "all"} {
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[2].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[3].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[4].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[5].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[6].u_LANE/*} 1}
+} else {
+    error "Unsupported SAIF scope '$::RUN_SAIF_SCOPE'. Use top, lane0, lanes2, lanes4, or all."
+}
+puts $fp {puts "[saif_stamp] SAIF run all begin"}
+puts $fp {flush stdout}
 puts $fp "run all"
+puts $fp {puts "[saif_stamp] SAIF run all done"}
+puts $fp {flush stdout}
 puts $fp "close_saif"
 puts $fp "quit"
 close $fp

@@ -96,6 +96,7 @@ def build_saif_launcher(
         f"set ::RUN_SAIF_CNN_THRESH_RAW {args.cnn_thresh_raw}",
         f"set ::RUN_SAIF_SDF_MODE {args.sdf}",
         f"set ::RUN_SAIF_START_US {args.saif_start_us}",
+        f"set ::RUN_SAIF_SCOPE {args.saif_scope}",
     ]
     if args.testhex_dir:
         testhex_dir = Path(args.testhex_dir).expanduser()
@@ -161,6 +162,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=2.0,
         help="Delay before SAIF recording starts, in microseconds. Default: 2.0.",
+    )
+    parser.add_argument(
+        "--saif-scope",
+        choices=["top", "lane0", "lanes2", "lanes4", "all"],
+        default="all",
+        help="SAIF logging scope. Default logs top, distributor, and all seven lanes in separate chunks.",
     )
     parser.add_argument(
         "--testhex-dir",
