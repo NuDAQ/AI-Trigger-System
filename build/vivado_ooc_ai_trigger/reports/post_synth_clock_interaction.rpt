@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Mon May 18 00:12:05 2026
+| Date              : Mon May 18 12:03:00 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_clock_interaction -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_clock_interaction.rpt
 | Design            : AI_TRIGGER_TOP
@@ -22,6 +22,6 @@ From Clock    To Clock      Clock Edges  WNS(ns)  TNS(ns)    Endpoints    Endpoi
 CLK_ADC       CLK_ADC       rise - rise    14.69     0.00            0         2301            16.00  Clean                Timed                
 CLK_ADC       CLK_CNN                                                0           70                   Ignored              Asynchronous Groups  
 CLK_CNN       CLK_ADC                                                0           70                   Ignored              Asynchronous Groups  
-CLK_CNN       CLK_CNN       rise - rise     2.57     0.00            0        42993             5.71  Clean                Timed                
+CLK_CNN       CLK_CNN       rise - rise     2.77     0.00            0        42410             5.71  Clean                Timed                
 
 
