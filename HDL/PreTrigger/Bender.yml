@@ -1,6 +1,0 @@
-package:
-  name: gateware
-
-sources:
-  - "**/*.sv"
-  - "**/*.vhd"
