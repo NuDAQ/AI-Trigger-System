@@ -2,21 +2,20 @@
 -- ADC_CHUNK_DISTRIBUTOR
 -- CLK_ADC domain.
 --
--- Accumulates incoming ADC batches (16 samples/batch, 4 channels) and
--- distributes complete 256-sample chunks to 6 CNN lanes in round-robin order.
+-- DATA_STR is asserted every CLK_ADC cycle (continuous 1 Gsps ADC stream).
+-- Each cycle carries one 16-sample batch across 4 channels.
+-- After N_BATCHES (16) cycles the complete 256-sample chunk is committed to the
+-- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --
--- On every DATA_STR pulse one batch arrives.  After 16 batches the chunk is
--- complete: LANE_WE is pulsed for the current lane, BATCH_ADDR and BATCH_DATA
--- carry the packed write payload, then the lane index advances.
+-- CHUNK_BUSY feedback (CLK_ADC domain) comes from each lane's FIFO full signal.
+-- If the target lane's FIFO is full when the chunk boundary arrives, the chunk
+-- is dropped and CHUNK_OVERFLOW is asserted.
 --
--- If the next lane is still busy (LANE_BUSY high), CHUNK_OVERFLOW is asserted
--- and the chunk is dropped (not written).
---
--- BATCH_DATA packing (one 64-bit word per time-step, 16 words per batch):
---   word[i] bits [15: 0] = ch0, sample i, sign-extended 12->16 bit
---   word[i] bits [31:16] = ch1, sample i, sign-extended 12->16 bit
---   word[i] bits [47:32] = ch2, sample i, sign-extended 12->16 bit
---   word[i] bits [63:48] = ch3, sample i, sign-extended 12->16 bit
+-- BATCH_DATA packing (1024-bit = 16 words x 64-bit):
+--   word[i] bits [15: 0] = ch0 sample i, sign-extended 12->16 bit
+--   word[i] bits [31:16] = ch1 sample i
+--   word[i] bits [47:32] = ch2 sample i
+--   word[i] bits [63:48] = ch3 sample i
 -- =============================================================================
 
 library ieee;
@@ -27,22 +26,17 @@ use work.AI_TRIGGER_PKG.all;
 entity ADC_CHUNK_DISTRIBUTOR is
     port (
         CLK_ADC        : in  std_logic;
-        RST            : in  std_logic;   -- active-high, synchronous
+        RST            : in  std_logic;
 
-        -- ADC input (CLK_ADC domain)
-        DATA_STR       : in  std_logic;   -- one pulse per 16-sample batch
+        DATA_STR       : in  std_logic;   -- always high in normal operation
         ADC_DATA4      : in  adc_data4_t;
 
-        -- Feedback from lanes (CLK_ADC domain)
-        LANE_BUSY      : in  lane_busy_t;
+        LANE_BUSY      : in  lane_busy_t; -- FIFO full per lane (CLK_ADC domain)
 
-        -- To CNN_CORE_LANE array (CLK_ADC domain)
         LANE_WE        : out std_logic_vector(N_LANES-1 downto 0);
-        BATCH_ADDR     : out std_logic_vector(3 downto 0);   -- 0-15
-        BATCH_DATA     : out std_logic_vector(N_BATCH_S*64-1 downto 0);  -- 1024-bit
+        BATCH_DATA     : out std_logic_vector(N_BATCH_S*64-1 downto 0);
 
-        -- Status (CLK_ADC domain)
-        CHUNK_OVERFLOW : out std_logic    -- sticky: chunk dropped, lane was busy
+        CHUNK_OVERFLOW : out std_logic
     );
 end entity ADC_CHUNK_DISTRIBUTOR;
 
@@ -51,8 +45,8 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal batch_cnt  : integer range 0 to N_BATCHES-1 := 0;
     signal lane_sel   : integer range 0 to N_LANES-1   := 0;
     signal overflow_r : std_logic := '0';
+    signal we_r       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
-    -- Combinational packed data: sign-extend each 12-bit ADC sample to 16 bits
     signal packed : std_logic_vector(N_BATCH_S*64-1 downto 0);
 
     function sign_ext(s : std_logic_vector(11 downto 0)) return std_logic_vector is
@@ -63,7 +57,7 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
 begin
 
     -- -------------------------------------------------------------------------
-    -- Combinational packing: ADC_DATA4 -> 1024-bit BATCH_DATA
+    -- Combinational packing: 4 ch x 16 samples -> 1024-bit word
     -- -------------------------------------------------------------------------
     gen_pack : for i in 0 to N_BATCH_S-1 generate
         packed(i*64+15 downto i*64+0)  <= sign_ext(ADC_DATA4(0)(i));
@@ -83,25 +77,21 @@ begin
             if RST = '1' then
                 batch_cnt  <= 0;
                 lane_sel   <= 0;
-                LANE_WE    <= (others => '0');
-                BATCH_ADDR <= (others => '0');
+                we_r       <= (others => '0');
                 overflow_r <= '0';
             else
-                LANE_WE    <= (others => '0');  -- default: no write
+                we_r       <= (others => '0');
                 overflow_r <= '0';
 
                 if DATA_STR = '1' then
-                    BATCH_ADDR <= std_logic_vector(to_unsigned(batch_cnt, 4));
-
-                    if LANE_BUSY(lane_sel) = '1' then
-                        -- Lane not yet drained; drop chunk
-                        overflow_r <= '1';
+                    -- Write this batch to the current lane if FIFO has space
+                    if LANE_BUSY(lane_sel) = '0' then
+                        we_r(lane_sel) <= '1';
                     else
-                        -- Write this batch to the selected lane
-                        LANE_WE(lane_sel) <= '1';
+                        overflow_r <= '1';
                     end if;
 
-                    -- Advance counters regardless of overflow
+                    -- Advance counters every batch
                     if batch_cnt = N_BATCHES-1 then
                         batch_cnt <= 0;
                         if lane_sel = N_LANES-1 then
@@ -117,6 +107,7 @@ begin
         end if;
     end process;
 
+    LANE_WE        <= we_r;
     CHUNK_OVERFLOW <= overflow_r;
 
 end architecture rtl;

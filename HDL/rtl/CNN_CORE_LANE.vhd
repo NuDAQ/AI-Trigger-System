@@ -2,25 +2,30 @@
 -- CNN_CORE_LANE
 -- One parallel CNN inference lane.
 --
--- Contains:
---   - 256 x 64-bit chunk buffer (register array, written from CLK_ADC)
---   - 4-phase CDC handshake (CLK_ADC <-> CLK_CNN)
---   - RST synchronizer (CLK_ADC -> CLK_CNN)
---   - CNN stream FSM (CLK_CNN): streams chunk to WRAPPER_TOP via ap_ctrl_hs + AXI-S
---   - WRAPPER_TOP instantiation (cnn_core inside)
+-- Buffer architecture (replaces register array from v1):
+--   fifo_async_1024_to_64 — same Xilinx IP used in the original
+--   CNN_FIFO_CONNECTOR.  Write port: 1024-bit x 16 deep (CLK_ADC).
+--   Read port: 128-bit x 128 deep (CLK_CNN).  The FIFO is the CDC mechanism.
 --
--- CLK_ADC domain outputs:  CHUNK_BUSY
--- CLK_CNN domain outputs:  LANE_TRIG, LANE_SCORE, LANE_VALID
+--   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
+--   After 16 writes the chunk is complete; chunk_done_adc is set.
+--   The CNN FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel) to
+--   produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
 --
--- ap_ctrl_hs protocol (from HiLoGatedCNNTrigger notes):
---   - start must be held high until ready rises.
---   - input_valid + first data word must be asserted simultaneously with start.
---   - No bubbles in the input stream (input_valid stays high for all 256 words).
+-- CHUNK_BUSY = fifo_full (CLK_ADC domain):
+--   High while the FIFO holds an unread chunk (~640 ns at 200 MHz).
+--   Falls low as soon as the CNN starts reading, long before inference ends.
+--   This allows the ADC to write the next chunk while inference is still
+--   running, which is required for 6-lane continuous 1 Gsps operation.
 --
--- Buffer implementation note:
---   The chunk buffer is a plain register array (16384 FFs per lane).
---   For production, replace with a BRAM-based dual-clock buffer or use the
---   Xilinx 1024->64 async FIFO approach from CNN_FIFO_CONNECTOR.
+-- Control CDC (chunk_done / chunk_ack, 4-phase set/clear):
+--   chunk_done_adc: set after 16th FIFO write, cleared by chunk_ack_adc sync.
+--   chunk_done_cnn: 2-FF sync of chunk_done_adc; CNN FSM starts on rising edge.
+--   chunk_ack_cnn:  set in CC_ACK (after inference done), cleared when
+--                   chunk_done_cnn falls.
+--   chunk_ack_adc:  2-FF sync of chunk_ack_cnn; clears chunk_done_adc.
+--
+-- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
 -- =============================================================================
 
 library ieee;
@@ -30,30 +35,27 @@ use work.AI_TRIGGER_PKG.all;
 
 entity CNN_CORE_LANE is
     port (
-        -- Clocks and reset (RST synchronous to CLK_ADC, active-high)
         CLK_ADC      : in  std_logic;
         CLK_CNN      : in  std_logic;
-        RST          : in  std_logic;
+        RST          : in  std_logic;   -- active-high, synchronous to CLK_ADC
 
-        -- Write interface from ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
+        -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
-        BATCH_ADDR   : in  std_logic_vector(3 downto 0);   -- 0-15
-        BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);  -- 1024-bit
+        BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
 
-        -- Status to distributor (CLK_ADC domain)
-        CHUNK_BUSY   : out std_logic;   -- high while chunk not yet acknowledged by CNN
+        -- To distributor (CLK_ADC domain) — FIFO write-side full
+        CHUNK_BUSY   : out std_logic;
 
         -- Results (CLK_CNN domain)
-        LANE_TRIG    : out std_logic;   -- 1-cycle pulse: score > CNN_THRESH (comparison in top)
-        LANE_SCORE   : out std_logic_vector(15 downto 0);  -- ap_fixed<16,6> raw
-        LANE_VALID   : out std_logic    -- 1-cycle pulse: new score latched
+        LANE_SCORE   : out std_logic_vector(15 downto 0);
+        LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
 
 architecture rtl of CNN_CORE_LANE is
 
     -- -------------------------------------------------------------------------
-    -- WRAPPER_TOP component (Verilog, from cnn-core-wrapper dep)
+    -- WRAPPER_TOP (Verilog, from cnn-core-wrapper dependency)
     -- -------------------------------------------------------------------------
     component WRAPPER_TOP
         generic (
@@ -79,37 +81,58 @@ architecture rtl of CNN_CORE_LANE is
     end component;
 
     -- -------------------------------------------------------------------------
-    -- Chunk buffer: 256 x 64-bit
-    -- Written from CLK_ADC (16 words per batch, 16 batches per chunk).
-    -- Read from CLK_CNN (1 word per cycle, sequential).
+    -- Async FIFO: 1024-bit write (CLK_ADC) / 128-bit read (CLK_CNN)
+    -- Depth: 16 write entries = 128 read entries.
+    -- FWFT mode: dout valid when not empty, rd_en pops current entry.
+    -- Must be generated as Xilinx FIFO Generator IP with these settings:
+    --   Write Width = 1024, Write Depth = 16
+    --   Read  Width = 128,  (asymmetric, auto-calculated depth = 128)
+    --   Independent Clocks, First Word Fall Through
     -- -------------------------------------------------------------------------
-    type chunk_buf_t is array (0 to N_CHUNK_W-1) of std_logic_vector(63 downto 0);
-    signal chunk_buf : chunk_buf_t := (others => (others => '0'));
+    component fifo_async_1024_to_64
+        port (
+            rst    : in  std_logic;
+            wr_clk : in  std_logic;
+            rd_clk : in  std_logic;
+            din    : in  std_logic_vector(1023 downto 0);
+            wr_en  : in  std_logic;
+            rd_en  : in  std_logic;
+            dout   : out std_logic_vector(127 downto 0);
+            full   : out std_logic;
+            empty  : out std_logic
+        );
+    end component;
 
-    -- -------------------------------------------------------------------------
-    -- CDC signals
     -- -------------------------------------------------------------------------
     -- CLK_ADC domain
-    signal chunk_written_adc : std_logic := '0';
-    signal chunk_ack_adc_ff  : std_logic_vector(1 downto 0) := (others => '0');
+    -- -------------------------------------------------------------------------
+    signal wr_count       : integer range 0 to N_BATCHES-1 := 0;
+    signal chunk_done_adc : std_logic := '0';
+    signal fifo_full_s    : std_logic;
 
+    -- 2-FF sync: chunk_ack_cnn -> CLK_ADC
+    signal chunk_ack_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
+    signal chunk_ack_adc    : std_logic;
+
+    -- -------------------------------------------------------------------------
     -- CLK_CNN domain
-    signal chunk_written_ff  : std_logic_vector(1 downto 0) := (others => '0');
-    signal chunk_ack_cnn     : std_logic := '0';
+    -- -------------------------------------------------------------------------
+    -- RST synchronizer (init '1' so rst_n_cnn = '0' before any CNN clock edge)
+    signal rst_cnn_ff   : std_logic_vector(1 downto 0) := "11";
+    signal rst_n_cnn    : std_logic;
 
-    signal chunk_written_cnn : std_logic;
-    signal chunk_ack_adc     : std_logic;
+    -- 2-FF sync: chunk_done_adc -> CLK_CNN
+    signal chunk_done_ff  : std_logic_vector(1 downto 0) := (others => '0');
+    signal chunk_done_cnn : std_logic;
 
-    -- -------------------------------------------------------------------------
-    -- RST synchronizer (CLK_ADC -> CLK_CNN)
-    -- Initialised to '1' so rst_n_cnn='0' from time 0 (before any CLK_CNN edge)
-    -- -------------------------------------------------------------------------
-    signal rst_cnn_ff : std_logic_vector(1 downto 0) := "11";
-    signal rst_n_cnn  : std_logic;
+    signal chunk_ack_cnn  : std_logic := '0';
 
-    -- -------------------------------------------------------------------------
-    -- CNN interface signals (CLK_CNN domain)
-    -- -------------------------------------------------------------------------
+    -- FIFO read side
+    signal fifo_dout  : std_logic_vector(127 downto 0);
+    signal fifo_empty : std_logic;
+    signal fifo_rd_en : std_logic := '0';
+
+    -- CNN interface
     signal cnn_start     : std_logic := '0';
     signal cnn_done      : std_logic;
     signal cnn_idle      : std_logic;
@@ -120,12 +143,11 @@ architecture rtl of CNN_CORE_LANE is
     signal cnn_out_data  : std_logic_vector(15 downto 0);
     signal cnn_out_valid : std_logic;
 
-    -- -------------------------------------------------------------------------
-    -- CNN stream FSM (CLK_CNN domain)
-    -- -------------------------------------------------------------------------
+    -- Stream FSM
     type cnn_fsm_t is (CC_IDLE, CC_STREAM, CC_WAIT_DONE, CC_ACK);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
-    signal stream_cnt : integer range 0 to N_CHUNK_W-1 := 0;
+    signal stream_cnt : integer range 0 to N_CHUNK_W := 0;
+    signal word_sel   : std_logic := '0';
 
     signal lane_score_r : std_logic_vector(15 downto 0) := (others => '0');
     signal lane_valid_r : std_logic := '0';
@@ -137,29 +159,32 @@ begin
     -- =========================================================================
 
     -- -------------------------------------------------------------------------
-    -- Chunk buffer write:  16 words per batch, parallel into buffer
+    -- FIFO write + chunk_done_adc management
     -- -------------------------------------------------------------------------
     process(CLK_ADC)
     begin
         if rising_edge(CLK_ADC) then
-            if WR_EN = '1' then
-                for i in 0 to N_BATCH_S-1 loop
-                    chunk_buf(to_integer(unsigned(BATCH_ADDR)) * N_BATCH_S + i)
-                        <= BATCH_DATA((i+1)*64-1 downto i*64);
-                end loop;
-                -- Last batch of chunk: mark written
-                if BATCH_ADDR = std_logic_vector(to_unsigned(N_BATCHES-1, 4)) then
-                    chunk_written_adc <= '1';
+            if RST = '1' then
+                wr_count       <= 0;
+                chunk_done_adc <= '0';
+            else
+                -- Set chunk_done after 16th write; cleared by CNN ack sync
+                if WR_EN = '1' then
+                    if wr_count = N_BATCHES-1 then
+                        wr_count       <= 0;
+                        chunk_done_adc <= '1';
+                    else
+                        wr_count <= wr_count + 1;
+                    end if;
                 end if;
-            end if;
-            -- Clear when CNN domain acknowledges
-            if chunk_ack_adc = '1' then
-                chunk_written_adc <= '0';
+                if chunk_ack_adc = '1' then
+                    chunk_done_adc <= '0';
+                end if;
             end if;
         end if;
     end process;
 
-    -- 2-FF synchronizer: chunk_ack_cnn -> CLK_ADC
+    -- 2-FF sync: chunk_ack_cnn -> CLK_ADC
     process(CLK_ADC)
     begin
         if rising_edge(CLK_ADC) then
@@ -168,15 +193,16 @@ begin
     end process;
     chunk_ack_adc <= chunk_ack_adc_ff(1);
 
-    CHUNK_BUSY <= chunk_written_adc;
+    -- CHUNK_BUSY = FIFO full (write side).
+    -- Falls low as soon as the CNN reads the first entry, allowing the next
+    -- chunk to be written while inference is still in progress.
+    CHUNK_BUSY <= fifo_full_s;
 
     -- =========================================================================
     -- CLK_CNN DOMAIN
     -- =========================================================================
 
-    -- -------------------------------------------------------------------------
     -- RST synchronizer
-    -- -------------------------------------------------------------------------
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
@@ -185,19 +211,17 @@ begin
     end process;
     rst_n_cnn <= not rst_cnn_ff(1);
 
-    -- -------------------------------------------------------------------------
-    -- 2-FF synchronizer: chunk_written_adc -> CLK_CNN
-    -- -------------------------------------------------------------------------
+    -- 2-FF sync: chunk_done_adc -> CLK_CNN
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
-            chunk_written_ff <= chunk_written_ff(0) & chunk_written_adc;
+            chunk_done_ff <= chunk_done_ff(0) & chunk_done_adc;
         end if;
     end process;
-    chunk_written_cnn <= chunk_written_ff(1);
+    chunk_done_cnn <= chunk_done_ff(1);
 
     -- -------------------------------------------------------------------------
-    -- CNN stream FSM
+    -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
     -- -------------------------------------------------------------------------
     process(CLK_CNN)
     begin
@@ -207,64 +231,83 @@ begin
                 cnn_start    <= '0';
                 cnn_in_valid <= '0';
                 cnn_in_data  <= (others => '0');
+                fifo_rd_en   <= '0';
+                word_sel     <= '0';
                 stream_cnt   <= 0;
                 chunk_ack_cnn <= '0';
                 lane_valid_r  <= '0';
                 lane_score_r  <= (others => '0');
             else
-                lane_valid_r <= '0';  -- default: no pulse
+                lane_valid_r <= '0';
+                fifo_rd_en   <= '0';   -- default: don't pop
 
                 case cnn_state is
 
                     -- ---------------------------------------------------------
                     when CC_IDLE =>
                         chunk_ack_cnn <= '0';
-                        if chunk_written_cnn = '1' then
-                            -- Present word 0 and assert start simultaneously
-                            cnn_in_data  <= chunk_buf(0);
-                            cnn_in_valid <= '1';
+                        word_sel      <= '0';
+                        stream_cnt    <= N_CHUNK_W;
+
+                        if chunk_done_cnn = '1' and fifo_empty = '0' then
+                            -- Assert start and first word simultaneously
                             cnn_start    <= '1';
-                            stream_cnt   <= 0;
+                            cnn_in_valid <= '1';
+                            -- FWFT: dout already holds first 128-bit entry
+                            cnn_in_data  <= fifo_dout(63 downto 0);
                             cnn_state    <= CC_STREAM;
                         end if;
 
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
-                        -- Deassert start once ready rises (hold until then)
+                        -- Deassert start when WRAPPER_TOP signals ready
                         if cnn_ready = '1' then
                             cnn_start <= '0';
                         end if;
 
-                        -- Advance stream on handshake
                         if cnn_in_ready = '1' then
-                            if stream_cnt = N_CHUNK_W-1 then
-                                -- Last word accepted
+                            stream_cnt <= stream_cnt - 1;
+
+                            if word_sel = '0' then
+                                -- Sent lower half; present upper half next cycle
+                                word_sel     <= '1';
+                                cnn_in_data  <= fifo_dout(127 downto 64);
+                                -- Do NOT pop FIFO yet
+                            else
+                                -- Sent upper half; pop FIFO and prepare lower
+                                -- half of the next entry (available next cycle
+                                -- in FWFT mode after rd_en pulse)
+                                word_sel     <= '0';
+                                fifo_rd_en   <= '1';
+                            end if;
+
+                            if stream_cnt = 1 then
                                 cnn_in_valid <= '0';
                                 cnn_state    <= CC_WAIT_DONE;
-                            else
-                                stream_cnt  <= stream_cnt + 1;
-                                -- Pre-fetch next word (async read from register array)
-                                cnn_in_data <= chunk_buf(stream_cnt + 1);
                             end if;
+                        end if;
+
+                        -- Update cnn_in_data from newly popped FIFO entry
+                        -- (takes effect one cycle after fifo_rd_en, FWFT)
+                        if fifo_rd_en = '1' then
+                            cnn_in_data <= fifo_dout(63 downto 0);
                         end if;
 
                     -- ---------------------------------------------------------
                     when CC_WAIT_DONE =>
                         cnn_in_valid <= '0';
                         cnn_start    <= '0';
-                        -- Latch score when output handshake occurs
                         if cnn_out_valid = '1' then
                             lane_score_r <= cnn_out_data;
                         end if;
-                        -- Advance when ap_done fires
                         if cnn_done = '1' then
                             cnn_state <= CC_ACK;
                         end if;
 
                     -- ---------------------------------------------------------
                     when CC_ACK =>
-                        lane_valid_r  <= '1';   -- one-cycle pulse
-                        chunk_ack_cnn <= '1';   -- held high until ADC side clears written flag
+                        lane_valid_r  <= '1';
+                        chunk_ack_cnn <= '1';
                         cnn_state     <= CC_IDLE;
 
                 end case;
@@ -274,8 +317,22 @@ begin
 
     LANE_SCORE <= lane_score_r;
     LANE_VALID <= lane_valid_r;
-    -- LANE_TRIG comparison is done in AI_TRIGGER_TOP against CNN_THRESH
-    LANE_TRIG  <= '0';  -- placeholder; top-level drives this from LANE_SCORE vs CNN_THRESH
+
+    -- =========================================================================
+    -- FIFO instantiation
+    -- =========================================================================
+    u_FIFO : fifo_async_1024_to_64
+        port map (
+            rst    => RST,
+            wr_clk => CLK_ADC,
+            rd_clk => CLK_CNN,
+            din    => BATCH_DATA,
+            wr_en  => WR_EN,
+            rd_en  => fifo_rd_en,
+            dout   => fifo_dout,
+            full   => fifo_full_s,
+            empty  => fifo_empty
+        );
 
     -- =========================================================================
     -- WRAPPER_TOP instantiation
@@ -299,7 +356,7 @@ begin
             input_ready  => cnn_in_ready,
             output_data  => cnn_out_data,
             output_valid => cnn_out_valid,
-            output_ready => '1'           -- always ready to receive score
+            output_ready => '1'
         );
 
 end architecture rtl;

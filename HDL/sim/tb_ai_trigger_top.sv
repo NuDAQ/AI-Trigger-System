@@ -157,12 +157,14 @@ module tb_AI_TRIGGER_TOP;
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);
 
-        // Reset
-        rst = 1;
+        // Reset — DATA_STR is low during reset, goes high and stays high after
+        rst      = 1;
+        data_str = 0;
         $display("[%0t] Asserting reset...", $time);
         repeat(10) @(posedge clk_cnn);
         repeat(4)  @(posedge clk_adc);
-        rst = 0;
+        rst      = 0;
+        data_str = 1;   // continuously high from here: 1 Gsps ADC stream
         repeat(4)  @(posedge clk_adc);
 
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
@@ -191,7 +193,13 @@ module tb_AI_TRIGGER_TOP;
 
     // =========================================================================
     // Input driver (CLK_ADC domain)
-    // Streams samples back-to-back: 16 batches per sample, 1 batch per cycle.
+    //
+    // DATA_STR is always high (set once after reset, never touched here).
+    // The driver updates ADC_DATA4_FLAT every CLK_ADC cycle to simulate the
+    // continuous 1 Gsps ADC stream: 16 samples per cycle across 4 channels.
+    //
+    // Each sample occupies exactly N_BATCHES (16) consecutive CLK_ADC cycles.
+    // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
         integer s_id, b, s, ch;
@@ -199,20 +207,19 @@ module tb_AI_TRIGGER_TOP;
         reg [767:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
-                // Load hex file for this sample
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
                 $readmemh(filename, sample_hex);
                 if (sample_hex[0] === 64'bx) begin
                     $display("[ERROR] Failed to load %s", filename); $finish;
                 end
 
-                // Record send time (at CLK_CNN resolution for latency measurement)
+                // Record send time for latency measurement
                 start_time_fifo[fifo_tail] = $time;
                 fifo_tail = (fifo_tail + 1) % 2048;
 
-                // Send 16 batches (16 CLK_ADC cycles)
+                // Drive 16 consecutive batches, one per CLK_ADC cycle.
+                // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
-                    // Pack all 16 timesteps of this batch into ADC_DATA4_FLAT
                     batch_flat = 768'h0;
                     for (s = 0; s < N_BATCH_S; s = s + 1) begin
                         for (ch = 0; ch < N_CH; ch = ch + 1) begin
@@ -221,16 +228,12 @@ module tb_AI_TRIGGER_TOP;
                         end
                     end
                     adc_data4_flat = batch_flat;
-                    data_str       = 1;
-                    @(posedge clk_adc);
-                    data_str       = 0;  // deassert between batches
-                    // Note: for truly continuous streaming, hold data_str high every cycle.
-                    // Using deassert here keeps the testbench simple; adjust if needed.
+                    @(posedge clk_adc);   // hold for exactly 1 cycle; no gap
                 end
 
                 sent_count = sent_count + 1;
             end
-            // Keep data_str low after all samples sent
+            // After all samples: keep driving zeros (ADC continues running)
             adc_data4_flat = 768'h0;
         end
     endtask
