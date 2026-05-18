@@ -6,16 +6,16 @@ WARNING: Behavioral models for independent clock FIFO configurations do not mode
 WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
 WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
 [0] Asserting reset...
-[168000] Starting AI_TRIGGER_TOP test
-[168000] TESTHEX_DIR: testhex_stream
-[168000] Samples: 1000  Threshold raw: 512 (0.5000)
+[120000] Starting AI_TRIGGER_TOP test
+[120000] TESTHEX_DIR: testhex_stream
+[120000] Samples: 1000  Threshold raw: 512 (0.5000)
 ---------------------------------------------------------------------
 Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
 ---------------------------------------------------------------------
-     0 | 0x0158        |      0.335938 |     0 |    0 |      1.835
-     1 | 0x0152        |      0.330078 |     0 |    0 |      1.835
-     2 | 0x014a        |      0.322266 |     0 |    0 |      1.840
-     3 | 0x0158        |      0.335938 |     0 |    0 |      1.835
-     4 | 0x015d        |      0.340820 |     0 |    0 |      1.835
-     5 | 0x016d        |      0.356445 |     0 |    0 |      1.740
-INFO: xsimkernel Simulation Memory Usage: 166232 KB (Peak: 192276 KB), Simulation CPU Usage: 41280 ms
+     0 | 0x0166        |      0.349609 |     0 |    0 |      1.895
+     1 | 0x0166        |      0.349609 |     0 |    0 |      1.895
+     2 | 0x016e        |      0.357422 |     0 |    0 |      1.895
+     3 | 0x017a        |      0.369141 |     0 |    0 |      1.895
+     4 | 0x0174        |      0.363281 |     0 |    0 |      1.895
+     5 | 0x014d        |      0.325195 |     0 |    0 |      1.785
+INFO: xsimkernel Simulation Memory Usage: 166228 KB (Peak: 192272 KB), Simulation CPU Usage: 30280 ms
