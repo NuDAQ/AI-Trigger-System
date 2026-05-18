@@ -59,6 +59,11 @@ Compiling module xil_defaultlib.cnn_core_start_for_dense_wide_st...
 Compiling module xil_defaultlib.cnn_core
 Compiling module xil_defaultlib.WRAPPER_TOP(INPUT_WIDTH=64,OUTPU...
 Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [cnn_core_lane_default]
+Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=1)\]
+Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=2)\]
+Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=3)\]
+Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=4)\]
+Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=5)\]
 Compiling architecture rtl of entity xil_defaultlib.ADC_CHUNK_DISTRIBUTOR [adc_chunk_distributor_default]
 Compiling architecture structural of entity xil_defaultlib.AI_TRIGGER_TOP [ai_trigger_top_default]
 Compiling architecture rtl of entity xil_defaultlib.AI_TRIGGER_TOP_TB_WRAP [ai_trigger_top_tb_wrap_default]
