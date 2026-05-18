@@ -17,5 +17,5 @@ Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
      2 | 0x016e        |      0.357422 |     0 |    0 |      1.895
      3 | 0x017a        |      0.369141 |     0 |    0 |      1.895
      4 | 0x0174        |      0.363281 |     0 |    0 |      1.895
-     5 | 0x014d        |      0.325195 |     0 |    0 |      1.785
-INFO: xsimkernel Simulation Memory Usage: 166228 KB (Peak: 192272 KB), Simulation CPU Usage: 13130 ms
+     5 | 0x016c        |      0.355469 |     0 |    0 |      1.895
+INFO: xsimkernel Simulation Memory Usage: 166236 KB (Peak: 192280 KB), Simulation CPU Usage: 13130 ms
