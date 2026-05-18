@@ -57,7 +57,7 @@ build/vivado_post_impl_saif/*
 !build/vivado_post_impl_saif/reports/
 !build/vivado_post_impl_saif/reports/**
 !build/vivado_post_impl_saif/activity/
-!build/vivado_post_impl_saif/activity/*.saif
+build/vivado_post_impl_saif/activity/*.saif
 !build/vivado_post_impl_saif/xsim/
 !build/vivado_post_impl_saif/xsim/*.csv
 !build/vivado_post_impl_saif/generated/
@@ -173,7 +173,7 @@ build/vivado_post_impl_saif/*
 !build/vivado_post_impl_saif/reports/
 !build/vivado_post_impl_saif/reports/**
 !build/vivado_post_impl_saif/activity/
-!build/vivado_post_impl_saif/activity/*.saif
+build/vivado_post_impl_saif/activity/*.saif
 !build/vivado_post_impl_saif/xsim/
 !build/vivado_post_impl_saif/xsim/*.csv
 !build/vivado_post_impl_saif/generated/
