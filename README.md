@@ -140,7 +140,7 @@ The measured full-system simulation result after the current fixes is:
 Samples sent:     1000
 Results received: 1000
 Chunk overflows:  0
-Accuracy:         955 / 1000 = 95.50%
+Accuracy:         955 / 1000 = 95.50% (as an example, threshold = -6.0)
 Latency:          287-288 CLK_CNN cycles
 ```
 
