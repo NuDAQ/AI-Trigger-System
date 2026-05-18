@@ -220,6 +220,8 @@ def main() -> int:
 
     vivado = find_executable(args.vivado, "VIVADO", "vivado")
     env = os.environ.copy()
+    vivado_dir = str(Path(vivado).resolve().parent)
+    env["PATH"] = vivado_dir + os.pathsep + env.get("PATH", "")
 
     if not args.skip_build:
         bender = find_executable(args.bender, "BENDER", "bender")

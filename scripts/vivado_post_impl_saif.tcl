@@ -33,6 +33,13 @@ if {![info exists ::RUN_SAIF_START_US]} {
     set ::RUN_SAIF_START_US 2.0
 }
 
+proc run_external {args} {
+    puts "INFO: running: [join $args { }]"
+    if {[catch {exec {*}$args >@ stdout 2>@ stderr} err]} {
+        error "Command failed: [join $args { }]\n$err"
+    }
+}
+
 set repo_root [file normalize $::RUN_SAIF_REPO_ROOT]
 set dcp       [file normalize $::RUN_SAIF_DCP]
 set out_dir   [file normalize $::RUN_SAIF_OUT_DIR]
@@ -104,10 +111,10 @@ if {[info exists ::env(XILINX_VIVADO)]} {
     set glbl [file join $::env(XILINX_VIVADO) data verilog src glbl.v]
 }
 
-xvlog -sv $tb_sv
-xvlog $netlist
+run_external xvlog -sv $tb_sv
+run_external xvlog $netlist
 if {[file exists $glbl]} {
-    xvlog $glbl
+    run_external xvlog $glbl
 }
 
 set sdf_args {}
@@ -126,13 +133,13 @@ if {[file exists $glbl]} {
     lappend xelab_tops glbl
 }
 
-xelab -relax -debug typical -timescale 1ns/10ps \
+run_external xelab -relax -debug typical -timescale 1ns/10ps \
     -L unisims_ver -L unimacro_ver -L secureip \
     {*}$sdf_args \
     {*}$xelab_tops \
     -s ai_trigger_post_impl_saif
 
-xsim ai_trigger_post_impl_saif \
+run_external xsim ai_trigger_post_impl_saif \
     -tclbatch $run_tcl \
     -testplusarg "TESTHEX_DIR=$testhex_dir" \
     -testplusarg "OUT_CSV=$csv" \
