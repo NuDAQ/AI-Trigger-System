@@ -180,9 +180,11 @@ architecture rtl of CNN_CORE_LANE is
     signal cnn_out_data  : std_logic_vector(15 downto 0);
     signal cnn_out_valid : std_logic;
 
-    -- Stream FSM.  Output capture is intentionally independent so the next
-    -- input chunk can be launched when the HLS core raises ready, before the
-    -- previous output necessarily arrives.
+    -- Stream FSM.  Output capture is intentionally independent: LANE_BUSY is
+    -- released when the 256-word AXIS input transaction has been accepted, not
+    -- when the later CNN output arrives.  The HLS dataflow core behaves like a
+    -- continuously-started pipeline, so adjacent accepted chunks are streamed
+    -- back-to-back instead of waiting for done/idle.
     type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_W := 0;
@@ -332,9 +334,10 @@ begin
                         stream_cnt    <= N_CHUNK_W;
 
                         if pending_count_cnn /= 0 and fifo_empty = '0' then
-                            -- Assert start and first word simultaneously
-                            -- Hold start in CC_STREAM until WRAPPER_TOP raises
-                            -- ready, matching the ap_ctrl_hs protocol.
+                            -- Assert start and first word simultaneously.
+                            -- Keep start asserted through the input stream; the
+                            -- wrapper/HLS TB treats ap_start as a continuous
+                            -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
                             -- FWFT: dout already holds first 128-bit entry
@@ -360,10 +363,10 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
-                        -- Deassert start when WRAPPER_TOP signals ready
-                        if cnn_ready = '1' then
-                            cnn_start <= '0';
-                        end if;
+                        -- Keep ap_start high while actively feeding the HLS
+                        -- dataflow pipeline.  Do not wait for ap_done, and do
+                        -- not use ap_ready as the stream-completion condition.
+                        cnn_start <= '1';
 
                         if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
@@ -386,22 +389,50 @@ begin
                             end if;
 
                             if stream_cnt = 1 then
-                                cnn_start    <= '0';
-                                cnn_in_valid <= '0';
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
-                                cnn_state    <= CC_IDLE;
-                                -- synthesis translate_off
-                                if dbg_cnn_events < DEBUG_EVENTS then
-                                    report "LANE" & integer'image(LANE_ID) &
-                                           " CNN stream_done completed=" &
-                                           integer'image(to_integer(chunk_count_cnn)) &
-                                           " started=" &
-                                           integer'image(to_integer(started_count_cnn)) &
-                                           " fifo_empty=" & std_logic'image(fifo_empty) &
-                                           " ready=" & std_logic'image(cnn_ready);
-                                    dbg_cnn_events <= dbg_cnn_events + 1;
+
+                                if pending_count_cnn /= 0 and fifo_empty = '0' then
+                                    -- The word_sel=1 path above just preloaded
+                                    -- the lower half of the next FIFO entry, so
+                                    -- continue without an idle/start gap.
+                                    cnn_start    <= '1';
+                                    cnn_in_valid <= '1';
+                                    stream_cnt   <= N_CHUNK_W;
+                                    word_sel     <= '0';
+                                    started_count_cnn <= started_count_cnn + 1;
+                                    cnn_state    <= CC_STREAM;
+                                    -- synthesis translate_off
+                                    if dbg_cnn_events < DEBUG_EVENTS then
+                                        report "LANE" & integer'image(LANE_ID) &
+                                               " CNN stream_done+next completed=" &
+                                               integer'image(to_integer(chunk_count_cnn)) &
+                                               " started_next=" &
+                                               integer'image(to_integer(started_count_cnn + 1)) &
+                                               " pending=" &
+                                               integer'image(to_integer(pending_count_cnn)) &
+                                               " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " ready=" & std_logic'image(cnn_ready) &
+                                               " idle=" & std_logic'image(cnn_idle);
+                                        dbg_cnn_events <= dbg_cnn_events + 1;
+                                    end if;
+                                    -- synthesis translate_on
+                                else
+                                    cnn_start    <= '0';
+                                    cnn_in_valid <= '0';
+                                    cnn_state    <= CC_IDLE;
+                                    -- synthesis translate_off
+                                    if dbg_cnn_events < DEBUG_EVENTS then
+                                        report "LANE" & integer'image(LANE_ID) &
+                                               " CNN stream_done completed=" &
+                                               integer'image(to_integer(chunk_count_cnn)) &
+                                               " started=" &
+                                               integer'image(to_integer(started_count_cnn)) &
+                                               " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " ready=" & std_logic'image(cnn_ready);
+                                        dbg_cnn_events <= dbg_cnn_events + 1;
+                                    end if;
+                                    -- synthesis translate_on
                                 end if;
-                                -- synthesis translate_on
                             end if;
                         end if;
 
