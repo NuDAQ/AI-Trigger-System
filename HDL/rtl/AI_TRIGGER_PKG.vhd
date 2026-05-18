@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
-    constant N_LANES    : integer := 6;    -- parallel CNN cores
+    constant N_LANES    : integer := 7;    -- parallel CNN cores
     constant N_CH       : integer := 4;    -- ADC channels
     constant N_BATCH_S  : integer := 16;   -- samples per channel per batch
     constant N_BATCHES  : integer := 16;   -- batches per chunk (16 * 16 = 256 timesteps)

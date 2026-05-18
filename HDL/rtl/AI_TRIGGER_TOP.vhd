@@ -1,11 +1,11 @@
 -- =============================================================================
 -- AI_TRIGGER_TOP
--- Top-level structural wrapper for the 6-lane parallel CNN trigger.
+-- Top-level structural wrapper for the parallel CNN trigger.
 --
 -- Instantiates:
 --   - ADC_CHUNK_DISTRIBUTOR: accumulates ADC batches (DATA_STR always high),
---                             distributes chunks round-robin to 6 CNN_CORE_LANE
---   - CNN_CORE_LANE x 6:     FIFO buffer + CDC + CNN inference per lane
+--                             distributes chunks round-robin to CNN_CORE_LANE
+--   - CNN_CORE_LANE x N_LANES: FIFO buffer + CDC + CNN inference per lane
 --
 -- Trigger decision (CLK_CNN domain):
 --   CNN_TRIG fires for one CLK_CNN cycle when any lane reports

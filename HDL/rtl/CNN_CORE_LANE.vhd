@@ -8,7 +8,9 @@
 --   Read port: 128-bit x 128 deep (CLK_CNN).  The FIFO is the CDC mechanism.
 --
 --   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
---   After 16 writes the completed-chunk counter is incremented.
+--   The CNN input stream may start after the first FIFO write of a chunk.
+--   The remaining FIFO writes arrive faster than the 200 MHz stream consumes
+--   them, so this hides the 256 ns ADC capture time.
 --   The CNN input FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel)
 --   to produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
 --
@@ -17,9 +19,9 @@
 -- 256-word stream finishes, not when inference output is produced.
 --
 -- Control CDC:
---   The FIFO carries data across domains.  A Gray-coded completion counter
---   carries the number of fully written chunks.  The CNN side keeps its own
---   started counter and launches whenever completed_count > started_count.
+--   The FIFO carries data across domains.  A Gray-coded accept counter carries
+--   the number of chunks whose first batch was written.  The CNN side keeps its
+--   own started counter and launches whenever accepted_count > started_count.
 --   This allows the FIFO to hold more than one completed chunk; a single
 --   chunk_done bit would lose completions while a previous chunk is running.
 --
@@ -223,20 +225,23 @@ begin
                 end if;
 
                 if WR_EN = '1' then
-                    if wr_count = N_BATCHES-1 then
-                        wr_count        <= 0;
+                    if wr_count = 0 then
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
                         chunk_busy_adc  <= '1';
                         -- synthesis translate_off
                         if dbg_adc_events < DEBUG_EVENTS then
                             report "LANE" & integer'image(LANE_ID) &
-                                   " ADC chunk_complete count=" &
+                                   " ADC chunk_accept count=" &
                                    integer'image(to_integer(chunk_count_adc + 1)) &
                                    " fifo_full=" & std_logic'image(fifo_full_s);
                             dbg_adc_events <= dbg_adc_events + 1;
                         end if;
                         -- synthesis translate_on
+                    end if;
+
+                    if wr_count = N_BATCHES-1 then
+                        wr_count <= 0;
                     else
                         wr_count <= wr_count + 1;
                     end if;
