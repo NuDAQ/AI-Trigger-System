@@ -12,9 +12,3 @@ packages:
       Git: git@github.com:NuDAQ/CNN-Core-Wrapper.git
     dependencies:
     - cnn-core
-  gateware:
-    revision: null
-    version: null
-    source:
-      Path: HDL/PreTrigger
-    dependencies: []

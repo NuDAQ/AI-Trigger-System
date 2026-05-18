@@ -1,2 +1,0 @@
-overrides:
-  gateware: { path: "HDL/PreTrigger" }
