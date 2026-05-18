@@ -30,14 +30,13 @@ routed checkpoint:
 python3 scripts/run_post_impl_saif.py
 ```
 
-## Current Baseline
+## Current Report Set
 
-The committed OOC reports are a useful baseline, but they should not be treated
-as final sign-off data. They were generated before the latest 170 MHz
-`CLK_CNN` update and boundary-constraint cleanup. A fresh OOC implementation
-run is required before using the numbers as final timing or power data.
+The current post-implementation reports were generated from the flat-port
+wrapper design after the 170 MHz `CLK_CNN` update. They are suitable for the
+current block-level timing, resource, and SAIF power assessment.
 
-Baseline report context:
+Report context:
 
 | Item | Value |
 | --- | --- |
@@ -45,34 +44,57 @@ Baseline report context:
 | Device | `xcku5p-ffvb676-2-e` |
 | Build style | Out-of-context block implementation |
 | CNN lanes | 7 |
-| Baseline `CLK_ADC` | 62.5 MHz |
-| Baseline `CLK_CNN` | 175.0 MHz |
+| `CLK_ADC` | 62.5 MHz |
+| `CLK_CNN` | 170.010 MHz |
 
-## Timing Baseline
+## Post-Implementation Simulation
 
-The baseline routed timing report closes timing:
+The current gate-level functional simulation completed successfully with the
+existing testbench:
 
 | Metric | Value |
 | --- | ---: |
-| WNS | 1.284 ns |
+| Samples sent | 16 |
+| Results received | 16 |
+| Chunk overflows | 0 |
+| Correct predictions | 16 / 16 |
+| Average latency | 286.6 `CLK_CNN` cycles |
+| Average latency | 1.686 us |
+
+The run used `CNN_THRESH=-96`, corresponding to a threshold of -6.0. The only
+positive label in the 16-sample window was sample 9, and the post-implementation
+simulation predicted it correctly.
+
+## Timing Result
+
+The routed timing report closes timing at the current clock targets:
+
+| Metric | Value |
+| --- | ---: |
+| WNS | 1.504 ns |
 | TNS | 0 ns |
-| WHS | 0.027 ns |
+| WHS | 0.029 ns |
 | THS | 0 ns |
 
-The old report also contains boundary-constraint warnings for missing input and
-output delays. Those warnings are expected for that baseline run and are one of
-the reasons the report should be refreshed after the current XDC changes. The
-next implementation run should confirm that `CLK_CNN` is analyzed at 170 MHz,
-that the ADC/CNN clock relationship is handled as intended, and that the
-methodology warnings are either resolved or explicitly justified.
+Per-clock timing summary:
 
-## Resource Baseline
+| Clock | WNS | TNS | WHS | THS |
+| --- | ---: | ---: | ---: | ---: |
+| `CLK_ADC` | 12.903 ns | 0 ns | 0.030 ns | 0 ns |
+| `CLK_CNN` | 1.504 ns | 0 ns | 0.029 ns | 0 ns |
 
-The routed utilization baseline is:
+The report still contains OOC boundary warnings for missing input and output
+delays: 779 input ports and 12 output ports. There are no unconstrained
+internal endpoints and all user-specified timing constraints are met. The
+boundary warnings should still be reviewed before system-level sign-off.
+
+## Resource Result
+
+The routed utilization result is:
 
 | Resource | Used | Device utilization |
 | --- | ---: | ---: |
-| LUT | 29,102 | 13.41% |
+| LUT | 29,105 | 13.41% |
 | FF | 15,924 | 3.67% |
 | BRAM tile | 101.5 | 21.15% |
 | DSP | 77 | 4.22% |
@@ -88,7 +110,7 @@ implementation. Each lane contains one `WRAPPER_TOP` CNN wrapper, one async
 FIFO, and 11 DSPs. This is the main check that the CNN datapath was preserved
 and not optimized away as unused logic.
 
-Typical per-lane baseline usage:
+Typical per-lane usage:
 
 | Resource | Per lane |
 | --- | ---: |
@@ -100,34 +122,49 @@ Typical per-lane baseline usage:
 
 Across seven lanes this accounts for the reported 77 DSPs.
 
-## Power Baseline
+## SAIF Power Result
 
-The existing power report is vectorless:
+The current power report uses switching activity from post-implementation xsim:
 
 | Metric | Value |
 | --- | ---: |
-| Total on-chip power | 1.442 W |
-| Dynamic power | 0.983 W |
-| Static power | 0.459 W |
-| Confidence | Medium |
+| Total on-chip power | 1.414 W |
+| Dynamic power | 0.955 W |
+| Static power | 0.458 W |
+| Confidence | High |
+| Design nets matched | 98% |
 
-This is not a final power estimate. The report has no SAIF activity file and
-Vivado reports less than 25% internal-node activity coverage. Final power
-analysis should use the post-implementation SAIF flow and review:
+The main dynamic contributors are:
 
-```text
-build/vivado_post_impl_saif/reports/post_route_power_saif.rpt
-```
+| Component | Dynamic power |
+| --- | ---: |
+| Signals | 0.343 W |
+| CLB logic | 0.320 W |
+| Block RAM | 0.147 W |
+| Clocks | 0.107 W |
+| DSPs | 0.039 W |
+
+The SAIF logging script first tries explicit hierarchy scopes, then falls back
+to full-DUT recursive logging if too few objects are matched. In the current
+xsim log, the explicit scopes matched only 14 top-level DUT objects. The
+fallback logged 162,789 additional objects, for a total logged object count of
+162,803. This produced the 98% SAIF net match and High power confidence.
+
+The full-DUT `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` enumeration dominated
+runtime. On the reference Ubuntu run it took about 100 minutes; the actual
+post-implementation simulation completed in less than one minute after the SAIF
+objects were registered.
 
 ## Sign-Off Checklist
 
 Before treating the implementation as sign-off quality:
 
-1. Re-run OOC implementation with the current 170 MHz `CLK_CNN` constraint.
-2. Confirm timing closure for `CLK_ADC` and `CLK_CNN`.
-3. Confirm boundary timing warnings are resolved or documented.
-4. Confirm hierarchical utilization still shows seven CNN lanes and 77 DSPs.
-5. Run post-implementation simulation with the testbench and confirm all
-   requested samples complete.
-6. Generate SAIF from post-implementation simulation and confirm the power
-   report uses the activity file with acceptable confidence.
+1. Confirm whether the remaining input/output delay warnings are acceptable for
+   this OOC block context.
+2. Confirm hierarchical utilization still shows seven CNN lanes and 77 DSPs
+   after any RTL or constraint change.
+3. Re-run post-implementation simulation when changing the testbench stimulus,
+   threshold, lane count, or CNN clock.
+4. Re-run SAIF power after any timing, placement, or activity-profile change.
+5. For higher workload coverage, compare the 16-sample power result against a
+   longer 32- or 64-sample SAIF run.
