@@ -91,15 +91,17 @@ architecture rtl of CNN_CORE_LANE is
     -- -------------------------------------------------------------------------
     component fifo_async_1024_to_64
         port (
-            rst    : in  std_logic;
-            wr_clk : in  std_logic;
-            rd_clk : in  std_logic;
-            din    : in  std_logic_vector(1023 downto 0);
-            wr_en  : in  std_logic;
-            rd_en  : in  std_logic;
-            dout   : out std_logic_vector(127 downto 0);
-            full   : out std_logic;
-            empty  : out std_logic
+            rst         : in  std_logic;
+            wr_clk      : in  std_logic;
+            rd_clk      : in  std_logic;
+            din         : in  std_logic_vector(1023 downto 0);
+            wr_en       : in  std_logic;
+            rd_en       : in  std_logic;
+            dout        : out std_logic_vector(127 downto 0);
+            full        : out std_logic;
+            empty       : out std_logic;
+            wr_rst_busy : out std_logic;   -- high while write port is in reset
+            rd_rst_busy : out std_logic    -- high while read port is in reset
         );
     end component;
 
@@ -269,28 +271,26 @@ begin
                             stream_cnt <= stream_cnt - 1;
 
                             if word_sel = '0' then
-                                -- Sent lower half; present upper half next cycle
-                                word_sel     <= '1';
-                                cnn_in_data  <= fifo_dout(127 downto 64);
-                                -- Do NOT pop FIFO yet
+                                -- CNN just consumed the LOWER half of entry N.
+                                -- Pre-load the UPPER half of entry N (dout unchanged).
+                                -- Assert rd_en now: entry N+1 will appear at dout
+                                -- exactly one cycle later (FWFT latency = 1).
+                                cnn_in_data <= fifo_dout(127 downto 64);
+                                fifo_rd_en  <= '1';
+                                word_sel    <= '1';
                             else
-                                -- Sent upper half; pop FIFO and prepare lower
-                                -- half of the next entry (available next cycle
-                                -- in FWFT mode after rd_en pulse)
-                                word_sel     <= '0';
-                                fifo_rd_en   <= '1';
+                                -- CNN just consumed the UPPER half of entry N.
+                                -- rd_en was asserted last cycle; dout now holds
+                                -- entry N+1. Pre-load its LOWER half.
+                                cnn_in_data <= fifo_dout(63 downto 0);
+                                word_sel    <= '0';
+                                -- fifo_rd_en stays '0' (default)
                             end if;
 
                             if stream_cnt = 1 then
                                 cnn_in_valid <= '0';
                                 cnn_state    <= CC_WAIT_DONE;
                             end if;
-                        end if;
-
-                        -- Update cnn_in_data from newly popped FIFO entry
-                        -- (takes effect one cycle after fifo_rd_en, FWFT)
-                        if fifo_rd_en = '1' then
-                            cnn_in_data <= fifo_dout(63 downto 0);
                         end if;
 
                     -- ---------------------------------------------------------
@@ -320,18 +320,28 @@ begin
 
     -- =========================================================================
     -- FIFO instantiation
+    -- IP settings (Xilinx FIFO Generator 13.2):
+    --   Basic       : Independent Clocks Block RAM, Sync Stages = 2
+    --   Native Ports: First Word Fall Through, Asymmetric Port Width
+    --                 Write Width = 1024, Write Depth = 32  (actual ~31)
+    --                 Read  Width = 128,  Read  Depth = 128 (auto)
+    --                 Output Registers = off (FWFT uses embedded BRAM reg)
+    --   Status Flags: all off
+    --   Data Counts : all off
     -- =========================================================================
     u_FIFO : fifo_async_1024_to_64
         port map (
-            rst    => RST,
-            wr_clk => CLK_ADC,
-            rd_clk => CLK_CNN,
-            din    => BATCH_DATA,
-            wr_en  => WR_EN,
-            rd_en  => fifo_rd_en,
-            dout   => fifo_dout,
-            full   => fifo_full_s,
-            empty  => fifo_empty
+            rst         => RST,
+            wr_clk      => CLK_ADC,
+            rd_clk      => CLK_CNN,
+            din         => BATCH_DATA,
+            wr_en       => WR_EN,
+            rd_en       => fifo_rd_en,
+            dout        => fifo_dout,
+            full        => fifo_full_s,
+            empty       => fifo_empty,
+            wr_rst_busy => open,
+            rd_rst_busy => open
         );
 
     -- =========================================================================

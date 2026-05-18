@@ -158,16 +158,38 @@ stalls the HLS datapath and will produce incorrect inference results.
 **RST synchronizer**: `rst_s1` and `rst_cnn` are initialized to `'1'` so that `rst_n = '0'`
 is driven to `cnn_core` before any `CLK_CNN` edge, matching the HLS reset expectation.
 
+#### Async FIFO IP (`fifo_async_1024_to_64`)
+
+Each `CNN_CORE_LANE` instantiates one Xilinx FIFO Generator IP.
+Required configuration (Vivado IP Catalog → FIFO Generator 13.2):
+
+| Tab          | Setting                   | Value                              |
+|--------------|---------------------------|------------------------------------|
+| Basic        | Fifo Implementation       | Independent Clocks Block RAM       |
+| Basic        | Synchronization Stages    | 2                                  |
+| Native Ports | Read Mode                 | **First Word Fall Through**        |
+| Native Ports | Asymmetric Port Width     | Enabled                            |
+| Native Ports | Write Width               | 1024                               |
+| Native Ports | Write Depth               | 32  (Actual Write Depth ≈ 31)      |
+| Native Ports | Read Width                | 128 (Actual Read Depth ≈ 248)      |
+| Native Ports | Output Registers          | Off (FWFT uses embedded BRAM reg)  |
+| Native Ports | Enable Safety Circuit     | **On** (prevents BRAM corruption)  |
+| Status Flags | All flags                 | Off                                |
+| Data Counts  | All counts                | Off                                |
+
+The FSM streams all 256 CNN input words with **no bubbles** at 1 word/CLK\_CNN cycle.
+Read latency is 0 in FWFT mode; `rd_en` asserted when consuming the lower half of each
+128-bit entry causes the upper half to be valid in the same dout (unchanged), and the
+next entry appears at dout exactly one CLK\_CNN cycle later.
+
 #### BRAM Resource Budget
 
-Each lane uses one 256 × 64-bit dual-port buffer:
+Per-lane FIFO (1024-bit write / 128-bit read, depth 32):
 
 | Resource       | Per lane | Total (6 lanes) |
 |----------------|----------|-----------------|
 | BRAM_18K       | 1        | 6               |
-| Buffer depth   | 256 words| —               |
-| Buffer width   | 64-bit   | —               |
-| Storage        | 2 KB     | 12 KB           |
+| BRAM_36K       | 14       | 84              |
 
 CNN core resources (from HLS synthesis, per lane):
 
@@ -177,6 +199,8 @@ CNN core resources (from HLS synthesis, per lane):
 | DSP       | 11       |
 | FF        | ~3000    |
 | LUT       | ~26500   |
+
+Total BRAM utilisation (6 FIFOs only): 84 BRAM\_36K / 240 available ≈ 35 %.
 
 ## Simulation
 
