@@ -151,8 +151,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open CSV: %s", out_csv_path); $finish;
         end
         $fwrite(csv_file,
-            "sample_id,hex_out,float_out,label,prediction,correct,"
-            "latency_cycles_cnn,latency_us\n");
+            "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n");
 
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);

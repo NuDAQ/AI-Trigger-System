@@ -25,6 +25,15 @@
 
 !analysis/
 !analysis/**
+
+# Ignore bender dependency cache (large git objects)
+.bender/
+
+# Ignore large data/output files
+data/*.npy
+data/*.pdf
+analysis/**/*.npy
+analysis/**/*.txt
 ###########################################################################
 ##	VIVADO
 ###########################################################################

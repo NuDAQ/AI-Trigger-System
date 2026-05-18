@@ -1,0 +1,32 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+"../../../../AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/sim/fifo_async_1024_to_64.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config7_Pipeline_DenseWideMain.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_9_5_5_3_0_1u_config7_s.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_fifo_w252_d4_S.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_fifo_w448_d4_S.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_first_conv_4lane_temporal_wide_cl_array_array_ap_fixed_28u_config3_s.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config5_s.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_12s_5ns_15_1_1.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_16s_6s_20_1_1.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_regslice_both.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_28u_array_ap_fixed_16_6_5_3_0_28u_relu_config4_s.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_sparsemux_11_3_12_1_1.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_sparsemux_2353_11_6_1_1.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_sparsemux_9_2_16_1_1.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_9_5_5_3_0_1u_config7_U0.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config5_U0.v" \
+"../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_fixed_16_6_5_3_0_28u_relu_config4_U0.v" \
+"../../../../../.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v" \
+
+sv xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+"../../../../../HDL/sim/tb_ai_trigger_top.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
