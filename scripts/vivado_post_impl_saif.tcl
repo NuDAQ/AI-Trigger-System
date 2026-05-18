@@ -18,7 +18,7 @@ if {![info exists ::RUN_SAIF_TESTHEX_DIR]} {
     set ::RUN_SAIF_TESTHEX_DIR ""
 }
 if {![info exists ::RUN_SAIF_NUM_SAMPLES]} {
-    set ::RUN_SAIF_NUM_SAMPLES 64
+    set ::RUN_SAIF_NUM_SAMPLES 16
 }
 if {![info exists ::RUN_SAIF_SCORE_THRESHOLD]} {
     set ::RUN_SAIF_SCORE_THRESHOLD -6.0
@@ -28,6 +28,9 @@ if {![info exists ::RUN_SAIF_CNN_THRESH_RAW]} {
 }
 if {![info exists ::RUN_SAIF_SDF_MODE]} {
     set ::RUN_SAIF_SDF_MODE none
+}
+if {![info exists ::RUN_SAIF_START_US]} {
+    set ::RUN_SAIF_START_US 2.0
 }
 
 set repo_root [file normalize $::RUN_SAIF_REPO_ROOT]
@@ -66,6 +69,7 @@ puts "INFO: out_dir     = $out_dir"
 puts "INFO: testhex_dir = $testhex_dir"
 puts "INFO: samples     = $::RUN_SAIF_NUM_SAMPLES"
 puts "INFO: sdf_mode    = $::RUN_SAIF_SDF_MODE"
+puts "INFO: saif_start  = $::RUN_SAIF_START_US us"
 
 set netlist [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.v]
 set sdf     [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.sdf]
@@ -83,6 +87,9 @@ if {$::RUN_SAIF_SDF_MODE eq "none"} {
 close_design
 
 set fp [open $run_tcl w]
+if {$::RUN_SAIF_START_US > 0.0} {
+    puts $fp "run $::RUN_SAIF_START_US us"
+}
 puts $fp "open_saif {$saif}"
 puts $fp "log_saif \[get_objects -r /tb_AI_TRIGGER_TOP/dut/*\]"
 puts $fp "run all"

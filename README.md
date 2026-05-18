@@ -300,8 +300,9 @@ activity and feed the resulting SAIF back into `report_power`:
 python3 scripts/run_post_impl_saif.py
 ```
 
-The default run uses the flat-port simulation wrapper as the OOC top, runs 64
-samples through the existing testbench, writes
+The default run uses the flat-port simulation wrapper as the OOC top, runs 16
+samples through the existing testbench, starts SAIF recording after a 2 us
+warm-up window, writes
 `build/vivado_post_impl_saif/activity/ai_trigger_post_impl.saif`, and reports
 power to:
 
@@ -318,5 +319,5 @@ SDF:
 python3 scripts/run_post_impl_saif.py --samples 16 --sdf max
 ```
 
-Longer SAIF windows, such as 128 or 256 samples, can be used when runtime is
+Longer SAIF windows, such as 32 or 64 samples, can be used when runtime is
 acceptable and a more representative average activity profile is needed.

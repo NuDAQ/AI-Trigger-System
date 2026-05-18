@@ -95,6 +95,7 @@ def build_saif_launcher(
         f"set ::RUN_SAIF_SCORE_THRESHOLD {args.score_threshold}",
         f"set ::RUN_SAIF_CNN_THRESH_RAW {args.cnn_thresh_raw}",
         f"set ::RUN_SAIF_SDF_MODE {args.sdf}",
+        f"set ::RUN_SAIF_START_US {args.saif_start_us}",
     ]
     if args.testhex_dir:
         testhex_dir = Path(args.testhex_dir).expanduser()
@@ -146,14 +147,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--samples",
         type=int,
-        default=64,
-        help="Number of samples to run in gate-level simulation. Default: 64.",
+        default=16,
+        help="Number of samples to run in gate-level simulation. Default: 16.",
     )
     parser.add_argument(
         "--sdf",
         choices=["none", "min", "typ", "max"],
         default="none",
         help="SDF annotation mode. Use none for faster SAIF; max for a short timing smoke test.",
+    )
+    parser.add_argument(
+        "--saif-start-us",
+        type=float,
+        default=2.0,
+        help="Delay before SAIF recording starts, in microseconds. Default: 2.0.",
     )
     parser.add_argument(
         "--testhex-dir",
