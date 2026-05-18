@@ -64,6 +64,12 @@ set_property simulator_language Mixed [current_project]
 puts "INFO: sourcing Bender-generated RTL file list..."
 source $bender_script
 
+set tb_wrap [file join $repo_root HDL sim AI_TRIGGER_TOP_TB_WRAP.vhd]
+if {[file exists $tb_wrap]} {
+    puts "INFO: adding flat-port wrapper source: $tb_wrap"
+    add_files -norecurse $tb_wrap
+}
+
 # Bender imports wrapper-level board constraints from the dependency.  Those
 # constraints describe a standalone wrapper project and are not valid for this
 # DAQ subsystem OOC run.

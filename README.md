@@ -32,7 +32,7 @@ AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
 | Clock | Nominal rate | Function |
 | --- | ---: | --- |
 | `CLK_ADC` | 62.5 MHz | Accepts 16 ADC samples per cycle per channel, equivalent to 1 Gsps per channel. |
-| `CLK_CNN` | 175 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
+| `CLK_CNN` | 170 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
 
 The reset input `RST` is active high and generated in the ADC domain. Each
 `CNN_CORE_LANE` retimes reset into the CNN clock domain before driving the
@@ -129,10 +129,10 @@ conservative interval estimate:
 f_CNN >= 288 / 1792 ns = 160.7 MHz
 ```
 
-The current 175 MHz CNN clock target leaves margin while remaining more
+The current 170 MHz CNN clock target leaves margin while remaining more
 conservative for implementation. For comparison, six lanes would require about
 179-188 MHz using the same assumptions, which does not leave enough margin at a
-175 MHz target.
+170 MHz target.
 
 The measured full-system simulation result after the current fixes is:
 
@@ -261,7 +261,7 @@ AI_Trigger_System/AI_Trigger_System.xpr
 
 Primary checks for the next analysis step:
 
-1. Confirm `CLK_CNN` timing closure at 175 MHz.
+1. Confirm `CLK_CNN` timing closure at 170 MHz.
 2. Confirm `CLK_ADC` timing closure at 62.5 MHz.
 3. Review resource use for seven CNN wrappers plus seven async FIFOs.
 4. Check FIFO Generator resource mapping and reset behavior.
@@ -289,4 +289,34 @@ build/vivado_ooc_ai_trigger/reports/
 The main throughput target is one 256-sample chunk every 256 ns at the ADC
 input. At seven lanes, the CNN domain should have enough margin if the single
 core transaction interval remains near 260-275 cycles and the implemented
-`CLK_CNN` frequency is at or above 175 MHz.
+`CLK_CNN` frequency is at or above 170 MHz.
+
+## Post-Implementation SAIF Power Flow
+
+For power analysis, use a routed netlist simulation to collect switching
+activity and feed the resulting SAIF back into `report_power`:
+
+```bash
+python3 scripts/run_post_impl_saif.py
+```
+
+The default run uses the flat-port simulation wrapper as the OOC top, runs 64
+samples through the existing testbench, writes
+`build/vivado_post_impl_saif/activity/ai_trigger_post_impl.saif`, and reports
+power to:
+
+```text
+build/vivado_post_impl_saif/reports/post_route_power_saif.rpt
+```
+
+The default gate simulation is functional, without SDF annotation, because the
+SAIF goal is representative switching activity rather than exhaustive timing
+simulation. For a short timing smoke test, reduce the sample count and enable
+SDF:
+
+```bash
+python3 scripts/run_post_impl_saif.py --samples 16 --sdf max
+```
+
+Longer SAIF windows, such as 128 or 256 samples, can be used when runtime is
+acceptable and a more representative average activity profile is needed.

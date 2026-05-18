@@ -25,7 +25,7 @@
 //
 // Clocks:
 //   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
-//   CLK_CNN:  5.714 ns period (175 MHz) — CNN inference clock
+//   CLK_CNN:  5.882 ns period (170 MHz) — CNN inference clock
 //
 // Plusargs:
 //   +TESTHEX_DIR=<path>     directory containing testhex_stream files
@@ -41,7 +41,7 @@ module tb_AI_TRIGGER_TOP;
     // Parameters
     // -------------------------------------------------------------------------
     parameter CLK_ADC_PERIOD = 16.0;   // ns (62.5 MHz)
-    parameter CLK_CNN_PERIOD =  5.714285714; // ns (175 MHz)
+    parameter CLK_CNN_PERIOD =  5.882352941; // ns (170 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
     parameter TIMEOUT_CYCLES_CNN  = 100_000_000;  // watchdog on CLK_CNN
