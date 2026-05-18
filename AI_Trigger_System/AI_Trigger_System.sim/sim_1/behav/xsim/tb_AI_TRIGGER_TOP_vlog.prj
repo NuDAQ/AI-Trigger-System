@@ -1,5 +1,5 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+verilog xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SYNTHESIS=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
 "../../../../AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/sim/fifo_async_1024_to_64.v" \
 "../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core.v" \
 "../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config7_Pipeline_DenseWideMain.v" \
@@ -22,7 +22,7 @@ verilog xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION
 "../../../../../../CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_fixed_16_6_5_3_0_28u_relu_config4_U0.v" \
 "../../../../../.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v" \
 
-sv xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIM=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+sv xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SYNTHESIS=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
 "../../../../../HDL/sim/tb_ai_trigger_top.sv" \
 
 # compile glbl module
