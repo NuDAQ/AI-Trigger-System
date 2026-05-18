@@ -325,3 +325,8 @@ acceptable and a more representative average activity profile is needed.
 For faster debug runs, use `--saif-scope lane0`, `--saif-scope lanes2`, or
 `--saif-scope lanes4`. The script prints object counts and elapsed time for
 each SAIF logging chunk so long setup phases can be distinguished from a hang.
+It also fails the run if fewer than 1000 simulation objects are logged, which
+helps catch bad hierarchy patterns before producing a misleading power report.
+The logged object count is determined by the xsim `get_objects` scope patterns,
+not by timing constraints. The scope list is specified in
+`scripts/vivado_post_impl_saif.tcl` so the intended SAIF coverage is explicit.

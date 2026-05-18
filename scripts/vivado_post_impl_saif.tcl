@@ -35,6 +35,9 @@ if {![info exists ::RUN_SAIF_START_US]} {
 if {![info exists ::RUN_SAIF_SCOPE]} {
     set ::RUN_SAIF_SCOPE all
 }
+if {![info exists ::RUN_SAIF_MIN_OBJECTS]} {
+    set ::RUN_SAIF_MIN_OBJECTS 1000
+}
 
 proc run_external {args} {
     puts "INFO: running: [join $args { }]"
@@ -81,6 +84,7 @@ puts "INFO: samples     = $::RUN_SAIF_NUM_SAMPLES"
 puts "INFO: sdf_mode    = $::RUN_SAIF_SDF_MODE"
 puts "INFO: saif_start  = $::RUN_SAIF_START_US us"
 puts "INFO: saif_scope  = $::RUN_SAIF_SCOPE"
+puts "INFO: min_objects = $::RUN_SAIF_MIN_OBJECTS"
 
 set netlist [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.v]
 set sdf     [file join $net_dir AI_TRIGGER_TOP_TB_WRAP_post_route.sdf]
@@ -102,12 +106,18 @@ if {$::RUN_SAIF_START_US > 0.0} {
     puts $fp "run $::RUN_SAIF_START_US us"
 }
 puts $fp "open_saif {$saif}"
+puts $fp "set saif_total_objects 0"
 puts $fp {
+# SAIF coverage is controlled by the simulation object scopes below, not by
+# Vivado timing constraints.  Each get_objects pattern selects xsim objects
+# to record; the post-run read_saif step maps those activities back to the
+# routed checkpoint for report_power.
 proc saif_stamp {} {
     return [clock format [clock seconds] -format {%H:%M:%S}]
 }
 
 proc saif_log_scope {scope recursive} {
+    global saif_total_objects
     puts "[saif_stamp] SAIF get_objects begin: $scope recursive=$recursive"
     flush stdout
     set t0 [clock seconds]
@@ -117,6 +127,7 @@ proc saif_log_scope {scope recursive} {
         set objs [get_objects $scope]
     }
     set n [llength $objs]
+    incr saif_total_objects $n
     set t1 [clock seconds]
     puts "[saif_stamp] SAIF get_objects done: $scope count=$n elapsed=[expr {$t1 - $t0}]s"
     flush stdout
@@ -134,33 +145,37 @@ proc saif_log_scope {scope recursive} {
 if {$::RUN_SAIF_SCOPE eq "top"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
 } elseif {$::RUN_SAIF_SCOPE eq "lane0"} {
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/*} 1}
 } elseif {$::RUN_SAIF_SCOPE eq "lanes2"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/*} 1}
 } elseif {$::RUN_SAIF_SCOPE eq "lanes4"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[2].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[3].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/*} 1}
 } elseif {$::RUN_SAIF_SCOPE eq "all"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/*} 0}
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/u_DIST/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[0].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[1].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[2].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[3].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[4].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[5].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes[6].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[0\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/*} 1}
+    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/*} 1}
 } else {
     error "Unsupported SAIF scope '$::RUN_SAIF_SCOPE'. Use top, lane0, lanes2, lanes4, or all."
 }
 puts $fp {puts "[saif_stamp] SAIF run all begin"}
+puts $fp "puts \"\[saif_stamp\] SAIF total logged object count=\$saif_total_objects\""
+puts $fp "if {\$saif_total_objects < $::RUN_SAIF_MIN_OBJECTS} {"
+puts $fp "    error \"SAIF object count \$saif_total_objects is below required minimum $::RUN_SAIF_MIN_OBJECTS; scope patterns likely matched too little hierarchy\""
+puts $fp "}"
 puts $fp {flush stdout}
 puts $fp "run all"
 puts $fp {puts "[saif_stamp] SAIF run all done"}
@@ -217,10 +232,23 @@ if {![file exists $saif]} {
 }
 
 open_checkpoint $dcp
-if {[catch {read_saif -input $saif -instance_name tb_AI_TRIGGER_TOP/dut} err]} {
-    puts "WARNING: read_saif with testbench instance failed: $err"
-    puts "WARNING: retrying read_saif without instance_name"
-    read_saif -input $saif
+set saif_loaded 0
+set read_attempts [list \
+    [list read_saif -strip_path tb_AI_TRIGGER_TOP/dut $saif] \
+    [list read_saif -strip_path /tb_AI_TRIGGER_TOP/dut $saif] \
+    [list read_saif $saif] \
+]
+foreach read_cmd $read_attempts {
+    puts "INFO: trying SAIF import: [join $read_cmd { }]"
+    if {[catch {uplevel #0 $read_cmd} err]} {
+        puts "WARNING: SAIF import failed: $err"
+    } else {
+        set saif_loaded 1
+        break
+    }
+}
+if {!$saif_loaded} {
+    error "Failed to import SAIF. Run 'read_saif -help' in Vivado for this installation's syntax."
 }
 
 report_power -file [file join $rpt_dir post_route_power_saif.rpt]

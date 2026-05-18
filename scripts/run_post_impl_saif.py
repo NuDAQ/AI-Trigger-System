@@ -97,6 +97,7 @@ def build_saif_launcher(
         f"set ::RUN_SAIF_SDF_MODE {args.sdf}",
         f"set ::RUN_SAIF_START_US {args.saif_start_us}",
         f"set ::RUN_SAIF_SCOPE {args.saif_scope}",
+        f"set ::RUN_SAIF_MIN_OBJECTS {args.saif_min_objects}",
     ]
     if args.testhex_dir:
         testhex_dir = Path(args.testhex_dir).expanduser()
@@ -168,6 +169,12 @@ def parse_args() -> argparse.Namespace:
         choices=["top", "lane0", "lanes2", "lanes4", "all"],
         default="all",
         help="SAIF logging scope. Default logs top, distributor, and all seven lanes in separate chunks.",
+    )
+    parser.add_argument(
+        "--saif-min-objects",
+        type=int,
+        default=1000,
+        help="Fail if SAIF logging matches fewer objects than this. Default: 1000.",
     )
     parser.add_argument(
         "--testhex-dir",
