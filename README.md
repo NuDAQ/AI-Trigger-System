@@ -13,6 +13,27 @@ The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
 dependencies. The local RTL handles ADC-domain batching, clock-domain crossing,
 lane scheduling, output aggregation, and the trigger threshold comparison.
 
+## Dependency Management
+
+This repository uses Bender to manage the external CNN RTL dependencies.
+
+Install and update dependencies:
+
+```bash
+cargo install bender
+bender update
+```
+
+Regenerate Vivado source scripts when dependencies change:
+
+```bash
+bender script vivado -t vivado > add_files.tcl
+bender script vivado-sim -t sim > add_sim_files.tcl
+```
+
+If the generated Tcl files contain a hardcoded `ROOT`, update it for the local
+checkout or regenerate the scripts on the target machine.
+
 ## Current Architecture
 
 Top-level hierarchy:
@@ -230,25 +251,6 @@ Simulation output is written to:
 ```text
 AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv
 ```
-
-## Bender Dependencies
-
-Install and update dependencies:
-
-```bash
-cargo install bender
-bender update
-```
-
-Regenerate Vivado source scripts when dependencies change:
-
-```bash
-bender script vivado -t vivado > add_files.tcl
-bender script vivado-sim -t sim > add_sim_files.tcl
-```
-
-If the generated Tcl files contain a hardcoded `ROOT`, update it for the local
-checkout or regenerate the scripts on the target machine.
 
 ## Synthesis and Implementation Notes
 
