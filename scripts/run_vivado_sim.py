@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -139,7 +140,21 @@ def main() -> int:
 
     cmd = [vivado, "-mode", "batch", "-source", str(tcl_path)]
     print("INFO: running:", " ".join(cmd), flush=True)
-    result = subprocess.run(cmd, cwd=repo_root)
+    proc = subprocess.Popen(cmd, cwd=repo_root)
+    try:
+        return_code = proc.wait()
+    except KeyboardInterrupt:
+        print("\nINFO: interrupt received; terminating Vivado...", flush=True)
+        proc.send_signal(signal.SIGINT)
+        try:
+            return_code = proc.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            proc.terminate()
+            try:
+                return_code = proc.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                return_code = proc.wait()
 
     if not args.keep_tcl:
         try:
@@ -147,7 +162,7 @@ def main() -> int:
         except OSError:
             pass
 
-    return result.returncode
+    return return_code
 
 
 if __name__ == "__main__":

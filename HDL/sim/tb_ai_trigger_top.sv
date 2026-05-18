@@ -156,15 +156,15 @@ module tb_AI_TRIGGER_TOP;
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);
 
-        // Reset — DATA_STR is low during reset, goes high and stays high after
+        // Reset.  DATA_STR stays low until the input thread presents sample 0,
+        // so the first hardware chunk is not polluted by reset-padding zeros.
         rst      = 1;
         data_str = 0;
         $display("[%0t] Asserting reset...", $time);
         repeat(10) @(posedge clk_cnn);
         repeat(4)  @(posedge clk_adc);
         rst      = 0;
-        data_str = 1;   // continuously high from here: 1 Gsps ADC stream
-        repeat(4)  @(posedge clk_adc);
+        repeat(1)  @(posedge clk_adc);
 
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
@@ -193,7 +193,7 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     // Input driver (CLK_ADC domain)
     //
-    // DATA_STR is always high (set once after reset, never touched here).
+    // DATA_STR is high exactly while this finite test stream is active.
     // The driver updates ADC_DATA4_FLAT every CLK_ADC cycle to simulate the
     // continuous 1 Gsps ADC stream: 16 samples per cycle across 4 channels.
     //
@@ -227,13 +227,15 @@ module tb_AI_TRIGGER_TOP;
                         end
                     end
                     adc_data4_flat = batch_flat;
+                    data_str = 1;
                     @(posedge clk_adc);   // hold for exactly 1 cycle; no gap
                 end
 
                 sent_count = sent_count + 1;
             end
-            // After all samples: keep driving zeros (ADC continues running)
+            // After all requested samples, stop the finite test stream.
             adc_data4_flat = 768'h0;
+            data_str = 0;
         end
     endtask
 

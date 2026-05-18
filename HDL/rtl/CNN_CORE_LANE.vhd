@@ -9,8 +9,8 @@
 --
 --   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
 --   After 16 writes the completed-chunk counter is incremented.
---   The CNN FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel) to
---   produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
+--   The CNN input FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel)
+--   to produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
 --
 -- CHUNK_BUSY = fifo_full (CLK_ADC domain):
 --   High while the FIFO holds an unread chunk (~640 ns at 200 MHz).
@@ -165,8 +165,10 @@ architecture rtl of CNN_CORE_LANE is
     signal cnn_out_data  : std_logic_vector(15 downto 0);
     signal cnn_out_valid : std_logic;
 
-    -- Stream FSM
-    type cnn_fsm_t is (CC_IDLE, CC_STREAM, CC_WAIT_DONE, CC_ACK);
+    -- Stream FSM.  Output capture is intentionally independent so the next
+    -- input chunk can be launched when the HLS core raises ready, before the
+    -- previous output necessarily arrives.
+    type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_W := 0;
     signal word_sel   : std_logic := '0';
@@ -249,11 +251,15 @@ begin
                 word_sel     <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
-                lane_valid_r  <= '0';
-                lane_score_r  <= (others => '0');
+                lane_valid_r <= '0';
+                lane_score_r <= (others => '0');
             else
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
+                if cnn_out_valid = '1' then
+                    lane_score_r <= cnn_out_data;
+                    lane_valid_r <= '1';
+                end if;
 
                 case cnn_state is
 
@@ -262,7 +268,8 @@ begin
                         word_sel      <= '0';
                         stream_cnt    <= N_CHUNK_W;
 
-                        if pending_count_cnn /= 0 and fifo_empty = '0' then
+                        if pending_count_cnn /= 0 and fifo_empty = '0' and
+                           (cnn_idle = '1' or cnn_ready = '1') then
                             -- Assert start and first word simultaneously
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
@@ -301,25 +308,9 @@ begin
 
                             if stream_cnt = 1 then
                                 cnn_in_valid <= '0';
-                                cnn_state    <= CC_WAIT_DONE;
+                                cnn_state    <= CC_IDLE;
                             end if;
                         end if;
-
-                    -- ---------------------------------------------------------
-                    when CC_WAIT_DONE =>
-                        cnn_in_valid <= '0';
-                        cnn_start    <= '0';
-                        if cnn_out_valid = '1' then
-                            lane_score_r <= cnn_out_data;
-                        end if;
-                        if cnn_done = '1' then
-                            cnn_state <= CC_ACK;
-                        end if;
-
-                    -- ---------------------------------------------------------
-                    when CC_ACK =>
-                        lane_valid_r  <= '1';
-                        cnn_state     <= CC_IDLE;
 
                 end case;
             end if;
