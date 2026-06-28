@@ -18,11 +18,11 @@
     "num_compared": 64,
     "label_mismatches_between_csv_and_npy": 0,
     "keras_threshold": 0.5,
-    "prediction_agreement": 0.484375,
+    "prediction_agreement": 0.96875,
     "score_diff": {
-      "mean_abs": 3.3864364335937505,
-      "max_abs": 7.440429937499999,
-      "correlation": 0.6857447839812479
+      "mean_abs": 0.6384125009765628,
+      "max_abs": 2.5595705312500003,
+      "correlation": 0.9758047264495308
     }
   }
 }
