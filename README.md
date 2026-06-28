@@ -13,6 +13,22 @@ The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
 dependencies. The local RTL handles ADC-domain batching, clock-domain crossing,
 lane scheduling, output aggregation, and the trigger threshold comparison.
 
+## Design Figures
+
+The current implementation follows the continuous lane-parallel trigger
+architecture shown below. The editable PDF sources are kept in `pic/` together
+with PNG previews for README rendering.
+
+![Continuous lane-parallel AI trigger system](pic/figure_C_continuous_lane_parallel_ai_trigger.png)
+
+[PDF source](pic/figure_C_continuous_lane_parallel_ai_trigger.drawio.pdf)
+
+The CNN core itself comes from the post-baseline streaming optimization flow:
+
+![Post-baseline streaming optimization](pic/figure_D_post_baseline_streaming_optimization.png)
+
+[PDF source](pic/figure_D_post_baseline_streaming_optimization.drawio.pdf)
+
 ## Dependency Management
 
 This repository uses Bender to manage the external CNN RTL dependencies.
@@ -111,6 +127,11 @@ For every chunk:
 4. The CNN side reads the FIFO as 128-bit words and emits 128 consecutive
    128-bit AXI-stream words to `WRAPPER_TOP`.
 
+The async FIFO uses a 1024-bit write port and a 128-bit read port. Xilinx FIFO
+Generator emits the high 128-bit segment of each 1024-bit write first, so the
+distributor stores the eight 128-bit CNN beats in reverse segment order. This
+preserves chronological CNN input order at the FIFO read side.
+
 `CNN_CORE_LANE` releases `CHUNK_BUSY` after the 128 input beats have been
 accepted by the CNN input stream. It does not wait for the CNN score output.
 This allows the input side of a lane to accept a later chunk while the previous
@@ -154,21 +175,27 @@ f_CNN >= 183 / 1280 ns = 143.0 MHz
 The current 200 MHz CNN clock target leaves margin while matching the poster
 architecture with five replicated cores.
 
-The measured full-system simulation result after the current fixes is:
+The latest short full-system behavioral check, using 64 samples at
+`CLK_CNN = 200 MHz` and `CNN_THRESH_RAW = 0`, reports:
 
 ```text
-Samples sent:     1000
-Results received: 1000
+Samples sent:     64
+Results received: 64
 Chunk overflows:  0
-Accuracy:         955 / 1000 = 95.50% (as an example, threshold = -6.0)
-Latency:          TBD after 5-lane, 200 MHz server simulation
+Accuracy:         63 / 64 = 98.44%
+Avg latency:      201.9 CNN cycles = 1.010 us
+Throughput:       3.73 Mchunks/s
+RTL/Keras score correlation: 0.976
+RTL/Keras trigger agreement: 62 / 64 = 96.88%
 ```
 
 The reported latency is end-to-end from the start of the ADC chunk to
 `CNN_OUT_VALID`. It includes ADC batching, FIFO/CDC, CNN input streaming, CNN
 pipeline latency, and output aggregation. It is not the steady-state output
 interval. In steady state, accepted chunks are launched at the ADC chunk rate
-across the five lanes.
+across the five lanes. Keras comparison is used as a sanity check for score
+alignment; exact score equality is not expected because the RTL is fixed-point
+HLS output.
 
 ## Output Score and Trigger Threshold
 

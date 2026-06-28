@@ -26,6 +26,9 @@ Bender.local
 !materials/
 !materials/**
 
+!pic/
+!pic/**
+
 !analysis/
 !analysis/**
 
