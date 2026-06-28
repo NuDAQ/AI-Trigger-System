@@ -111,7 +111,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cnn-thresh-raw",
         type=int,
-        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default is -96 in the testbench.",
+        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default is -12288 in the testbench.",
     )
     parser.add_argument(
         "--keep-tcl",

@@ -24,7 +24,7 @@ if {![info exists ::RUN_SAIF_SCORE_THRESHOLD]} {
     set ::RUN_SAIF_SCORE_THRESHOLD -6.0
 }
 if {![info exists ::RUN_SAIF_CNN_THRESH_RAW]} {
-    set ::RUN_SAIF_CNN_THRESH_RAW -96
+    set ::RUN_SAIF_CNN_THRESH_RAW -12288
 }
 if {![info exists ::RUN_SAIF_SDF_MODE]} {
     set ::RUN_SAIF_SDF_MODE none

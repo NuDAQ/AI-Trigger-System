@@ -9,6 +9,7 @@ package AI_TRIGGER_PKG is
     constant N_BATCH_S  : integer := 16;   -- samples per channel per batch
     constant N_BATCHES  : integer := 16;   -- batches per chunk (16 * 16 = 256 timesteps)
     constant N_CHUNK_W  : integer := 256;  -- total CNN input words per chunk
+    constant N_CHUNK_BEATS_CNN : integer := 128;  -- two timesteps per 128-bit CNN beat
 
     -- ADC data types: 4 channels, 16 samples per batch, 12-bit per sample
     subtype adc_sample_t  is std_logic_vector(11 downto 0);

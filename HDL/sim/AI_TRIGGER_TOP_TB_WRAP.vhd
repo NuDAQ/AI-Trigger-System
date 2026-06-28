@@ -24,9 +24,9 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         RST             : in  std_logic;
         DATA_STR        : in  std_logic;
         ADC_DATA4_FLAT  : in  std_logic_vector(767 downto 0);  -- 4*16*12 = 768
-        CNN_THRESH      : in  std_logic_vector(15 downto 0);
+        CNN_THRESH      : in  std_logic_vector(31 downto 0);
         CNN_TRIG        : out std_logic;
-        CNN_OUT_DATA    : out std_logic_vector(15 downto 0);
+        CNN_OUT_DATA    : out std_logic_vector(31 downto 0);
         CNN_OUT_VALID   : out std_logic;
         CHUNK_OVERFLOW  : out std_logic
     );

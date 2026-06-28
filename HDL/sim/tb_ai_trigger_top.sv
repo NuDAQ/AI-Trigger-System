@@ -18,10 +18,10 @@
 //   The testbench presents 16 timesteps per DATA_STR pulse (one CLK_ADC cycle).
 //
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
-//   float_score = $signed(CNN_OUT_DATA[8:0]) / 16.0
-// The core output is ap_fixed<9,5>, byte-aligned into a 16-bit TDATA word.
+//   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
+// The core output is ap_fixed<22,11>, byte-aligned into a 32-bit TDATA word.
 // The wrapper behavioral reference run uses SCORE_THRESHOLD=-6.0, so the
-// matching CNN_THRESH default is 9'sd-96.
+// matching CNN_THRESH default is 22'sd-12288.
 //
 // Clocks:
 //   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
@@ -32,7 +32,7 @@
 //   +OUT_CSV=<path>         output CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
 //   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
-//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -96)
+//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -12288)
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -56,10 +56,10 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     reg  clk_adc, clk_cnn, rst, data_str;
     reg  [767:0] adc_data4_flat;  // 4 ch * 16 samples * 12-bit = 768 bits
-    reg  [15:0]  cnn_thresh;
+    reg  [31:0]  cnn_thresh;
 
     wire         cnn_trig;
-    wire [15:0]  cnn_out_data;
+    wire [31:0]  cnn_out_data;
     wire         cnn_out_valid;
     wire         chunk_overflow;
 
@@ -142,9 +142,9 @@ module tb_AI_TRIGGER_TOP;
         if (!$value$plusargs("SCORE_THRESHOLD=%f", score_threshold))
             score_threshold = -6.0;
         if (!$value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw))
-            cnn_thresh_raw = -96;  // -6.0 in ap_fixed<9,5>
+            cnn_thresh_raw = -12288;  // -6.0 in ap_fixed<22,11>
 
-        cnn_thresh    = $signed(cnn_thresh_raw[15:0]);
+        cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 768'h0;
         data_str       = 0;
 
@@ -176,7 +176,7 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
-                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
+                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
         $display("---------------------------------------------------------------------");
         $display("Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)");
         $display("---------------------------------------------------------------------");
@@ -272,8 +272,8 @@ module tb_AI_TRIGGER_TOP;
 
                     latency_cycles = (t_end - t_start) / CLK_CNN_PERIOD;
 
-                    // Decode score: ap_fixed<9,5>, byte-aligned in [8:0].
-                    out_float  = $itor($signed(cnn_out_data[8:0])) / 16.0;
+                    // Decode score: ap_fixed<22,11>, byte-aligned in [21:0].
+                    out_float  = $itor($signed(cnn_out_data[21:0])) / 2048.0;
                     prediction = (out_float > score_threshold) ? 1 : 0;
                     label_val  = labels[received_count];
                     is_correct = (prediction == label_val) ? 1 : 0;
@@ -281,12 +281,12 @@ module tb_AI_TRIGGER_TOP;
                     if (is_correct) correct_count = correct_count + 1;
                     total_latency_acc = total_latency_acc + latency_cycles;
 
-                    $display("%6d | 0x%04h        | %13.6f | %5d | %4d | %10.3f",
+                    $display("%6d | 0x%08h    | %13.6f | %5d | %4d | %10.3f",
                              received_count, cnn_out_data, out_float,
                              label_val, prediction,
                              latency_cycles * CLK_CNN_PERIOD / 1000.0);
 
-                    $fwrite(csv_file, "%0d,0x%04h,%.6f,%0d,%0d,%0d,%0d,%.3f\n",
+                    $fwrite(csv_file, "%0d,0x%08h,%.6f,%0d,%0d,%0d,%0d,%.3f\n",
                             received_count, cnn_out_data, out_float,
                             label_val, prediction, is_correct,
                             latency_cycles,
@@ -318,7 +318,7 @@ module tb_AI_TRIGGER_TOP;
             $display("CLK_CNN:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
-                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
+                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
             $display("-------------------------------------------------------------");
             $display("Samples sent:     %0d", sent_count);
             $display("Results received: %0d", received_count);

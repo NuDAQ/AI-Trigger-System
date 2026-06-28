@@ -12,7 +12,7 @@
 -- either all 16 batches are written, or the whole chunk is dropped.
 --
 -- BATCH_DATA packing (1024-bit = 16 words x 64-bit):
---   word[i] bits [15: 0] = ch0 sample i, sign-extended 12->16 bit
+--   word[i] bits [15: 0] = ch0 sample i, quantized 12-bit ADC -> ap_fixed<9,4>
 --   word[i] bits [31:16] = ch1 sample i
 --   word[i] bits [47:32] = ch2 sample i
 --   word[i] bits [63:48] = ch3 sample i
@@ -56,9 +56,21 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal dbg_chunk_seq : integer := 0;
     -- synthesis translate_on
 
-    function sign_ext(s : std_logic_vector(11 downto 0)) return std_logic_vector is
+    function adc_to_axis16(s : std_logic_vector(11 downto 0)) return std_logic_vector is
+        variable raw      : signed(11 downto 0);
+        variable scaled   : signed(11 downto 0);
+        variable fixed9   : signed(8 downto 0);
     begin
-        return s(11) & s(11) & s(11) & s(11) & s;
+        raw := signed(s);
+        scaled := shift_right(raw, 1);
+        if scaled > to_signed(255, scaled'length) then
+            fixed9 := to_signed(255, fixed9'length);
+        elsif scaled < to_signed(-256, scaled'length) then
+            fixed9 := to_signed(-256, fixed9'length);
+        else
+            fixed9 := resize(scaled, fixed9'length);
+        end if;
+        return std_logic_vector(resize(fixed9, 16));
     end function;
 
 begin
@@ -67,10 +79,10 @@ begin
     -- Combinational packing: 4 ch x 16 samples -> 1024-bit word
     -- -------------------------------------------------------------------------
     gen_pack : for i in 0 to N_BATCH_S-1 generate
-        packed(i*64+15 downto i*64+0)  <= sign_ext(ADC_DATA4(0)(i));
-        packed(i*64+31 downto i*64+16) <= sign_ext(ADC_DATA4(1)(i));
-        packed(i*64+47 downto i*64+32) <= sign_ext(ADC_DATA4(2)(i));
-        packed(i*64+63 downto i*64+48) <= sign_ext(ADC_DATA4(3)(i));
+        packed(i*64+15 downto i*64+0)  <= adc_to_axis16(ADC_DATA4(0)(i));
+        packed(i*64+31 downto i*64+16) <= adc_to_axis16(ADC_DATA4(1)(i));
+        packed(i*64+47 downto i*64+32) <= adc_to_axis16(ADC_DATA4(2)(i));
+        packed(i*64+63 downto i*64+48) <= adc_to_axis16(ADC_DATA4(3)(i));
     end generate;
 
     BATCH_DATA <= packed;

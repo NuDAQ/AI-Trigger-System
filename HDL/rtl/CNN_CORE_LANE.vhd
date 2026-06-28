@@ -11,12 +11,12 @@
 --   The CNN input stream may start after the first FIFO write of a chunk.
 --   The remaining FIFO writes arrive faster than the 200 MHz stream consumes
 --   them, so this hides the 256 ns ADC capture time.
---   The CNN input FSM reads 128 x 128-bit entries using a 2:1 mux (word_sel)
---   to produce 256 x 64-bit AXI-S words for WRAPPER_TOP.
+--   The CNN input FSM reads 128 x 128-bit entries, where each entry contains
+--   two timesteps x four 16-bit lanes for WRAPPER_TOP 4.x.
 --
 -- CHUNK_BUSY is asserted while this lane has a complete chunk that has not
 -- yet been fully consumed by the CNN input stream.  It is cleared when the
--- 256-word stream finishes, not when inference output is produced.
+-- 128-beat stream finishes, not when inference output is produced.
 --
 -- Control CDC:
 --   The FIFO carries data across domains.  A Gray-coded accept counter carries
@@ -51,7 +51,7 @@ entity CNN_CORE_LANE is
         CHUNK_BUSY   : out std_logic;
 
         -- Results (CLK_CNN domain)
-        LANE_SCORE   : out std_logic_vector(15 downto 0);
+        LANE_SCORE   : out std_logic_vector(31 downto 0);
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -86,8 +86,8 @@ architecture rtl of CNN_CORE_LANE is
     -- -------------------------------------------------------------------------
     component WRAPPER_TOP
         generic (
-            INPUT_WIDTH   : integer := 64;
-            OUTPUT_WIDTH  : integer := 16;
+            INPUT_WIDTH   : integer := 128;
+            OUTPUT_WIDTH  : integer := 32;
             NUM_TIMESTEPS : integer := 256;
             NUM_CHANNELS  : integer := 4
         );
@@ -98,10 +98,10 @@ architecture rtl of CNN_CORE_LANE is
             done         : out std_logic;
             idle         : out std_logic;
             ready        : out std_logic;
-            input_data   : in  std_logic_vector(63 downto 0);
+            input_data   : in  std_logic_vector(127 downto 0);
             input_valid  : in  std_logic;
             input_ready  : out std_logic;
-            output_data  : out std_logic_vector(15 downto 0);
+            output_data  : out std_logic_vector(31 downto 0);
             output_valid : out std_logic;
             output_ready : in  std_logic
         );
@@ -174,26 +174,27 @@ architecture rtl of CNN_CORE_LANE is
     signal cnn_done      : std_logic;
     signal cnn_idle      : std_logic;
     signal cnn_ready     : std_logic;
-    signal cnn_in_data   : std_logic_vector(63 downto 0) := (others => '0');
+    signal cnn_in_data   : std_logic_vector(127 downto 0);
     signal cnn_in_valid  : std_logic := '0';
     signal cnn_in_ready  : std_logic;
-    signal cnn_out_data  : std_logic_vector(15 downto 0);
+    signal cnn_out_data  : std_logic_vector(31 downto 0);
     signal cnn_out_valid : std_logic;
 
     -- Stream FSM.  Output capture is intentionally independent: LANE_BUSY is
-    -- released when the 256-word AXIS input transaction has been accepted, not
+    -- released when the 128-beat AXIS input transaction has been accepted, not
     -- when the later CNN output arrives.  The HLS dataflow core behaves like a
     -- continuously-started pipeline, so adjacent accepted chunks are streamed
     -- back-to-back instead of waiting for done/idle.
     type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
-    signal stream_cnt : integer range 0 to N_CHUNK_W := 0;
-    signal word_sel   : std_logic := '0';
+    signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
 
-    signal lane_score_r : std_logic_vector(15 downto 0) := (others => '0');
+    signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_valid_r : std_logic := '0';
 
 begin
+
+    cnn_in_data <= fifo_dout;
 
     -- =========================================================================
     -- CLK_ADC DOMAIN
@@ -296,9 +297,7 @@ begin
                 cnn_state    <= CC_IDLE;
                 cnn_start    <= '0';
                 cnn_in_valid <= '0';
-                cnn_in_data  <= (others => '0');
                 fifo_rd_en   <= '0';
-                word_sel     <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
                 stream_done_toggle_cnn <= '0';
@@ -314,7 +313,7 @@ begin
                     if dbg_cnn_events < DEBUG_EVENTS then
                         report "LANE" & integer'image(LANE_ID) &
                                " CNN output_valid score_raw=" &
-                               integer'image(to_integer(signed(cnn_out_data))) &
+                               integer'image(to_integer(signed(cnn_out_data(21 downto 0)))) &
                                " completed=" &
                                integer'image(to_integer(chunk_count_cnn)) &
                                " started=" &
@@ -330,8 +329,7 @@ begin
                     when CC_IDLE =>
                         cnn_start    <= '0';
                         cnn_in_valid <= '0';
-                        word_sel      <= '0';
-                        stream_cnt    <= N_CHUNK_W;
+                        stream_cnt    <= N_CHUNK_BEATS_CNN;
 
                         if pending_count_cnn /= 0 and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
@@ -340,8 +338,6 @@ begin
                             -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
-                            -- FWFT: dout already holds first 128-bit entry
-                            cnn_in_data  <= fifo_dout(63 downto 0);
                             started_count_cnn <= started_count_cnn + 1;
                             cnn_state    <= CC_STREAM;
                             -- synthesis translate_off
@@ -370,35 +366,15 @@ begin
 
                         if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
-
-                            if word_sel = '0' then
-                                -- CNN just consumed the LOWER half of entry N.
-                                -- Pre-load the UPPER half of entry N (dout unchanged).
-                                -- Assert rd_en now: entry N+1 will appear at dout
-                                -- exactly one cycle later (FWFT latency = 1).
-                                cnn_in_data <= fifo_dout(127 downto 64);
-                                fifo_rd_en  <= '1';
-                                word_sel    <= '1';
-                            else
-                                -- CNN just consumed the UPPER half of entry N.
-                                -- rd_en was asserted last cycle; dout now holds
-                                -- entry N+1. Pre-load its LOWER half.
-                                cnn_in_data <= fifo_dout(63 downto 0);
-                                word_sel    <= '0';
-                                -- fifo_rd_en stays '0' (default)
-                            end if;
+                            fifo_rd_en <= '1';
 
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
                                 if pending_count_cnn /= 0 and fifo_empty = '0' then
-                                    -- The word_sel=1 path above just preloaded
-                                    -- the lower half of the next FIFO entry, so
-                                    -- continue without an idle/start gap.
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
-                                    stream_cnt   <= N_CHUNK_W;
-                                    word_sel     <= '0';
+                                    stream_cnt   <= N_CHUNK_BEATS_CNN;
                                     started_count_cnn <= started_count_cnn + 1;
                                     cnn_state    <= CC_STREAM;
                                     -- synthesis translate_off
@@ -475,8 +451,8 @@ begin
     -- =========================================================================
     u_WRAPPER : WRAPPER_TOP
         generic map (
-            INPUT_WIDTH   => 64,
-            OUTPUT_WIDTH  => 16,
+            INPUT_WIDTH   => 128,
+            OUTPUT_WIDTH  => 32,
             NUM_TIMESTEPS => 256,
             NUM_CHANNELS  => 4
         )

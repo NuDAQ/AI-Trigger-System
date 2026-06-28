@@ -195,7 +195,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cnn-thresh-raw",
         type=int,
-        default=-96,
+        default=-12288,
         help="Raw signed CNN_THRESH value driven into the DUT.",
     )
     parser.add_argument(
