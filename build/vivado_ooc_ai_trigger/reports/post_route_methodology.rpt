@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Sat Jun 27 23:24:56 2026
+| Date         : Sat Jun 27 23:37:16 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_methodology -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_methodology.rpt
 | Design       : AI_TRIGGER_TOP
@@ -23,22 +23,16 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 848
+             Violations found: 847
 +-----------+----------+------------------------------------+------------+
 | Rule      | Severity | Description                        | Violations |
 +-----------+----------+------------------------------------+------------+
-| TIMING-10 | Warning  | Missing property on synchronizer   | 1          |
 | TIMING-18 | Warning  | Missing input or output delay      | 837        |
 | TIMING-24 | Warning  | Overridden Max delay datapath only | 10         |
 +-----------+----------+------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
-TIMING-10#1 Warning
-Missing property on synchronizer  
-One or more logic synchronizer has been detected between 2 clock domains but the synchronizer does not have the property ASYNC_REG defined on one or both registers. It is recommended to run report_cdc for a complete and detailed CDC coverage
-Related violations: <none>
-
 TIMING-18#1 Warning
 Missing input or output delay  
 An input delay is missing on ADC_DATA4[0][0][0] relative to the rising and/or falling clock edge(s) of CLK_ADC.
