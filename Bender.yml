@@ -13,7 +13,7 @@ package:
   # Other packages this package depends on. Optional.
 dependencies:
   # Path dependency.
-  cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "3.0.1" }
+  cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "4.0.0" }
 
 sources:
   - HDL/rtl/AI_TRIGGER_PKG.vhd
@@ -25,4 +25,3 @@ sources:
     files:
       - HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd
       - HDL/sim/tb_ai_trigger_top.sv
-
