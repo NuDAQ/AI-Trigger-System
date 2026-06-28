@@ -31,6 +31,8 @@ Bender.local
 
 !analysis/
 !analysis/**
+analysis/**/__pycache__/
+analysis/**/*.pyc
 
 !docs/
 !docs/**

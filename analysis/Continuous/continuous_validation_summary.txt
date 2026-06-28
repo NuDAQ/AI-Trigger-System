@@ -1,0 +1,12 @@
+Continuous trigger full-dataset validation
+Samples: 1000
+Decision threshold: 0.000000
+Labels: class 0 = 820, class 1 = 180
+RTL accuracy at threshold: 0.981000
+Keras accuracy at threshold: 0.984000
+RTL/Keras prediction agreement at threshold: 0.987000
+RTL/Keras score correlation: 0.975878
+Mean absolute score difference: 0.647125
+Median absolute score difference: 0.532714
+95% absolute score difference: 1.654052
+Maximum absolute score difference: 4.265136
