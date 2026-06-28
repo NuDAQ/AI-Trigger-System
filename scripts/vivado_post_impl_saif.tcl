@@ -204,8 +204,6 @@ if {$::RUN_SAIF_SCOPE eq "top"} {
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/*} 1}
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/*} 1}
     puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/*} 1}
-    puts $fp {saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/*} 1}
 } else {
     error "Unsupported SAIF scope '$::RUN_SAIF_SCOPE'. Use top, lane0, lanes2, lanes4, or all."
 }
