@@ -11,6 +11,7 @@
 ##	DO NOT IGNORE THE FOLLOWING FILES
 ###########################################################################
 !Bender.*
+Bender.local
 !AI_Trigger_System/
 !AI_Trigger_System/**/
 
