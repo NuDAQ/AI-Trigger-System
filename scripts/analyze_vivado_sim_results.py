@@ -104,11 +104,34 @@ def load_keras_model(path: Path):
     custom_objects = {}
     try:
         from hgq.layers import QConv2D, QDense
+
+        class CompatQConv2D(QConv2D):
+            def __init__(self, *args, **kwargs):
+                kwargs.pop("ebops_factor", None)
+                super().__init__(*args, **kwargs)
+
+            @classmethod
+            def from_config(cls, config):
+                config = dict(config)
+                config.pop("ebops_factor", None)
+                return super().from_config(config)
+
+        class CompatQDense(QDense):
+            def __init__(self, *args, **kwargs):
+                kwargs.pop("ebops_factor", None)
+                super().__init__(*args, **kwargs)
+
+            @classmethod
+            def from_config(cls, config):
+                config = dict(config)
+                config.pop("ebops_factor", None)
+                return super().from_config(config)
+
         custom_objects.update({
-            "QConv2D": QConv2D,
-            "QDense": QDense,
-            "hgq>QConv2D": QConv2D,
-            "hgq>QDense": QDense,
+            "QConv2D": CompatQConv2D,
+            "QDense": CompatQDense,
+            "hgq>QConv2D": CompatQConv2D,
+            "hgq>QDense": CompatQDense,
         })
     except ImportError:
         pass
