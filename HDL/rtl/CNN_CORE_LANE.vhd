@@ -192,6 +192,11 @@ architecture rtl of CNN_CORE_LANE is
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_valid_r : std_logic := '0';
 
+    attribute ASYNC_REG : string;
+    attribute ASYNC_REG of stream_done_adc_ff : signal is "TRUE";
+    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
+    attribute ASYNC_REG of chunk_gray_ff : signal is "TRUE";
+
 begin
 
     cnn_in_data <= fifo_dout;
