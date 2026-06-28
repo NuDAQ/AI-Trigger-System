@@ -35,7 +35,25 @@ if {[info exists ::RUN_SIM_REPO_ROOT] && $::RUN_SIM_REPO_ROOT ne ""} {
 puts "INFO: repo_root = $repo_root"
 puts "INFO: xsim more_options = $xsim_more_options"
 
-# 3. Find testhex_stream — look in bender checkout first, then fall back
+# 3. Refresh Vivado project sources from the current Bender lockfile.
+# The committed Vivado project can lag dependency upgrades; sourcing a fresh
+# Bender script before launch_simulation keeps xsim aligned with wrapper/core.
+set sim_gen_dir [file join $repo_root build vivado_sim generated]
+file mkdir $sim_gen_dir
+set bender_sim_script [file join $sim_gen_dir add_files_bender_sim.tcl]
+puts "INFO: generating Vivado simulation source list with Bender..."
+if {[catch {exec bender script vivado-sim -t simulation > $bender_sim_script} err]} {
+    error "bender script vivado-sim failed: $err"
+}
+if {![file exists $bender_sim_script] || [file size $bender_sim_script] == 0} {
+    error "Bender generated an empty Vivado simulation script."
+}
+puts "INFO: sourcing Bender simulation source list: $bender_sim_script"
+source $bender_sim_script
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+
+# 4. Find testhex_stream — look in bender checkout first, then fall back
 set bender_glob "$repo_root/.bender/git/checkouts/cnn-core-wrapper-*/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream"
 set testhex_candidates [glob -nocomplain $bender_glob]
 
@@ -52,14 +70,14 @@ if {[llength $testhex_candidates] > 0} {
     set testhex_src ""
 }
 
-# 4. Build the xsim working-directory path (no backslash continuation)
+# 5. Build the xsim working-directory path (no backslash continuation)
 set proj_dir [get_property DIRECTORY [current_project]]
 set proj_name [current_project]
 set xsim_dir [file normalize "$proj_dir/${proj_name}.sim/sim_1/behav/xsim"]
 puts "INFO: xsim_dir = $xsim_dir"
 file mkdir $xsim_dir
 
-# 5. Create symlink testhex_stream -> source
+# 6. Create symlink testhex_stream -> source
 if {$testhex_src ne ""} {
     set link_path [file join $xsim_dir testhex_stream]
     catch {file delete -force $link_path}
@@ -71,7 +89,7 @@ if {$testhex_src ne ""} {
     }
 }
 
-# 6. Launch simulation
+# 7. Launch simulation
 puts "INFO: Launching behavioral simulation..."
 launch_simulation -simset sim_1 -mode behavioral
 
