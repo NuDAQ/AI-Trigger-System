@@ -1,20 +1,14 @@
 packages:
   cnn-core:
-    revision: 20dcddadde520214d3889c7f8a81fba00df3a37c
-    version: 1.0.4
+    revision: null
+    version: null
     source:
-      Git: git@github.com:NuDAQ/CNN-Core-Generator.git
+      Path: /home/work1/Works/CNN-Core-Generator
     dependencies: []
   cnn-core-wrapper:
-    revision: 36fc94bcde9e8705615538698235729a352f2ea3
-    version: 1.0.1
+    revision: 1a9554f554c495730117a688b5bb953cfddb89f1
+    version: 4.0.0
     source:
       Git: git@github.com:NuDAQ/CNN-Core-Wrapper.git
     dependencies:
     - cnn-core
-  gateware:
-    revision: null
-    version: null
-    source:
-      Path: HDL/PreTrigger
-    dependencies: []

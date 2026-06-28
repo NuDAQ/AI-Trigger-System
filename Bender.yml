@@ -13,15 +13,15 @@ package:
   # Other packages this package depends on. Optional.
 dependencies:
   # Path dependency.
-  cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "^1.0.0" }
-  gateware: { git: "git@gitlab.com:NuRadioDAQ/gateware.git", rev: "cb05ada0ae27b6c9142e629d0e845f0f086e9d76" }
+  cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "4.0.0" }
 
 sources:
-  - HDL/HiLoPath/CNN_FIFO_CONNECTOR.vhd
-  - HDL/HiLoPath/HILO_PATH_WRAPPER.vhd
-  - HDL/HiLoPath/TEMP_SYS_TOP.vhd
-  - HDL/HiLoPath/sim/TEMP_SYS_TOP_TB_WRAP.vhd
-  - target: sim
-    files:
-      - HDL/HiLoPath/sim/tb_temp_sys_top.sv
+  - HDL/rtl/AI_TRIGGER_PKG.vhd
+  - HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+  - HDL/rtl/CNN_CORE_LANE.vhd
+  - HDL/rtl/AI_TRIGGER_TOP.vhd
 
+  - target: simulation
+    files:
+      - HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd
+      - HDL/sim/tb_ai_trigger_top.sv

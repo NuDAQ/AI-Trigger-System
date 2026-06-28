@@ -1,0 +1,22 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date              : Sat Jun 27 23:37:18 2026
+| Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_cdc -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_cdc.rpt
+| Design            : AI_TRIGGER_TOP
+| Device            : xcku5p-ffvb676
+| Speed File        : -2  PRODUCTION 1.29 05-01-2022
+| Design State      : Routed
+| Temperature Grade : E
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+CDC Report
+
+Severity  Source Clock      Destination Clock  CDC Type                 Exceptions           Endpoints  Safe  Unsafe  Unknown  No ASYNC_REG  
+--------  ----------------  -----------------  -----------------------  -------------------  ---------  ----  ------  -------  ------------  
+Warning   input port clock  CLK_ADC            No Common Primary Clock  False Path                   5     5       0        0             0  
+Warning   CLK_ADC           CLK_CNN            No Common Primary Clock  Asynch Clock Groups         25    25       0        0             0  
+Warning   input port clock  CLK_CNN            No Common Primary Clock  False Path                   5     5       0        0             0  
+Info      CLK_CNN           CLK_ADC            No Common Primary Clock  Asynch Clock Groups         10    10       0        0             0  
+

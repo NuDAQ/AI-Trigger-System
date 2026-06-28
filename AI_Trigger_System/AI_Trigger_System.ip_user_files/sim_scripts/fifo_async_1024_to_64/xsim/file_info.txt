@@ -1,2 +1,0 @@
-fifo_async_1024_to_64.v,verilog,xil_defaultlib,../../../../AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/sim/fifo_async_1024_to_64.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v

@@ -1,0 +1,28 @@
+{
+  "keras_comparison": {
+    "model_path": "/home/work1/Works/CNN-Core-Generator/cnn_core_project/keras_model.keras",
+    "x_test_path": "/home/work1/Works/CNN-Core-Generator/data/X_test_data.npy",
+    "y_test_path": "/home/work1/Works/CNN-Core-Generator/data/y_test_labels.npy",
+    "x_test_shape_raw": [
+      1000,
+      4,
+      256,
+      1
+    ],
+    "x_test_shape_model": [
+      1000,
+      256,
+      4
+    ],
+    "x_test_transform": "transpose_from_channels_first_time_series",
+    "num_compared": 256,
+    "label_mismatches_between_csv_and_npy": 0,
+    "keras_threshold": 0.5,
+    "prediction_agreement": 0.9921875,
+    "score_diff": {
+      "mean_abs": 0.6655845805664066,
+      "max_abs": 4.265136375000001,
+      "correlation": 0.976333276639258
+    }
+  }
+}
