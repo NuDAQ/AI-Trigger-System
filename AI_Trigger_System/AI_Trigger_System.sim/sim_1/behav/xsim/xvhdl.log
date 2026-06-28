@@ -1,3 +1,7 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ADC_CHUNK_DISTRIBUTOR'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'CNN_CORE_LANE'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/AI_TRIGGER_TOP.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'AI_TRIGGER_TOP'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd" into library xil_defaultlib
