@@ -169,7 +169,7 @@ def parse_args() -> argparse.Namespace:
         "--saif-scope",
         choices=["top", "lane0", "lanes2", "lanes4", "all"],
         default="all",
-        help="SAIF logging scope. Default logs top, distributor, and all seven lanes in separate chunks.",
+        help="SAIF logging scope. Default logs top, distributor, and all five lanes in separate chunks.",
     )
     parser.add_argument(
         "--saif-min-objects",
