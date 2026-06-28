@@ -7,27 +7,21 @@
 This repository contains an FPGA AI trigger path for continuous radio detector
 ADC data. The current top-level design accepts four channels of 1 Gsps ADC data,
 groups the stream into 256-sample chunks, and distributes those chunks across
-five parallel CNN inference lanes.
+five parallel CNN inference lanes. The number of lanes is parameterized.
 
 The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
-dependencies. The local RTL handles ADC-domain batching, clock-domain crossing,
-lane scheduling, output aggregation, and the trigger threshold comparison.
+dependencies.
 
 ## Design Figures
 
 The current implementation follows the continuous lane-parallel trigger
-architecture shown below. The editable PDF sources are kept in `pic/` together
-with PNG previews for README rendering.
+architecture shown below.
 
 ![Continuous lane-parallel AI trigger system](pic/figure_C_continuous_lane_parallel_ai_trigger.png)
-
-[PDF source](pic/figure_C_continuous_lane_parallel_ai_trigger.drawio.pdf)
 
 The CNN core itself comes from the post-baseline streaming optimization flow:
 
 ![Post-baseline streaming optimization](pic/figure_D_post_baseline_streaming_optimization.png)
-
-[PDF source](pic/figure_D_post_baseline_streaming_optimization.drawio.pdf)
 
 ## Dependency Management
 
