@@ -11,11 +11,17 @@
 -- a complete 16-batch chunk.  The decision is made once at the chunk boundary:
 -- either all 16 batches are written, or the whole chunk is dropped.
 --
--- BATCH_DATA packing (1024-bit = 16 words x 64-bit):
---   word[i] bits [15: 0] = ch0 sample i, quantized 12-bit ADC -> ap_fixed<9,4>
---   word[i] bits [31:16] = ch1 sample i
---   word[i] bits [47:32] = ch2 sample i
---   word[i] bits [63:48] = ch3 sample i
+-- BATCH_DATA packing (1024-bit = 8 words x 128-bit):
+--   The downstream Xilinx asymmetric FIFO emits the high 128-bit segment of a
+--   1024-bit write first.  Store chronological CNN beats in reverse 128-bit
+--   segment order so the read side sees beat 0, beat 1, ... beat 7.
+--
+--   beat[p] low  64 bits = row 2*p:
+--     bits [15: 0] = ch0, quantized 12-bit ADC -> ap_fixed<9,4>
+--     bits [31:16] = ch1
+--     bits [47:32] = ch2
+--     bits [63:48] = ch3
+--   beat[p] high 64 bits = row 2*p+1 with the same channel layout.
 -- =============================================================================
 
 library ieee;
@@ -76,13 +82,25 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
 begin
 
     -- -------------------------------------------------------------------------
-    -- Combinational packing: 4 ch x 16 samples -> 1024-bit word
+    -- Combinational packing: 4 ch x 16 samples -> 1024-bit FIFO write.
+    -- Each 128-bit segment contains two consecutive timesteps.  Segments are
+    -- written in reverse bit order to compensate for FIFO high-segment-first
+    -- asymmetric reads.
     -- -------------------------------------------------------------------------
-    gen_pack : for i in 0 to N_BATCH_S-1 generate
-        packed(i*64+15 downto i*64+0)  <= adc_to_axis16(ADC_DATA4(0)(i));
-        packed(i*64+31 downto i*64+16) <= adc_to_axis16(ADC_DATA4(1)(i));
-        packed(i*64+47 downto i*64+32) <= adc_to_axis16(ADC_DATA4(2)(i));
-        packed(i*64+63 downto i*64+48) <= adc_to_axis16(ADC_DATA4(3)(i));
+    gen_pack : for p in 0 to N_BATCH_S/2-1 generate
+        constant SEG_BASE : integer := (N_BATCH_S/2 - 1 - p) * 128;
+        constant ROW0     : integer := 2 * p;
+        constant ROW1     : integer := 2 * p + 1;
+    begin
+        packed(SEG_BASE+15 downto SEG_BASE+0)   <= adc_to_axis16(ADC_DATA4(0)(ROW0));
+        packed(SEG_BASE+31 downto SEG_BASE+16)  <= adc_to_axis16(ADC_DATA4(1)(ROW0));
+        packed(SEG_BASE+47 downto SEG_BASE+32)  <= adc_to_axis16(ADC_DATA4(2)(ROW0));
+        packed(SEG_BASE+63 downto SEG_BASE+48)  <= adc_to_axis16(ADC_DATA4(3)(ROW0));
+
+        packed(SEG_BASE+79 downto SEG_BASE+64)  <= adc_to_axis16(ADC_DATA4(0)(ROW1));
+        packed(SEG_BASE+95 downto SEG_BASE+80)  <= adc_to_axis16(ADC_DATA4(1)(ROW1));
+        packed(SEG_BASE+111 downto SEG_BASE+96) <= adc_to_axis16(ADC_DATA4(2)(ROW1));
+        packed(SEG_BASE+127 downto SEG_BASE+112) <= adc_to_axis16(ADC_DATA4(3)(ROW1));
     end generate;
 
     BATCH_DATA <= packed;
