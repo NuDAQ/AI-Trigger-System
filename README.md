@@ -169,19 +169,19 @@ f_CNN >= 183 / 1280 ns = 143.0 MHz
 The current 200 MHz CNN clock target leaves margin while matching the poster
 architecture with five replicated cores.
 
-The latest full-system behavioral check, using 256 samples at
+The latest full-system behavioral check, using 1000 samples at
 `CLK_CNN = 200 MHz` and `CNN_THRESH_RAW = 0`, reports:
 
 ```text
-Samples sent:     256
-Results received: 256
+Samples sent:     1000
+Results received: 1000
 Chunk overflows:  0
-Accuracy:         253 / 256 = 98.83%
+Accuracy:         981 / 1000 = 98.10%
 Avg latency:      202.0 CNN cycles = 1.010 us
-Throughput:       3.86 Mchunks/s
-RTL/Keras score correlation: 0.9763
-RTL/Keras trigger agreement: 254 / 256 = 99.22%
-RTL/Keras mean absolute score difference: 0.666
+Throughput:       3.89 Mchunks/s
+RTL/Keras score correlation: 0.9759
+RTL/Keras trigger agreement: 987 / 1000 = 98.70%
+RTL/Keras mean absolute score difference: 0.647
 ```
 
 The reported latency is end-to-end from the start of the ADC chunk to
@@ -272,6 +272,25 @@ Simulation output is written to:
 ```text
 AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv
 ```
+
+## Continuous Validation Plots
+
+Full-dataset score validation plots are generated with PyROOT:
+
+```bash
+python3 analysis/Continuous/plot_continuous_validation.py
+```
+
+The script reads the Vivado simulation score CSV and the Keras comparison CSV,
+then writes:
+
+```text
+analysis/Continuous/continuous_validation.root
+analysis/Continuous/continuous_validation_report.pdf
+```
+
+The report includes score agreement, score residuals, absolute score error,
+threshold-0 confusion matrices, latency, and score distributions by label.
 
 ## Synthesis and Implementation Notes
 
