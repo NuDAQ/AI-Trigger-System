@@ -72,8 +72,8 @@ build/vivado_post_impl_saif/activity/*.saif
 build/vivado_sim/*
 !build/vivado_sim/generated/
 !build/vivado_sim/generated/*.tcl
-!build/vivado_sim_analysis/
-!build/vivado_sim_analysis/**
+!build/vivado_sim_analysis*/
+!build/vivado_sim_analysis*/**
 
 # Ignore bender dependency cache (large git objects)
 .bender/
