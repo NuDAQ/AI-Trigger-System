@@ -105,6 +105,26 @@ def load_keras_model(path: Path):
     try:
         from hgq.layers import QConv2D, QDense
 
+        if not getattr(QConv2D, "_ai_trigger_ebops_compat", False):
+            qconv2d_init = QConv2D.__init__
+
+            def qconv2d_compat_init(self, *args, **kwargs):
+                kwargs.pop("ebops_factor", None)
+                qconv2d_init(self, *args, **kwargs)
+
+            QConv2D.__init__ = qconv2d_compat_init
+            QConv2D._ai_trigger_ebops_compat = True
+
+        if not getattr(QDense, "_ai_trigger_ebops_compat", False):
+            qdense_init = QDense.__init__
+
+            def qdense_compat_init(self, *args, **kwargs):
+                kwargs.pop("ebops_factor", None)
+                qdense_init(self, *args, **kwargs)
+
+            QDense.__init__ = qdense_compat_init
+            QDense._ai_trigger_ebops_compat = True
+
         class CompatQConv2D(QConv2D):
             def __init__(self, *args, **kwargs):
                 kwargs.pop("ebops_factor", None)
