@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date             : Mon May 18 12:21:06 2026
+| Date             : Sun Jun 28 01:03:30 2026
 | Host             : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command          : report_power -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger_wrap/reports/post_route_power.rpt
 | Design           : AI_TRIGGER_TOP_TB_WRAP
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 1.416        |
+| Total On-Chip Power (W)  | 1.495        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.958        |
+| Dynamic (W)              | 1.036        |
 | Device Static (W)        | 0.459        |
 | Effective TJA (C/W)      | 1.7          |
-| Max Ambient (C)          | 97.6         |
-| Junction Temperature (C) | 27.4         |
+| Max Ambient (C)          | 97.4         |
+| Junction Temperature (C) | 27.6         |
 | Confidence Level         | Medium       |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,19 +52,19 @@ Table of Contents
 +-------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
 +-------------------------+-----------+----------+-----------+-----------------+
-| Clocks                  |     0.104 |        4 |       --- |             --- |
-| CLB Logic               |     0.354 |    57657 |       --- |             --- |
-|   LUT as Logic          |     0.322 |    26620 |    216960 |           12.27 |
-|   CARRY8                |     0.014 |     1533 |     27120 |            5.65 |
-|   LUT as Shift Register |     0.012 |     2485 |     99840 |            2.49 |
-|   Register              |     0.006 |    15924 |    433920 |            3.67 |
-|   Others                |     0.000 |      825 |       --- |             --- |
-|   F7/F8 Muxes           |     0.000 |      973 |    216960 |            0.45 |
-| Signals                 |     0.302 |    48472 |       --- |             --- |
-| Block RAM               |     0.149 |    101.5 |       480 |           21.15 |
-| DSPs                    |     0.048 |       77 |      1824 |            4.22 |
+| Clocks                  |     0.133 |        4 |       --- |             --- |
+| CLB Logic               |     0.378 |    61983 |       --- |             --- |
+|   LUT as Logic          |     0.325 |    25555 |    216960 |           11.78 |
+|   CARRY8                |     0.028 |     2585 |     27120 |            9.53 |
+|   LUT as Shift Register |     0.017 |     2760 |     99840 |            2.76 |
+|   Register              |     0.008 |    16283 |    433920 |            3.75 |
+|   Others                |     0.000 |      986 |       --- |             --- |
+|   F7/F8 Muxes           |     0.000 |     1685 |    216960 |            0.78 |
+| Signals                 |     0.305 |    45796 |       --- |             --- |
+| Block RAM               |     0.205 |     72.5 |       480 |           15.10 |
+| DSPs                    |     0.015 |       20 |      1824 |            1.10 |
 | Static Power            |     0.459 |          |           |                 |
-| Total                   |     1.416 |          |           |                 |
+| Total                   |     1.495 |          |           |                 |
 +-------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -74,9 +74,9 @@ Table of Contents
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source     | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint     |       0.850 |     1.263 |       1.115 |      0.148 |       NA    | Unspecified | NA         |
+| Vccint     |       0.850 |     1.353 |       1.204 |      0.148 |       NA    | Unspecified | NA         |
 | Vccint_io  |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
-| Vccbram    |       0.850 |     0.014 |       0.011 |      0.002 |       NA    | Unspecified | NA         |
+| Vccbram    |       0.850 |     0.016 |       0.014 |      0.002 |       NA    | Unspecified | NA         |
 | Vccaux     |       1.800 |     0.128 |       0.000 |      0.128 |       NA    | Unspecified | NA         |
 | Vccaux_io  |       1.800 |     0.031 |       0.000 |      0.031 |       NA    | Unspecified | NA         |
 | Vcco33     |       3.300 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -134,7 +134,7 @@ Table of Contents
 | Clock   | Domain  | Constraint (ns) |
 +---------+---------+-----------------+
 | CLK_ADC | CLK_ADC |            16.0 |
-| CLK_CNN | CLK_CNN |             5.9 |
+| CLK_CNN | CLK_CNN |             5.0 |
 +---------+---------+-----------------+
 
 
@@ -147,29 +147,24 @@ Table of Contents
 +-------------------------+-----------+
 | Name                    | Power (W) |
 +-------------------------+-----------+
-| AI_TRIGGER_TOP_TB_WRAP  |     0.958 |
-|   u_DUT                 |     0.958 |
-|     gen_lanes[0].u_LANE |     0.139 |
-|       u_FIFO            |     0.024 |
-|       u_WRAPPER         |     0.113 |
-|     gen_lanes[1].u_LANE |     0.138 |
-|       u_FIFO            |     0.024 |
-|       u_WRAPPER         |     0.113 |
-|     gen_lanes[2].u_LANE |     0.136 |
-|       u_FIFO            |     0.023 |
-|       u_WRAPPER         |     0.112 |
-|     gen_lanes[3].u_LANE |     0.136 |
-|       u_FIFO            |     0.023 |
-|       u_WRAPPER         |     0.112 |
-|     gen_lanes[4].u_LANE |     0.136 |
-|       u_FIFO            |     0.022 |
-|       u_WRAPPER         |     0.113 |
-|     gen_lanes[5].u_LANE |     0.136 |
-|       u_FIFO            |     0.022 |
-|       u_WRAPPER         |     0.112 |
-|     gen_lanes[6].u_LANE |     0.135 |
-|       u_FIFO            |     0.022 |
-|       u_WRAPPER         |     0.112 |
+| AI_TRIGGER_TOP_TB_WRAP  |     1.036 |
+|   u_DUT                 |     1.036 |
+|     gen_lanes[0].u_LANE |     0.206 |
+|       u_FIFO            |     0.045 |
+|       u_WRAPPER         |     0.161 |
+|     gen_lanes[1].u_LANE |     0.208 |
+|       u_FIFO            |     0.045 |
+|       u_WRAPPER         |     0.162 |
+|     gen_lanes[2].u_LANE |     0.206 |
+|       u_FIFO            |     0.045 |
+|       u_WRAPPER         |     0.160 |
+|     gen_lanes[3].u_LANE |     0.207 |
+|       u_FIFO            |     0.045 |
+|       u_WRAPPER         |     0.161 |
+|     gen_lanes[4].u_LANE |     0.205 |
+|       u_FIFO            |     0.043 |
+|       u_WRAPPER         |     0.162 |
+|     u_DIST              |     0.002 |
 +-------------------------+-----------+
 
 

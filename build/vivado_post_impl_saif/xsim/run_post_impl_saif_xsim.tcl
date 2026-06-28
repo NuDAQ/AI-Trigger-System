@@ -77,8 +77,6 @@ saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[1\].u_LANE/*} 1
 saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[2\].u_LANE/*} 1
 saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[3\].u_LANE/*} 1
 saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[4\].u_LANE/*} 1
-saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[5\].u_LANE/*} 1
-saif_log_scope {/tb_AI_TRIGGER_TOP/dut/gen_lanes\[6\].u_LANE/*} 1
 puts "[saif_stamp] SAIF run all begin"
 puts "[saif_stamp] SAIF total logged object count=$saif_total_objects"
 if {$saif_total_objects < 1000 && 1} {

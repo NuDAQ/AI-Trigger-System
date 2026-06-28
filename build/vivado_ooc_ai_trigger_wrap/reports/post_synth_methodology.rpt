@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Mon May 18 12:18:46 2026
+| Date         : Sun Jun 28 01:01:19 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_methodology -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger_wrap/reports/post_synth_methodology.rpt
 | Design       : AI_TRIGGER_TOP_TB_WRAP
@@ -23,22 +23,16 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 820
+             Violations found: 847
 +-----------+----------+------------------------------------+------------+
 | Rule      | Severity | Description                        | Violations |
 +-----------+----------+------------------------------------+------------+
-| TIMING-10 | Warning  | Missing property on synchronizer   | 1          |
-| TIMING-18 | Warning  | Missing input or output delay      | 805        |
-| TIMING-24 | Warning  | Overridden Max delay datapath only | 14         |
+| TIMING-18 | Warning  | Missing input or output delay      | 837        |
+| TIMING-24 | Warning  | Overridden Max delay datapath only | 10         |
 +-----------+----------+------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
-TIMING-10#1 Warning
-Missing property on synchronizer  
-One or more logic synchronizer has been detected between 2 clock domains but the synchronizer does not have the property ASYNC_REG defined on one or both registers. It is recommended to run report_cdc for a complete and detailed CDC coverage
-Related violations: <none>
-
 TIMING-18#1 Warning
 Missing input or output delay  
 An input delay is missing on ADC_DATA4_FLAT[0] relative to the rising and/or falling clock edge(s) of CLK_ADC.
@@ -3916,150 +3910,310 @@ Related violations: <none>
 
 TIMING-18#776 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[1] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[16] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#777 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[2] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[17] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#778 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[3] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[18] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#779 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[4] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[19] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#780 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[5] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[1] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#781 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[6] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[20] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#782 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[7] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[21] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#783 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[8] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[22] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#784 Warning
 Missing input or output delay  
-An input delay is missing on CNN_THRESH[9] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[23] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#785 Warning
 Missing input or output delay  
-An input delay is missing on DATA_STR relative to the rising and/or falling clock edge(s) of CLK_ADC.
+An input delay is missing on CNN_THRESH[24] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#786 Warning
 Missing input or output delay  
-An input delay is missing on RST relative to the rising and/or falling clock edge(s) of CLK_ADC, CLK_CNN.
+An input delay is missing on CNN_THRESH[25] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#787 Warning
 Missing input or output delay  
-An output delay is missing on CHUNK_OVERFLOW relative to the rising and/or falling clock edge(s) of CLK_ADC.
+An input delay is missing on CNN_THRESH[26] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#788 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[0] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[27] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#789 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[10] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[28] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#790 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[11] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[29] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#791 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[12] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[2] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#792 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[13] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[30] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#793 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[14] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[31] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#794 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[15] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[3] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#795 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[1] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[4] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#796 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[2] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[5] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#797 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[3] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[6] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#798 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[4] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[7] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#799 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[5] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[8] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#800 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[6] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on CNN_THRESH[9] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#801 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[7] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on DATA_STR relative to the rising and/or falling clock edge(s) of CLK_ADC.
 Related violations: <none>
 
 TIMING-18#802 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[8] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An input delay is missing on RST relative to the rising and/or falling clock edge(s) of CLK_ADC, CLK_CNN.
 Related violations: <none>
 
 TIMING-18#803 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_DATA[9] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An output delay is missing on CHUNK_OVERFLOW relative to the rising and/or falling clock edge(s) of CLK_ADC.
 Related violations: <none>
 
 TIMING-18#804 Warning
 Missing input or output delay  
-An output delay is missing on CNN_OUT_VALID relative to the rising and/or falling clock edge(s) of CLK_CNN.
+An output delay is missing on CNN_OUT_DATA[0] relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
 
 TIMING-18#805 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[10] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#806 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[11] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#807 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[12] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#808 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[13] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#809 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[14] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#810 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[15] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#811 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[16] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#812 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[17] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#813 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[18] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#814 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[19] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#815 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[1] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#816 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[20] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#817 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[21] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#818 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[22] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#819 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[23] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#820 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[24] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#821 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[25] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#822 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[26] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#823 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[27] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#824 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[28] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#825 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[29] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#826 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[2] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#827 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[30] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#828 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[31] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#829 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[3] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#830 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[4] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#831 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[5] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#832 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[6] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#833 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[7] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#834 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[8] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#835 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_DATA[9] relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#836 Warning
+Missing input or output delay  
+An output delay is missing on CNN_OUT_VALID relative to the rising and/or falling clock edge(s) of CLK_CNN.
+Related violations: <none>
+
+TIMING-18#837 Warning
 Missing input or output delay  
 An output delay is missing on CNN_TRIG relative to the rising and/or falling clock edge(s) of CLK_CNN.
 Related violations: <none>
@@ -4076,27 +4230,27 @@ Related violations: <none>
 
 TIMING-24#3 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 14). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 4). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#4 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 16). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 6). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#5 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 4). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 8). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#6 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 6). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 14). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#7 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 8). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 16). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#8 Warning
@@ -4112,26 +4266,6 @@ Related violations: <none>
 TIMING-24#10 Warning
 Overridden Max delay datapath only  
 An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 22). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
-Related violations: <none>
-
-TIMING-24#11 Warning
-Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 24). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
-Related violations: <none>
-
-TIMING-24#12 Warning
-Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 26). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
-Related violations: <none>
-
-TIMING-24#13 Warning
-Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 28). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
-Related violations: <none>
-
-TIMING-24#14 Warning
-Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 30). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 
