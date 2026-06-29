@@ -145,6 +145,15 @@ begin
                            " got0=" & integer'image(sample_at(event_data, 0, 0)) &
                            " exp0=" & integer'image(sample_at(expected_batch(chunk_expected, batch_expected), 0, 0))
                     severity failure;
+                if (seen mod (EVENT_CHUNKS * N_BATCHES)) = EVENT_CHUNKS * N_BATCHES - 1 then
+                    assert event_last = '1'
+                        report "final event path beat must assert event_last"
+                        severity failure;
+                else
+                    assert event_last = '0'
+                        report "non-final event path beat must not assert event_last"
+                        severity failure;
+                end if;
                 seen := seen + 1;
             else
                 wait_cycles := wait_cycles + 1;
@@ -154,10 +163,6 @@ begin
             end if;
             wait until rising_edge(clk_adc);
         end loop;
-
-        assert event_last = '1'
-            report "final event path beat must assert event_last"
-            severity failure;
 
         report "tb_event_capture_path passed";
         stop;

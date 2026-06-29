@@ -109,6 +109,11 @@ begin
         variable seen : integer := 0;
         variable chunk_expected : integer;
         variable batch_expected : integer;
+        variable held_data : raw_adc_batch_t;
+        variable held_last : std_logic;
+        variable held_chunk_id : chunk_id_t;
+        variable held_score : std_logic_vector(31 downto 0);
+        variable miss_before : unsigned(31 downto 0);
     begin
         for ch in 0 to N_CH - 1 loop
             for s in 0 to N_BATCH_S - 1 loop
@@ -140,11 +145,39 @@ begin
             wait until rising_edge(clk);
         end loop;
         data_str <= '0';
+        event_ready <= '0';
 
         while seen < EVENT_CHUNKS * N_BATCHES loop
             wait until rising_edge(clk);
             wait for 1 ns;
             if event_valid = '1' then
+                if seen = 0 then
+                    held_data     := event_data;
+                    held_last     := event_last;
+                    held_chunk_id := event_chunk_id;
+                    held_score    := event_score;
+                    for stall in 0 to 2 loop
+                        wait until rising_edge(clk);
+                        wait for 1 ns;
+                        assert event_valid = '1'
+                            report "event_valid must remain asserted while backpressured"
+                            severity failure;
+                        assert event_data = held_data
+                            report "event_data changed while backpressured"
+                            severity failure;
+                        assert event_last = held_last
+                            report "event_last changed while backpressured"
+                            severity failure;
+                        assert event_chunk_id = held_chunk_id
+                            report "event_chunk_id changed while backpressured"
+                            severity failure;
+                        assert event_score = held_score
+                            report "event_score changed while backpressured"
+                            severity failure;
+                    end loop;
+                    event_ready <= '1';
+                    wait for 1 ns;
+                end if;
                 chunk_expected := seen / N_BATCHES;
                 batch_expected := seen mod N_BATCHES;
                 assert event_chunk_id = to_unsigned(1, CHUNK_ID_WIDTH)
@@ -168,6 +201,36 @@ begin
                 seen := seen + 1;
             end if;
         end loop;
+
+        miss_before := ring_miss_count;
+        for c in 3 to WAVEFORM_RING_DEPTH + 5 loop
+            for b in 0 to N_BATCHES - 1 loop
+                drive_batch(adc_data4, c, b);
+                data_str <= '1';
+                wait until rising_edge(clk);
+            end loop;
+        end loop;
+        data_str <= '0';
+
+        trigger_valid    <= '1';
+        trigger_chunk_id <= to_unsigned(1, CHUNK_ID_WIDTH);
+        trigger_score    <= std_logic_vector(to_signed(4096, 32));
+        wait until rising_edge(clk);
+        trigger_valid <= '0';
+
+        for i in 0 to 7 loop
+            wait until rising_edge(clk);
+            wait for 1 ns;
+            assert rb_rd_en = '0'
+                report "stale trigger must be dropped before issuing a ring-buffer read"
+                severity failure;
+            assert event_valid = '0'
+                report "stale trigger must not emit event data"
+                severity failure;
+        end loop;
+        assert ring_miss_count = miss_before + 1
+            report "dropping a stale trigger must increment ring_miss_count once"
+            severity failure;
 
         report "tb_event_capture_ctrl passed";
         stop;
