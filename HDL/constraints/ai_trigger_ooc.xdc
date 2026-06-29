@@ -16,8 +16,12 @@ set_clock_groups -asynchronous \
 # forcing board IO timing assumptions into this OOC run.  Keep this file to
 # plain XDC commands; Vivado ignores Tcl control flow such as foreach/if when
 # constraints are processed during implementation.
-set_input_delay 0.000 -clock [get_clocks CLK_ADC] [get_ports -quiet {RST DATA_STR ADC_DATA4* EVENT_READY}]
+set_input_delay 0.000 -clock [get_clocks CLK_ADC] [get_ports -quiet {DATA_STR ADC_DATA4* EVENT_READY}]
 set_input_delay 0.000 -clock [get_clocks CLK_CNN] [get_ports -quiet {CNN_THRESH*}]
 
 set_output_delay 0.000 -clock [get_clocks CLK_CNN] [get_ports -quiet {CNN_TRIG CNN_OUT_DATA* CNN_OUT_CHUNK_ID* CNN_OUT_VALID DROPPED_TRIGGER_COUNT*}]
 set_output_delay 0.000 -clock [get_clocks CLK_ADC] [get_ports -quiet {EVENT_VALID EVENT_DATA* EVENT_LAST EVENT_CHUNK_ID* EVENT_SCORE* RING_MISS_COUNT* CHUNK_OVERFLOW}]
+
+# RST is a reset/control input, not a sampled OOC data interface.  Timing it
+# with zero input delay creates artificial hold checks into reset pins.
+set_false_path -from [get_ports RST]
