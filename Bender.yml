@@ -21,6 +21,7 @@ sources:
   - HDL/rtl/TRIGGER_CDC_FIFO.vhd
   - HDL/rtl/WAVEFORM_RING_BUFFER.vhd
   - HDL/rtl/EVENT_CAPTURE_CTRL.vhd
+  - HDL/rtl/EVENT_CAPTURE_PATH.vhd
   - HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
   - HDL/rtl/CNN_CORE_LANE.vhd
   - HDL/rtl/AI_TRIGGER_TOP.vhd
