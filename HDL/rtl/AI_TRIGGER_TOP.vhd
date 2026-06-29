@@ -38,6 +38,13 @@ entity AI_TRIGGER_TOP is
         CNN_OUT_CHUNK_ID : out chunk_id_t;
         CNN_OUT_VALID  : out std_logic;
 
+        EVENT_VALID    : out std_logic;
+        EVENT_READY    : in  std_logic;
+        EVENT_DATA     : out raw_adc_batch_t;
+        EVENT_LAST     : out std_logic;
+        EVENT_CHUNK_ID : out chunk_id_t;
+        EVENT_SCORE    : out std_logic_vector(31 downto 0);
+
         CHUNK_OVERFLOW : out std_logic
     );
 end entity AI_TRIGGER_TOP;
@@ -53,6 +60,9 @@ architecture structural of AI_TRIGGER_TOP is
     signal lane_score : score_arr_t;
     signal lane_chunk_id : chunk_id_arr_t;
     signal lane_valid : std_logic_vector(N_LANES-1 downto 0);
+    signal agg_score_data : std_logic_vector(31 downto 0) := (others => '0');
+    signal agg_score_chunk_id : chunk_id_t := (others => '0');
+    signal agg_score_valid : std_logic := '0';
 
 begin
 
@@ -88,6 +98,25 @@ begin
             );
     end generate;
 
+    u_EVENT_PATH : entity work.EVENT_CAPTURE_PATH
+        port map (
+            CLK_ADC        => CLK_ADC,
+            CLK_CNN        => CLK_CNN,
+            RST            => RST,
+            DATA_STR       => DATA_STR,
+            ADC_DATA4      => ADC_DATA4,
+            SCORE_VALID    => agg_score_valid,
+            SCORE_DATA     => agg_score_data,
+            SCORE_CHUNK_ID => agg_score_chunk_id,
+            CNN_THRESH     => CNN_THRESH,
+            EVENT_VALID    => EVENT_VALID,
+            EVENT_READY    => EVENT_READY,
+            EVENT_DATA     => EVENT_DATA,
+            EVENT_LAST     => EVENT_LAST,
+            EVENT_CHUNK_ID => EVENT_CHUNK_ID,
+            EVENT_SCORE    => EVENT_SCORE
+        );
+
     -- Result aggregation (CLK_CNN): registered comparator per lane, OR result
     process(CLK_CNN)
         variable any_trig  : std_logic;
@@ -115,6 +144,9 @@ begin
             CNN_OUT_DATA  <= last_data;
             CNN_OUT_CHUNK_ID <= last_chunk_id;
             CNN_OUT_VALID <= last_valid;
+            agg_score_data <= last_data;
+            agg_score_chunk_id <= last_chunk_id;
+            agg_score_valid <= last_valid;
         end if;
     end process;
 

@@ -29,6 +29,12 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         CNN_OUT_DATA    : out std_logic_vector(31 downto 0);
         CNN_OUT_CHUNK_ID: out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
         CNN_OUT_VALID   : out std_logic;
+        EVENT_VALID     : out std_logic;
+        EVENT_READY     : in  std_logic;
+        EVENT_DATA      : out std_logic_vector(RAW_ADC_BATCH_WIDTH - 1 downto 0);
+        EVENT_LAST      : out std_logic;
+        EVENT_CHUNK_ID  : out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
+        EVENT_SCORE     : out std_logic_vector(31 downto 0);
         CHUNK_OVERFLOW  : out std_logic
     );
 end entity AI_TRIGGER_TOP_TB_WRAP;
@@ -37,6 +43,7 @@ architecture rtl of AI_TRIGGER_TOP_TB_WRAP is
 
     signal adc_internal : adc_data4_t;
     signal cnn_out_chunk_id_i : chunk_id_t;
+    signal event_chunk_id_i : chunk_id_t;
 
 begin
 
@@ -62,9 +69,16 @@ begin
             CNN_OUT_DATA   => CNN_OUT_DATA,
             CNN_OUT_CHUNK_ID => cnn_out_chunk_id_i,
             CNN_OUT_VALID  => CNN_OUT_VALID,
+            EVENT_VALID    => EVENT_VALID,
+            EVENT_READY    => EVENT_READY,
+            EVENT_DATA     => EVENT_DATA,
+            EVENT_LAST     => EVENT_LAST,
+            EVENT_CHUNK_ID => event_chunk_id_i,
+            EVENT_SCORE    => EVENT_SCORE,
             CHUNK_OVERFLOW => CHUNK_OVERFLOW
         );
 
     CNN_OUT_CHUNK_ID <= std_logic_vector(cnn_out_chunk_id_i);
+    EVENT_CHUNK_ID <= std_logic_vector(event_chunk_id_i);
 
 end architecture rtl;

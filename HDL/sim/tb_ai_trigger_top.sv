@@ -62,6 +62,11 @@ module tb_AI_TRIGGER_TOP;
     wire [31:0]  cnn_out_data;
     wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
+    wire         event_valid;
+    wire [767:0] event_data;
+    wire         event_last;
+    wire [15:0]  event_chunk_id;
+    wire [31:0]  event_score;
     wire         chunk_overflow;
 
     // -------------------------------------------------------------------------
@@ -78,6 +83,12 @@ module tb_AI_TRIGGER_TOP;
         .CNN_OUT_DATA   (cnn_out_data),
         .CNN_OUT_CHUNK_ID (cnn_out_chunk_id),
         .CNN_OUT_VALID  (cnn_out_valid),
+        .EVENT_VALID    (event_valid),
+        .EVENT_READY    (1'b1),
+        .EVENT_DATA     (event_data),
+        .EVENT_LAST     (event_last),
+        .EVENT_CHUNK_ID (event_chunk_id),
+        .EVENT_SCORE    (event_score),
         .CHUNK_OVERFLOW (chunk_overflow)
     );
 
