@@ -54,6 +54,7 @@ add_files -norecurse -fileset [current_fileset] [list \
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/rtl/AI_TRIGGER_PKG.vhd \
     $ROOT/HDL/rtl/TRIGGER_DECISION.vhd \
+    $ROOT/HDL/rtl/CHUNK_ID_CDC_FIFO.vhd \
     $ROOT/HDL/rtl/TRIGGER_CDC_FIFO.vhd \
     $ROOT/HDL/rtl/WAVEFORM_RING_BUFFER.vhd \
     $ROOT/HDL/rtl/EVENT_CAPTURE_CTRL.vhd \
