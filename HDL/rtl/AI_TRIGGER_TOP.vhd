@@ -65,6 +65,11 @@ architecture structural of AI_TRIGGER_TOP is
     signal agg_score_data : std_logic_vector(31 downto 0) := (others => '0');
     signal agg_score_chunk_id : chunk_id_t := (others => '0');
     signal agg_score_valid : std_logic := '0';
+    signal rst_cnn_ff : std_logic_vector(1 downto 0) := "11";
+    signal rst_cnn : std_logic := '1';
+
+    attribute ASYNC_REG : string;
+    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
 
 begin
 
@@ -123,34 +128,52 @@ begin
 
     -- Result aggregation (CLK_CNN): registered comparator per lane, OR result
     process(CLK_CNN)
+    begin
+        if rising_edge(CLK_CNN) then
+            rst_cnn_ff <= rst_cnn_ff(0) & RST;
+        end if;
+    end process;
+    rst_cnn <= rst_cnn_ff(1);
+
+    process(CLK_CNN)
         variable any_trig  : std_logic;
         variable last_data : std_logic_vector(31 downto 0);
         variable last_chunk_id : chunk_id_t;
         variable last_valid: std_logic;
     begin
         if rising_edge(CLK_CNN) then
-            any_trig   := '0';
-            last_data  := (others => '0');
-            last_chunk_id := (others => '0');
-            last_valid := '0';
-            for i in 0 to N_LANES-1 loop
-                if lane_valid(i) = '1' then
-                    last_data  := lane_score(i);
-                    last_chunk_id := lane_chunk_id(i);
-                    last_valid := '1';
-                    if signed(lane_score(i)(21 downto 0)) >
-                       signed(CNN_THRESH(21 downto 0)) then
-                        any_trig := '1';
+            if rst_cnn = '1' then
+                CNN_TRIG <= '0';
+                CNN_OUT_DATA <= (others => '0');
+                CNN_OUT_CHUNK_ID <= (others => '0');
+                CNN_OUT_VALID <= '0';
+                agg_score_data <= (others => '0');
+                agg_score_chunk_id <= (others => '0');
+                agg_score_valid <= '0';
+            else
+                any_trig   := '0';
+                last_data  := (others => '0');
+                last_chunk_id := (others => '0');
+                last_valid := '0';
+                for i in 0 to N_LANES-1 loop
+                    if lane_valid(i) = '1' then
+                        last_data  := lane_score(i);
+                        last_chunk_id := lane_chunk_id(i);
+                        last_valid := '1';
+                        if signed(lane_score(i)(21 downto 0)) >
+                           signed(CNN_THRESH(21 downto 0)) then
+                            any_trig := '1';
+                        end if;
                     end if;
-                end if;
-            end loop;
-            CNN_TRIG      <= any_trig;
-            CNN_OUT_DATA  <= last_data;
-            CNN_OUT_CHUNK_ID <= last_chunk_id;
-            CNN_OUT_VALID <= last_valid;
-            agg_score_data <= last_data;
-            agg_score_chunk_id <= last_chunk_id;
-            agg_score_valid <= last_valid;
+                end loop;
+                CNN_TRIG      <= any_trig;
+                CNN_OUT_DATA  <= last_data;
+                CNN_OUT_CHUNK_ID <= last_chunk_id;
+                CNN_OUT_VALID <= last_valid;
+                agg_score_data <= last_data;
+                agg_score_chunk_id <= last_chunk_id;
+                agg_score_valid <= last_valid;
+            end if;
         end if;
     end process;
 

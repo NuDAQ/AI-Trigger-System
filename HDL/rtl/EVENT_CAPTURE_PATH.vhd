@@ -50,6 +50,11 @@ architecture structural of EVENT_CAPTURE_PATH is
     signal rb_rd_valid       : std_logic;
     signal rb_rd_hit         : std_logic;
     signal dropped_trigger_count_r : unsigned(31 downto 0) := (others => '0');
+    signal rst_cnn_ff        : std_logic_vector(1 downto 0) := "11";
+    signal rst_cnn           : std_logic := '1';
+
+    attribute ASYNC_REG : string;
+    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
 begin
     u_ring : entity work.WAVEFORM_RING_BUFFER
         port map (
@@ -70,7 +75,7 @@ begin
     u_decision : entity work.TRIGGER_DECISION
         port map (
             CLK              => CLK_CNN,
-            RST              => RST,
+            RST              => rst_cnn,
             SCORE_VALID      => SCORE_VALID,
             SCORE_DATA       => SCORE_DATA,
             SCORE_CHUNK_ID   => SCORE_CHUNK_ID,
@@ -83,7 +88,7 @@ begin
     u_trigger_cdc : entity work.TRIGGER_CDC_FIFO
         port map (
             WR_CLK      => CLK_CNN,
-            WR_RST      => RST,
+            WR_RST      => rst_cnn,
             WR_VALID    => trigger_valid_cnn,
             WR_READY    => trigger_ready_cnn,
             WR_CHUNK_ID => trigger_id_cnn,
@@ -124,7 +129,15 @@ begin
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
-            if RST = '1' then
+            rst_cnn_ff <= rst_cnn_ff(0) & RST;
+        end if;
+    end process;
+    rst_cnn <= rst_cnn_ff(1);
+
+    process(CLK_CNN)
+    begin
+        if rising_edge(CLK_CNN) then
+            if rst_cnn = '1' then
                 dropped_trigger_count_r <= (others => '0');
             elsif trigger_valid_cnn = '1' and trigger_ready_cnn = '0' then
                 dropped_trigger_count_r <= dropped_trigger_count_r + 1;
