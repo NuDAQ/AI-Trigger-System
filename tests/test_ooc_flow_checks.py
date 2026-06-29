@@ -43,6 +43,15 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertNotIn("u_CHUNK_ID_FIFO", lane)
+        self.assertNotIn("entity work.CHUNK_ID_CDC_FIFO", lane)
+        self.assertIn("xpm_cdc_handshake", lane)
+        self.assertRegex(lane, r"DEST_EXT_HSK\s+=>\s+1")
+        self.assertIn("chunk_id_dest_ack", lane)
+
 
 if __name__ == "__main__":
     unittest.main()

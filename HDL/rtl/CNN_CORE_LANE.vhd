@@ -19,10 +19,9 @@
 -- 128-beat stream finishes, not when inference output is produced.
 --
 -- Control CDC:
---   The wide FIFO carries waveform batches across domains.  A small async FIFO
---   carries the matching chunk_id metadata.  The CNN side launches when both
---   data and metadata are present, so score chunk IDs are not recovered through
---   a cross-domain RAM read.
+--   The wide FIFO carries waveform batches across domains.  An XPM handshake
+--   CDC primitive carries the matching chunk_id metadata.  The CNN side
+--   acknowledges metadata only when the matching FIFO data is also available.
 --
 -- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
 -- =============================================================================
@@ -30,6 +29,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library xpm;
+use xpm.vcomponents.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity CNN_CORE_LANE is
@@ -122,9 +123,10 @@ architecture rtl of CNN_CORE_LANE is
     signal fifo_full_s    : std_logic;
     type chunk_id_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of chunk_id_t;
 
-    signal chunk_id_wr_valid : std_logic := '0';
-    signal chunk_id_wr_ready : std_logic;
-    signal chunk_id_wr_data  : chunk_id_t := (others => '0');
+    signal chunk_id_src_send    : std_logic := '0';
+    signal chunk_id_src_rcv     : std_logic;
+    signal chunk_id_src_pending : std_logic := '0';
+    signal chunk_id_src_data    : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0) := (others => '0');
 
     -- 2-FF sync: stream_done_toggle_cnn -> CLK_ADC
     signal stream_done_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
@@ -140,9 +142,9 @@ architecture rtl of CNN_CORE_LANE is
     signal started_count_cnn : chunk_cnt_t := (others => '0');
     signal stream_done_toggle_cnn : std_logic := '0';
 
-    signal chunk_id_rd_valid : std_logic;
-    signal chunk_id_rd_ready : std_logic := '0';
-    signal chunk_id_rd_data  : chunk_id_t;
+    signal chunk_id_dest_req  : std_logic;
+    signal chunk_id_dest_ack  : std_logic := '0';
+    signal chunk_id_dest_data : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0);
 
     -- synthesis translate_off
     signal dbg_adc_events : integer := 0;
@@ -204,10 +206,15 @@ begin
                 chunk_count_adc <= (others => '0');
                 chunk_busy_adc  <= '0';
                 stream_done_seen_adc <= '0';
-                chunk_id_wr_valid <= '0';
-                chunk_id_wr_data <= (others => '0');
+                chunk_id_src_send <= '0';
+                chunk_id_src_pending <= '0';
+                chunk_id_src_data <= (others => '0');
             else
-                chunk_id_wr_valid <= '0';
+                chunk_id_src_send <= '0';
+                if chunk_id_src_rcv = '1' then
+                    chunk_id_src_pending <= '0';
+                end if;
+
                 if stream_done_adc_ff(1) /= stream_done_seen_adc then
                     stream_done_seen_adc <= stream_done_adc_ff(1);
                     chunk_busy_adc <= '0';
@@ -224,8 +231,9 @@ begin
 
                 if WR_EN = '1' then
                     if wr_count = 0 then
-                        chunk_id_wr_valid <= '1';
-                        chunk_id_wr_data <= CHUNK_ID;
+                        chunk_id_src_send <= '1';
+                        chunk_id_src_data <= std_logic_vector(CHUNK_ID);
+                        chunk_id_src_pending <= '1';
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_busy_adc  <= '1';
                         -- synthesis translate_off
@@ -256,7 +264,7 @@ begin
         end if;
     end process;
 
-    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s or not chunk_id_wr_ready;
+    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s or chunk_id_src_pending;
 
     -- =========================================================================
     -- CLK_CNN DOMAIN
@@ -290,11 +298,11 @@ begin
                 lane_chunk_id_r <= (others => '0');
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
-                chunk_id_rd_ready <= '0';
+                chunk_id_dest_ack <= '0';
             else
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
-                chunk_id_rd_ready <= '0';
+                chunk_id_dest_ack <= '0';
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
                     lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
@@ -324,15 +332,15 @@ begin
                         cnn_in_valid <= '0';
                         stream_cnt    <= N_CHUNK_BEATS_CNN;
 
-                        if chunk_id_rd_valid = '1' and fifo_empty = '0' then
+                        if chunk_id_dest_req = '1' and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
                             -- Keep start asserted through the input stream; the
                             -- wrapper/HLS TB treats ap_start as a continuous
                             -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
-                            chunk_id_rd_ready <= '1';
-                            score_id_mem(score_id_wr_idx) <= chunk_id_rd_data;
+                            chunk_id_dest_ack <= '1';
+                            score_id_mem(score_id_wr_idx) <= unsigned(chunk_id_dest_data);
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -367,12 +375,12 @@ begin
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
-                                if chunk_id_rd_valid = '1' and fifo_empty = '0' then
+                                if chunk_id_dest_req = '1' and fifo_empty = '0' then
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
-                                    chunk_id_rd_ready <= '1';
-                                    score_id_mem(score_id_wr_idx) <= chunk_id_rd_data;
+                                    chunk_id_dest_ack <= '1';
+                                    score_id_mem(score_id_wr_idx) <= unsigned(chunk_id_dest_data);
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
@@ -444,18 +452,24 @@ begin
             rd_rst_busy => open
         );
 
-    u_CHUNK_ID_FIFO : entity work.CHUNK_ID_CDC_FIFO
+    u_CHUNK_ID_CDC : xpm_cdc_handshake
+        generic map (
+            DEST_EXT_HSK   => 1,
+            DEST_SYNC_FF   => 2,
+            INIT_SYNC_FF   => 0,
+            SIM_ASSERT_CHK => 0,
+            SRC_SYNC_FF    => 2,
+            WIDTH          => CHUNK_ID_WIDTH
+        )
         port map (
-            WR_CLK      => CLK_ADC,
-            WR_RST      => RST,
-            WR_VALID    => chunk_id_wr_valid,
-            WR_READY    => chunk_id_wr_ready,
-            WR_CHUNK_ID => chunk_id_wr_data,
-            RD_CLK      => CLK_CNN,
-            RD_RST      => not rst_n_cnn,
-            RD_VALID    => chunk_id_rd_valid,
-            RD_READY    => chunk_id_rd_ready,
-            RD_CHUNK_ID => chunk_id_rd_data
+            src_clk   => CLK_ADC,
+            src_in    => chunk_id_src_data,
+            src_send  => chunk_id_src_send,
+            src_rcv   => chunk_id_src_rcv,
+            dest_clk  => CLK_CNN,
+            dest_out  => chunk_id_dest_data,
+            dest_req  => chunk_id_dest_req,
+            dest_ack  => chunk_id_dest_ack
         );
 
     -- =========================================================================
