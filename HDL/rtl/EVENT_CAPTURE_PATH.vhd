@@ -22,7 +22,10 @@ entity EVENT_CAPTURE_PATH is
         EVENT_DATA     : out raw_adc_batch_t;
         EVENT_LAST     : out std_logic;
         EVENT_CHUNK_ID : out chunk_id_t;
-        EVENT_SCORE    : out std_logic_vector(31 downto 0)
+        EVENT_SCORE    : out std_logic_vector(31 downto 0);
+
+        DROPPED_TRIGGER_COUNT : out unsigned(31 downto 0);
+        RING_MISS_COUNT       : out unsigned(31 downto 0)
     );
 end entity EVENT_CAPTURE_PATH;
 
@@ -46,6 +49,7 @@ architecture structural of EVENT_CAPTURE_PATH is
     signal rb_rd_data        : raw_adc_batch_t;
     signal rb_rd_valid       : std_logic;
     signal rb_rd_hit         : std_logic;
+    signal dropped_trigger_count_r : unsigned(31 downto 0) := (others => '0');
 begin
     u_ring : entity work.WAVEFORM_RING_BUFFER
         port map (
@@ -113,7 +117,21 @@ begin
             EVENT_DATA       => EVENT_DATA,
             EVENT_LAST       => EVENT_LAST,
             EVENT_CHUNK_ID   => EVENT_CHUNK_ID,
-            EVENT_SCORE      => EVENT_SCORE
+            EVENT_SCORE      => EVENT_SCORE,
+            RING_MISS_COUNT  => RING_MISS_COUNT
         );
+
+    process(CLK_CNN)
+    begin
+        if rising_edge(CLK_CNN) then
+            if RST = '1' then
+                dropped_trigger_count_r <= (others => '0');
+            elsif trigger_valid_cnn = '1' and trigger_ready_cnn = '0' then
+                dropped_trigger_count_r <= dropped_trigger_count_r + 1;
+            end if;
+        end if;
+    end process;
+
+    DROPPED_TRIGGER_COUNT <= dropped_trigger_count_r;
 
 end architecture structural;

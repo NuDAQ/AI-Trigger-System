@@ -68,6 +68,8 @@ module tb_AI_TRIGGER_TOP;
     wire         event_last;
     wire [15:0]  event_chunk_id;
     wire [31:0]  event_score;
+    wire [31:0]  dropped_trigger_count;
+    wire [31:0]  ring_miss_count;
     wire         chunk_overflow;
 
     // -------------------------------------------------------------------------
@@ -90,6 +92,8 @@ module tb_AI_TRIGGER_TOP;
         .EVENT_LAST     (event_last),
         .EVENT_CHUNK_ID (event_chunk_id),
         .EVENT_SCORE    (event_score),
+        .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
+        .RING_MISS_COUNT       (ring_miss_count),
         .CHUNK_OVERFLOW (chunk_overflow)
     );
 
@@ -417,6 +421,8 @@ module tb_AI_TRIGGER_TOP;
                      overflow_count);
             $display("Events saved:     %0d", event_count);
             $display("Event batches:    %0d", event_batch_count);
+            $display("Dropped triggers: %0d", dropped_trigger_count);
+            $display("Ring misses:      %0d", ring_miss_count);
 
             if (received_count > 0) begin
                 accuracy      = 100.0 * correct_count / received_count;

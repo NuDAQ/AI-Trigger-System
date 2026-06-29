@@ -28,7 +28,9 @@ entity EVENT_CAPTURE_CTRL is
         EVENT_DATA       : out raw_adc_batch_t;
         EVENT_LAST       : out std_logic;
         EVENT_CHUNK_ID   : out chunk_id_t;
-        EVENT_SCORE      : out std_logic_vector(31 downto 0)
+        EVENT_SCORE      : out std_logic_vector(31 downto 0);
+
+        RING_MISS_COUNT  : out unsigned(31 downto 0)
     );
 end entity EVENT_CAPTURE_CTRL;
 
@@ -53,6 +55,7 @@ architecture rtl of EVENT_CAPTURE_CTRL is
     signal event_last_r     : std_logic := '0';
     signal event_chunk_id_r : chunk_id_t := (others => '0');
     signal event_score_r    : std_logic_vector(31 downto 0) := (others => '0');
+    signal ring_miss_count_r : unsigned(31 downto 0) := (others => '0');
 
     function next_chunk_ready(
         have_latest : std_logic;
@@ -108,6 +111,7 @@ begin
                 event_last_r       <= '0';
                 event_chunk_id_r   <= (others => '0');
                 event_score_r      <= (others => '0');
+                ring_miss_count_r  <= (others => '0');
             else
                 rb_rd_en_r <= '0';
 
@@ -161,6 +165,7 @@ begin
                                     event_chunk_id_r <= active_chunk_id;
                                     event_score_r    <= active_score;
                                 else
+                                    ring_miss_count_r <= ring_miss_count_r + 1;
                                     state <= IDLE;
                                 end if;
                             end if;
@@ -179,4 +184,5 @@ begin
     EVENT_CHUNK_ID  <= event_chunk_id_r;
     EVENT_SCORE     <= event_score_r;
     TRIGGER_READY   <= '1' when state = IDLE and event_valid_r = '0' else '0';
+    RING_MISS_COUNT <= ring_miss_count_r;
 end architecture rtl;

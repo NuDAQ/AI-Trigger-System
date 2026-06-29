@@ -44,6 +44,8 @@ entity AI_TRIGGER_TOP is
         EVENT_LAST     : out std_logic;
         EVENT_CHUNK_ID : out chunk_id_t;
         EVENT_SCORE    : out std_logic_vector(31 downto 0);
+        DROPPED_TRIGGER_COUNT : out unsigned(31 downto 0);
+        RING_MISS_COUNT       : out unsigned(31 downto 0);
 
         CHUNK_OVERFLOW : out std_logic
     );
@@ -114,7 +116,9 @@ begin
             EVENT_DATA     => EVENT_DATA,
             EVENT_LAST     => EVENT_LAST,
             EVENT_CHUNK_ID => EVENT_CHUNK_ID,
-            EVENT_SCORE    => EVENT_SCORE
+            EVENT_SCORE    => EVENT_SCORE,
+            DROPPED_TRIGGER_COUNT => DROPPED_TRIGGER_COUNT,
+            RING_MISS_COUNT       => RING_MISS_COUNT
         );
 
     -- Result aggregation (CLK_CNN): registered comparator per lane, OR result

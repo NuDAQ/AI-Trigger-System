@@ -30,6 +30,7 @@ architecture sim of tb_event_capture_ctrl is
     signal event_last       : std_logic;
     signal event_chunk_id   : chunk_id_t;
     signal event_score      : std_logic_vector(31 downto 0);
+    signal ring_miss_count  : unsigned(31 downto 0);
 
     function sample_value(chunk_id : integer; batch_id : integer; ch : integer; sample : integer)
         return std_logic_vector is
@@ -100,7 +101,8 @@ begin
             EVENT_DATA       => event_data,
             EVENT_LAST       => event_last,
             EVENT_CHUNK_ID   => event_chunk_id,
-            EVENT_SCORE      => event_score
+            EVENT_SCORE      => event_score,
+            RING_MISS_COUNT  => ring_miss_count
         );
 
     process
