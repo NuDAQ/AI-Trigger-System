@@ -13,9 +13,9 @@ package AI_TRIGGER_PKG is
     constant N_CHUNK_BEATS_CNN : integer := 128;  -- two timesteps per 128-bit CNN beat
     constant CHUNK_ID_WIDTH : integer := 16;
     constant RAW_ADC_BATCH_WIDTH : integer := N_CH * N_BATCH_S * 12;
-    constant WAVEFORM_RING_DEPTH : integer := 16;
+    constant WAVEFORM_RING_DEPTH : integer := 64;
     constant EVENT_CHUNKS : integer := 3;
-    constant TRIGGER_FIFO_ADDR_WIDTH : integer := 3;
+    constant TRIGGER_FIFO_ADDR_WIDTH : integer := 5;
     constant TRIGGER_FIFO_DEPTH : integer := 2 ** TRIGGER_FIFO_ADDR_WIDTH;
 
     -- ADC data types: 4 channels, 16 samples per batch, 12-bit per sample
