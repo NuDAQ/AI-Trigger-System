@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Sun Jun 28 20:53:59 2026
+| Date              : Sun Jun 28 21:17:40 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_cdc -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_cdc.rpt
 | Design            : AI_TRIGGER_TOP
@@ -13,8 +13,10 @@ Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanc
 
 CDC Report
 
-Severity  Source Clock  Destination Clock  CDC Type                 Exceptions           Endpoints  Safe  Unsafe  Unknown  No ASYNC_REG  
---------  ------------  -----------------  -----------------------  -------------------  ---------  ----  ------  -------  ------------  
-Critical  CLK_CNN       CLK_ADC            No Common Primary Clock  Asynch Clock Groups         86    84       0        2             0  
-Critical  CLK_ADC       CLK_CNN            No Common Primary Clock  Asynch Clock Groups        143    53      90        0             0  
+Severity  Source Clock      Destination Clock  CDC Type                 Exceptions           Endpoints  Safe  Unsafe  Unknown  No ASYNC_REG  
+--------  ----------------  -----------------  -----------------------  -------------------  ---------  ----  ------  -------  ------------  
+Critical  CLK_CNN           CLK_ADC            No Common Primary Clock  Asynch Clock Groups         86    84       0        2             0  
+Critical  input port clock  CLK_ADC            No Common Primary Clock  False Path                1583  1316     251       16             0  
+Critical  CLK_ADC           CLK_CNN            No Common Primary Clock  Asynch Clock Groups        131    41      90        0             0  
+Warning   input port clock  CLK_CNN            No Common Primary Clock  False Path                  12    12       0        0             0  
 
