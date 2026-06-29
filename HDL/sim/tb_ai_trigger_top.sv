@@ -45,6 +45,7 @@ module tb_AI_TRIGGER_TOP;
     parameter CLK_CNN_PERIOD =  5.000; // ns (200 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
+    parameter NUM_SAMPLES_MAX     = 1000;
     parameter TIMEOUT_CYCLES_CNN  = 100_000_000;  // watchdog on CLK_CNN
 
     parameter N_CH      = 4;
@@ -119,7 +120,7 @@ module tb_AI_TRIGGER_TOP;
 
     // Per-sample hex storage (256 words)
     reg [63:0] sample_hex [0:N_CHUNK_W-1];
-    reg [31:0] labels [0:999];
+    reg [31:0] labels [0:NUM_SAMPLES_MAX-1];
 
     // Tracking
     integer sent_count    = 0;
@@ -163,6 +164,11 @@ module tb_AI_TRIGGER_TOP;
             event_csv_path = "ai_trigger_events.csv";
         if (!$value$plusargs("NUM_SAMPLES=%d", num_samples))
             num_samples = NUM_SAMPLES_DEFAULT;
+        if (num_samples <= 0 || num_samples > NUM_SAMPLES_MAX) begin
+            $display("[ERROR] NUM_SAMPLES=%0d is outside supported range 1..%0d",
+                     num_samples, NUM_SAMPLES_MAX);
+            $finish;
+        end
         has_score_threshold_arg = $value$plusargs("SCORE_THRESHOLD=%f", score_threshold);
         if (!has_score_threshold_arg)
             score_threshold = -6.0;
@@ -247,15 +253,28 @@ module tb_AI_TRIGGER_TOP;
     // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
-        integer s_id, b, s, ch;
+        integer s_id, b, s, ch, w, sample_file;
         string  filename;
         reg [767:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
+                sample_file = $fopen(filename, "r");
+                if (sample_file == 0) begin
+                    $display("[ERROR] Missing sample file for sample %0d: %s",
+                             s_id, filename);
+                    $finish;
+                end
+                $fclose(sample_file);
+
+                for (w = 0; w < N_CHUNK_W; w = w + 1)
+                    sample_hex[w] = 64'hx;
                 $readmemh(filename, sample_hex);
-                if (sample_hex[0] === 64'bx) begin
-                    $display("[ERROR] Failed to load %s", filename); $finish;
+                if ($isunknown(sample_hex[0]) ||
+                    $isunknown(sample_hex[N_CHUNK_W-1])) begin
+                    $display("[ERROR] Incomplete or invalid sample %0d: %s",
+                             s_id, filename);
+                    $finish;
                 end
 
                 // Record send time for latency measurement
