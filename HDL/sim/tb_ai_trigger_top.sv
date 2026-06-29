@@ -110,6 +110,8 @@ module tb_AI_TRIGGER_TOP;
     integer num_samples;
     real    score_threshold;
     integer cnn_thresh_raw;
+    integer has_score_threshold_arg;
+    integer has_cnn_thresh_raw_arg;
 
     // Per-sample hex storage (256 words)
     reg [63:0] sample_hex [0:N_CHUNK_W-1];
@@ -157,10 +159,14 @@ module tb_AI_TRIGGER_TOP;
             event_csv_path = "ai_trigger_events.csv";
         if (!$value$plusargs("NUM_SAMPLES=%d", num_samples))
             num_samples = NUM_SAMPLES_DEFAULT;
-        if (!$value$plusargs("SCORE_THRESHOLD=%f", score_threshold))
+        has_score_threshold_arg = $value$plusargs("SCORE_THRESHOLD=%f", score_threshold);
+        if (!has_score_threshold_arg)
             score_threshold = -6.0;
-        if (!$value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw))
+        has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
+        if (!has_cnn_thresh_raw_arg)
             cnn_thresh_raw = -12288;  // -6.0 in ap_fixed<22,11>
+        if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
+            score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 
         cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 768'h0;
@@ -216,6 +222,7 @@ module tb_AI_TRIGGER_TOP;
         join_none
 
         output_monitor_thread();
+        drain_event_stream();
         disable fork;
 
         sim_end_time = $time;
@@ -308,6 +315,28 @@ module tb_AI_TRIGGER_TOP;
     endtask
 
     // =========================================================================
+    // Event drain
+    //
+    // CNN results can arrive before the event-capture stream has finished
+    // writing the corresponding 3-chunk waveform.  Let the ADC-domain stream
+    // settle before ending the testbench and killing event_monitor_thread().
+    // =========================================================================
+    task automatic drain_event_stream;
+        integer quiet_cycles;
+        begin
+            quiet_cycles = 0;
+            while (quiet_cycles < 96) begin
+                @(posedge clk_adc);
+                if (event_valid) begin
+                    quiet_cycles = 0;
+                end else begin
+                    quiet_cycles = quiet_cycles + 1;
+                end
+            end
+        end
+    endtask
+
+    // =========================================================================
     // Output monitor (CLK_CNN domain)
     // Watches CNN_OUT_VALID, latches scores, computes accuracy.
     // =========================================================================
@@ -380,6 +409,7 @@ module tb_AI_TRIGGER_TOP;
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
                      cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
+            $display("Score threshold:  %.4f float", score_threshold);
             $display("-------------------------------------------------------------");
             $display("Samples sent:     %0d", sent_count);
             $display("Results received: %0d", received_count);
