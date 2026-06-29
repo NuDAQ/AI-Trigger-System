@@ -64,6 +64,17 @@ class OocFlowChecks(unittest.TestCase):
             r"chunk_id_src_send\s*<=\s*chunk_id_src_pending;",
         )
 
+    def test_lane_xpm_dest_request_is_consumed_once(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertIn("chunk_id_dest_seen", lane)
+        self.assertRegex(lane, r"if\s+chunk_id_dest_req\s*=\s*'0'\s+then\s+chunk_id_dest_seen\s*<=\s*'0';")
+        self.assertRegex(
+            lane,
+            r"elsif\s+chunk_id_dest_seen\s*=\s*'0'\s+and\s+chunk_id_meta_valid\s*=\s*'0'\s+then",
+        )
+        self.assertIn("chunk_id_meta_valid <= '1';", lane)
+
 
 if __name__ == "__main__":
     unittest.main()

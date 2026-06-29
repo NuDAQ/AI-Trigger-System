@@ -145,6 +145,9 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_id_dest_req  : std_logic;
     signal chunk_id_dest_ack  : std_logic := '0';
     signal chunk_id_dest_data : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0);
+    signal chunk_id_meta_valid : std_logic := '0';
+    signal chunk_id_meta_data  : chunk_id_t := (others => '0');
+    signal chunk_id_dest_seen  : std_logic := '0';
 
     -- synthesis translate_off
     signal dbg_adc_events : integer := 0;
@@ -301,10 +304,21 @@ begin
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
                 chunk_id_dest_ack <= '0';
+                chunk_id_meta_valid <= '0';
+                chunk_id_meta_data <= (others => '0');
+                chunk_id_dest_seen <= '0';
             else
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
                 chunk_id_dest_ack <= '0';
+                if chunk_id_dest_req = '0' then
+                    chunk_id_dest_seen <= '0';
+                elsif chunk_id_dest_seen = '0' and chunk_id_meta_valid = '0' then
+                    chunk_id_meta_data <= unsigned(chunk_id_dest_data);
+                    chunk_id_meta_valid <= '1';
+                    chunk_id_dest_seen <= '1';
+                    chunk_id_dest_ack <= '1';
+                end if;
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
                     lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
@@ -334,15 +348,15 @@ begin
                         cnn_in_valid <= '0';
                         stream_cnt    <= N_CHUNK_BEATS_CNN;
 
-                        if chunk_id_dest_req = '1' and fifo_empty = '0' then
+                        if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
                             -- Keep start asserted through the input stream; the
                             -- wrapper/HLS TB treats ap_start as a continuous
                             -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
-                            chunk_id_dest_ack <= '1';
-                            score_id_mem(score_id_wr_idx) <= unsigned(chunk_id_dest_data);
+                            chunk_id_meta_valid <= '0';
+                            score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -377,12 +391,12 @@ begin
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
-                                if chunk_id_dest_req = '1' and fifo_empty = '0' then
+                                if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
-                                    chunk_id_dest_ack <= '1';
-                                    score_id_mem(score_id_wr_idx) <= unsigned(chunk_id_dest_data);
+                                    chunk_id_meta_valid <= '0';
+                                    score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
