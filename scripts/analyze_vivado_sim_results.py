@@ -12,6 +12,9 @@ import sys
 from pathlib import Path
 
 
+EVENT_BATCHES_PER_CAPTURE = 3 * 16
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Validate tb_AI_TRIGGER_TOP CSV/log output from Vivado xsim."
@@ -32,6 +35,14 @@ def parse_args() -> argparse.Namespace:
             "simulate.log"
         ),
         help="xsim simulate.log path.",
+    )
+    parser.add_argument(
+        "--event-csv",
+        default=(
+            "AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/"
+            "ai_trigger_events.csv"
+        ),
+        help="Optional event waveform CSV path.",
     )
     parser.add_argument("--expected-samples", type=int, default=1000)
     parser.add_argument("--expected-cores", type=int, default=5)
@@ -309,6 +320,62 @@ def compare_with_keras(args: argparse.Namespace, rows: list[dict[str, str]]) -> 
     return summary, comparison_rows
 
 
+def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | str]:
+    if not path.exists():
+        return {"exists": False, "path": str(path), "rows": 0, "events": 0, "complete_events": 0}
+
+    rows = list(csv.DictReader(path.open(newline="", encoding="utf-8")))
+    required_cols = {
+        "event_index",
+        "event_chunk_id",
+        "event_score_hex",
+        "event_batch_index",
+        "event_last",
+        "event_data_hex",
+    }
+    if rows:
+        missing = required_cols - set(rows[0])
+        if missing:
+            fail(errors, f"event CSV missing columns: {sorted(missing)}")
+
+    batches_by_event: dict[int, int] = {}
+    complete_events = 0
+    for i, row in enumerate(rows):
+        try:
+            event_index = int(row["event_index"])
+            batch_index = int(row["event_batch_index"])
+            event_last = int(row["event_last"])
+        except (KeyError, ValueError) as exc:
+            fail(errors, f"event row {i} parse failed: {exc}")
+            continue
+
+        expected_batch = batches_by_event.get(event_index, 0)
+        if batch_index != expected_batch:
+            fail(errors, f"event {event_index} row {i} batch {batch_index}, expected {expected_batch}")
+        batches_by_event[event_index] = expected_batch + 1
+
+        if event_last:
+            complete_events += 1
+            if batches_by_event[event_index] != EVENT_BATCHES_PER_CAPTURE:
+                fail(
+                    errors,
+                    f"event {event_index} has {batches_by_event[event_index]} batches, "
+                    f"expected {EVENT_BATCHES_PER_CAPTURE}",
+                )
+
+        data_hex = row.get("event_data_hex", "")
+        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{192}", data_hex):
+            fail(errors, f"event row {i} data is not 768-bit hex")
+
+    return {
+        "exists": True,
+        "path": str(path),
+        "rows": len(rows),
+        "events": len(batches_by_event),
+        "complete_events": complete_events,
+    }
+
+
 def main() -> int:
     args = parse_args()
     csv_path = Path(args.csv)
@@ -428,6 +495,17 @@ def main() -> int:
     if score_min is not None and score_max is not None:
         print(f"  score:      min={score_min:.6f} max={score_max:.6f}")
 
+    event_summary = analyze_event_csv(Path(args.event_csv), errors)
+    if event_summary["exists"]:
+        print(
+            "  events:     "
+            f"rows={event_summary['rows']} "
+            f"events={event_summary['events']} "
+            f"complete={event_summary['complete_events']}"
+        )
+    else:
+        print(f"  events:     skipped (not found: {event_summary['path']})")
+
     keras_summary, comparison_rows = compare_with_keras(args, rows)
     if keras_summary is not None:
         agreement = float(keras_summary["prediction_agreement"])
@@ -441,7 +519,10 @@ def main() -> int:
         args.out_dir.mkdir(parents=True, exist_ok=True)
         summary_path = args.out_dir / "summary.json"
         comparison_path = args.out_dir / "keras_comparison.csv"
-        summary_path.write_text(json.dumps({"keras_comparison": keras_summary}, indent=2) + "\n")
+        summary_path.write_text(json.dumps({
+            "event_capture": event_summary,
+            "keras_comparison": keras_summary,
+        }, indent=2) + "\n")
         with comparison_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=list(comparison_rows[0]))
             writer.writeheader()
@@ -455,6 +536,10 @@ def main() -> int:
         print(f"  wrote:      {comparison_path}")
     else:
         print("  keras:     skipped (model/X/Y files not found)")
+        args.out_dir.mkdir(parents=True, exist_ok=True)
+        summary_path = args.out_dir / "summary.json"
+        summary_path.write_text(json.dumps({"event_capture": event_summary}, indent=2) + "\n")
+        print(f"  wrote:      {summary_path}")
 
     if errors:
         print("\nFAIL:")

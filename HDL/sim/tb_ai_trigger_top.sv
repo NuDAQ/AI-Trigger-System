@@ -30,6 +30,7 @@
 // Plusargs:
 //   +TESTHEX_DIR=<path>     directory containing testhex_stream files
 //   +OUT_CSV=<path>         output CSV path
+//   +EVENT_CSV=<path>       event waveform CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
 //   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
 //   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -12288)
@@ -104,8 +105,8 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Simulation variables
     // -------------------------------------------------------------------------
-    string  testhex_dir, out_csv_path;
-    integer csv_file;
+    string  testhex_dir, out_csv_path, event_csv_path;
+    integer csv_file, event_csv_file;
     integer num_samples;
     real    score_threshold;
     integer cnn_thresh_raw;
@@ -119,6 +120,8 @@ module tb_AI_TRIGGER_TOP;
     integer received_count = 0;
     integer correct_count  = 0;
     integer overflow_count = 0;
+    integer event_count    = 0;
+    integer event_batch_count = 0;
 
     // Latency FIFO (record send time per sample, match with received results)
     reg [63:0] start_time_fifo [0:2047];
@@ -150,6 +153,8 @@ module tb_AI_TRIGGER_TOP;
             testhex_dir = "testhex_stream";
         if (!$value$plusargs("OUT_CSV=%s", out_csv_path))
             out_csv_path = "ai_trigger_results.csv";
+        if (!$value$plusargs("EVENT_CSV=%s", event_csv_path))
+            event_csv_path = "ai_trigger_events.csv";
         if (!$value$plusargs("NUM_SAMPLES=%d", num_samples))
             num_samples = NUM_SAMPLES_DEFAULT;
         if (!$value$plusargs("SCORE_THRESHOLD=%f", score_threshold))
@@ -169,6 +174,14 @@ module tb_AI_TRIGGER_TOP;
         $fwrite(csv_file,
             "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n");
         $fflush(csv_file);
+
+        event_csv_file = $fopen(event_csv_path, "w");
+        if (event_csv_file == 0) begin
+            $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
+        end
+        $fwrite(event_csv_file,
+            "event_index,event_chunk_id,event_score_hex,event_batch_index,event_last,event_data_hex\n");
+        $fflush(event_csv_file);
 
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);
@@ -199,6 +212,7 @@ module tb_AI_TRIGGER_TOP;
         // Fork: send data on ADC clock, receive on CNN clock
         fork
             input_driver_thread();
+            event_monitor_thread();
         join_none
 
         output_monitor_thread();
@@ -207,6 +221,7 @@ module tb_AI_TRIGGER_TOP;
         sim_end_time = $time;
         print_summary();
         $fclose(csv_file);
+        $fclose(event_csv_file);
         $finish;
     end
 
@@ -256,6 +271,39 @@ module tb_AI_TRIGGER_TOP;
             // After all requested samples, stop the finite test stream.
             adc_data4_flat = 768'h0;
             data_str = 0;
+        end
+    endtask
+
+    // =========================================================================
+    // Event monitor (CLK_ADC domain)
+    // Records the raw waveform event stream. One complete event is:
+    // previous chunk, triggered chunk, next chunk = 48 ADC batches.
+    // =========================================================================
+    task automatic event_monitor_thread;
+        integer batch_in_event;
+        begin
+            batch_in_event = 0;
+            forever begin
+                @(posedge clk_adc);
+                if (event_valid) begin
+                    $fwrite(event_csv_file, "%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
+                            event_count,
+                            event_chunk_id,
+                            event_score,
+                            batch_in_event,
+                            event_last,
+                            event_data);
+                    $fflush(event_csv_file);
+
+                    event_batch_count = event_batch_count + 1;
+                    if (event_last) begin
+                        event_count = event_count + 1;
+                        batch_in_event = 0;
+                    end else begin
+                        batch_in_event = batch_in_event + 1;
+                    end
+                end
+            end
         end
     endtask
 
@@ -337,6 +385,8 @@ module tb_AI_TRIGGER_TOP;
             $display("Results received: %0d", received_count);
             $display("Chunk overflows:  %0d (should be 0 in normal operation)",
                      overflow_count);
+            $display("Events saved:     %0d", event_count);
+            $display("Event batches:    %0d", event_batch_count);
 
             if (received_count > 0) begin
                 accuracy      = 100.0 * correct_count / received_count;
@@ -354,6 +404,7 @@ module tb_AI_TRIGGER_TOP;
             end
             $display("=============================================================");
             $display("Results saved to: %s", out_csv_path);
+            $display("Events saved to:  %s", event_csv_path);
             $display("Simulation complete.");
         end
     endtask
