@@ -152,9 +152,11 @@ begin
                                 if RB_RD_HIT = '1' then
                                     event_valid_r    <= '1';
                                     event_data_r     <= RB_RD_DATA;
-                                    event_last_r     <= '1' when
-                                        chunk_offset = EVENT_CHUNKS - 1 and batch_idx = N_BATCHES - 1
-                                        else '0';
+                                    if chunk_offset = EVENT_CHUNKS - 1 and batch_idx = N_BATCHES - 1 then
+                                        event_last_r <= '1';
+                                    else
+                                        event_last_r <= '0';
+                                    end if;
                                     event_chunk_id_r <= active_chunk_id;
                                     event_score_r    <= active_score;
                                 else
