@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Static checks for the Vivado OOC implementation flow."""
+
+from pathlib import Path
+import re
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def read(path: str) -> str:
+    return (ROOT / path).read_text(encoding="utf-8")
+
+
+class OocFlowChecks(unittest.TestCase):
+    def test_reset_is_not_timed_as_ooc_data_input(self) -> None:
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+        input_delay_lines = [
+            line for line in xdc.splitlines() if line.strip().startswith("set_input_delay")
+        ]
+
+        self.assertTrue(input_delay_lines)
+        self.assertFalse(any(re.search(r"\bRST\b", line) for line in input_delay_lines))
+        self.assertRegex(xdc, r"set_false_path\s+-from\s+\[get_ports\s+RST\]")
+
+    def test_ooc_input_hold_checks_are_cut_at_block_boundary(self) -> None:
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+
+        self.assertRegex(
+            xdc,
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{DATA_STR ADC_DATA4\* EVENT_READY\}\]",
+        )
+        self.assertRegex(
+            xdc,
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{CNN_THRESH\*\}\]",
+        )
+
+    def test_ooc_flow_writes_detailed_cdc_reports(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+
+        self.assertIn("post_synth_cdc_details.rpt", tcl)
+        self.assertIn("post_route_cdc_details.rpt", tcl)
+        self.assertRegex(tcl, r"report_cdc\s+-details")
+
+    def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertNotIn("u_CHUNK_ID_FIFO", lane)
+        self.assertNotIn("entity work.CHUNK_ID_CDC_FIFO", lane)
+        self.assertIn("xpm_cdc_handshake", lane)
+        self.assertRegex(lane, r"DEST_EXT_HSK\s+=>\s+0")
+        self.assertIn("chunk_id_meta_valid", lane)
+
+    def test_lane_xpm_source_request_is_held_until_ack(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertRegex(
+            lane,
+            r"if\s+chunk_id_src_rcv\s*=\s*'1'\s+then\s+"
+            r"chunk_id_src_send\s*<=\s*'0';\s+"
+            r"chunk_id_src_pending\s*<=\s*'0';\s+"
+            r"else\s+"
+            r"chunk_id_src_send\s*<=\s*chunk_id_src_pending;",
+        )
+
+    def test_lane_xpm_dest_request_is_consumed_once(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertIn("chunk_id_dest_seen", lane)
+        self.assertRegex(lane, r"if\s+chunk_id_dest_req\s*=\s*'0'\s+then\s+chunk_id_dest_seen\s*<=\s*'0';")
+        self.assertRegex(
+            lane,
+            r"elsif\s+chunk_id_dest_seen\s*=\s*'0'\s+and\s+chunk_id_meta_valid\s*=\s*'0'\s+then",
+        )
+        self.assertIn("chunk_id_meta_valid <= '1';", lane)
+
+
+if __name__ == "__main__":
+    unittest.main()

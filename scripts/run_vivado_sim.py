@@ -55,6 +55,8 @@ def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
         lines.append(f"set ::RUN_SIM_TESTHEX_DIR {tcl_quote(testhex_dir.resolve())}")
     if args.out_csv:
         lines.append(f"set ::RUN_SIM_OUT_CSV {tcl_quote(args.out_csv)}")
+    if args.event_csv:
+        lines.append(f"set ::RUN_SIM_EVENT_CSV {tcl_quote(args.event_csv)}")
     if args.num_samples is not None:
         lines.append(f"set ::RUN_SIM_NUM_SAMPLES {args.num_samples}")
     if args.score_threshold is not None:
@@ -102,6 +104,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--out-csv",
         help="Pass +OUT_CSV=<path>. Defaults to ai_trigger_results.csv in xsim dir.",
+    )
+    parser.add_argument(
+        "--event-csv",
+        help="Pass +EVENT_CSV=<path>. Defaults to ai_trigger_events.csv in xsim dir.",
     )
     parser.add_argument(
         "--score-threshold",

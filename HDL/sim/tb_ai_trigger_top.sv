@@ -30,6 +30,7 @@
 // Plusargs:
 //   +TESTHEX_DIR=<path>     directory containing testhex_stream files
 //   +OUT_CSV=<path>         output CSV path
+//   +EVENT_CSV=<path>       event waveform CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
 //   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
 //   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -12288)
@@ -44,7 +45,9 @@ module tb_AI_TRIGGER_TOP;
     parameter CLK_CNN_PERIOD =  5.000; // ns (200 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
+    parameter NUM_SAMPLES_MAX     = 1000;
     parameter TIMEOUT_CYCLES_CNN  = 100_000_000;  // watchdog on CLK_CNN
+    parameter OUTPUT_DRAIN_CYCLES = 8192;         // finish after input done + quiet CNN cycles
 
     parameter N_CH      = 4;
     parameter N_BATCH_S = 16;   // timesteps per batch
@@ -60,7 +63,15 @@ module tb_AI_TRIGGER_TOP;
 
     wire         cnn_trig;
     wire [31:0]  cnn_out_data;
+    wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
+    wire         event_valid;
+    wire [767:0] event_data;
+    wire         event_last;
+    wire [15:0]  event_chunk_id;
+    wire [31:0]  event_score;
+    wire [31:0]  dropped_trigger_count;
+    wire [31:0]  ring_miss_count;
     wire         chunk_overflow;
 
     // -------------------------------------------------------------------------
@@ -75,7 +86,16 @@ module tb_AI_TRIGGER_TOP;
         .CNN_THRESH     (cnn_thresh),
         .CNN_TRIG       (cnn_trig),
         .CNN_OUT_DATA   (cnn_out_data),
+        .CNN_OUT_CHUNK_ID (cnn_out_chunk_id),
         .CNN_OUT_VALID  (cnn_out_valid),
+        .EVENT_VALID    (event_valid),
+        .EVENT_READY    (1'b1),
+        .EVENT_DATA     (event_data),
+        .EVENT_LAST     (event_last),
+        .EVENT_CHUNK_ID (event_chunk_id),
+        .EVENT_SCORE    (event_score),
+        .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
+        .RING_MISS_COUNT       (ring_miss_count),
         .CHUNK_OVERFLOW (chunk_overflow)
     );
 
@@ -91,25 +111,31 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Simulation variables
     // -------------------------------------------------------------------------
-    string  testhex_dir, out_csv_path;
-    integer csv_file;
+    string  testhex_dir, out_csv_path, event_csv_path;
+    integer csv_file, event_csv_file;
     integer num_samples;
     real    score_threshold;
     integer cnn_thresh_raw;
+    integer has_score_threshold_arg;
+    integer has_cnn_thresh_raw_arg;
 
     // Per-sample hex storage (256 words)
     reg [63:0] sample_hex [0:N_CHUNK_W-1];
-    reg [31:0] labels [0:999];
+    reg [31:0] labels [0:NUM_SAMPLES_MAX-1];
 
     // Tracking
     integer sent_count    = 0;
     integer received_count = 0;
     integer correct_count  = 0;
     integer overflow_count = 0;
+    integer event_count    = 0;
+    integer event_batch_count = 0;
+    integer input_done = 0;
+    integer sim_done = 0;
 
-    // Latency FIFO (record send time per sample, match with received results)
-    reg [63:0] start_time_fifo [0:2047];
-    integer fifo_head = 0, fifo_tail = 0;
+    // Latency lookup indexed by DUT chunk/sample id.  Pressure tests may drop
+    // chunks, so received_count is not a reliable proxy for the sample id.
+    reg [63:0] start_time_by_sample [0:NUM_SAMPLES_MAX-1];
     real total_latency_acc = 0;
 
     reg [63:0] sim_start_time, sim_end_time;
@@ -137,12 +163,23 @@ module tb_AI_TRIGGER_TOP;
             testhex_dir = "testhex_stream";
         if (!$value$plusargs("OUT_CSV=%s", out_csv_path))
             out_csv_path = "ai_trigger_results.csv";
+        if (!$value$plusargs("EVENT_CSV=%s", event_csv_path))
+            event_csv_path = "ai_trigger_events.csv";
         if (!$value$plusargs("NUM_SAMPLES=%d", num_samples))
             num_samples = NUM_SAMPLES_DEFAULT;
-        if (!$value$plusargs("SCORE_THRESHOLD=%f", score_threshold))
+        if (num_samples <= 0 || num_samples > NUM_SAMPLES_MAX) begin
+            $display("[ERROR] NUM_SAMPLES=%0d is outside supported range 1..%0d",
+                     num_samples, NUM_SAMPLES_MAX);
+            $finish;
+        end
+        has_score_threshold_arg = $value$plusargs("SCORE_THRESHOLD=%f", score_threshold);
+        if (!has_score_threshold_arg)
             score_threshold = -6.0;
-        if (!$value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw))
+        has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
+        if (!has_cnn_thresh_raw_arg)
             cnn_thresh_raw = -12288;  // -6.0 in ap_fixed<22,11>
+        if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
+            score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 
         cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 768'h0;
@@ -156,6 +193,14 @@ module tb_AI_TRIGGER_TOP;
         $fwrite(csv_file,
             "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n");
         $fflush(csv_file);
+
+        event_csv_file = $fopen(event_csv_path, "w");
+        if (event_csv_file == 0) begin
+            $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
+        end
+        $fwrite(event_csv_file,
+            "event_index,event_chunk_id,event_score_hex,event_batch_index,event_last,event_data_hex\n");
+        $fflush(event_csv_file);
 
         // Load labels
         $readmemh($sformatf("%s/labels.hex", testhex_dir), labels);
@@ -186,14 +231,18 @@ module tb_AI_TRIGGER_TOP;
         // Fork: send data on ADC clock, receive on CNN clock
         fork
             input_driver_thread();
+            event_monitor_thread();
         join_none
 
         output_monitor_thread();
+        drain_event_stream();
         disable fork;
 
         sim_end_time = $time;
+        sim_done = 1;
         print_summary();
         $fclose(csv_file);
+        $fclose(event_csv_file);
         $finish;
     end
 
@@ -208,20 +257,32 @@ module tb_AI_TRIGGER_TOP;
     // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
-        integer s_id, b, s, ch;
+        integer s_id, b, s, ch, w, sample_file;
         string  filename;
         reg [767:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
+                sample_file = $fopen(filename, "r");
+                if (sample_file == 0) begin
+                    $display("[ERROR] Missing sample file for sample %0d: %s",
+                             s_id, filename);
+                    $finish;
+                end
+                $fclose(sample_file);
+
+                for (w = 0; w < N_CHUNK_W; w = w + 1)
+                    sample_hex[w] = 64'hx;
                 $readmemh(filename, sample_hex);
-                if (sample_hex[0] === 64'bx) begin
-                    $display("[ERROR] Failed to load %s", filename); $finish;
+                if ($isunknown(sample_hex[0]) ||
+                    $isunknown(sample_hex[N_CHUNK_W-1])) begin
+                    $display("[ERROR] Incomplete or invalid sample %0d: %s",
+                             s_id, filename);
+                    $finish;
                 end
 
-                // Record send time for latency measurement
-                start_time_fifo[fifo_tail] = $time;
-                fifo_tail = (fifo_tail + 1) % 2048;
+                // Record send time for latency measurement by sample/chunk id.
+                start_time_by_sample[s_id] = $time;
 
                 // Drive 16 consecutive batches, one per CLK_ADC cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
@@ -243,6 +304,62 @@ module tb_AI_TRIGGER_TOP;
             // After all requested samples, stop the finite test stream.
             adc_data4_flat = 768'h0;
             data_str = 0;
+            input_done = 1;
+        end
+    endtask
+
+    // =========================================================================
+    // Event monitor (CLK_ADC domain)
+    // Records the raw waveform event stream. One complete event is:
+    // previous chunk, triggered chunk, next chunk = 48 ADC batches.
+    // =========================================================================
+    task automatic event_monitor_thread;
+        integer batch_in_event;
+        begin
+            batch_in_event = 0;
+            forever begin
+                @(posedge clk_adc);
+                if (event_valid) begin
+                    $fwrite(event_csv_file, "%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
+                            event_count,
+                            event_chunk_id,
+                            event_score,
+                            batch_in_event,
+                            event_last,
+                            event_data);
+                    $fflush(event_csv_file);
+
+                    event_batch_count = event_batch_count + 1;
+                    if (event_last) begin
+                        event_count = event_count + 1;
+                        batch_in_event = 0;
+                    end else begin
+                        batch_in_event = batch_in_event + 1;
+                    end
+                end
+            end
+        end
+    endtask
+
+    // =========================================================================
+    // Event drain
+    //
+    // CNN results can arrive before the event-capture stream has finished
+    // writing the corresponding 3-chunk waveform.  Let the ADC-domain stream
+    // settle before ending the testbench and killing event_monitor_thread().
+    // =========================================================================
+    task automatic drain_event_stream;
+        integer quiet_cycles;
+        begin
+            quiet_cycles = 0;
+            while (quiet_cycles < 96) begin
+                @(posedge clk_adc);
+                if (event_valid) begin
+                    quiet_cycles = 0;
+                end else begin
+                    quiet_cycles = quiet_cycles + 1;
+                end
+            end
         end
     endtask
 
@@ -251,21 +368,29 @@ module tb_AI_TRIGGER_TOP;
     // Watches CNN_OUT_VALID, latches scores, computes accuracy.
     // =========================================================================
     task automatic output_monitor_thread;
-        integer latency_cycles;
+        integer latency_cycles, output_quiet_cycles, sample_id_int;
         reg [63:0] t_start, t_end;
         real out_float;
         integer prediction, label_val, is_correct;
         begin
-            while (received_count < num_samples) begin
+            output_quiet_cycles = 0;
+            while (!input_done || output_quiet_cycles < OUTPUT_DRAIN_CYCLES) begin
                 @(posedge clk_cnn);
 
                 if (cnn_out_valid) begin
                     t_end = $time;
+                    output_quiet_cycles = 0;
+                    sample_id_int = $unsigned({16'h0000, cnn_out_chunk_id});
 
-                    // Retrieve matching send time from FIFO
-                    if (fifo_head != fifo_tail) begin
-                        t_start  = start_time_fifo[fifo_head];
-                        fifo_head = (fifo_head + 1) % 2048;
+                    if (sample_id_int < 0 || sample_id_int >= num_samples) begin
+                        $display("[ERROR] CNN_OUT_CHUNK_ID=%0d outside sample range 0..%0d",
+                                 sample_id_int, num_samples - 1);
+                        $finish;
+                    end
+
+                    // Retrieve matching send time by DUT chunk/sample id.
+                    if (sample_id_int < NUM_SAMPLES_MAX) begin
+                        t_start = start_time_by_sample[sample_id_int];
                     end else begin
                         t_start = t_end;
                     end
@@ -275,29 +400,36 @@ module tb_AI_TRIGGER_TOP;
                     // Decode score: ap_fixed<22,11>, byte-aligned in [21:0].
                     out_float  = $itor($signed(cnn_out_data[21:0])) / 2048.0;
                     prediction = (out_float > score_threshold) ? 1 : 0;
-                    label_val  = labels[received_count];
+                    label_val  = labels[sample_id_int];
                     is_correct = (prediction == label_val) ? 1 : 0;
 
                     if (is_correct) correct_count = correct_count + 1;
                     total_latency_acc = total_latency_acc + latency_cycles;
 
                     $display("%6d | 0x%08h    | %13.6f | %5d | %4d | %10.3f",
-                             received_count, cnn_out_data, out_float,
+                             sample_id_int, cnn_out_data, out_float,
                              label_val, prediction,
                              latency_cycles * CLK_CNN_PERIOD / 1000.0);
 
                     $fwrite(csv_file, "%0d,0x%08h,%.6f,%0d,%0d,%0d,%0d,%.3f\n",
-                            received_count, cnn_out_data, out_float,
+                            sample_id_int, cnn_out_data, out_float,
                             label_val, prediction, is_correct,
                             latency_cycles,
                             latency_cycles * CLK_CNN_PERIOD / 1000.0);
                     $fflush(csv_file);
 
                     received_count = received_count + 1;
+                end else if (input_done) begin
+                    output_quiet_cycles = output_quiet_cycles + 1;
                 end
 
                 // Count overflows (sticky; sample once per CNN cycle)
-                if (chunk_overflow) overflow_count = overflow_count + 1;
+                if (chunk_overflow) begin
+                    overflow_count = overflow_count + 1;
+                    $display("[ERROR] Unexpected chunk overflow after sending %0d samples, received %0d results",
+                             sent_count, received_count);
+                    $finish;
+                end
             end
         end
     endtask
@@ -319,11 +451,17 @@ module tb_AI_TRIGGER_TOP;
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
                      cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
+            $display("Score threshold:  %.4f float", score_threshold);
             $display("-------------------------------------------------------------");
             $display("Samples sent:     %0d", sent_count);
             $display("Results received: %0d", received_count);
+            $display("Output drain:     %0d quiet CLK_CNN cycles", OUTPUT_DRAIN_CYCLES);
             $display("Chunk overflows:  %0d (should be 0 in normal operation)",
                      overflow_count);
+            $display("Events saved:     %0d", event_count);
+            $display("Event batches:    %0d", event_batch_count);
+            $display("Dropped triggers: %0d", dropped_trigger_count);
+            $display("Ring misses:      %0d", ring_miss_count);
 
             if (received_count > 0) begin
                 accuracy      = 100.0 * correct_count / received_count;
@@ -341,6 +479,7 @@ module tb_AI_TRIGGER_TOP;
             end
             $display("=============================================================");
             $display("Results saved to: %s", out_csv_path);
+            $display("Events saved to:  %s", event_csv_path);
             $display("Simulation complete.");
         end
     endtask
@@ -350,9 +489,9 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     initial begin
         repeat (TIMEOUT_CYCLES_CNN) @(posedge clk_cnn);
-        if (received_count < num_samples) begin
-            $display("\n[ERROR] Watchdog timeout! received %0d / %0d",
-                     received_count, num_samples);
+        if (!sim_done) begin
+            $display("\n[ERROR] Watchdog timeout! sent %0d / %0d, received %0d",
+                     sent_count, num_samples, received_count);
             print_summary();
             $finish;
         end

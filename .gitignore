@@ -42,6 +42,11 @@ analysis/**/*.pyc
 scripts/__pycache__/
 scripts/**/*.pyc
 
+!tests/
+!tests/**
+tests/**/__pycache__/
+tests/**/*.pyc
+
 !build/
 build/*
 !build/vivado_ooc_ai_trigger/
@@ -81,9 +86,6 @@ build/vivado_sim/*
 .bender/
 
 # Ignore large data/output files
-data/*.npy
-data/*.pdf
-analysis/**/*.npy
 analysis/**/*.txt
 ###########################################################################
 ##	VIVADO
@@ -108,6 +110,8 @@ analysis/**/*.txt
 !*.dcp
 !*.vds
 !*.pb
+# Re-exclude xsim protobuf binaries (override the !*.pb above)
+build/**/xsim/*.pb
 #All bd comments and layout coordinates are stored within .ui
 !*.ui
 !*.ooc

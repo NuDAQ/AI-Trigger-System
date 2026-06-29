@@ -34,6 +34,13 @@ file mkdir $rpt_dir
 file mkdir $dcp_dir
 file mkdir $gen_dir
 
+proc write_cdc_reports {summary_path details_path} {
+    report_cdc -file $summary_path
+    if {[catch {report_cdc -details -file $details_path} err]} {
+        puts "WARNING: detailed CDC report failed: $err"
+    }
+}
+
 set_param general.maxThreads $::RUN_BUILD_THREADS
 
 puts "INFO: repo_root = $repo_root"
@@ -126,7 +133,9 @@ report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir
 catch {report_methodology -file [file join $rpt_dir post_synth_methodology.rpt]}
 report_timing_summary -file [file join $rpt_dir post_synth_timing_summary.rpt]
 report_clock_interaction -file [file join $rpt_dir post_synth_clock_interaction.rpt]
-report_cdc -file [file join $rpt_dir post_synth_cdc.rpt]
+write_cdc_reports \
+    [file join $rpt_dir post_synth_cdc.rpt] \
+    [file join $rpt_dir post_synth_cdc_details.rpt]
 
 if {$::RUN_BUILD_IMPL} {
     puts "INFO: running OOC implementation..."
@@ -149,7 +158,9 @@ if {$::RUN_BUILD_IMPL} {
     catch {report_methodology -file [file join $rpt_dir post_route_methodology.rpt]}
     report_timing_summary -file [file join $rpt_dir post_route_timing_summary.rpt]
     report_clock_interaction -file [file join $rpt_dir post_route_clock_interaction.rpt]
-    report_cdc -file [file join $rpt_dir post_route_cdc.rpt]
+    write_cdc_reports \
+        [file join $rpt_dir post_route_cdc.rpt] \
+        [file join $rpt_dir post_route_cdc_details.rpt]
     report_route_status -file [file join $rpt_dir post_route_status.rpt]
     report_power -file [file join $rpt_dir post_route_power.rpt]
 }

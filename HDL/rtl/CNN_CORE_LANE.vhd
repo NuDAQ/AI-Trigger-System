@@ -19,11 +19,9 @@
 -- 128-beat stream finishes, not when inference output is produced.
 --
 -- Control CDC:
---   The FIFO carries data across domains.  A Gray-coded accept counter carries
---   the number of chunks whose first batch was written.  The CNN side keeps its
---   own started counter and launches whenever accepted_count > started_count.
---   This allows the FIFO to hold more than one completed chunk; a single
---   chunk_done bit would lose completions while a previous chunk is running.
+--   The wide FIFO carries waveform batches across domains.  An XPM handshake
+--   CDC primitive carries the matching chunk_id metadata.  The CNN side
+--   acknowledges metadata only when the matching FIFO data is also available.
 --
 -- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
 -- =============================================================================
@@ -31,6 +29,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library xpm;
+use xpm.vcomponents.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity CNN_CORE_LANE is
@@ -46,12 +46,14 @@ entity CNN_CORE_LANE is
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
         BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
+        CHUNK_ID     : in  chunk_id_t;
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
 
         -- Results (CLK_CNN domain)
         LANE_SCORE   : out std_logic_vector(31 downto 0);
+        LANE_CHUNK_ID: out chunk_id_t;
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -60,26 +62,6 @@ architecture rtl of CNN_CORE_LANE is
 
     constant CHUNK_CNT_W : integer := 4;
     subtype chunk_cnt_t is unsigned(CHUNK_CNT_W-1 downto 0);
-
-    function bin_to_gray(b : chunk_cnt_t) return std_logic_vector is
-        variable g : chunk_cnt_t;
-        variable shifted : chunk_cnt_t;
-    begin
-        shifted := (others => '0');
-        shifted(CHUNK_CNT_W-2 downto 0) := b(CHUNK_CNT_W-1 downto 1);
-        g := b xor shifted;
-        return std_logic_vector(g);
-    end function;
-
-    function gray_to_bin(g : std_logic_vector(CHUNK_CNT_W-1 downto 0)) return chunk_cnt_t is
-        variable b : chunk_cnt_t;
-    begin
-        b(CHUNK_CNT_W-1) := g(CHUNK_CNT_W-1);
-        for i in CHUNK_CNT_W-2 downto 0 loop
-            b(i) := b(i+1) xor g(i);
-        end loop;
-        return b;
-    end function;
 
     -- -------------------------------------------------------------------------
     -- WRAPPER_TOP (Verilog, from cnn-core-wrapper dependency)
@@ -137,9 +119,14 @@ architecture rtl of CNN_CORE_LANE is
     -- -------------------------------------------------------------------------
     signal wr_count       : integer range 0 to N_BATCHES-1 := 0;
     signal chunk_count_adc : chunk_cnt_t := (others => '0');
-    signal chunk_gray_adc  : std_logic_vector(CHUNK_CNT_W-1 downto 0) := (others => '0');
     signal chunk_busy_adc  : std_logic := '0';
     signal fifo_full_s    : std_logic;
+    type chunk_id_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of chunk_id_t;
+
+    signal chunk_id_src_send    : std_logic := '0';
+    signal chunk_id_src_rcv     : std_logic;
+    signal chunk_id_src_pending : std_logic := '0';
+    signal chunk_id_src_data    : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0) := (others => '0');
 
     -- 2-FF sync: stream_done_toggle_cnn -> CLK_ADC
     signal stream_done_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
@@ -152,12 +139,15 @@ architecture rtl of CNN_CORE_LANE is
     signal rst_cnn_ff   : std_logic_vector(1 downto 0) := "11";
     signal rst_n_cnn    : std_logic;
 
-    -- 2-FF sync: chunk_gray_adc -> CLK_CNN
-    signal chunk_gray_ff  : std_logic_vector(CHUNK_CNT_W*2-1 downto 0) := (others => '0');
-    signal chunk_count_cnn : chunk_cnt_t := (others => '0');
     signal started_count_cnn : chunk_cnt_t := (others => '0');
-    signal pending_count_cnn : chunk_cnt_t;
     signal stream_done_toggle_cnn : std_logic := '0';
+
+    signal chunk_id_dest_req  : std_logic;
+    signal chunk_id_dest_ack  : std_logic := '0';
+    signal chunk_id_dest_data : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0);
+    signal chunk_id_meta_valid : std_logic := '0';
+    signal chunk_id_meta_data  : chunk_id_t := (others => '0');
+    signal chunk_id_dest_seen  : std_logic := '0';
 
     -- synthesis translate_off
     signal dbg_adc_events : integer := 0;
@@ -190,12 +180,15 @@ architecture rtl of CNN_CORE_LANE is
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
 
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
+    signal lane_chunk_id_r : chunk_id_t := (others => '0');
     signal lane_valid_r : std_logic := '0';
+    signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
+    signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
+    signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
 
     attribute ASYNC_REG : string;
     attribute ASYNC_REG of stream_done_adc_ff : signal is "TRUE";
     attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
-    attribute ASYNC_REG of chunk_gray_ff : signal is "TRUE";
 
 begin
 
@@ -214,10 +207,19 @@ begin
             if RST = '1' then
                 wr_count       <= 0;
                 chunk_count_adc <= (others => '0');
-                chunk_gray_adc  <= (others => '0');
                 chunk_busy_adc  <= '0';
                 stream_done_seen_adc <= '0';
+                chunk_id_src_send <= '0';
+                chunk_id_src_pending <= '0';
+                chunk_id_src_data <= (others => '0');
             else
+                if chunk_id_src_rcv = '1' then
+                    chunk_id_src_send <= '0';
+                    chunk_id_src_pending <= '0';
+                else
+                    chunk_id_src_send <= chunk_id_src_pending;
+                end if;
+
                 if stream_done_adc_ff(1) /= stream_done_seen_adc then
                     stream_done_seen_adc <= stream_done_adc_ff(1);
                     chunk_busy_adc <= '0';
@@ -234,8 +236,10 @@ begin
 
                 if WR_EN = '1' then
                     if wr_count = 0 then
+                        chunk_id_src_send <= '1';
+                        chunk_id_src_data <= std_logic_vector(CHUNK_ID);
+                        chunk_id_src_pending <= '1';
                         chunk_count_adc <= chunk_count_adc + 1;
-                        chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
                         chunk_busy_adc  <= '1';
                         -- synthesis translate_off
                         if dbg_adc_events < DEBUG_EVENTS then
@@ -265,7 +269,7 @@ begin
         end if;
     end process;
 
-    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s;
+    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s or chunk_id_src_pending;
 
     -- =========================================================================
     -- CLK_CNN DOMAIN
@@ -279,18 +283,6 @@ begin
         end if;
     end process;
     rst_n_cnn <= not rst_cnn_ff(1);
-
-    -- 2-FF sync: completed-chunk Gray counter -> CLK_CNN
-    process(CLK_CNN)
-    begin
-        if rising_edge(CLK_CNN) then
-            chunk_gray_ff(CHUNK_CNT_W-1 downto 0) <= chunk_gray_adc;
-            chunk_gray_ff(CHUNK_CNT_W*2-1 downto CHUNK_CNT_W) <=
-                chunk_gray_ff(CHUNK_CNT_W-1 downto 0);
-        end if;
-    end process;
-    chunk_count_cnn <= gray_to_bin(chunk_gray_ff(CHUNK_CNT_W*2-1 downto CHUNK_CNT_W));
-    pending_count_cnn <= chunk_count_cnn - started_count_cnn;
 
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
@@ -308,19 +300,38 @@ begin
                 stream_done_toggle_cnn <= '0';
                 lane_valid_r <= '0';
                 lane_score_r <= (others => '0');
+                lane_chunk_id_r <= (others => '0');
+                score_id_wr_idx <= 0;
+                score_id_rd_idx <= 0;
+                chunk_id_dest_ack <= '0';
+                chunk_id_meta_valid <= '0';
+                chunk_id_meta_data <= (others => '0');
+                chunk_id_dest_seen <= '0';
             else
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
+                chunk_id_dest_ack <= '0';
+                if chunk_id_dest_req = '0' then
+                    chunk_id_dest_seen <= '0';
+                elsif chunk_id_dest_seen = '0' and chunk_id_meta_valid = '0' then
+                    chunk_id_meta_data <= unsigned(chunk_id_dest_data);
+                    chunk_id_meta_valid <= '1';
+                    chunk_id_dest_seen <= '1';
+                end if;
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
+                    lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
                     lane_valid_r <= '1';
+                    if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
+                        score_id_rd_idx <= 0;
+                    else
+                        score_id_rd_idx <= score_id_rd_idx + 1;
+                    end if;
                     -- synthesis translate_off
                     if dbg_cnn_events < DEBUG_EVENTS then
                         report "LANE" & integer'image(LANE_ID) &
                                " CNN output_valid score_raw=" &
                                integer'image(to_integer(signed(cnn_out_data(21 downto 0)))) &
-                               " completed=" &
-                               integer'image(to_integer(chunk_count_cnn)) &
                                " started=" &
                                integer'image(to_integer(started_count_cnn));
                         dbg_cnn_events <= dbg_cnn_events + 1;
@@ -336,24 +347,27 @@ begin
                         cnn_in_valid <= '0';
                         stream_cnt    <= N_CHUNK_BEATS_CNN;
 
-                        if pending_count_cnn /= 0 and fifo_empty = '0' then
+                        if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
                             -- Keep start asserted through the input stream; the
                             -- wrapper/HLS TB treats ap_start as a continuous
                             -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
+                            chunk_id_meta_valid <= '0';
+                            score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
+                            if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
+                                score_id_wr_idx <= 0;
+                            else
+                                score_id_wr_idx <= score_id_wr_idx + 1;
+                            end if;
                             started_count_cnn <= started_count_cnn + 1;
                             cnn_state    <= CC_STREAM;
                             -- synthesis translate_off
                             if dbg_cnn_events < DEBUG_EVENTS then
                                 report "LANE" & integer'image(LANE_ID) &
-                                       " CNN launch completed=" &
-                                       integer'image(to_integer(chunk_count_cnn)) &
                                        " started_next=" &
                                        integer'image(to_integer(started_count_cnn + 1)) &
-                                       " pending=" &
-                                       integer'image(to_integer(pending_count_cnn)) &
                                        " fifo_empty=" & std_logic'image(fifo_empty) &
                                        " ready=" & std_logic'image(cnn_ready) &
                                        " idle=" & std_logic'image(cnn_idle);
@@ -376,21 +390,24 @@ begin
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
-                                if pending_count_cnn /= 0 and fifo_empty = '0' then
+                                if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
+                                    chunk_id_meta_valid <= '0';
+                                    score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
+                                    if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
+                                        score_id_wr_idx <= 0;
+                                    else
+                                        score_id_wr_idx <= score_id_wr_idx + 1;
+                                    end if;
                                     started_count_cnn <= started_count_cnn + 1;
                                     cnn_state    <= CC_STREAM;
                                     -- synthesis translate_off
                                     if dbg_cnn_events < DEBUG_EVENTS then
                                         report "LANE" & integer'image(LANE_ID) &
-                                               " CNN stream_done+next completed=" &
-                                               integer'image(to_integer(chunk_count_cnn)) &
                                                " started_next=" &
                                                integer'image(to_integer(started_count_cnn + 1)) &
-                                               " pending=" &
-                                               integer'image(to_integer(pending_count_cnn)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
                                                " ready=" & std_logic'image(cnn_ready) &
                                                " idle=" & std_logic'image(cnn_idle);
@@ -404,8 +421,6 @@ begin
                                     -- synthesis translate_off
                                     if dbg_cnn_events < DEBUG_EVENTS then
                                         report "LANE" & integer'image(LANE_ID) &
-                                               " CNN stream_done completed=" &
-                                               integer'image(to_integer(chunk_count_cnn)) &
                                                " started=" &
                                                integer'image(to_integer(started_count_cnn)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
@@ -423,6 +438,7 @@ begin
     end process;
 
     LANE_SCORE <= lane_score_r;
+    LANE_CHUNK_ID <= lane_chunk_id_r;
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================
@@ -449,6 +465,26 @@ begin
             empty       => fifo_empty,
             wr_rst_busy => open,
             rd_rst_busy => open
+        );
+
+    u_CHUNK_ID_CDC : xpm_cdc_handshake
+        generic map (
+            DEST_EXT_HSK   => 0,
+            DEST_SYNC_FF   => 2,
+            INIT_SYNC_FF   => 0,
+            SIM_ASSERT_CHK => 0,
+            SRC_SYNC_FF    => 2,
+            WIDTH          => CHUNK_ID_WIDTH
+        )
+        port map (
+            src_clk   => CLK_ADC,
+            src_in    => chunk_id_src_data,
+            src_send  => chunk_id_src_send,
+            src_rcv   => chunk_id_src_rcv,
+            dest_clk  => CLK_CNN,
+            dest_out  => chunk_id_dest_data,
+            dest_req  => chunk_id_dest_req,
+            dest_ack  => chunk_id_dest_ack
         );
 
     -- =========================================================================
