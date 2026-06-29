@@ -56,6 +56,29 @@ AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
     fifo_async_1024_to_64   Vivado FIFO Generator IP
     WRAPPER_TOP             cnn-core-wrapper dependency
       cnn_core              cnn-core dependency
+  EVENT_CAPTURE_PATH        HDL/rtl/EVENT_CAPTURE_PATH.vhd
+    WAVEFORM_RING_BUFFER    HDL/rtl/WAVEFORM_RING_BUFFER.vhd
+    TRIGGER_DECISION        HDL/rtl/TRIGGER_DECISION.vhd
+    TRIGGER_CDC_FIFO        HDL/rtl/TRIGGER_CDC_FIFO.vhd
+    EVENT_CAPTURE_CTRL      HDL/rtl/EVENT_CAPTURE_CTRL.vhd
+```
+
+Functional data flow:
+
+```text
+ADC batches @ CLK_ADC
+  -> ADC_CHUNK_DISTRIBUTOR
+     -> 256-timestep chunks, round-robin assigned to five CNN_CORE_LANE blocks
+        -> async FIFO + chunk-id CDC per lane
+           -> WRAPPER_TOP/cnn_core @ CLK_CNN
+              -> score + chunk id
+                 -> score aggregation and threshold compare
+                    -> CNN_TRIG / CNN_OUT_DATA / CNN_OUT_CHUNK_ID
+
+The raw ADC stream is also written into WAVEFORM_RING_BUFFER.  When a CNN score
+crosses CNN_THRESH, TRIGGER_DECISION sends the trigger through TRIGGER_CDC_FIFO
+back to the ADC domain.  EVENT_CAPTURE_CTRL then reads the corresponding
+three-chunk waveform window from the ring buffer and streams it on EVENT_*.
 ```
 
 ### Clock Domains
@@ -230,6 +253,9 @@ matching the wrapper behavioral reference run.
 | `HDL/rtl/AI_TRIGGER_TOP.vhd` | Structural top level, result aggregation, and threshold comparison. |
 | `HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd` | ADC-domain chunk formation and round-robin lane assignment. |
 | `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane async FIFO, CDC counters, AXI-stream input FSM, and CNN wrapper instance. |
+| `HDL/rtl/EVENT_CAPTURE_PATH.vhd` | Trigger decision, trigger CDC, waveform ring buffer, and event readout path. |
+| `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | ADC-domain circular storage for recent raw waveform chunks. |
+| `HDL/rtl/EVENT_CAPTURE_CTRL.vhd` | ADC-domain event window readout controller. |
 | `HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd` | Mixed-language simulation wrapper for the VHDL top-level input type. |
 | `HDL/sim/tb_ai_trigger_top.sv` | SystemVerilog simulation testbench. |
 | `scripts/run_vivado_sim.py` | Batch-mode Vivado simulation launcher. |
@@ -325,7 +351,7 @@ misleading resource, timing, and IO utilization results.
 OOC build reports are written under:
 
 ```text
-build/vivado_ooc_ai_trigger_wrap/reports/
+build/vivado_ooc_ai_trigger/reports/
 ```
 
 Post-implementation SAIF and timing reports are written under:
@@ -338,18 +364,17 @@ Current routed result summary:
 
 | Metric | Current report |
 | --- | ---: |
-| Timing | WNS 1.114 ns, TNS 0, WHS 0.020 ns |
+| Timing | WNS 1.109 ns, TNS 0, WHS 0.007 ns |
 | `CLK_ADC` | 62.5 MHz |
 | `CLK_CNN` | 200 MHz target |
-| LUT | 28,315 |
-| FF | 16,283 |
-| BRAM tiles | 72.5 |
+| CLB LUT | 28,692 |
+| CLB registers | 17,886 |
+| BRAM tiles | 94 |
 | DSP | 20 |
 | IOB | 0 |
-| SAIF power | 1.380 W total, High confidence |
-| Dynamic power | 0.922 W |
-| Static power | 0.458 W |
-| SAIF net match | 99% |
+| Vectorless power | 1.676 W total, Medium confidence |
+| Dynamic power | 1.215 W |
+| Static power | 0.461 W |
 
 The hierarchical utilization report should show all five lanes present. Each lane
 contains one CNN wrapper and one async FIFO, so the CNN datapath was not
@@ -359,10 +384,12 @@ The latest SAIF hierarchy report shows dynamic power dominated by the five CNN
 lanes. Each lane is about 0.182-0.186 W, including about 0.146-0.150 W in the
 wrapper and about 0.035 W in the FIFO. The distributor is about 0.007 W.
 
-The current timing report still contains OOC boundary warnings for missing
-input and output delays. There are no unconstrained internal endpoints and all
-user-specified timing constraints are met, but the boundary assumptions should
-be reviewed before using the result as final system-level sign-off.
+The current routed timing report has no failing setup or hold endpoints and all
+user-specified timing constraints are met. The methodology and CDC reports still
+need review before system-level sign-off: the OOC constraints intentionally use
+zero-delay IO boundary assumptions, and the current reports include CDC
+warnings for the event capture path plus warnings that broad asynchronous clock
+grouping overrides several point-to-point max-delay checks.
 
 The main throughput target is one 256-sample chunk every 256 ns at the ADC
 input. At five lanes, the CNN domain should have enough margin if the single

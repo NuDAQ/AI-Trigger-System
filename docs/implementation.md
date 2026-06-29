@@ -32,9 +32,11 @@ python3 scripts/run_post_impl_saif.py
 
 ## Current Report Set
 
-The current post-implementation reports were generated from the flat-port
-wrapper design after the 170 MHz `CLK_CNN` update. They are suitable for the
-current block-level timing, resource, and SAIF power assessment.
+The current routed reports were generated from the `AI_TRIGGER_TOP`
+out-of-context block implementation after the five-lane, 200 MHz `CLK_CNN`
+updates. They are suitable for the current block-level timing and resource
+assessment. SAIF power should be regenerated after functional or activity
+profile changes.
 
 Report context:
 
@@ -43,27 +45,27 @@ Report context:
 | Vivado | 2023.2 |
 | Device | `xcku5p-ffvb676-2-e` |
 | Build style | Out-of-context block implementation |
-| CNN lanes | 7 |
+| CNN lanes | 5 |
 | `CLK_ADC` | 62.5 MHz |
-| `CLK_CNN` | 170.010 MHz |
+| `CLK_CNN` | 200.000 MHz |
 
 ## Post-Implementation Simulation
 
-The current gate-level functional simulation completed successfully with the
-existing testbench:
+The latest behavioral Vivado simulation completed successfully with the
+existing testbench and the functional threshold used for validation:
 
 | Metric | Value |
 | --- | ---: |
-| Samples sent | 16 |
-| Results received | 16 |
+| Samples sent | 1000 |
+| Results received | 1000 |
 | Chunk overflows | 0 |
-| Correct predictions | 16 / 16 |
-| Average latency | 286.6 `CLK_CNN` cycles |
-| Average latency | 1.686 us |
+| Correct predictions | 981 / 1000 |
+| Average latency | 202.0 `CLK_CNN` cycles |
+| Average latency | 1.010 us |
 
-The run used `CNN_THRESH=-96`, corresponding to a threshold of -6.0. The only
-positive label in the 16-sample window was sample 9, and the post-implementation
-simulation predicted it correctly.
+The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. The routed
+gate-level and SAIF simulations should be rerun when sign-off power or
+post-route functional evidence is needed.
 
 ## Timing Result
 
@@ -71,22 +73,23 @@ The routed timing report closes timing at the current clock targets:
 
 | Metric | Value |
 | --- | ---: |
-| WNS | 1.504 ns |
+| WNS | 1.109 ns |
 | TNS | 0 ns |
-| WHS | 0.029 ns |
+| WHS | 0.007 ns |
 | THS | 0 ns |
 
 Per-clock timing summary:
 
 | Clock | WNS | TNS | WHS | THS |
 | --- | ---: | ---: | ---: | ---: |
-| `CLK_ADC` | 12.903 ns | 0 ns | 0.030 ns | 0 ns |
-| `CLK_CNN` | 1.504 ns | 0 ns | 0.029 ns | 0 ns |
+| `CLK_ADC` | 12.266 ns | 0 ns | 0.039 ns | 0 ns |
+| `CLK_CNN` | 1.109 ns | 0 ns | 0.007 ns | 0 ns |
 
-The report still contains OOC boundary warnings for missing input and output
-delays: 779 input ports and 12 output ports. There are no unconstrained
-internal endpoints and all user-specified timing constraints are met. The
-boundary warnings should still be reviewed before system-level sign-off.
+The routed report has no failing setup or hold endpoints and all
+user-specified timing constraints are met. The methodology report still flags
+zero-delay OOC boundary assumptions and clock-group constraints that override
+several point-to-point max-delay checks. The CDC report also still needs review
+before system-level sign-off.
 
 ## Resource Result
 
@@ -94,10 +97,10 @@ The routed utilization result is:
 
 | Resource | Used | Device utilization |
 | --- | ---: | ---: |
-| LUT | 29,105 | 13.41% |
-| FF | 15,924 | 3.67% |
-| BRAM tile | 101.5 | 21.15% |
-| DSP | 77 | 4.22% |
+| CLB LUT | 28,692 | 13.22% |
+| CLB register | 17,886 | 4.12% |
+| BRAM tile | 94 | 19.58% |
+| DSP | 20 | 1.10% |
 | IOB | 0 | 0.00% |
 
 The zero IOB count is intentional for the OOC flow. It indicates that the DAQ
@@ -105,50 +108,51 @@ subsystem was not implemented as a package-level IO top.
 
 ## Hierarchy Preservation
 
-The hierarchical utilization report shows all seven generated lanes after
+The hierarchical utilization report shows all five generated lanes after
 implementation. Each lane contains one `WRAPPER_TOP` CNN wrapper, one async
-FIFO, and 11 DSPs. This is the main check that the CNN datapath was preserved
+FIFO, and 4 DSPs. This is the main check that the CNN datapath was preserved
 and not optimized away as unused logic.
 
 Typical per-lane usage:
 
 | Resource | Per lane |
 | --- | ---: |
-| LUT | about 4.1k |
-| FF | about 2.3k |
+| CLB LUT | about 5.6k |
+| CLB register | about 3.3k |
 | RAMB36/FIFO | 14 |
 | RAMB18 | 1 |
-| DSP | 11 |
+| DSP | 4 |
 
-Across seven lanes this accounts for the reported 77 DSPs.
+Across five lanes this accounts for the reported 20 DSPs.
 
 ## SAIF Power Result
 
-The current power report uses switching activity from post-implementation xsim:
+The current routed OOC power report is vectorless and should be treated as an
+estimate until a fresh SAIF run is available:
 
 | Metric | Value |
 | --- | ---: |
-| Total on-chip power | 1.414 W |
-| Dynamic power | 0.955 W |
-| Static power | 0.458 W |
-| Confidence | High |
-| Design nets matched | 98% |
+| Total on-chip power | 1.676 W |
+| Dynamic power | 1.215 W |
+| Static power | 0.461 W |
+| Confidence | Medium |
+| Design nets matched | NA |
 
 The main dynamic contributors are:
 
 | Component | Dynamic power |
 | --- | ---: |
-| Signals | 0.343 W |
-| CLB logic | 0.320 W |
-| Block RAM | 0.147 W |
-| Clocks | 0.107 W |
-| DSPs | 0.039 W |
+| CLB logic | 0.459 W |
+| Signals | 0.372 W |
+| Block RAM | 0.237 W |
+| Clocks | 0.130 W |
+| DSPs | 0.016 W |
 
 The SAIF logging script first tries explicit hierarchy scopes, then falls back
-to full-DUT recursive logging if too few objects are matched. In the current
-xsim log, the explicit scopes matched only 14 top-level DUT objects. The
-fallback logged 162,789 additional objects, for a total logged object count of
-162,803. This produced the 98% SAIF net match and High power confidence.
+to full-DUT recursive logging if too few objects are matched. Previous SAIF
+runs produced high-confidence power estimates, but those reports predate the
+latest CDC and lane-handshake fixes and should not be treated as the current
+power sign-off result.
 
 The full-DUT `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` enumeration dominated
 runtime. On the reference Ubuntu run it took about 100 minutes; the actual
@@ -161,10 +165,11 @@ Before treating the implementation as sign-off quality:
 
 1. Confirm whether the remaining input/output delay warnings are acceptable for
    this OOC block context.
-2. Confirm hierarchical utilization still shows seven CNN lanes and 77 DSPs
+2. Confirm hierarchical utilization still shows five CNN lanes and 20 DSPs
    after any RTL or constraint change.
 3. Re-run post-implementation simulation when changing the testbench stimulus,
-   threshold, lane count, or CNN clock.
-4. Re-run SAIF power after any timing, placement, or activity-profile change.
-5. For higher workload coverage, compare the 16-sample power result against a
+   threshold, lane count, CDC logic, or CNN clock.
+4. Re-run SAIF power after any timing, placement, CDC, or activity-profile
+   change.
+5. For higher workload coverage, compare a short 16-sample power run against a
    longer 32- or 64-sample SAIF run.
