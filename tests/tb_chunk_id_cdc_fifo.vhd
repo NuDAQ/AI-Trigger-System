@@ -1,0 +1,99 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use std.env.all;
+use work.AI_TRIGGER_PKG.all;
+
+entity tb_chunk_id_cdc_fifo is
+end entity tb_chunk_id_cdc_fifo;
+
+architecture sim of tb_chunk_id_cdc_fifo is
+    signal wr_clk      : std_logic := '0';
+    signal rd_clk      : std_logic := '0';
+    signal wr_rst      : std_logic := '1';
+    signal rd_rst      : std_logic := '1';
+    signal wr_valid    : std_logic := '0';
+    signal wr_ready    : std_logic;
+    signal wr_chunk_id : chunk_id_t := (others => '0');
+    signal rd_valid    : std_logic;
+    signal rd_ready    : std_logic := '0';
+    signal rd_chunk_id : chunk_id_t;
+begin
+    wr_clk <= not wr_clk after 4 ns;
+    rd_clk <= not rd_clk after 7 ns;
+
+    u_dut : entity work.CHUNK_ID_CDC_FIFO
+        port map (
+            WR_CLK      => wr_clk,
+            WR_RST      => wr_rst,
+            WR_VALID    => wr_valid,
+            WR_READY    => wr_ready,
+            WR_CHUNK_ID => wr_chunk_id,
+            RD_CLK      => rd_clk,
+            RD_RST      => rd_rst,
+            RD_VALID    => rd_valid,
+            RD_READY    => rd_ready,
+            RD_CHUNK_ID => rd_chunk_id
+        );
+
+    process
+    begin
+        wait until rising_edge(wr_clk);
+        wait until rising_edge(wr_clk);
+        wr_rst <= '0';
+        wait;
+    end process;
+
+    process
+    begin
+        wait until rising_edge(rd_clk);
+        wait until rising_edge(rd_clk);
+        rd_rst <= '0';
+        wait;
+    end process;
+
+    process
+    begin
+        wait until wr_rst = '0';
+        wait until rising_edge(wr_clk);
+
+        for i in 0 to 9 loop
+            wr_valid    <= '1';
+            wr_chunk_id <= to_unsigned(100 + i, CHUNK_ID_WIDTH);
+            wait until rising_edge(wr_clk);
+            assert wr_ready = '1'
+                report "chunk id fifo unexpectedly full during ordered write"
+                severity failure;
+        end loop;
+        wr_valid <= '0';
+        wait;
+    end process;
+
+    process
+    begin
+        wait until rd_rst = '0';
+        for i in 0 to 4 loop
+            wait until rising_edge(rd_clk);
+        end loop;
+
+        for i in 0 to 9 loop
+            wait until rising_edge(rd_clk) and rd_valid = '1';
+            wait for 1 ns;
+            assert rd_chunk_id = to_unsigned(100 + i, CHUNK_ID_WIDTH)
+                report "chunk id fifo changed chunk order under CDC"
+                severity failure;
+            rd_ready <= '1';
+            wait until rising_edge(rd_clk);
+            rd_ready <= '0';
+
+            if i = 3 then
+                for stall in 0 to 5 loop
+                    wait until rising_edge(rd_clk);
+                end loop;
+            end if;
+        end loop;
+
+        report "tb_chunk_id_cdc_fifo passed";
+        stop;
+    end process;
+end architecture sim;

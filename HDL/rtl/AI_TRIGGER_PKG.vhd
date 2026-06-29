@@ -15,6 +15,8 @@ package AI_TRIGGER_PKG is
     constant RAW_ADC_BATCH_WIDTH : integer := N_CH * N_BATCH_S * 12;
     constant WAVEFORM_RING_DEPTH : integer := 64;
     constant EVENT_CHUNKS : integer := 3;
+    constant CHUNK_ID_FIFO_ADDR_WIDTH : integer := 5;
+    constant CHUNK_ID_FIFO_DEPTH : integer := 2 ** CHUNK_ID_FIFO_ADDR_WIDTH;
     constant TRIGGER_FIFO_ADDR_WIDTH : integer := 5;
     constant TRIGGER_FIFO_DEPTH : integer := 2 ** TRIGGER_FIFO_ADDR_WIDTH;
 
