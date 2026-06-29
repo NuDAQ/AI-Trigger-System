@@ -15,6 +15,8 @@ package AI_TRIGGER_PKG is
     constant RAW_ADC_BATCH_WIDTH : integer := N_CH * N_BATCH_S * 12;
     constant WAVEFORM_RING_DEPTH : integer := 16;
     constant EVENT_CHUNKS : integer := 3;
+    constant TRIGGER_FIFO_ADDR_WIDTH : integer := 3;
+    constant TRIGGER_FIFO_DEPTH : integer := 2 ** TRIGGER_FIFO_ADDR_WIDTH;
 
     -- ADC data types: 4 channels, 16 samples per batch, 12-bit per sample
     subtype adc_sample_t  is std_logic_vector(11 downto 0);

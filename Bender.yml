@@ -18,6 +18,7 @@ dependencies:
 sources:
   - HDL/rtl/AI_TRIGGER_PKG.vhd
   - HDL/rtl/TRIGGER_DECISION.vhd
+  - HDL/rtl/TRIGGER_CDC_FIFO.vhd
   - HDL/rtl/WAVEFORM_RING_BUFFER.vhd
   - HDL/rtl/EVENT_CAPTURE_CTRL.vhd
   - HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
