@@ -1,3 +1,14 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/AI_TRIGGER_PKG.vhd" into library xil_defaultlib
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ADC_CHUNK_DISTRIBUTOR'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'CNN_CORE_LANE'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/WAVEFORM_RING_BUFFER.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'WAVEFORM_RING_BUFFER'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/TRIGGER_DECISION.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'TRIGGER_DECISION'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/TRIGGER_CDC_FIFO.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'TRIGGER_CDC_FIFO'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/EVENT_CAPTURE_CTRL.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'EVENT_CAPTURE_CTRL'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/EVENT_CAPTURE_PATH.vhd" into library xil_defaultlib

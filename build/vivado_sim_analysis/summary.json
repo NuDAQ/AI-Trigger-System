@@ -2,9 +2,9 @@
   "event_capture": {
     "exists": true,
     "path": "AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv",
-    "rows": 361,
-    "events": 6,
-    "complete_events": 6
+    "rows": 624,
+    "events": 13,
+    "complete_events": 13
   },
   "keras_comparison": {
     "model_path": "/home/work1/Works/CNN-Core-Generator/cnn_core_project/keras_model.keras",

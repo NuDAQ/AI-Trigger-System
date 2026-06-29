@@ -857,15 +857,15 @@ Score threshold:  0.0000 float
 Samples sent:     64
 Results received: 64
 Chunk overflows:  0 (should be 0 in normal operation)
-Events saved:     6
-Event batches:    361
+Events saved:     13
+Event batches:    624
 Correct:          63 / 64 (98.44%)
 -------------------------------------------------------------
 Avg latency:      201.9 CLK_CNN cycles  (1.010 us)
-Total sim time:   30.320 us
-Throughput:       2110817.94 samples/sec
+Total sim time:   46.288 us
+Throughput:       1382647.77 samples/sec
 =============================================================
 Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
-$finish called at time : 30936 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 232
+$finish called at time : 46904 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 232
