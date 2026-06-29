@@ -210,9 +210,11 @@ begin
                 chunk_id_src_pending <= '0';
                 chunk_id_src_data <= (others => '0');
             else
-                chunk_id_src_send <= '0';
                 if chunk_id_src_rcv = '1' then
+                    chunk_id_src_send <= '0';
                     chunk_id_src_pending <= '0';
+                else
+                    chunk_id_src_send <= chunk_id_src_pending;
                 end if;
 
                 if stream_done_adc_ff(1) /= stream_done_seen_adc then

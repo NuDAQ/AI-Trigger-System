@@ -424,7 +424,12 @@ module tb_AI_TRIGGER_TOP;
                 end
 
                 // Count overflows (sticky; sample once per CNN cycle)
-                if (chunk_overflow) overflow_count = overflow_count + 1;
+                if (chunk_overflow) begin
+                    overflow_count = overflow_count + 1;
+                    $display("[ERROR] Unexpected chunk overflow after sending %0d samples, received %0d results",
+                             sent_count, received_count);
+                    $finish;
+                end
             end
         end
     endtask

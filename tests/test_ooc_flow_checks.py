@@ -52,6 +52,18 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(lane, r"DEST_EXT_HSK\s+=>\s+1")
         self.assertIn("chunk_id_dest_ack", lane)
 
+    def test_lane_xpm_source_request_is_held_until_ack(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertRegex(
+            lane,
+            r"if\s+chunk_id_src_rcv\s*=\s*'1'\s+then\s+"
+            r"chunk_id_src_send\s*<=\s*'0';\s+"
+            r"chunk_id_src_pending\s*<=\s*'0';\s+"
+            r"else\s+"
+            r"chunk_id_src_send\s*<=\s*chunk_id_src_pending;",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
