@@ -101,6 +101,31 @@ set_property xsim.simulate.xsim.more_options $xsim_more_options [get_filesets si
 set_property xsim.simulate.runtime all [get_filesets sim_1]
 puts "INFO: xsim more_options = $xsim_more_options"
 
+# The committed Vivado project may contain stale CNN-core source paths from an
+# earlier local setup.  Keep generated IP files, but refresh Bender-managed
+# sources from scratch to avoid duplicate and obsolete compile inputs.
+puts "INFO: removing stale Bender-managed sources from project filesets..."
+set stale_patterns [list \
+    "$repo_root/HDL/rtl/*" \
+    "$repo_root/HDL/sim/*" \
+    "$repo_root/.bender/git/checkouts/cnn-core-wrapper-*/*" \
+    "/home/work1/Works/CNN-Core-Generator/*" \
+]
+foreach fs_name {sources_1 sim_1} {
+    if {[catch {get_filesets $fs_name} fs_obj]} {
+        continue
+    }
+    foreach file_obj [get_files -quiet -of_objects [get_filesets $fs_name]] {
+        set file_path [file normalize [get_property NAME $file_obj]]
+        foreach pattern $stale_patterns {
+            if {[string match $pattern $file_path]} {
+                catch {remove_files -fileset [get_filesets $fs_name] $file_obj}
+                break
+            }
+        }
+    }
+}
+
 # Refresh Vivado simulation sources from the current Bender lockfile.
 set sim_gen_dir [file join $repo_root build vivado_sim generated]
 file mkdir $sim_gen_dir
@@ -114,6 +139,11 @@ if {![file exists $bender_sim_script] || [file size $bender_sim_script] == 0} {
 }
 puts "INFO: sourcing Bender simulation source list: $bender_sim_script"
 source $bender_sim_script
+
+foreach vhdl_file [get_files -quiet *.vhd] {
+    catch {set_property file_type {VHDL 2008} $vhdl_file}
+}
+
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
