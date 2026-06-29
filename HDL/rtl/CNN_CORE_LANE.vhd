@@ -317,7 +317,6 @@ begin
                     chunk_id_meta_data <= unsigned(chunk_id_dest_data);
                     chunk_id_meta_valid <= '1';
                     chunk_id_dest_seen <= '1';
-                    chunk_id_dest_ack <= '1';
                 end if;
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
@@ -470,7 +469,7 @@ begin
 
     u_CHUNK_ID_CDC : xpm_cdc_handshake
         generic map (
-            DEST_EXT_HSK   => 1,
+            DEST_EXT_HSK   => 0,
             DEST_SYNC_FF   => 2,
             INIT_SYNC_FF   => 0,
             SIM_ASSERT_CHK => 0,

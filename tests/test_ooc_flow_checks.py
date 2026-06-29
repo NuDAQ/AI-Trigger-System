@@ -49,8 +49,8 @@ class OocFlowChecks(unittest.TestCase):
         self.assertNotIn("u_CHUNK_ID_FIFO", lane)
         self.assertNotIn("entity work.CHUNK_ID_CDC_FIFO", lane)
         self.assertIn("xpm_cdc_handshake", lane)
-        self.assertRegex(lane, r"DEST_EXT_HSK\s+=>\s+1")
-        self.assertIn("chunk_id_dest_ack", lane)
+        self.assertRegex(lane, r"DEST_EXT_HSK\s+=>\s+0")
+        self.assertIn("chunk_id_meta_valid", lane)
 
     def test_lane_xpm_source_request_is_held_until_ack(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
