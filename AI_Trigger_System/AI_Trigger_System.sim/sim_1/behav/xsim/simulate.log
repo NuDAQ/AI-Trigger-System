@@ -859,6 +859,8 @@ Results received: 64
 Chunk overflows:  0 (should be 0 in normal operation)
 Events saved:     13
 Event batches:    624
+Dropped triggers: 0
+Ring misses:      0
 Correct:          63 / 64 (98.44%)
 -------------------------------------------------------------
 Avg latency:      201.9 CLK_CNN cycles  (1.010 us)
@@ -868,4 +870,4 @@ Throughput:       1382647.77 samples/sec
 Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
-$finish called at time : 46904 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 232
+$finish called at time : 46904 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 236
