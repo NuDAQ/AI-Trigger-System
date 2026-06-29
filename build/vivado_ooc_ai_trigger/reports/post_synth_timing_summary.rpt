@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Sun Jun 28 21:15:23 2026
+| Date              : Sun Jun 28 21:41:12 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_timing_summary -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_timing_summary.rpt
 | Design            : AI_TRIGGER_TOP
@@ -45,7 +45,7 @@ Timing Summary Report
 Rule       Severity  Description                               Violations  
 ---------  --------  ----------------------------------------  ----------  
 TIMING-9   Warning   Unknown CDC Logic                         1           
-TIMING-24  Warning   Overridden Max delay datapath only        10          
+TIMING-24  Warning   Overridden Max delay datapath only        15          
 XDCH-2     Warning   Same min and max delay values on IO port  1735        
 
 Note: This report is based on the most recent report_methodology run and may not be up-to-date. Run report_methodology on the current design for the latest report.
@@ -145,10 +145,10 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-      2.066        0.000                      0                59987       -0.049     -162.750                   3360                59987        1.958        0.000                       0                 23853  
+      2.066        0.000                      0                59262        0.023        0.000                      0                53342        1.958        0.000                       0                 23708  
 
 
-Timing constraints are not met.
+All user specified timing constraints are met.
 
 
 ------------------------------------------------------------------------------------------------
@@ -169,8 +169,8 @@ CLK_CNN  {0.000 2.500}        5.000           200.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
 -----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-CLK_ADC            14.000        0.000                      0                11949       -0.049     -162.750                   3360                11949        7.458        0.000                       0                  1931  
-CLK_CNN             2.066        0.000                      0                48038        0.023        0.000                      0                48038        1.958        0.000                       0                 21922  
+CLK_ADC            14.000        0.000                      0                11344        0.032        0.000                      0                 5424        7.458        0.000                       0                  1811  
+CLK_CNN             2.066        0.000                      0                47918        0.023        0.000                      0                47918        1.958        0.000                       0                 21897  
 
 
 ------------------------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ From Clock:  CLK_ADC
   To Clock:  CLK_ADC
 
 Setup :            0  Failing Endpoints,  Worst Slack       14.000ns,  Total Violation        0.000ns
-Hold  :         3360  Failing Endpoints,  Worst Slack       -0.049ns,  Total Violation     -162.750ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.032ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        7.458ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
@@ -233,7 +233,7 @@ Slack (MET) :             14.000ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=1930, unset)         0.030     0.030    u_EVENT_PATH/u_capture/CLK
+                         net (fo=1810, unset)         0.030     0.030    u_EVENT_PATH/u_capture/CLK
                          FDRE                                         r  u_EVENT_PATH/u_capture/active_chunk_id_reg[5]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.077     0.107 r  u_EVENT_PATH/u_capture/active_chunk_id_reg[5]/Q
@@ -260,7 +260,7 @@ Slack (MET) :             14.000ns  (required time - arrival time)
 
                          (clock CLK_ADC rise edge)   16.000    16.000 r  
                                                       0.000    16.000 r  CLK_ADC (IN)
-                         net (fo=1930, unset)         0.021    16.021    u_EVENT_PATH/u_capture/CLK
+                         net (fo=1810, unset)         0.021    16.021    u_EVENT_PATH/u_capture/CLK
                          FDRE                                         r  u_EVENT_PATH/u_capture/state_reg[0]/C
                          clock pessimism              0.000    16.021    
                          clock uncertainty           -0.035    15.986    
@@ -277,43 +277,45 @@ Slack (MET) :             14.000ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (VIOLATED) :        -0.049ns  (arrival time - required time)
-  Source:                 ADC_DATA4[1][3][11]
-                            (input port clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
-  Destination:            gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/DINADIN[11]
-                            (rising edge-triggered cell RAMB36E2 clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
+Slack (MET) :             0.032ns  (arrival time - required time)
+  Source:                 u_EVENT_PATH/u_ring/chunk_id_reg[6]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
+  Destination:            u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/I
+                            (rising edge-triggered cell RAMD64E clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
   Path Group:             CLK_ADC
   Path Type:              Hold (Min at Fast Process Corner)
   Requirement:            0.000ns  (CLK_ADC rise@0.000ns - CLK_ADC rise@0.000ns)
-  Data Path Delay:        0.000ns  (logic 0.000ns (0.000%)  route 0.000ns (0.000%))
+  Data Path Delay:        0.113ns  (logic 0.037ns (32.743%)  route 0.076ns (67.257%))
   Logic Levels:           0  
-  Input Delay:            0.000ns
-  Clock Path Skew:        0.054ns (DCD - SCD - CPR)
-    Destination Clock Delay (DCD):    0.054ns
-    Source Clock Delay      (SCD):    0.000ns
+  Clock Path Skew:        0.026ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    0.039ns
+    Source Clock Delay      (SCD):    0.013ns
     Clock Pessimism Removal (CPR):    -0.000ns
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
-                         input delay                  0.000     0.000    
-                                                      0.000     0.000 r  ADC_DATA4[1][3][11] (IN)
-                         net (fo=48, unset)           0.000     0.000    gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/din[57]
-                         RAMB36E2                                     r  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/DINADIN[11]
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=1810, unset)         0.013     0.013    u_EVENT_PATH/u_ring/CLK
+                         FDRE                                         r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_FDRE_C_Q)         0.037     0.050 r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/Q
+                         net (fo=3, unplaced)         0.076     0.126    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/DIG
+                         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/I
   -------------------------------------------------------------------    -------------------
 
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=1930, unset)         0.054     0.054    gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/wr_clk
-                         RAMB36E2                                     r  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/CLKBWRCLK
-                         clock pessimism              0.000     0.054    
-                         RAMB36E2 (Hold_RAMB36E2_CLKBWRCLK_DINADIN[11])
-                                                     -0.005     0.049    gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram
+                         net (fo=1810, unset)         0.039     0.039    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/WCLK
+                         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/CLK
+                         clock pessimism              0.000     0.039    
+                         RAMD64E (Hold_RAMD64E_CLK_I)
+                                                      0.055     0.094    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG
   -------------------------------------------------------------------
-                         required time                         -0.049    
-                         arrival time                           0.000    
+                         required time                         -0.094    
+                         arrival time                           0.126    
   -------------------------------------------------------------------
-                         slack                                 -0.049    
+                         slack                                  0.032    
 
 
 
@@ -369,7 +371,7 @@ Slack (MET) :             2.066ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=21921, unset)        0.030     0.030    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
+                         net (fo=21896, unset)        0.030     0.030    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
                          FDRE                                         r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.077     0.107 r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/Q
@@ -406,7 +408,7 @@ Slack (MET) :             2.066ns  (required time - arrival time)
 
                          (clock CLK_CNN rise edge)    5.000     5.000 r  
                                                       0.000     5.000 r  CLK_CNN (IN)
-                         net (fo=21921, unset)        0.021     5.021    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
+                         net (fo=21896, unset)        0.021     5.021    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
                          FDRE                                         r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_reg_36979_reg[15]/C
                          clock pessimism              0.000     5.021    
                          clock uncertainty           -0.035     4.986    
@@ -442,7 +444,7 @@ Slack (MET) :             0.023ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=21921, unset)        0.013     0.013    gen_lanes[0].u_LANE/CLK_CNN
+                         net (fo=21896, unset)        0.013     0.013    gen_lanes[0].u_LANE/CLK_CNN
                          FDRE                                         r  gen_lanes[0].u_LANE/score_id_wr_idx_reg[3]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.038     0.051 r  gen_lanes[0].u_LANE/score_id_wr_idx_reg[3]/Q
@@ -452,7 +454,7 @@ Slack (MET) :             0.023ns  (arrival time - required time)
 
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=21921, unset)        0.039     0.039    gen_lanes[0].u_LANE/score_id_mem_reg_0_15_0_13/WCLK
+                         net (fo=21896, unset)        0.039     0.039    gen_lanes[0].u_LANE/score_id_mem_reg_0_15_0_13/WCLK
                          RAMD32                                       r  gen_lanes[0].u_LANE/score_id_mem_reg_0_15_0_13/RAMA/CLK
                          clock pessimism              0.000     0.039    
                          RAMD32 (Hold_RAMD32_CLK_WADR3)
