@@ -12,6 +12,7 @@ entity EVENT_CAPTURE_CTRL is
         COMMIT_CHUNK_ID  : in  chunk_id_t;
 
         TRIGGER_VALID    : in  std_logic;
+        TRIGGER_READY    : out std_logic;
         TRIGGER_CHUNK_ID : in  chunk_id_t;
         TRIGGER_SCORE    : in  std_logic_vector(31 downto 0);
 
@@ -177,4 +178,5 @@ begin
     EVENT_LAST      <= event_last_r;
     EVENT_CHUNK_ID  <= event_chunk_id_r;
     EVENT_SCORE     <= event_score_r;
+    TRIGGER_READY   <= '1' when state = IDLE and event_valid_r = '0' else '0';
 end architecture rtl;

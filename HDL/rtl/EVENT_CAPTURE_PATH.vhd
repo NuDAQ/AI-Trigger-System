@@ -99,6 +99,7 @@ begin
             CHUNK_COMMIT     => chunk_commit,
             COMMIT_CHUNK_ID  => commit_chunk_id,
             TRIGGER_VALID    => trigger_valid_adc,
+            TRIGGER_READY    => trigger_ready_adc,
             TRIGGER_CHUNK_ID => trigger_id_adc,
             TRIGGER_SCORE    => trigger_score_adc,
             RB_RD_EN         => rb_rd_en,
@@ -115,5 +116,4 @@ begin
             EVENT_SCORE      => EVENT_SCORE
         );
 
-    trigger_ready_adc <= '1';
 end architecture structural;

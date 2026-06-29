@@ -15,6 +15,7 @@ architecture sim of tb_event_capture_ctrl is
     signal chunk_commit     : std_logic;
     signal commit_chunk_id  : chunk_id_t;
     signal trigger_valid    : std_logic := '0';
+    signal trigger_ready    : std_logic;
     signal trigger_chunk_id : chunk_id_t := (others => '0');
     signal trigger_score    : std_logic_vector(31 downto 0) := (others => '0');
     signal rb_rd_en         : std_logic;
@@ -85,6 +86,7 @@ begin
             CHUNK_COMMIT     => chunk_commit,
             COMMIT_CHUNK_ID  => commit_chunk_id,
             TRIGGER_VALID    => trigger_valid,
+            TRIGGER_READY    => trigger_ready,
             TRIGGER_CHUNK_ID => trigger_chunk_id,
             TRIGGER_SCORE    => trigger_score,
             RB_RD_EN         => rb_rd_en,
