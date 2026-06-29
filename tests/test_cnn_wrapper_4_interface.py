@@ -39,10 +39,13 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
 
         self.assertRegex(top, r"CNN_THRESH\s+:\s+in\s+std_logic_vector\(31 downto 0\)")
         self.assertRegex(top, r"CNN_OUT_DATA\s+:\s+out\s+std_logic_vector\(31 downto 0\)")
+        self.assertRegex(top, r"CNN_OUT_CHUNK_ID\s+:\s+out\s+chunk_id_t")
         self.assertRegex(wrap, r"CNN_THRESH\s+:\s+in\s+std_logic_vector\(31 downto 0\)")
         self.assertRegex(wrap, r"CNN_OUT_DATA\s+:\s+out\s+std_logic_vector\(31 downto 0\)")
+        self.assertRegex(wrap, r"CNN_OUT_CHUNK_ID\s*:\s+out\s+std_logic_vector\(CHUNK_ID_WIDTH - 1 downto 0\)")
         self.assertRegex(sv_tb, r"reg\s+\[31:0\]\s+cnn_thresh")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+cnn_out_data")
+        self.assertRegex(sv_tb, r"wire\s+\[15:0\]\s+cnn_out_chunk_id")
 
     def test_lane_streams_128_bit_beats_to_wrapper(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")

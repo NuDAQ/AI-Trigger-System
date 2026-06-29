@@ -46,12 +46,14 @@ entity CNN_CORE_LANE is
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
         BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
+        CHUNK_ID     : in  chunk_id_t;
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
 
         -- Results (CLK_CNN domain)
         LANE_SCORE   : out std_logic_vector(31 downto 0);
+        LANE_CHUNK_ID: out chunk_id_t;
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -140,6 +142,8 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_gray_adc  : std_logic_vector(CHUNK_CNT_W-1 downto 0) := (others => '0');
     signal chunk_busy_adc  : std_logic := '0';
     signal fifo_full_s    : std_logic;
+    type chunk_id_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of chunk_id_t;
+    signal chunk_id_mem : chunk_id_mem_t := (others => (others => '0'));
 
     -- 2-FF sync: stream_done_toggle_cnn -> CLK_ADC
     signal stream_done_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
@@ -190,7 +194,11 @@ architecture rtl of CNN_CORE_LANE is
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
 
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
+    signal lane_chunk_id_r : chunk_id_t := (others => '0');
     signal lane_valid_r : std_logic := '0';
+    signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
+    signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
+    signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
 
     attribute ASYNC_REG : string;
     attribute ASYNC_REG of stream_done_adc_ff : signal is "TRUE";
@@ -234,6 +242,7 @@ begin
 
                 if WR_EN = '1' then
                     if wr_count = 0 then
+                        chunk_id_mem(to_integer(chunk_count_adc)) <= CHUNK_ID;
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_gray_adc  <= bin_to_gray(chunk_count_adc + 1);
                         chunk_busy_adc  <= '1';
@@ -308,12 +317,21 @@ begin
                 stream_done_toggle_cnn <= '0';
                 lane_valid_r <= '0';
                 lane_score_r <= (others => '0');
+                lane_chunk_id_r <= (others => '0');
+                score_id_wr_idx <= 0;
+                score_id_rd_idx <= 0;
             else
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
+                    lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
                     lane_valid_r <= '1';
+                    if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
+                        score_id_rd_idx <= 0;
+                    else
+                        score_id_rd_idx <= score_id_rd_idx + 1;
+                    end if;
                     -- synthesis translate_off
                     if dbg_cnn_events < DEBUG_EVENTS then
                         report "LANE" & integer'image(LANE_ID) &
@@ -343,6 +361,13 @@ begin
                             -- enable and ap_done is only an output completion.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
+                            score_id_mem(score_id_wr_idx) <=
+                                chunk_id_mem(to_integer(started_count_cnn));
+                            if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
+                                score_id_wr_idx <= 0;
+                            else
+                                score_id_wr_idx <= score_id_wr_idx + 1;
+                            end if;
                             started_count_cnn <= started_count_cnn + 1;
                             cnn_state    <= CC_STREAM;
                             -- synthesis translate_off
@@ -380,6 +405,13 @@ begin
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
+                                    score_id_mem(score_id_wr_idx) <=
+                                        chunk_id_mem(to_integer(started_count_cnn));
+                                    if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
+                                        score_id_wr_idx <= 0;
+                                    else
+                                        score_id_wr_idx <= score_id_wr_idx + 1;
+                                    end if;
                                     started_count_cnn <= started_count_cnn + 1;
                                     cnn_state    <= CC_STREAM;
                                     -- synthesis translate_off
@@ -423,6 +455,7 @@ begin
     end process;
 
     LANE_SCORE <= lane_score_r;
+    LANE_CHUNK_ID <= lane_chunk_id_r;
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================

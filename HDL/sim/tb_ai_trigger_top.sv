@@ -60,6 +60,7 @@ module tb_AI_TRIGGER_TOP;
 
     wire         cnn_trig;
     wire [31:0]  cnn_out_data;
+    wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
     wire         chunk_overflow;
 
@@ -75,6 +76,7 @@ module tb_AI_TRIGGER_TOP;
         .CNN_THRESH     (cnn_thresh),
         .CNN_TRIG       (cnn_trig),
         .CNN_OUT_DATA   (cnn_out_data),
+        .CNN_OUT_CHUNK_ID (cnn_out_chunk_id),
         .CNN_OUT_VALID  (cnn_out_valid),
         .CHUNK_OVERFLOW (chunk_overflow)
     );

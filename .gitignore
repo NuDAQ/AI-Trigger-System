@@ -42,6 +42,11 @@ analysis/**/*.pyc
 scripts/__pycache__/
 scripts/**/*.pyc
 
+!tests/
+!tests/**
+tests/**/__pycache__/
+tests/**/*.pyc
+
 !build/
 build/*
 !build/vivado_ooc_ai_trigger/

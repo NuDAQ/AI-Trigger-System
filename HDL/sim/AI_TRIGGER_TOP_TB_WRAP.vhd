@@ -27,6 +27,7 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         CNN_THRESH      : in  std_logic_vector(31 downto 0);
         CNN_TRIG        : out std_logic;
         CNN_OUT_DATA    : out std_logic_vector(31 downto 0);
+        CNN_OUT_CHUNK_ID: out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
         CNN_OUT_VALID   : out std_logic;
         CHUNK_OVERFLOW  : out std_logic
     );
@@ -35,6 +36,7 @@ end entity AI_TRIGGER_TOP_TB_WRAP;
 architecture rtl of AI_TRIGGER_TOP_TB_WRAP is
 
     signal adc_internal : adc_data4_t;
+    signal cnn_out_chunk_id_i : chunk_id_t;
 
 begin
 
@@ -58,8 +60,11 @@ begin
             CNN_THRESH     => CNN_THRESH,
             CNN_TRIG       => CNN_TRIG,
             CNN_OUT_DATA   => CNN_OUT_DATA,
+            CNN_OUT_CHUNK_ID => cnn_out_chunk_id_i,
             CNN_OUT_VALID  => CNN_OUT_VALID,
             CHUNK_OVERFLOW => CHUNK_OVERFLOW
         );
+
+    CNN_OUT_CHUNK_ID <= std_logic_vector(cnn_out_chunk_id_i);
 
 end architecture rtl;
