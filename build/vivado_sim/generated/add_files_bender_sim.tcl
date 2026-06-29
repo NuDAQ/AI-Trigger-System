@@ -39,6 +39,11 @@ add_files -norecurse -fileset [current_fileset] [list \
 
 add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/rtl/AI_TRIGGER_PKG.vhd \
+    $ROOT/HDL/rtl/TRIGGER_DECISION.vhd \
+    $ROOT/HDL/rtl/TRIGGER_CDC_FIFO.vhd \
+    $ROOT/HDL/rtl/WAVEFORM_RING_BUFFER.vhd \
+    $ROOT/HDL/rtl/EVENT_CAPTURE_CTRL.vhd \
+    $ROOT/HDL/rtl/EVENT_CAPTURE_PATH.vhd \
     $ROOT/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd \
     $ROOT/HDL/rtl/CNN_CORE_LANE.vhd \
     $ROOT/HDL/rtl/AI_TRIGGER_TOP.vhd \

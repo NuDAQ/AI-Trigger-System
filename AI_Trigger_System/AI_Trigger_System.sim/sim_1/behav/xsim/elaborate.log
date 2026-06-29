@@ -74,6 +74,11 @@ Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LAN
 Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=3)\]
 Compiling architecture rtl of entity xil_defaultlib.CNN_CORE_LANE [\CNN_CORE_LANE(lane_id=4)\]
 Compiling architecture rtl of entity xil_defaultlib.ADC_CHUNK_DISTRIBUTOR [adc_chunk_distributor_default]
+Compiling architecture rtl of entity xil_defaultlib.WAVEFORM_RING_BUFFER [waveform_ring_buffer_default]
+Compiling architecture rtl of entity xil_defaultlib.TRIGGER_DECISION [trigger_decision_default]
+Compiling architecture rtl of entity xil_defaultlib.TRIGGER_CDC_FIFO [trigger_cdc_fifo_default]
+Compiling architecture rtl of entity xil_defaultlib.EVENT_CAPTURE_CTRL [event_capture_ctrl_default]
+Compiling architecture structural of entity xil_defaultlib.EVENT_CAPTURE_PATH [event_capture_path_default]
 Compiling architecture structural of entity xil_defaultlib.AI_TRIGGER_TOP [ai_trigger_top_default]
 Compiling architecture rtl of entity xil_defaultlib.AI_TRIGGER_TOP_TB_WRAP [ai_trigger_top_tb_wrap_default]
 Compiling module xil_defaultlib.tb_AI_TRIGGER_TOP
