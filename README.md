@@ -230,9 +230,13 @@ The latest full-system behavioral check, using 1000 samples at
 Samples sent:     1000
 Results received: 1000
 Chunk overflows:  0
+Events saved:     163
+Event batches:    2608
+Dropped triggers: 0
+Ring misses:      0
 Accuracy:         981 / 1000 = 98.10%
 Avg latency:      202.0 CNN cycles = 1.010 us
-Throughput:       3.89 Mchunks/s
+Throughput:       3.34 Mchunks/s
 RTL/Keras score correlation: 0.9759
 RTL/Keras trigger agreement: 987 / 1000 = 98.70%
 RTL/Keras mean absolute score difference: 0.647
@@ -344,6 +348,26 @@ AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv
 
 The event CSV includes `event_timestamp`, a 24-bit 256 ns tick timestamp that is
 constant across all 16 batches of a triggered-chunk event.
+
+After a full-system run, validate the score CSV, event CSV, and simulation log
+with:
+
+```bash
+python3 scripts/analyze_vivado_sim_results.py \
+  AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv \
+  --log AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/simulate.log \
+  --event-csv AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv \
+  --expected-samples 1000 \
+  --expected-cores 5 \
+  --expected-cnn-mhz 200 \
+  --expected-thresh-raw 0 \
+  --max-overflows 0
+```
+
+At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
+expected to produce exactly one 16-batch event. The latest checked run has 163
+positive-score chunks and 163 complete events, with no missing, duplicate, or
+extra event chunks.
 
 ## Continuous Validation Plots
 
