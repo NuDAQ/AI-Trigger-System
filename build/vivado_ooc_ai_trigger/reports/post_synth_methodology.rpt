@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Sun Jun 28 23:11:01 2026
+| Date         : Mon Jun 29 19:37:29 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_methodology -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_methodology.rpt
 | Design       : AI_TRIGGER_TOP
@@ -23,11 +23,12 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 1751
+             Violations found: 1775
 +-----------+----------+------------------------------------------+------------+
 | Rule      | Severity | Description                              | Violations |
 +-----------+----------+------------------------------------------+------------+
 | TIMING-9  | Warning  | Unknown CDC Logic                        | 1          |
+| TIMING-18 | Warning  | Missing input or output delay            | 24         |
 | TIMING-24 | Warning  | Overridden Max delay datapath only       | 15         |
 | XDCH-2    | Warning  | Same min and max delay values on IO port | 1735       |
 +-----------+----------+------------------------------------------+------------+
@@ -37,6 +38,126 @@ Table of Contents
 TIMING-9#1 Warning
 Unknown CDC Logic  
 One or more asynchronous Clock Domain Crossing has been detected between 2 clock domains through a set_false_path or a set_clock_groups or set_max_delay -datapath_only constraint but no double-registers logic synchronizer has been found on the side of the capture clock. It is recommended to run report_cdc for a complete and detailed CDC coverage. Please consider using XPM_CDC to avoid Critical severities
+Related violations: <none>
+
+TIMING-18#1 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[0] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#2 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[10] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#3 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[11] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#4 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[12] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#5 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[13] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#6 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[14] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#7 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[15] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#8 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[16] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#9 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[17] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#10 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[18] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#11 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[19] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#12 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[1] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#13 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[20] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#14 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[21] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#15 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[22] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#16 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[23] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#17 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[2] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#18 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[3] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#19 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[4] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#20 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[5] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#21 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[6] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#22 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[7] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#23 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[8] relative to the rising and/or falling clock edge(s) of CLK_ADC.
+Related violations: <none>
+
+TIMING-18#24 Warning
+Missing input or output delay  
+An output delay is missing on EVENT_TIMESTAMP[9] relative to the rising and/or falling clock edge(s) of CLK_ADC.
 Related violations: <none>
 
 TIMING-24#1 Warning
