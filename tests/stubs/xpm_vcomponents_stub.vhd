@@ -49,6 +49,7 @@ entity xpm_cdc_handshake is
 end entity xpm_cdc_handshake;
 
 architecture sim of xpm_cdc_handshake is
+    constant DEST_REQ_HOLD_AFTER_ACK : integer := 4;
     signal src_payload      : std_logic_vector(WIDTH-1 downto 0) := (others => '0');
     signal req_toggle_src   : std_logic := '0';
     signal ack_toggle_dest  : std_logic := '0';
@@ -56,6 +57,8 @@ architecture sim of xpm_cdc_handshake is
     signal req_sync_dest    : std_logic_vector(1 downto 0) := (others => '0');
     signal dest_req_r       : std_logic := '0';
     signal dest_out_r       : std_logic_vector(WIDTH-1 downto 0) := (others => '0');
+    signal dest_drop_count  : integer range 0 to DEST_REQ_HOLD_AFTER_ACK := 0;
+    signal dest_ack_seen    : std_logic := '0';
 begin
     process(src_clk)
     begin
@@ -75,6 +78,8 @@ begin
 
             if dest_req_r = '0' and req_sync_dest(1) /= ack_toggle_dest then
                 dest_out_r <= src_payload;
+                dest_drop_count <= 0;
+                dest_ack_seen <= '0';
                 if DEST_EXT_HSK = 0 then
                     ack_toggle_dest <= req_sync_dest(1);
                     dest_req_r      <= '1';
@@ -84,9 +89,18 @@ begin
             elsif dest_req_r = '1' then
                 if DEST_EXT_HSK = 0 then
                     dest_req_r <= '0';
+                elsif dest_ack_seen = '1' then
+                    if dest_drop_count = DEST_REQ_HOLD_AFTER_ACK then
+                        dest_req_r <= '0';
+                        dest_drop_count <= 0;
+                        dest_ack_seen <= '0';
+                    else
+                        dest_drop_count <= dest_drop_count + 1;
+                    end if;
                 elsif dest_ack = '1' then
                     ack_toggle_dest <= req_sync_dest(1);
-                    dest_req_r      <= '0';
+                    dest_drop_count <= 0;
+                    dest_ack_seen <= '1';
                 end if;
             end if;
         end if;
