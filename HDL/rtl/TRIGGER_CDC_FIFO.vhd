@@ -39,6 +39,7 @@ architecture rtl of TRIGGER_CDC_FIFO is
     signal src_send    : std_logic := '0';
     signal src_rcv     : std_logic;
     signal src_pending : std_logic := '0';
+    signal src_wait_rcv_low : std_logic := '0';
 
     signal dest_data : meta_t;
     signal dest_req  : std_logic;
@@ -72,6 +73,7 @@ begin
         variable tail_v     : integer range 0 to TRIGGER_FIFO_DEPTH - 1;
         variable count_v    : integer range 0 to TRIGGER_FIFO_DEPTH;
         variable pending_v  : std_logic;
+        variable wait_low_v : std_logic;
         variable data_v     : meta_t;
         variable enqueue_v  : std_logic;
         variable enqueue_data_v : meta_t;
@@ -84,17 +86,24 @@ begin
                 src_data    <= (others => '0');
                 src_send    <= '0';
                 src_pending <= '0';
+                src_wait_rcv_low <= '0';
             else
                 head_v    := wr_head;
                 tail_v    := wr_tail;
                 count_v   := wr_count;
                 pending_v := src_pending;
+                wait_low_v := src_wait_rcv_low;
                 data_v    := src_data;
                 enqueue_v := '0';
                 enqueue_data_v := pack_meta(WR_CHUNK_ID, WR_SCORE, WR_TIMESTAMP);
 
+                if wait_low_v = '1' and src_rcv = '0' then
+                    wait_low_v := '0';
+                end if;
+
                 if src_pending = '1' and src_rcv = '1' then
                     pending_v := '0';
+                    wait_low_v := '1';
                     src_send  <= '0';
                     if count_v > 0 then
                         head_v  := inc_idx(head_v);
@@ -109,7 +118,7 @@ begin
                     enqueue_v := '1';
                 end if;
 
-                if pending_v = '0' and count_v > 0 then
+                if pending_v = '0' and wait_low_v = '0' and count_v > 0 then
                     if enqueue_v = '1' and count_v = 1 then
                         data_v := enqueue_data_v;
                     else
@@ -126,6 +135,7 @@ begin
                 wr_count    <= count_v;
                 src_data    <= data_v;
                 src_pending <= pending_v;
+                src_wait_rcv_low <= wait_low_v;
             end if;
         end if;
     end process;

@@ -50,6 +50,7 @@ end entity xpm_cdc_handshake;
 
 architecture sim of xpm_cdc_handshake is
     constant DEST_REQ_HOLD_AFTER_ACK : integer := 4;
+    constant SRC_RCV_HOLD_AFTER_ACK  : integer := 3;
     signal src_payload      : std_logic_vector(WIDTH-1 downto 0) := (others => '0');
     signal req_toggle_src   : std_logic := '0';
     signal ack_toggle_dest  : std_logic := '0';
@@ -59,14 +60,38 @@ architecture sim of xpm_cdc_handshake is
     signal dest_out_r       : std_logic_vector(WIDTH-1 downto 0) := (others => '0');
     signal dest_drop_count  : integer range 0 to DEST_REQ_HOLD_AFTER_ACK := 0;
     signal dest_ack_seen    : std_logic := '0';
+    signal src_rcv_r        : std_logic := '0';
+    signal src_rcv_count    : integer range 0 to SRC_RCV_HOLD_AFTER_ACK := 0;
+    signal src_busy         : std_logic := '0';
+    signal src_send_armed   : std_logic := '1';
 begin
     process(src_clk)
     begin
         if rising_edge(src_clk) then
             ack_sync_src <= ack_sync_src(0) & ack_toggle_dest;
-            if src_send = '1' and req_toggle_src = ack_sync_src(1) then
+            if src_send = '0' then
+                src_send_armed <= '1';
+            end if;
+
+            if src_send = '1'
+                    and src_send_armed = '1'
+                    and src_busy = '0'
+                    and req_toggle_src = ack_sync_src(1) then
                 src_payload    <= src_in;
                 req_toggle_src <= not req_toggle_src;
+                src_busy       <= '1';
+                src_send_armed <= '0';
+            end if;
+
+            if src_busy = '1' and req_toggle_src = ack_sync_src(1) then
+                src_rcv_r <= '1';
+                src_rcv_count <= SRC_RCV_HOLD_AFTER_ACK;
+                src_busy <= '0';
+            elsif src_rcv_count > 0 then
+                src_rcv_r <= '1';
+                src_rcv_count <= src_rcv_count - 1;
+            else
+                src_rcv_r <= '0';
             end if;
         end if;
     end process;
@@ -108,7 +133,7 @@ begin
         end if;
     end process;
 
-    src_rcv  <= src_send when req_toggle_src = ack_sync_src(1) else '0';
+    src_rcv  <= src_rcv_r;
     dest_req <= dest_req_r;
     dest_out <= dest_out_r;
 end architecture sim;

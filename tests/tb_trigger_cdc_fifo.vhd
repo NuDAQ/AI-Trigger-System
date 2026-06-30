@@ -139,7 +139,10 @@ begin
             wait_for_read_valid(rd_valid, 80);
             wait for 1 ns;
             assert rd_chunk_id = to_unsigned(20 + i, CHUNK_ID_WIDTH)
-                report "trigger fifo chunk id order mismatch"
+                report "trigger fifo chunk id order mismatch: expected "
+                    & integer'image(20 + i)
+                    & " got "
+                    & integer'image(to_integer(rd_chunk_id))
                 severity failure;
             assert rd_score = std_logic_vector(to_signed(1000 + i, 32))
                 report "trigger fifo score order mismatch"
