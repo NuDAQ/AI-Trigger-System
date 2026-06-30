@@ -2946,8 +2946,8 @@ Samples sent:     1000
 Results received: 1000
 Output drain:     8192 quiet CLK_CNN cycles
 Chunk overflows:  0 (should be 0 in normal operation)
-Events saved:     137
-Event batches:    2192
+Events saved:     163
+Event batches:    2608
 Dropped triggers: 0
 Ring misses:      0
 Correct:          981 / 1000 (98.10%)
@@ -2960,4 +2960,4 @@ Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
 $finish called at time : 299848 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 248
-INFO: xsimkernel Simulation Memory Usage: 165052 KB (Peak: 192684 KB), Simulation CPU Usage: 27410 ms
+INFO: xsimkernel Simulation Memory Usage: 165052 KB (Peak: 192684 KB), Simulation CPU Usage: 27270 ms
