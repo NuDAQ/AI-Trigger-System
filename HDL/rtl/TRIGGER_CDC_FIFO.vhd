@@ -43,6 +43,7 @@ architecture rtl of TRIGGER_CDC_FIFO is
     signal dest_data : meta_t;
     signal dest_req  : std_logic;
     signal dest_ack  : std_logic;
+    signal dest_ack_r : std_logic := '0';
 
     function inc_idx(i : integer) return integer is
     begin
@@ -148,9 +149,20 @@ begin
             dest_ack => dest_ack
         );
 
+    process(RD_CLK)
+    begin
+        if rising_edge(RD_CLK) then
+            if RD_RST = '1' then
+                dest_ack_r <= '0';
+            else
+                dest_ack_r <= dest_req and RD_READY;
+            end if;
+        end if;
+    end process;
+
     WR_READY     <= '1' when wr_count < TRIGGER_FIFO_DEPTH else '0';
-    RD_VALID     <= dest_req when RD_RST = '0' else '0';
-    dest_ack     <= dest_req and RD_READY and not RD_RST;
+    RD_VALID     <= dest_req and not dest_ack_r when RD_RST = '0' else '0';
+    dest_ack <= dest_ack_r;
     RD_CHUNK_ID  <= unsigned(dest_data(CHUNK_ID_WIDTH - 1 downto 0));
     RD_SCORE     <= dest_data(CHUNK_ID_WIDTH + 31 downto CHUNK_ID_WIDTH);
     RD_TIMESTAMP <= unsigned(dest_data(META_WIDTH - 1 downto CHUNK_ID_WIDTH + 32));

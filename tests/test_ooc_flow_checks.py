@@ -97,6 +97,15 @@ class OocFlowChecks(unittest.TestCase):
         self.assertNotIn("wr_gray_rd_ff", trigger_cdc)
         self.assertNotIn("bin_to_gray", trigger_cdc)
 
+    def test_trigger_cdc_dest_ack_is_registered_in_read_clock_domain(self) -> None:
+        trigger_cdc = read("HDL/rtl/TRIGGER_CDC_FIFO.vhd")
+
+        self.assertIn("signal dest_ack_r", trigger_cdc)
+        self.assertRegex(trigger_cdc, r"process\s*\(\s*RD_CLK\s*\)")
+        self.assertRegex(trigger_cdc, r"if\s+rising_edge\s*\(\s*RD_CLK\s*\)")
+        self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
+        self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
+
 
 if __name__ == "__main__":
     unittest.main()
