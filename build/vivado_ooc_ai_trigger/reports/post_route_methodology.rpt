@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Mon Jun 29 19:50:21 2026
+| Date         : Mon Jun 29 21:01:08 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_methodology -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_methodology.rpt
 | Design       : AI_TRIGGER_TOP
@@ -27,18 +27,12 @@ Table of Contents
 +-----------+----------+------------------------------------------+------------+
 | Rule      | Severity | Description                              | Violations |
 +-----------+----------+------------------------------------------+------------+
-| TIMING-9  | Warning  | Unknown CDC Logic                        | 1          |
-| TIMING-24 | Warning  | Overridden Max delay datapath only       | 15         |
+| TIMING-24 | Warning  | Overridden Max delay datapath only       | 16         |
 | XDCH-2    | Warning  | Same min and max delay values on IO port | 1759       |
 +-----------+----------+------------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
-TIMING-9#1 Warning
-Unknown CDC Logic  
-One or more asynchronous Clock Domain Crossing has been detected between 2 clock domains through a set_false_path or a set_clock_groups or set_max_delay -datapath_only constraint but no double-registers logic synchronizer has been found on the side of the capture clock. It is recommended to run report_cdc for a complete and detailed CDC coverage. Please consider using XPM_CDC to avoid Critical severities
-Related violations: <none>
-
 TIMING-24#1 Warning
 Overridden Max delay datapath only  
 An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 11). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
@@ -71,22 +65,22 @@ Related violations: <none>
 
 TIMING-24#7 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 33). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 35). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#8 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 35). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 37). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#9 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 37). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 39). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#10 Warning
 Overridden Max delay datapath only  
-An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 39). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_ADC and CLK_CNN overrides a set_max_delay -datapath_only (position 41). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 TIMING-24#11 Warning
@@ -112,6 +106,11 @@ Related violations: <none>
 TIMING-24#15 Warning
 Overridden Max delay datapath only  
 An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 29). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+Related violations: <none>
+
+TIMING-24#16 Warning
+Overridden Max delay datapath only  
+An asynchronous set_clock_groups or a set_false path (see constraint position 3 in the Timing Constraints window in Vivado IDE) between clocks CLK_CNN and CLK_ADC overrides a set_max_delay -datapath_only (position 33). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
 Related violations: <none>
 
 XDCH-2#1 Warning
