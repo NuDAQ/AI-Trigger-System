@@ -77,8 +77,10 @@ ADC batches @ CLK_ADC
 
 The raw ADC stream is also written into WAVEFORM_RING_BUFFER.  When a CNN score
 crosses CNN_THRESH, TRIGGER_DECISION sends the trigger through TRIGGER_CDC_FIFO
-back to the ADC domain.  EVENT_CAPTURE_CTRL then reads the corresponding
-triggered-chunk waveform window from the ring buffer and streams it on EVENT_*.
+back to the ADC domain. TRIGGER_CDC_FIFO keeps a 32-entry trigger descriptor
+queue in the CNN clock domain and uses an XPM handshake CDC for the descriptor
+crossing. EVENT_CAPTURE_CTRL then reads the corresponding triggered-chunk
+waveform window from the ring buffer and streams it on EVENT_*.
 ```
 
 The event waveform window is currently one chunk: the chunk whose CNN score

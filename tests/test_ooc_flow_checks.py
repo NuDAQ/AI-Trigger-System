@@ -88,6 +88,15 @@ class OocFlowChecks(unittest.TestCase):
         )
         self.assertIn("chunk_id_meta_valid <= '1';", lane)
 
+    def test_trigger_cdc_uses_xpm_handshake_not_custom_async_ram(self) -> None:
+        trigger_cdc = read("HDL/rtl/TRIGGER_CDC_FIFO.vhd")
+
+        self.assertIn("xpm_cdc_handshake", trigger_cdc)
+        self.assertRegex(trigger_cdc, r"DEST_EXT_HSK\s+=>\s+1")
+        self.assertNotIn("rd_gray_wr_ff", trigger_cdc)
+        self.assertNotIn("wr_gray_rd_ff", trigger_cdc)
+        self.assertNotIn("bin_to_gray", trigger_cdc)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library xpm;
+use xpm.vcomponents.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity TRIGGER_CDC_FIFO is
@@ -24,128 +26,132 @@ entity TRIGGER_CDC_FIFO is
 end entity TRIGGER_CDC_FIFO;
 
 architecture rtl of TRIGGER_CDC_FIFO is
-    constant PTR_WIDTH : integer := TRIGGER_FIFO_ADDR_WIDTH + 1;
-    subtype ptr_t is unsigned(PTR_WIDTH - 1 downto 0);
+    constant META_WIDTH : integer := CHUNK_ID_WIDTH + 32 + TIMESTAMP_WIDTH;
+    subtype meta_t is std_logic_vector(META_WIDTH - 1 downto 0);
+    type meta_queue_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of meta_t;
 
-    type chunk_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of chunk_id_t;
-    type score_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of std_logic_vector(31 downto 0);
-    type timestamp_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of timestamp_t;
+    signal wr_queue   : meta_queue_t := (others => (others => '0'));
+    signal wr_head    : integer range 0 to TRIGGER_FIFO_DEPTH - 1 := 0;
+    signal wr_tail    : integer range 0 to TRIGGER_FIFO_DEPTH - 1 := 0;
+    signal wr_count   : integer range 0 to TRIGGER_FIFO_DEPTH := 0;
 
-    signal chunk_mem : chunk_mem_t := (others => (others => '0'));
-    signal score_mem : score_mem_t := (others => (others => '0'));
-    signal timestamp_mem : timestamp_mem_t := (others => (others => '0'));
+    signal src_data    : meta_t := (others => '0');
+    signal src_send    : std_logic := '0';
+    signal src_rcv     : std_logic;
+    signal src_pending : std_logic := '0';
 
-    signal wr_bin  : ptr_t := (others => '0');
-    signal wr_gray : std_logic_vector(PTR_WIDTH - 1 downto 0) := (others => '0');
-    signal rd_bin  : ptr_t := (others => '0');
-    signal rd_gray : std_logic_vector(PTR_WIDTH - 1 downto 0) := (others => '0');
+    signal dest_data : meta_t;
+    signal dest_req  : std_logic;
+    signal dest_ack  : std_logic;
 
-    signal rd_gray_wr_ff : std_logic_vector(PTR_WIDTH * 2 - 1 downto 0) := (others => '0');
-    signal wr_gray_rd_ff : std_logic_vector(PTR_WIDTH * 2 - 1 downto 0) := (others => '0');
-
-    signal full_r  : std_logic := '0';
-    signal empty_r : std_logic := '1';
-
-    attribute ASYNC_REG : string;
-    attribute ASYNC_REG of rd_gray_wr_ff : signal is "TRUE";
-    attribute ASYNC_REG of wr_gray_rd_ff : signal is "TRUE";
-
-    function bin_to_gray(b : ptr_t) return std_logic_vector is
-        variable shifted : ptr_t := (others => '0');
-        variable g : ptr_t;
+    function inc_idx(i : integer) return integer is
     begin
-        shifted(PTR_WIDTH - 2 downto 0) := b(PTR_WIDTH - 1 downto 1);
-        g := b xor shifted;
-        return std_logic_vector(g);
-    end function;
-
-    function next_full(wr_next_gray : std_logic_vector(PTR_WIDTH - 1 downto 0);
-                       rd_sync_gray : std_logic_vector(PTR_WIDTH - 1 downto 0))
-        return std_logic is
-    begin
-        if wr_next_gray(PTR_WIDTH - 1 downto PTR_WIDTH - 2) =
-           not rd_sync_gray(PTR_WIDTH - 1 downto PTR_WIDTH - 2) and
-           wr_next_gray(PTR_WIDTH - 3 downto 0) = rd_sync_gray(PTR_WIDTH - 3 downto 0) then
-            return '1';
+        if i = TRIGGER_FIFO_DEPTH - 1 then
+            return 0;
         end if;
-        return '0';
+        return i + 1;
     end function;
 
-    function addr(p : ptr_t) return integer is
+    function pack_meta(
+        chunk_id  : chunk_id_t;
+        score     : std_logic_vector(31 downto 0);
+        timestamp : timestamp_t
+    ) return meta_t is
+        variable ret : meta_t := (others => '0');
     begin
-        return to_integer(p(TRIGGER_FIFO_ADDR_WIDTH - 1 downto 0));
+        ret(CHUNK_ID_WIDTH - 1 downto 0) := std_logic_vector(chunk_id);
+        ret(CHUNK_ID_WIDTH + 31 downto CHUNK_ID_WIDTH) := score;
+        ret(META_WIDTH - 1 downto CHUNK_ID_WIDTH + 32) := std_logic_vector(timestamp);
+        return ret;
     end function;
 begin
     process(WR_CLK)
-        variable wr_next_bin  : ptr_t;
-        variable wr_next_gray : std_logic_vector(PTR_WIDTH - 1 downto 0);
-        variable rd_sync_gray : std_logic_vector(PTR_WIDTH - 1 downto 0);
+        variable head_v     : integer range 0 to TRIGGER_FIFO_DEPTH - 1;
+        variable tail_v     : integer range 0 to TRIGGER_FIFO_DEPTH - 1;
+        variable count_v    : integer range 0 to TRIGGER_FIFO_DEPTH;
+        variable pending_v  : std_logic;
+        variable data_v     : meta_t;
+        variable enqueue_v  : std_logic;
+        variable enqueue_data_v : meta_t;
     begin
         if rising_edge(WR_CLK) then
             if WR_RST = '1' then
-                wr_bin        <= (others => '0');
-                wr_gray       <= (others => '0');
-                rd_gray_wr_ff <= (others => '0');
-                full_r        <= '0';
+                wr_head     <= 0;
+                wr_tail     <= 0;
+                wr_count    <= 0;
+                src_data    <= (others => '0');
+                src_send    <= '0';
+                src_pending <= '0';
             else
-                rd_gray_wr_ff(PTR_WIDTH - 1 downto 0) <= rd_gray;
-                rd_gray_wr_ff(PTR_WIDTH * 2 - 1 downto PTR_WIDTH) <=
-                    rd_gray_wr_ff(PTR_WIDTH - 1 downto 0);
-                rd_sync_gray := rd_gray_wr_ff(PTR_WIDTH * 2 - 1 downto PTR_WIDTH);
+                head_v    := wr_head;
+                tail_v    := wr_tail;
+                count_v   := wr_count;
+                pending_v := src_pending;
+                data_v    := src_data;
+                enqueue_v := '0';
+                enqueue_data_v := pack_meta(WR_CHUNK_ID, WR_SCORE, WR_TIMESTAMP);
 
-                wr_next_bin := wr_bin;
-                if WR_VALID = '1' and full_r = '0' then
-                    chunk_mem(addr(wr_bin)) <= WR_CHUNK_ID;
-                    score_mem(addr(wr_bin)) <= WR_SCORE;
-                    timestamp_mem(addr(wr_bin)) <= WR_TIMESTAMP;
-                    wr_next_bin := wr_bin + 1;
+                if src_pending = '1' and src_rcv = '1' then
+                    pending_v := '0';
+                    src_send  <= '0';
+                    if count_v > 0 then
+                        head_v  := inc_idx(head_v);
+                        count_v := count_v - 1;
+                    end if;
                 end if;
 
-                wr_next_gray := bin_to_gray(wr_next_bin);
-                wr_bin       <= wr_next_bin;
-                wr_gray      <= wr_next_gray;
-                full_r       <= next_full(wr_next_gray, rd_sync_gray);
-            end if;
-        end if;
-    end process;
-
-    process(RD_CLK)
-        variable rd_next_bin  : ptr_t;
-        variable rd_next_gray : std_logic_vector(PTR_WIDTH - 1 downto 0);
-        variable wr_sync_gray : std_logic_vector(PTR_WIDTH - 1 downto 0);
-    begin
-        if rising_edge(RD_CLK) then
-            if RD_RST = '1' then
-                rd_bin        <= (others => '0');
-                rd_gray       <= (others => '0');
-                wr_gray_rd_ff <= (others => '0');
-                empty_r       <= '1';
-            else
-                wr_gray_rd_ff(PTR_WIDTH - 1 downto 0) <= wr_gray;
-                wr_gray_rd_ff(PTR_WIDTH * 2 - 1 downto PTR_WIDTH) <=
-                    wr_gray_rd_ff(PTR_WIDTH - 1 downto 0);
-                wr_sync_gray := wr_gray_rd_ff(PTR_WIDTH * 2 - 1 downto PTR_WIDTH);
-
-                rd_next_bin := rd_bin;
-                if RD_READY = '1' and empty_r = '0' then
-                    rd_next_bin := rd_bin + 1;
+                if WR_VALID = '1' and count_v < TRIGGER_FIFO_DEPTH then
+                    wr_queue(tail_v) <= enqueue_data_v;
+                    tail_v    := inc_idx(tail_v);
+                    count_v   := count_v + 1;
+                    enqueue_v := '1';
                 end if;
 
-                rd_next_gray := bin_to_gray(rd_next_bin);
-                rd_bin       <= rd_next_bin;
-                rd_gray      <= rd_next_gray;
-                if rd_next_gray = wr_sync_gray then
-                    empty_r <= '1';
+                if pending_v = '0' and count_v > 0 then
+                    if enqueue_v = '1' and count_v = 1 then
+                        data_v := enqueue_data_v;
+                    else
+                        data_v := wr_queue(head_v);
+                    end if;
+                    pending_v := '1';
+                    src_send  <= '1';
                 else
-                    empty_r <= '0';
+                    src_send <= pending_v;
                 end if;
+
+                wr_head     <= head_v;
+                wr_tail     <= tail_v;
+                wr_count    <= count_v;
+                src_data    <= data_v;
+                src_pending <= pending_v;
             end if;
         end if;
     end process;
 
-    WR_READY    <= not full_r;
-RD_VALID    <= not empty_r;
-RD_CHUNK_ID <= chunk_mem(addr(rd_bin));
-RD_SCORE    <= score_mem(addr(rd_bin));
-RD_TIMESTAMP <= timestamp_mem(addr(rd_bin));
+    u_TRIGGER_CDC : xpm_cdc_handshake
+        generic map (
+            DEST_EXT_HSK   => 1,
+            DEST_SYNC_FF   => 2,
+            INIT_SYNC_FF   => 0,
+            SIM_ASSERT_CHK => 0,
+            SRC_SYNC_FF    => 2,
+            WIDTH          => META_WIDTH
+        )
+        port map (
+            src_clk  => WR_CLK,
+            src_in   => src_data,
+            src_send => src_send,
+            src_rcv  => src_rcv,
+            dest_clk => RD_CLK,
+            dest_out => dest_data,
+            dest_req => dest_req,
+            dest_ack => dest_ack
+        );
+
+    WR_READY     <= '1' when wr_count < TRIGGER_FIFO_DEPTH else '0';
+    RD_VALID     <= dest_req when RD_RST = '0' else '0';
+    dest_ack     <= dest_req and RD_READY and not RD_RST;
+    RD_CHUNK_ID  <= unsigned(dest_data(CHUNK_ID_WIDTH - 1 downto 0));
+    RD_SCORE     <= dest_data(CHUNK_ID_WIDTH + 31 downto CHUNK_ID_WIDTH);
+    RD_TIMESTAMP <= unsigned(dest_data(META_WIDTH - 1 downto CHUNK_ID_WIDTH + 32));
 end architecture rtl;
