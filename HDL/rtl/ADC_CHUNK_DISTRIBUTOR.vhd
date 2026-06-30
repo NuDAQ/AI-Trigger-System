@@ -42,6 +42,7 @@ entity ADC_CHUNK_DISTRIBUTOR is
         LANE_WE        : out std_logic_vector(N_LANES-1 downto 0);
         BATCH_DATA     : out std_logic_vector(N_BATCH_S*64-1 downto 0);
         CHUNK_ID       : out chunk_id_t;
+        CHUNK_TIMESTAMP : out timestamp_t;
 
         CHUNK_OVERFLOW : out std_logic
     );
@@ -52,6 +53,8 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal batch_cnt  : integer range 0 to N_BATCHES-1 := 0;
     signal lane_sel   : integer range 0 to N_LANES-1   := 0;
     signal chunk_id_r : chunk_id_t := (others => '0');
+    signal chunk_timestamp_r : timestamp_t := (others => '0');
+    signal chunk_timestamp_out_r : timestamp_t := (others => '0');
     signal drop_chunk : std_logic := '0';
     signal overflow_r : std_logic := '0';
     signal we_r       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
@@ -117,6 +120,8 @@ begin
                 batch_cnt  <= 0;
                 lane_sel   <= 0;
                 chunk_id_r <= (others => '0');
+                chunk_timestamp_r <= (others => '0');
+                chunk_timestamp_out_r <= (others => '0');
                 drop_chunk <= '0';
                 we_r       <= (others => '0');
                 overflow_r <= '0';
@@ -125,6 +130,8 @@ begin
                 overflow_r <= '0';
 
                 if DATA_STR = '1' then
+                    chunk_timestamp_out_r <= chunk_timestamp_r;
+
                     -- Decide once at the first batch of a chunk.  This avoids
                     -- partially writing a chunk if a lane becomes unavailable.
                     if batch_cnt = 0 then
@@ -167,6 +174,7 @@ begin
                             lane_sel <= lane_sel + 1;
                         end if;
                         chunk_id_r <= chunk_id_r + 1;
+                        chunk_timestamp_r <= chunk_timestamp_r + 1;
                         drop_chunk <= '0';
                         -- synthesis translate_off
                         dbg_chunk_seq <= dbg_chunk_seq + 1;
@@ -181,6 +189,7 @@ begin
 
     LANE_WE        <= we_r;
     CHUNK_ID       <= chunk_id_r;
+    CHUNK_TIMESTAMP <= chunk_timestamp_out_r;
     CHUNK_OVERFLOW <= overflow_r;
 
 end architecture rtl;

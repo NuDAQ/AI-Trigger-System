@@ -15,6 +15,7 @@ package AI_TRIGGER_PKG is
     constant RAW_ADC_BATCH_WIDTH : integer := N_CH * N_BATCH_S * 12;
     constant WAVEFORM_RING_DEPTH : integer := 64;
     constant EVENT_CHUNKS : integer := 1;
+    constant TIMESTAMP_WIDTH : integer := 24;
     constant CHUNK_ID_FIFO_ADDR_WIDTH : integer := 5;
     constant CHUNK_ID_FIFO_DEPTH : integer := 2 ** CHUNK_ID_FIFO_ADDR_WIDTH;
     constant TRIGGER_FIFO_ADDR_WIDTH : integer := 5;
@@ -25,8 +26,10 @@ package AI_TRIGGER_PKG is
     type    adc_row_t     is array (0 to N_BATCH_S - 1) of adc_sample_t;
     type    adc_data4_t   is array (0 to N_CH - 1)      of adc_row_t;
     subtype chunk_id_t     is unsigned(CHUNK_ID_WIDTH - 1 downto 0);
+    subtype timestamp_t    is unsigned(TIMESTAMP_WIDTH - 1 downto 0);
     subtype raw_adc_batch_t is std_logic_vector(RAW_ADC_BATCH_WIDTH - 1 downto 0);
     type chunk_id_arr_t is array (0 to N_LANES - 1) of chunk_id_t;
+    type timestamp_arr_t is array (0 to N_LANES - 1) of timestamp_t;
 
     -- Per-lane busy flags (CLK_ADC domain)
     type lane_busy_t is array (0 to N_LANES - 1) of std_logic;

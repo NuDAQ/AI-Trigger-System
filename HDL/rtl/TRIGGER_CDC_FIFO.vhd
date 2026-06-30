@@ -11,13 +11,15 @@ entity TRIGGER_CDC_FIFO is
         WR_READY    : out std_logic;
         WR_CHUNK_ID : in  chunk_id_t;
         WR_SCORE    : in  std_logic_vector(31 downto 0);
+        WR_TIMESTAMP : in  timestamp_t;
 
         RD_CLK      : in  std_logic;
         RD_RST      : in  std_logic;
         RD_VALID    : out std_logic;
         RD_READY    : in  std_logic;
         RD_CHUNK_ID : out chunk_id_t;
-        RD_SCORE    : out std_logic_vector(31 downto 0)
+        RD_SCORE    : out std_logic_vector(31 downto 0);
+        RD_TIMESTAMP : out timestamp_t
     );
 end entity TRIGGER_CDC_FIFO;
 
@@ -27,9 +29,11 @@ architecture rtl of TRIGGER_CDC_FIFO is
 
     type chunk_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of chunk_id_t;
     type score_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of std_logic_vector(31 downto 0);
+    type timestamp_mem_t is array (0 to TRIGGER_FIFO_DEPTH - 1) of timestamp_t;
 
     signal chunk_mem : chunk_mem_t := (others => (others => '0'));
     signal score_mem : score_mem_t := (others => (others => '0'));
+    signal timestamp_mem : timestamp_mem_t := (others => (others => '0'));
 
     signal wr_bin  : ptr_t := (others => '0');
     signal wr_gray : std_logic_vector(PTR_WIDTH - 1 downto 0) := (others => '0');
@@ -93,6 +97,7 @@ begin
                 if WR_VALID = '1' and full_r = '0' then
                     chunk_mem(addr(wr_bin)) <= WR_CHUNK_ID;
                     score_mem(addr(wr_bin)) <= WR_SCORE;
+                    timestamp_mem(addr(wr_bin)) <= WR_TIMESTAMP;
                     wr_next_bin := wr_bin + 1;
                 end if;
 
@@ -139,7 +144,8 @@ begin
     end process;
 
     WR_READY    <= not full_r;
-    RD_VALID    <= not empty_r;
-    RD_CHUNK_ID <= chunk_mem(addr(rd_bin));
-    RD_SCORE    <= score_mem(addr(rd_bin));
+RD_VALID    <= not empty_r;
+RD_CHUNK_ID <= chunk_mem(addr(rd_bin));
+RD_SCORE    <= score_mem(addr(rd_bin));
+RD_TIMESTAMP <= timestamp_mem(addr(rd_bin));
 end architecture rtl;

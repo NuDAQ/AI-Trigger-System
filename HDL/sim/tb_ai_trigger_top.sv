@@ -69,6 +69,7 @@ module tb_AI_TRIGGER_TOP;
     wire [767:0] event_data;
     wire         event_last;
     wire [15:0]  event_chunk_id;
+    wire [23:0]  event_timestamp;
     wire [31:0]  event_score;
     wire [31:0]  dropped_trigger_count;
     wire [31:0]  ring_miss_count;
@@ -93,6 +94,7 @@ module tb_AI_TRIGGER_TOP;
         .EVENT_DATA     (event_data),
         .EVENT_LAST     (event_last),
         .EVENT_CHUNK_ID (event_chunk_id),
+        .EVENT_TIMESTAMP (event_timestamp),
         .EVENT_SCORE    (event_score),
         .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
         .RING_MISS_COUNT       (ring_miss_count),
@@ -199,7 +201,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
         end
         $fwrite(event_csv_file,
-            "event_index,event_chunk_id,event_score_hex,event_batch_index,event_last,event_data_hex\n");
+            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex\n");
         $fflush(event_csv_file);
 
         // Load labels
@@ -320,9 +322,10 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid) begin
-                    $fwrite(event_csv_file, "%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
+                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
                             event_count,
                             event_chunk_id,
+                            event_timestamp,
                             event_score,
                             batch_in_event,
                             event_last,

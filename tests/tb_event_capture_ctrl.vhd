@@ -18,6 +18,7 @@ architecture sim of tb_event_capture_ctrl is
     signal trigger_ready    : std_logic;
     signal trigger_chunk_id : chunk_id_t := (others => '0');
     signal trigger_score    : std_logic_vector(31 downto 0) := (others => '0');
+    signal trigger_timestamp : timestamp_t := (others => '0');
     signal rb_rd_en         : std_logic;
     signal rb_rd_chunk_id   : chunk_id_t;
     signal rb_rd_batch_idx  : integer range 0 to N_BATCHES - 1;
@@ -29,6 +30,7 @@ architecture sim of tb_event_capture_ctrl is
     signal event_data       : raw_adc_batch_t;
     signal event_last       : std_logic;
     signal event_chunk_id   : chunk_id_t;
+    signal event_timestamp  : timestamp_t;
     signal event_score      : std_logic_vector(31 downto 0);
     signal ring_miss_count  : unsigned(31 downto 0);
 
@@ -90,6 +92,7 @@ begin
             TRIGGER_READY    => trigger_ready,
             TRIGGER_CHUNK_ID => trigger_chunk_id,
             TRIGGER_SCORE    => trigger_score,
+            TRIGGER_TIMESTAMP => trigger_timestamp,
             RB_RD_EN         => rb_rd_en,
             RB_RD_CHUNK_ID   => rb_rd_chunk_id,
             RB_RD_BATCH_IDX  => rb_rd_batch_idx,
@@ -101,6 +104,7 @@ begin
             EVENT_DATA       => event_data,
             EVENT_LAST       => event_last,
             EVENT_CHUNK_ID   => event_chunk_id,
+            EVENT_TIMESTAMP  => event_timestamp,
             EVENT_SCORE      => event_score,
             RING_MISS_COUNT  => ring_miss_count
         );
@@ -112,6 +116,7 @@ begin
         variable held_data : raw_adc_batch_t;
         variable held_last : std_logic;
         variable held_chunk_id : chunk_id_t;
+        variable held_timestamp : timestamp_t;
         variable held_score : std_logic_vector(31 downto 0);
         variable miss_before : unsigned(31 downto 0);
     begin
@@ -136,6 +141,7 @@ begin
         event_ready      <= '0';
         trigger_valid    <= '1';
         trigger_chunk_id <= to_unsigned(1, CHUNK_ID_WIDTH);
+        trigger_timestamp <= to_unsigned(1, TIMESTAMP_WIDTH);
         trigger_score    <= std_logic_vector(to_signed(2048, 32));
         wait until rising_edge(clk);
         trigger_valid <= '0';
@@ -155,6 +161,7 @@ begin
                     held_data     := event_data;
                     held_last     := event_last;
                     held_chunk_id := event_chunk_id;
+                    held_timestamp := event_timestamp;
                     held_score    := event_score;
                     for stall in 0 to 2 loop
                         wait until rising_edge(clk);
@@ -171,6 +178,9 @@ begin
                         assert event_chunk_id = held_chunk_id
                             report "event_chunk_id changed while backpressured"
                             severity failure;
+                        assert event_timestamp = held_timestamp
+                            report "event_timestamp changed while backpressured"
+                            severity failure;
                         assert event_score = held_score
                             report "event_score changed while backpressured"
                             severity failure;
@@ -185,6 +195,9 @@ begin
                     severity failure;
                 assert event_score = std_logic_vector(to_signed(2048, 32))
                     report "event metadata score mismatch"
+                    severity failure;
+                assert event_timestamp = to_unsigned(1, TIMESTAMP_WIDTH)
+                    report "event metadata timestamp mismatch"
                     severity failure;
                 assert event_data = expected_batch(chunk_expected, batch_expected)
                     report "event waveform batch mismatch seen=" & integer'image(seen) &
@@ -218,6 +231,7 @@ begin
 
         trigger_valid    <= '1';
         trigger_chunk_id <= to_unsigned(1, CHUNK_ID_WIDTH);
+        trigger_timestamp <= to_unsigned(1, TIMESTAMP_WIDTH);
         trigger_score    <= std_logic_vector(to_signed(4096, 32));
         wait until rising_edge(clk);
         trigger_valid <= '0';

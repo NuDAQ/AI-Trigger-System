@@ -17,12 +17,14 @@ architecture sim of tb_event_capture_path is
     signal score_valid      : std_logic := '0';
     signal score_data       : std_logic_vector(31 downto 0) := (others => '0');
     signal score_chunk_id   : chunk_id_t := (others => '0');
+    signal score_timestamp  : timestamp_t := (others => '0');
     signal cnn_thresh       : std_logic_vector(31 downto 0) := (others => '0');
     signal event_valid      : std_logic;
     signal event_ready      : std_logic := '1';
     signal event_data       : raw_adc_batch_t;
     signal event_last       : std_logic;
     signal event_chunk_id   : chunk_id_t;
+    signal event_timestamp  : timestamp_t;
     signal event_score      : std_logic_vector(31 downto 0);
     signal dropped_trigger_count : unsigned(31 downto 0);
     signal ring_miss_count       : unsigned(31 downto 0);
@@ -76,12 +78,14 @@ begin
             SCORE_VALID    => score_valid,
             SCORE_DATA     => score_data,
             SCORE_CHUNK_ID => score_chunk_id,
+            SCORE_TIMESTAMP => score_timestamp,
             CNN_THRESH     => cnn_thresh,
             EVENT_VALID    => event_valid,
             EVENT_READY    => event_ready,
             EVENT_DATA     => event_data,
             EVENT_LAST     => event_last,
             EVENT_CHUNK_ID => event_chunk_id,
+            EVENT_TIMESTAMP => event_timestamp,
             EVENT_SCORE    => event_score,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count,
             RING_MISS_COUNT       => ring_miss_count
@@ -118,6 +122,7 @@ begin
             score_valid    <= '1';
             score_data     <= std_logic_vector(to_signed(2048 + trig, 32));
             score_chunk_id <= to_unsigned(trig, CHUNK_ID_WIDTH);
+            score_timestamp <= to_unsigned(trig, TIMESTAMP_WIDTH);
             wait until rising_edge(clk_cnn);
             score_valid <= '0';
         end loop;
@@ -134,6 +139,9 @@ begin
                 batch_expected := seen mod N_BATCHES;
                 assert event_score = std_logic_vector(to_signed(2048 + to_integer(event_chunk_id), 32))
                     report "event path score mismatch"
+                    severity failure;
+                assert event_timestamp = to_unsigned(to_integer(event_chunk_id), TIMESTAMP_WIDTH)
+                    report "event path timestamp mismatch"
                     severity failure;
                 assert event_data = expected_batch(chunk_expected, batch_expected)
                     report "event path waveform mismatch seen=" & integer'image(seen) &

@@ -15,6 +15,7 @@ entity EVENT_CAPTURE_PATH is
         SCORE_VALID    : in  std_logic;
         SCORE_DATA     : in  std_logic_vector(31 downto 0);
         SCORE_CHUNK_ID : in  chunk_id_t;
+        SCORE_TIMESTAMP : in timestamp_t;
         CNN_THRESH     : in  std_logic_vector(31 downto 0);
 
         EVENT_VALID    : out std_logic;
@@ -22,6 +23,7 @@ entity EVENT_CAPTURE_PATH is
         EVENT_DATA     : out raw_adc_batch_t;
         EVENT_LAST     : out std_logic;
         EVENT_CHUNK_ID : out chunk_id_t;
+        EVENT_TIMESTAMP : out timestamp_t;
         EVENT_SCORE    : out std_logic_vector(31 downto 0);
 
         DROPPED_TRIGGER_COUNT : out unsigned(31 downto 0);
@@ -36,11 +38,13 @@ architecture structural of EVENT_CAPTURE_PATH is
     signal trigger_valid_cnn : std_logic;
     signal trigger_score_cnn : std_logic_vector(31 downto 0);
     signal trigger_id_cnn    : chunk_id_t;
+    signal trigger_timestamp_cnn : timestamp_t;
     signal trigger_ready_cnn : std_logic;
 
     signal trigger_valid_adc : std_logic;
     signal trigger_score_adc : std_logic_vector(31 downto 0);
     signal trigger_id_adc    : chunk_id_t;
+    signal trigger_timestamp_adc : timestamp_t;
     signal trigger_ready_adc : std_logic;
 
     signal rb_rd_en          : std_logic;
@@ -79,10 +83,12 @@ begin
             SCORE_VALID      => SCORE_VALID,
             SCORE_DATA       => SCORE_DATA,
             SCORE_CHUNK_ID   => SCORE_CHUNK_ID,
+            SCORE_TIMESTAMP  => SCORE_TIMESTAMP,
             CNN_THRESH       => CNN_THRESH,
             TRIGGER_VALID    => trigger_valid_cnn,
             TRIGGER_SCORE    => trigger_score_cnn,
-            TRIGGER_CHUNK_ID => trigger_id_cnn
+            TRIGGER_CHUNK_ID => trigger_id_cnn,
+            TRIGGER_TIMESTAMP => trigger_timestamp_cnn
         );
 
     u_trigger_cdc : entity work.TRIGGER_CDC_FIFO
@@ -93,12 +99,14 @@ begin
             WR_READY    => trigger_ready_cnn,
             WR_CHUNK_ID => trigger_id_cnn,
             WR_SCORE    => trigger_score_cnn,
+            WR_TIMESTAMP => trigger_timestamp_cnn,
             RD_CLK      => CLK_ADC,
             RD_RST      => RST,
             RD_VALID    => trigger_valid_adc,
             RD_READY    => trigger_ready_adc,
             RD_CHUNK_ID => trigger_id_adc,
-            RD_SCORE    => trigger_score_adc
+            RD_SCORE    => trigger_score_adc,
+            RD_TIMESTAMP => trigger_timestamp_adc
         );
 
     u_capture : entity work.EVENT_CAPTURE_CTRL
@@ -111,6 +119,7 @@ begin
             TRIGGER_READY    => trigger_ready_adc,
             TRIGGER_CHUNK_ID => trigger_id_adc,
             TRIGGER_SCORE    => trigger_score_adc,
+            TRIGGER_TIMESTAMP => trigger_timestamp_adc,
             RB_RD_EN         => rb_rd_en,
             RB_RD_CHUNK_ID   => rb_rd_chunk_id,
             RB_RD_BATCH_IDX  => rb_rd_batch_idx,
@@ -122,6 +131,7 @@ begin
             EVENT_DATA       => EVENT_DATA,
             EVENT_LAST       => EVENT_LAST,
             EVENT_CHUNK_ID   => EVENT_CHUNK_ID,
+            EVENT_TIMESTAMP  => EVENT_TIMESTAMP,
             EVENT_SCORE      => EVENT_SCORE,
             RING_MISS_COUNT  => RING_MISS_COUNT
         );

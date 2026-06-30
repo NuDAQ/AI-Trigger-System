@@ -83,7 +83,9 @@ triggered-chunk waveform window from the ring buffer and streams it on EVENT_*.
 
 The event waveform window is currently one chunk: the chunk whose CNN score
 crossed `CNN_THRESH`.  Each event therefore emits 16 ADC-domain batches, with
-`EVENT_LAST` asserted on the final batch.
+`EVENT_LAST` asserted on the final batch.  A 24-bit timestamp is assigned before
+chunk assembly at the same 256 ns window cadence and is carried with the
+triggered chunk to `EVENT_TIMESTAMP`.
 
 ### Clock Domains
 
@@ -95,6 +97,25 @@ crossed `CNN_THRESH`.  Each event therefore emits 16 ADC-domain batches, with
 The reset input `RST` is active high and generated in the ADC domain. Each
 `CNN_CORE_LANE` retimes reset into the CNN clock domain before driving the
 active-low reset expected by `WRAPPER_TOP`.
+
+### Event Timestamp
+
+`EVENT_TIMESTAMP` is a 24-bit relative timestamp in the ADC clock domain.  It
+increments once per 256 ns ADC window:
+
+```text
+1 timestamp tick = 16 ADC batches = 256 samples/channel = 256 ns
+```
+
+The timestamp is generated before the CNN chunk assembly/distribution path, so
+it can be shared by the current CNN trigger path and future trigger paths that
+may bypass the CNN chunk assembler.  In the current contiguous stream, the
+timestamp advances with the chunk window.  When a chunk triggers, the trigger
+descriptor carries the timestamp through the CNN-to-ADC trigger CDC FIFO, and
+the event readout presents it on every beat of the corresponding event.
+
+At 256 ns per tick, the 24-bit timestamp wraps after about 4.29 s.  Relative
+time comparisons should be performed modulo 24 bits.
 
 ### ADC Input Format
 
@@ -308,6 +329,15 @@ Simulation output is written to:
 ```text
 AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv
 ```
+
+Triggered waveform events are written to:
+
+```text
+AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv
+```
+
+The event CSV includes `event_timestamp`, a 24-bit 256 ns tick timestamp that is
+constant across all 16 batches of a triggered-chunk event.
 
 ## Continuous Validation Plots
 
