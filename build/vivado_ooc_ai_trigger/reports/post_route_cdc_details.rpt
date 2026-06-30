@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Mon Jun 29 21:39:16 2026
+| Date              : Mon Jun 29 21:51:47 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_cdc -details -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_cdc_details.rpt
 | Design            : AI_TRIGGER_TOP
@@ -14,10 +14,9 @@ Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanc
 CDC Report
 
 ID      Severity  Count  Description
-------  --------  -----  ---------------------------------------------
+------  --------  -----  ------------------------------------------
 CDC-3   Info         27  1-bit synchronized with ASYNC_REG property
-CDC-11  Critical     11  Fan-out from launch flop to destination clock
-CDC-26  Warning       2  LUTRAM read/write potential collision
+CDC-26  Warning      12  LUTRAM read/write potential collision
 
 Source Clock: CLK_CNN
 Destination Clock: CLK_ADC
@@ -47,43 +46,42 @@ Destination Clock: CLK_ADC
 CDC Type: No Common Primary Clock
 
 Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
----  ------  --------  -------------------------------------  -----  ----------  -------------  ----------------------------
-  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_ADC/sync_ff_reg[0]/PRE
+---  ------  --------  -------------------------------------  -----  ----------  -------------  ----------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  2  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  3  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  4  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  5  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  6  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_ADC/sync_ff_reg[0]/PRE
 
 Source Clock: CLK_ADC
 Destination Clock: CLK_CNN
 CDC Type: No Common Primary Clock
 
-Row  ID      Severity  Description                                    Depth  Exception            Source (From)                                                                                                                          Destination (To)
----  ------  --------  ---------------------------------------------  -----  -------------------  -------------------------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  1  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[0].u_LANE/rst_cnn_ff_reg[0]/D
-  2  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
-  3  CDC-3   Info      1-bit synchronized with ASYNC_REG property         7  Asynch Clock Groups  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
-  4  CDC-11  Critical  Fan-out from launch flop to destination clock      5  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
-  5  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[1].u_LANE/rst_cnn_ff_reg[0]/D
-  6  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
-  7  CDC-3   Info      1-bit synchronized with ASYNC_REG property         7  Asynch Clock Groups  gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
-  8  CDC-11  Critical  Fan-out from launch flop to destination clock      5  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
-  9  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[2].u_LANE/rst_cnn_ff_reg[0]/D
- 10  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
- 11  CDC-3   Info      1-bit synchronized with ASYNC_REG property         7  Asynch Clock Groups  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
- 12  CDC-11  Critical  Fan-out from launch flop to destination clock      5  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
- 13  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[3].u_LANE/rst_cnn_ff_reg[0]/D
- 14  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
- 15  CDC-3   Info      1-bit synchronized with ASYNC_REG property         7  Asynch Clock Groups  gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
- 16  CDC-11  Critical  Fan-out from launch flop to destination clock      5  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
- 17  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[4].u_LANE/rst_cnn_ff_reg[0]/D
- 18  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
- 19  CDC-3   Info      1-bit synchronized with ASYNC_REG property         7  Asynch Clock Groups  gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
- 20  CDC-11  Critical  Fan-out from launch flop to destination clock      5  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
- 21  CDC-11  Critical  Fan-out from launch flop to destination clock      2  Asynch Clock Groups  u_RST_ADC/sync_ff_reg[1]/C                                                                                                             u_EVENT_PATH/rst_cnn_ff_reg[0]/D
- 22  CDC-3   Info      1-bit synchronized with ASYNC_REG property         2  Asynch Clock Groups  u_EVENT_PATH/u_trigger_cdc/dest_ack_r_reg/C                                                                                            u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+Row  ID     Severity  Description                                 Depth  Exception            Source (From)                                                                                                                          Destination (To)
+---  -----  --------  ------------------------------------------  -----  -------------------  -------------------------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  3  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  5  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  6  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  7  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  8  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  9  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+ 10  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+ 11  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_EVENT_PATH/u_trigger_cdc/dest_ack_r_reg/C                                                                                            u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
 
 Source Clock: input port clock
 Destination Clock: CLK_CNN
 CDC Type: No Common Primary Clock
 
 Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
----  ------  --------  -------------------------------------  -----  ----------  -------------  ----------------------------
-  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_CNN/sync_ff_reg[0]/PRE
+---  ------  --------  -------------------------------------  -----  ----------  -------------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  2  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  3  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  4  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  5  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  6  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_CNN/sync_ff_reg[0]/PRE
 
