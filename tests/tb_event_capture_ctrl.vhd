@@ -133,6 +133,7 @@ begin
         end loop;
 
         data_str         <= '0';
+        event_ready      <= '0';
         trigger_valid    <= '1';
         trigger_chunk_id <= to_unsigned(1, CHUNK_ID_WIDTH);
         trigger_score    <= std_logic_vector(to_signed(2048, 32));
@@ -145,9 +146,8 @@ begin
             wait until rising_edge(clk);
         end loop;
         data_str <= '0';
-        event_ready <= '0';
 
-        while seen < EVENT_CHUNKS * N_BATCHES loop
+        while seen < N_BATCHES loop
             wait until rising_edge(clk);
             wait for 1 ns;
             if event_valid = '1' then
@@ -178,7 +178,7 @@ begin
                     event_ready <= '1';
                     wait for 1 ns;
                 end if;
-                chunk_expected := seen / N_BATCHES;
+                chunk_expected := 1;
                 batch_expected := seen mod N_BATCHES;
                 assert event_chunk_id = to_unsigned(1, CHUNK_ID_WIDTH)
                     report "event metadata chunk id mismatch"
@@ -187,9 +187,13 @@ begin
                     report "event metadata score mismatch"
                     severity failure;
                 assert event_data = expected_batch(chunk_expected, batch_expected)
-                    report "event waveform batch mismatch"
+                    report "event waveform batch mismatch seen=" & integer'image(seen) &
+                           " chunk=" & integer'image(chunk_expected) &
+                           " batch=" & integer'image(batch_expected) &
+                           " got0=" & integer'image(to_integer(unsigned(event_data(11 downto 0)))) &
+                           " exp0=" & integer'image(to_integer(unsigned(expected_batch(chunk_expected, batch_expected)(11 downto 0))))
                     severity failure;
-                if seen = EVENT_CHUNKS * N_BATCHES - 1 then
+                if seen = N_BATCHES - 1 then
                     assert event_last = '1'
                         report "last event batch must assert event_last"
                         severity failure;

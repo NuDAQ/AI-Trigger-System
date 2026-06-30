@@ -130,9 +130,7 @@ begin
             wait for 1 ns;
             if event_valid = '1' then
                 wait_cycles := 0;
-                chunk_expected := seen / N_BATCHES;
-                chunk_expected := chunk_expected - (chunk_expected / EVENT_CHUNKS) * EVENT_CHUNKS;
-                chunk_expected := chunk_expected + (to_integer(event_chunk_id) - 1);
+                chunk_expected := to_integer(event_chunk_id);
                 batch_expected := seen mod N_BATCHES;
                 assert event_score = std_logic_vector(to_signed(2048 + to_integer(event_chunk_id), 32))
                     report "event path score mismatch"

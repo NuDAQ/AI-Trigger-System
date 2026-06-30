@@ -311,7 +311,7 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     // Event monitor (CLK_ADC domain)
     // Records the raw waveform event stream. One complete event is:
-    // previous chunk, triggered chunk, next chunk = 48 ADC batches.
+    // triggered chunk = 16 ADC batches.
     // =========================================================================
     task automatic event_monitor_thread;
         integer batch_in_event;
@@ -345,7 +345,7 @@ module tb_AI_TRIGGER_TOP;
     // Event drain
     //
     // CNN results can arrive before the event-capture stream has finished
-    // writing the corresponding 3-chunk waveform.  Let the ADC-domain stream
+    // writing the corresponding triggered-chunk waveform.  Let the ADC-domain stream
     // settle before ending the testbench and killing event_monitor_thread().
     // =========================================================================
     task automatic drain_event_stream;

@@ -63,12 +63,22 @@ architecture rtl of EVENT_CAPTURE_CTRL is
         trigger_id  : chunk_id_t
     ) return boolean is
     begin
-        return have_latest = '1' and latest_id >= trigger_id + 1;
+        return have_latest = '1' and latest_id >= trigger_id;
+    end function;
+
+    function trigger_too_old(
+        have_latest : std_logic;
+        latest_id   : chunk_id_t;
+        trigger_id  : chunk_id_t
+    ) return boolean is
+    begin
+        return have_latest = '1' and
+               latest_id >= trigger_id + to_unsigned(WAVEFORM_RING_DEPTH, CHUNK_ID_WIDTH);
     end function;
 
     function capture_chunk_id(trigger_id : chunk_id_t; offset : integer) return chunk_id_t is
     begin
-        return trigger_id + to_unsigned(offset, CHUNK_ID_WIDTH) - 1;
+        return trigger_id + to_unsigned(offset, CHUNK_ID_WIDTH);
     end function;
 
     procedure advance_position(
@@ -133,7 +143,9 @@ begin
                                 active_score    <= TRIGGER_SCORE;
                                 chunk_offset    <= 0;
                                 batch_idx       <= 0;
-                                if next_chunk_ready(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
+                                if trigger_too_old(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
+                                    ring_miss_count_r <= ring_miss_count_r + 1;
+                                elsif next_chunk_ready(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
                                     state <= ISSUE_READ;
                                 else
                                     state <= WAIT_NEXT;
@@ -141,8 +153,13 @@ begin
                             end if;
 
                         when WAIT_NEXT =>
-                            if next_chunk_ready(have_commit, latest_commit_id, active_chunk_id) or
-                               (CHUNK_COMMIT = '1' and COMMIT_CHUNK_ID >= active_chunk_id + 1) then
+                            if trigger_too_old(have_commit, latest_commit_id, active_chunk_id) or
+                               (CHUNK_COMMIT = '1' and
+                                COMMIT_CHUNK_ID >= active_chunk_id + to_unsigned(WAVEFORM_RING_DEPTH, CHUNK_ID_WIDTH)) then
+                                ring_miss_count_r <= ring_miss_count_r + 1;
+                                state <= IDLE;
+                            elsif next_chunk_ready(have_commit, latest_commit_id, active_chunk_id) or
+                               (CHUNK_COMMIT = '1' and COMMIT_CHUNK_ID >= active_chunk_id) then
                                 state <= ISSUE_READ;
                             end if;
 
