@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Mon Jun 29 20:58:58 2026
+| Date              : Mon Jun 29 21:10:44 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_timing_summary -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_timing_summary.rpt
 | Design            : AI_TRIGGER_TOP
@@ -144,7 +144,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-      2.066        0.000                      0                62606        0.032        0.000                      0                56662        1.958        0.000                       0                 24898  
+      2.066        0.000                      0                62607        0.032        0.000                      0                56663        1.958        0.000                       0                 24899  
 
 
 All user specified timing constraints are met.
@@ -168,7 +168,7 @@ CLK_CNN  {0.000 2.500}        5.000           200.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
 -----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-CLK_ADC            14.322        0.000                      0                12137        0.032        0.000                      0                 6193        7.458        0.000                       0                  2211  
+CLK_ADC            14.322        0.000                      0                12138        0.032        0.000                      0                 6194        7.458        0.000                       0                  2212  
 CLK_CNN             2.066        0.000                      0                50469        0.032        0.000                      0                50469        1.958        0.000                       0                 22687  
 
 
@@ -232,7 +232,7 @@ Slack (MET) :             14.322ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2210, unset)         0.030     0.030    u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/dest_clk
+                         net (fo=2211, unset)         0.030     0.030    u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/dest_clk
                          FDRE                                         r  u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/dest_hsdata_ff_reg[9]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.077     0.107 r  u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/dest_hsdata_ff_reg[9]/Q
@@ -255,7 +255,7 @@ Slack (MET) :             14.322ns  (required time - arrival time)
 
                          (clock CLK_ADC rise edge)   16.000    16.000 r  
                                                       0.000    16.000 r  CLK_ADC (IN)
-                         net (fo=2210, unset)         0.021    16.021    u_EVENT_PATH/u_capture/CLK
+                         net (fo=2211, unset)         0.021    16.021    u_EVENT_PATH/u_capture/CLK
                          FDRE                                         r  u_EVENT_PATH/u_capture/ring_miss_count_r_reg[0]/C
                          clock pessimism              0.000    16.021    
                          clock uncertainty           -0.035    15.986    
@@ -291,7 +291,7 @@ Slack (MET) :             0.032ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2210, unset)         0.013     0.013    u_EVENT_PATH/u_ring/CLK
+                         net (fo=2211, unset)         0.013     0.013    u_EVENT_PATH/u_ring/CLK
                          FDRE                                         r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.037     0.050 r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/Q
@@ -301,7 +301,7 @@ Slack (MET) :             0.032ns  (arrival time - required time)
 
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2210, unset)         0.039     0.039    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/WCLK
+                         net (fo=2211, unset)         0.039     0.039    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/WCLK
                          RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/CLK
                          clock pessimism              0.000     0.039    
                          RAMD64E (Hold_RAMD64E_CLK_I)

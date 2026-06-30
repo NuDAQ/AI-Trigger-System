@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Mon Jun 29 21:00:23 2026
+| Date              : Mon Jun 29 21:12:09 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_timing_summary -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_place_timing_summary.rpt
 | Design            : AI_TRIGGER_TOP
@@ -144,10 +144,10 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-      1.335        0.000                      0                62511       -0.016       -0.016                      1                56567        1.958        0.000                       0                 24833  
+      1.420        0.000                      0                62512        0.000        0.000                      0                56568        1.958        0.000                       0                 24834  
 
 
-Timing constraints are not met.
+All user specified timing constraints are met.
 
 
 ------------------------------------------------------------------------------------------------
@@ -168,8 +168,8 @@ CLK_CNN  {0.000 2.500}        5.000           200.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
 -----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-CLK_ADC            13.765        0.000                      0                12067        0.021        0.000                      0                 6123        7.458        0.000                       0                  2161  
-CLK_CNN             1.335        0.000                      0                50444       -0.016       -0.016                      1                50444        1.958        0.000                       0                 22672  
+CLK_ADC            13.529        0.000                      0                12068        0.017        0.000                      0                 6124        7.458        0.000                       0                  2162  
+CLK_CNN             1.420        0.000                      0                50444        0.000        0.000                      0                50444        1.958        0.000                       0                 22672  
 
 
 ------------------------------------------------------------------------------------------------
@@ -200,27 +200,27 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  CLK_ADC
   To Clock:  CLK_ADC
 
-Setup :            0  Failing Endpoints,  Worst Slack       13.765ns,  Total Violation        0.000ns
-Hold  :            0  Failing Endpoints,  Worst Slack        0.021ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack       13.529ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.017ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        7.458ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             13.765ns  (required time - arrival time)
+Slack (MET) :             13.529ns  (required time - arrival time)
   Source:                 u_DIST/we_r_reg[2]/C
                             (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
-  Destination:            gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/ENBWREN
+  Destination:            gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/ENBWREN
                             (rising edge-triggered cell RAMB36E2 clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
   Path Group:             CLK_ADC
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            16.000ns  (CLK_ADC rise@16.000ns - CLK_ADC rise@0.000ns)
-  Data Path Delay:        1.869ns  (logic 0.218ns (11.664%)  route 1.651ns (88.336%))
+  Data Path Delay:        2.106ns  (logic 0.206ns (9.782%)  route 1.900ns (90.218%))
   Logic Levels:           2  (LUT2=2)
-  Clock Path Skew:        0.011ns (DCD - SCD + CPR)
+  Clock Path Skew:        0.012ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.040ns = ( 16.040 - 16.000 ) 
-    Source Clock Delay      (SCD):    0.029ns
+    Source Clock Delay      (SCD):    0.028ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -232,34 +232,34 @@ Slack (MET) :             13.765ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2160, unset)         0.029     0.029    u_DIST/CLK_ADC
-    SLICE_X46Y54         FDRE                                         r  u_DIST/we_r_reg[2]/C
+                         net (fo=2161, unset)         0.028     0.028    u_DIST/CLK_ADC
+    SLICE_X41Y39         FDRE                                         r  u_DIST/we_r_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X46Y54         FDRE (Prop_GFF_SLICEL_C_Q)
-                                                      0.079     0.108 r  u_DIST/we_r_reg[2]/Q
-                         net (fo=19, estimated)       0.516     0.624    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwas.wsts/wr_en
-    SLICE_X40Y49         LUT2 (Prop_B5LUT_SLICEL_I0_O)
-                                                      0.104     0.728 r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwas.wsts/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_i_5/O
-                         net (fo=9, estimated)        0.346     1.074    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/WEBWE[0]
-    SLICE_X38Y44         LUT2 (Prop_G6LUT_SLICEL_I1_O)
-                                                      0.035     1.109 r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_i_2/O
-                         net (fo=14, estimated)       0.789     1.898    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/ENA_I
-    RAMB36_X1Y6          RAMB36E2                                     r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/ENBWREN
+    SLICE_X41Y39         FDRE (Prop_CFF_SLICEL_C_Q)
+                                                      0.079     0.107 r  u_DIST/we_r_reg[2]/Q
+                         net (fo=19, estimated)       0.614     0.721    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwas.wsts/wr_en
+    SLICE_X49Y61         LUT2 (Prop_D6LUT_SLICEM_I0_O)
+                                                      0.088     0.809 r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwas.wsts/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_i_6/O
+                         net (fo=14, estimated)       0.240     1.049    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_2
+    SLICE_X49Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.039     1.088 r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram_i_2/O
+                         net (fo=14, estimated)       1.046     2.134    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/ENA_I
+    RAMB36_X2Y18         RAMB36E2                                     r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/ENBWREN
   -------------------------------------------------------------------    -------------------
 
                          (clock CLK_ADC rise edge)   16.000    16.000 r  
                                                       0.000    16.000 r  CLK_ADC (IN)
-                         net (fo=2160, unset)         0.040    16.040    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/wr_clk
-    RAMB36_X1Y6          RAMB36E2                                     r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/CLKBWRCLK
+                         net (fo=2161, unset)         0.040    16.040    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/wr_clk
+    RAMB36_X2Y18         RAMB36E2                                     r  gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/CLKBWRCLK
                          clock pessimism              0.000    16.040    
                          clock uncertainty           -0.035    16.005    
-    RAMB36_X1Y6          RAMB36E2 (Setup_RAMB36E2_RAMB36_CLKBWRCLK_ENBWREN)
-                                                     -0.342    15.663    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram
+    RAMB36_X2Y18         RAMB36E2 (Setup_RAMB36E2_RAMB36_CLKBWRCLK_ENBWREN)
+                                                     -0.342    15.663    gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram
   -------------------------------------------------------------------
                          required time                         15.663    
-                         arrival time                          -1.898    
+                         arrival time                          -2.134    
   -------------------------------------------------------------------
-                         slack                                 13.765    
+                         slack                                 13.529    
 
 
 
@@ -267,15 +267,15 @@ Slack (MET) :             13.765ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             0.021ns  (arrival time - required time)
-  Source:                 u_EVENT_PATH/u_ring/chunk_id_reg[6]/C
+Slack (MET) :             0.017ns  (arrival time - required time)
+  Source:                 u_EVENT_PATH/u_ring/chunk_id_reg[2]/C
                             (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
-  Destination:            u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/I
+  Destination:            u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMC/I
                             (rising edge-triggered cell RAMD64E clocked by CLK_ADC  {rise@0.000ns fall@8.000ns period=16.000ns})
   Path Group:             CLK_ADC
   Path Type:              Hold (Min at Fast Process Corner)
   Requirement:            0.000ns  (CLK_ADC rise@0.000ns - CLK_ADC rise@0.000ns)
-  Data Path Delay:        0.102ns  (logic 0.037ns (36.275%)  route 0.065ns (63.725%))
+  Data Path Delay:        0.098ns  (logic 0.038ns (38.776%)  route 0.060ns (61.224%))
   Logic Levels:           0  
   Clock Path Skew:        0.026ns (DCD - SCD - CPR)
     Destination Clock Delay (DCD):    0.039ns
@@ -286,27 +286,27 @@ Slack (MET) :             0.021ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2160, unset)         0.013     0.013    u_EVENT_PATH/u_ring/CLK
-    SLICE_X82Y11         FDRE                                         r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/C
+                         net (fo=2161, unset)         0.013     0.013    u_EVENT_PATH/u_ring/CLK
+    SLICE_X25Y17         FDRE                                         r  u_EVENT_PATH/u_ring/chunk_id_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X82Y11         FDRE (Prop_FFF_SLICEM_C_Q)
-                                                      0.037     0.050 r  u_EVENT_PATH/u_ring/chunk_id_reg[6]/Q
-                         net (fo=3, estimated)        0.065     0.115    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/DIG
-    SLICE_X81Y11         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/I
+    SLICE_X25Y17         FDRE (Prop_BFF_SLICEM_C_Q)
+                                                      0.038     0.051 r  u_EVENT_PATH/u_ring/chunk_id_reg[2]/Q
+                         net (fo=3, estimated)        0.060     0.111    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/DIC
+    SLICE_X25Y15         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMC/I
   -------------------------------------------------------------------    -------------------
 
                          (clock CLK_ADC rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_ADC (IN)
-                         net (fo=2160, unset)         0.039     0.039    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/WCLK
-    SLICE_X81Y11         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG/CLK
+                         net (fo=2161, unset)         0.039     0.039    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/WCLK
+    SLICE_X25Y15         RAMD64E                                      r  u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMC/CLK
                          clock pessimism              0.000     0.039    
-    SLICE_X81Y11         RAMD64E (Hold_G6LUT_SLICEM_CLK_I)
-                                                      0.055     0.094    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMG
+    SLICE_X25Y15         RAMD64E (Hold_C6LUT_SLICEM_CLK_I)
+                                                      0.055     0.094    u_EVENT_PATH/u_ring/tag_mem_reg_0_63_0_6/RAMC
   -------------------------------------------------------------------
                          required time                         -0.094    
-                         arrival time                           0.115    
+                         arrival time                           0.111    
   -------------------------------------------------------------------
-                         slack                                  0.021    
+                         slack                                  0.017    
 
 
 
@@ -320,9 +320,9 @@ Period(ns):         16.000
 Sources:            { CLK_ADC }
 
 Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
-Min Period        n/a     RAMB36E2/CLKARDCLK  n/a            1.569         16.000      14.431     RAMB36_X6Y2   u_EVENT_PATH/u_ring/batch_mem_reg_bram_0/CLKARDCLK
-Low Pulse Width   Slow    RAMB18E2/CLKBWRCLK  n/a            0.542         8.000       7.458      RAMB18_X0Y20  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKBWRCLK
-High Pulse Width  Slow    RAMB18E2/CLKBWRCLK  n/a            0.542         8.000       7.458      RAMB18_X0Y20  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKBWRCLK
+Min Period        n/a     RAMB36E2/CLKARDCLK  n/a            1.569         16.000      14.431     RAMB36_X1Y8   u_EVENT_PATH/u_ring/batch_mem_reg_bram_0/CLKARDCLK
+Low Pulse Width   Slow    RAMB18E2/CLKBWRCLK  n/a            0.542         8.000       7.458      RAMB18_X6Y14  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKBWRCLK
+High Pulse Width  Slow    RAMB18E2/CLKBWRCLK  n/a            0.542         8.000       7.458      RAMB18_X6Y14  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKBWRCLK
 
 
 
@@ -330,27 +330,27 @@ High Pulse Width  Slow    RAMB18E2/CLKBWRCLK  n/a            0.542         8.000
 From Clock:  CLK_CNN
   To Clock:  CLK_CNN
 
-Setup :            0  Failing Endpoints,  Worst Slack        1.335ns,  Total Violation        0.000ns
-Hold  :            1  Failing Endpoint ,  Worst Slack       -0.016ns,  Total Violation       -0.016ns
+Setup :            0  Failing Endpoints,  Worst Slack        1.420ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.000ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        1.958ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
 
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             1.335ns  (required time - arrival time)
+Slack (MET) :             1.420ns  (required time - arrival time)
   Source:                 gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/C
                             (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
-  Destination:            gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_20_reg_36964_reg[15]/D
+  Destination:            gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_reg_36979_reg[15]/D
                             (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
   Path Group:             CLK_CNN
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
-  Data Path Delay:        3.646ns  (logic 1.063ns (29.155%)  route 2.583ns (70.845%))
-  Logic Levels:           12  (CARRY8=3 LUT2=3 LUT6=5 MUXF7=1)
-  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
-    Source Clock Delay      (SCD):    0.030ns
+  Data Path Delay:        3.562ns  (logic 1.107ns (31.078%)  route 2.455ns (68.922%))
+  Logic Levels:           12  (CARRY8=3 LUT2=3 LUT5=1 LUT6=4 MUXF7=1)
+  Clock Path Skew:        -0.008ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.028ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -362,64 +362,64 @@ Slack (MET) :             1.335ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=22671, unset)        0.030     0.030    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
-    SLICE_X75Y19         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/C
+                         net (fo=22671, unset)        0.028     0.028    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
+    SLICE_X70Y52         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X75Y19         FDRE (Prop_EFF2_SLICEM_C_Q)
-                                                      0.079     0.109 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/Q
-                         net (fo=618, estimated)      0.643     0.752    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/sel[5]
-    SLICE_X65Y34         LUT6 (Prop_H6LUT_SLICEL_I0_O)
-                                                      0.150     0.902 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_17/O
-                         net (fo=1, estimated)        0.134     1.036    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_17_n_5
-    SLICE_X65Y33         LUT6 (Prop_H6LUT_SLICEL_I0_O)
-                                                      0.090     1.126 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_8/O
-                         net (fo=1, estimated)        0.269     1.395    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_8_n_5
-    SLICE_X66Y30         LUT6 (Prop_C6LUT_SLICEM_I5_O)
-                                                      0.037     1.432 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_2/O
-                         net (fo=1, routed)           0.021     1.453    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0_i_2_n_5
-    SLICE_X66Y30         MUXF7 (Prop_F7MUX_CD_SLICEM_I1_O)
-                                                      0.068     1.521 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U44/dout[0]_INST_0/O
-                         net (fo=15, estimated)       0.513     2.034    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/din1[0]
-    SLICE_X72Y39         LUT2 (Prop_F6LUT_SLICEL_I1_O)
-                                                      0.049     2.083 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0_i_19/O
-                         net (fo=1, estimated)        0.273     2.356    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0_i_19_n_5
-    SLICE_X74Y38         LUT6 (Prop_E6LUT_SLICEM_I1_O)
-                                                      0.037     2.393 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0_i_11/O
-                         net (fo=1, routed)           0.014     2.407    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0_i_11_n_5
-    SLICE_X74Y38         CARRY8 (Prop_CARRY8_SLICEM_S[4]_CO[7])
-                                                      0.156     2.563 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0/CO[7]
-                         net (fo=1, estimated)        0.026     2.589    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[0]_INST_0_n_5
-    SLICE_X74Y39         CARRY8 (Prop_CARRY8_SLICEM_CI_O[2])
-                                                      0.067     2.656 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_11/O[2]
-                         net (fo=3, estimated)        0.186     2.842    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_11_n_18
-    SLICE_X73Y38         LUT2 (Prop_E6LUT_SLICEL_I0_O)
-                                                      0.035     2.877 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_14/O
-                         net (fo=2, estimated)        0.228     3.105    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_14_n_5
-    SLICE_X72Y40         LUT6 (Prop_H6LUT_SLICEL_I0_O)
-                                                      0.036     3.141 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_4/O
-                         net (fo=2, estimated)        0.238     3.379    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_4_n_5
-    SLICE_X74Y41         LUT2 (Prop_A6LUT_SLICEM_I0_O)
-                                                      0.053     3.432 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_9/O
-                         net (fo=1, routed)           0.013     3.445    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0_i_9_n_5
-    SLICE_X74Y41         CARRY8 (Prop_CARRY8_SLICEM_S[0]_O[4])
-                                                      0.206     3.651 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U45/dout[11]_INST_0/O[4]
-                         net (fo=1, routed)           0.025     3.676    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_20_fu_12919_p2[15]
-    SLICE_X74Y41         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_20_reg_36964_reg[15]/D
+    SLICE_X70Y52         FDRE (Prop_BFF2_SLICEL_C_Q)
+                                                      0.080     0.108 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/add_ln118_reg_36943_pp0_iter2_reg_reg[5]/Q
+                         net (fo=618, estimated)      0.721     0.829    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/sel[5]
+    SLICE_X82Y67         LUT6 (Prop_D6LUT_SLICEM_I0_O)
+                                                      0.145     0.974 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_14/O
+                         net (fo=1, routed)           0.025     0.999    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_14_n_5
+    SLICE_X82Y67         MUXF7 (Prop_F7MUX_CD_SLICEM_I0_O)
+                                                      0.069     1.068 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_6/O
+                         net (fo=1, estimated)        0.187     1.255    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_6_n_5
+    SLICE_X82Y68         LUT6 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.101     1.356 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_2/O
+                         net (fo=4, estimated)        0.274     1.630    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[6]_INST_0_i_2_n_5
+    SLICE_X80Y69         LUT5 (Prop_G6LUT_SLICEL_I2_O)
+                                                      0.050     1.680 f  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/sparsemux_2353_11_7_1_1_U49/dout[4]_INST_0/O
+                         net (fo=16, estimated)       0.387     2.067    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/din1[4]
+    SLICE_X79Y69         LUT2 (Prop_D5LUT_SLICEM_I1_O)
+                                                      0.110     2.177 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_46/O
+                         net (fo=1, estimated)        0.249     2.426    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_46_n_5
+    SLICE_X77Y70         LUT6 (Prop_F6LUT_SLICEL_I1_O)
+                                                      0.035     2.461 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_38/O
+                         net (fo=1, routed)           0.011     2.472    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_38_n_5
+    SLICE_X77Y70         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
+                                                      0.155     2.627 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_13/CO[7]
+                         net (fo=1, estimated)        0.026     2.653    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_13_n_5
+    SLICE_X77Y71         CARRY8 (Prop_CARRY8_SLICEL_CI_O[0])
+                                                      0.056     2.709 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_10/O[0]
+                         net (fo=3, estimated)        0.174     2.883    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_10_n_20
+    SLICE_X77Y71         LUT2 (Prop_F6LUT_SLICEL_I1_O)
+                                                      0.035     2.918 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_12/O
+                         net (fo=2, estimated)        0.185     3.103    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_12_n_5
+    SLICE_X76Y70         LUT6 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.035     3.138 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_3/O
+                         net (fo=2, estimated)        0.182     3.320    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_3_n_5
+    SLICE_X77Y69         LUT2 (Prop_B6LUT_SLICEL_I0_O)
+                                                      0.036     3.356 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_8/O
+                         net (fo=1, routed)           0.009     3.365    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0_i_8_n_5
+    SLICE_X77Y69         CARRY8 (Prop_CARRY8_SLICEL_S[1]_O[4])
+                                                      0.200     3.565 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_9s_7s_16_1_1_U50/dout[11]_INST_0/O[4]
+                         net (fo=1, routed)           0.025     3.590    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_fu_22401_p2[15]
+    SLICE_X77Y69         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_reg_36979_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock CLK_CNN rise edge)    5.000     5.000 r  
                                                       0.000     5.000 r  CLK_CNN (IN)
-                         net (fo=22671, unset)        0.021     5.021    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
-    SLICE_X74Y41         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_20_reg_36964_reg[15]/C
-                         clock pessimism              0.000     5.021    
-                         clock uncertainty           -0.035     4.986    
-    SLICE_X74Y41         FDRE (Setup_EFF_SLICEM_C_D)
-                                                      0.025     5.011    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_20_reg_36964_reg[15]
+                         net (fo=22671, unset)        0.020     5.020    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/ap_clk
+    SLICE_X77Y69         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_reg_36979_reg[15]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X77Y69         FDRE (Setup_EFF_SLICEL_C_D)
+                                                      0.025     5.010    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0/grp_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain_fu_47/mul_ln73_22_reg_36979_reg[15]
   -------------------------------------------------------------------
-                         required time                          5.011    
-                         arrival time                          -3.676    
+                         required time                          5.010    
+                         arrival time                          -3.590    
   -------------------------------------------------------------------
-                         slack                                  1.335    
+                         slack                                  1.420    
 
 
 
@@ -427,15 +427,15 @@ Slack (MET) :             1.335ns  (required time - arrival time)
 
 Min Delay Paths
 --------------------------------------------------------------------------------------
-Slack (VIOLATED) :        -0.016ns  (arrival time - required time)
-  Source:                 gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_reg_1262_reg[3]/C
+Slack (MET) :             0.000ns  (arrival time - required time)
+  Source:                 gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_19_reg_1357_reg[6]/C
                             (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
-  Destination:            gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][63]_srl4/D
+  Destination:            gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][351]_srl4/D
                             (rising edge-triggered cell SRL16E clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
   Path Group:             CLK_CNN
   Path Type:              Hold (Min at Fast Process Corner)
   Requirement:            0.000ns  (CLK_CNN rise@0.000ns - CLK_CNN rise@0.000ns)
-  Data Path Delay:        0.072ns  (logic 0.038ns (52.778%)  route 0.034ns (47.222%))
+  Data Path Delay:        0.088ns  (logic 0.039ns (44.318%)  route 0.049ns (55.682%))
   Logic Levels:           0  
   Clock Path Skew:        0.026ns (DCD - SCD - CPR)
     Destination Clock Delay (DCD):    0.039ns
@@ -446,27 +446,27 @@ Slack (VIOLATED) :        -0.016ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=22671, unset)        0.013     0.013    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/ap_clk
-    SLICE_X42Y118        FDRE                                         r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_reg_1262_reg[3]/C
+                         net (fo=22671, unset)        0.013     0.013    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/ap_clk
+    SLICE_X72Y88         FDRE                                         r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_19_reg_1357_reg[6]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X42Y118        FDRE (Prop_CFF_SLICEM_C_Q)
-                                                      0.038     0.051 r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_reg_1262_reg[3]/Q
-                         net (fo=1, estimated)        0.034     0.085    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/din[63]
-    SLICE_X42Y117        SRL16E                                       r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][63]_srl4/D
+    SLICE_X72Y88         FDRE (Prop_HFF_SLICEL_C_Q)
+                                                      0.039     0.052 r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_U0/select_ln51_19_reg_1357_reg[6]/Q
+                         net (fo=1, estimated)        0.049     0.101    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/din[351]
+    SLICE_X71Y88         SRL16E                                       r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][351]_srl4/D
   -------------------------------------------------------------------    -------------------
 
                          (clock CLK_CNN rise edge)    0.000     0.000 r  
                                                       0.000     0.000 r  CLK_CNN (IN)
-                         net (fo=22671, unset)        0.039     0.039    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/clk
-    SLICE_X42Y117        SRL16E                                       r  gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][63]_srl4/CLK
+                         net (fo=22671, unset)        0.039     0.039    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/clk
+    SLICE_X71Y88         SRL16E                                       r  gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][351]_srl4/CLK
                          clock pessimism              0.000     0.039    
-    SLICE_X42Y117        SRL16E (Hold_H5LUT_SLICEM_CLK_D)
-                                                      0.062     0.101    gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][63]_srl4
+    SLICE_X71Y88         SRL16E (Hold_H5LUT_SLICEM_CLK_D)
+                                                      0.062     0.101    gen_lanes[3].u_LANE/u_WRAPPER/cnn_core_inst/layer5x4_out_U/U_cnn_core_fifo_w420_d4_S_ShiftReg/SRL_SIG_reg[3][351]_srl4
   -------------------------------------------------------------------
                          required time                         -0.101    
-                         arrival time                           0.085    
+                         arrival time                           0.101    
   -------------------------------------------------------------------
-                         slack                                 -0.016    
+                         slack                                  0.000    
 
 
 
@@ -480,9 +480,9 @@ Period(ns):         5.000
 Sources:            { CLK_CNN }
 
 Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
-Min Period        n/a     RAMB18E2/CLKARDCLK  n/a            1.355         5.000       3.645      RAMB18_X0Y20  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
-Low Pulse Width   Slow    RAMB18E2/CLKARDCLK  n/a            0.542         2.500       1.958      RAMB18_X0Y20  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
-High Pulse Width  Slow    RAMB18E2/CLKARDCLK  n/a            0.542         2.500       1.958      RAMB18_X0Y20  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
+Min Period        n/a     RAMB18E2/CLKARDCLK  n/a            1.355         5.000       3.645      RAMB18_X6Y14  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
+Low Pulse Width   Slow    RAMB18E2/CLKARDCLK  n/a            0.542         2.500       1.958      RAMB18_X6Y14  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
+High Pulse Width  Slow    RAMB18E2/CLKARDCLK  n/a            0.542         2.500       1.958      RAMB18_X6Y14  gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgb.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM18.ram/CLKARDCLK
 
 
 
