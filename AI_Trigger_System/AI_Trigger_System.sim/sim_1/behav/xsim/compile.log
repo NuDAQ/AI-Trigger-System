@@ -1,12 +1,72 @@
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module tb_AI_TRIGGER_TOP
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/AI_TRIGGER_PKG.vhd" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/AI-Trigger-System/AI_Trigger_System/AI_Trigger_System.gen/sources_1/ip/fifo_async_1024_to_64/sim/fifo_async_1024_to_64.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_async_1024_to_64
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config9_Pipeline_DenseWideMain
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_s
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_fifo_w252_d4_S.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w252_d4_S
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w252_d4_S_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_fifo_w420_d4_S.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w420_d4_S
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w420_d4_S_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_fifo_w448_d4_S.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w448_d4_S
+INFO: [VRFC 10-311] analyzing module cnn_core_fifo_w448_d4_S_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_first_conv_2row_4lane_temporal_wide_cl_array_array_ap_fixed_28u_config4_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_first_conv_2row_4lane_temporal_wide_cl_array_array_ap_fixed_28u_config4_s
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_flow_control_loop_pipe
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_flow_control_loop_pipe_sequential_init
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mac_muladd_9s_7s_16s_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mac_muladd_9s_7s_16s_16_1_1_DSP48_0
+INFO: [VRFC 10-311] analyzing module cnn_core_mac_muladd_9s_7s_16s_16_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mac_muladd_9s_7s_16s_17_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mac_muladd_9s_7s_16s_17_1_1_DSP48_1
+INFO: [VRFC 10-311] analyzing module cnn_core_mac_muladd_9s_7s_16s_17_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config6_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config6_s
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_5ns_13_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_5ns_13_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_5ns_14_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_5ns_14_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_6ns_14_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_6ns_14_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_6ns_15_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_6ns_15_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_6s_15_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_6s_15_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_mul_9s_7s_16_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_mul_9s_7s_16_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_regslice_both.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_regslice_both
+INFO: [VRFC 10-311] analyzing module cnn_core_regslice_both_w1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_s.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5_s
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_sparsemux_2353_11_7_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_sparsemux_2353_11_7_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_sparsemux_9_2_9_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_sparsemux_9_2_9_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_22_11_5_3_0_1u_config9_U0_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config6_U0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config6_U0
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_maxpool2d_wide_nonoverlap_cl_array_array_ap_fixed_28u_config6_U0_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/CNN-Core-Generator/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5bkb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5bkb
+INFO: [VRFC 10-311] analyzing module cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5bkb_ShiftReg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module WRAPPER_TOP
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'ADC_CHUNK_DISTRIBUTOR'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/RESET_SYNC.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'RESET_SYNC'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'CNN_CORE_LANE'
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/WAVEFORM_RING_BUFFER.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'WAVEFORM_RING_BUFFER'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/TRIGGER_DECISION.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'TRIGGER_DECISION'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/TRIGGER_CDC_FIFO.vhd" into library xil_defaultlib

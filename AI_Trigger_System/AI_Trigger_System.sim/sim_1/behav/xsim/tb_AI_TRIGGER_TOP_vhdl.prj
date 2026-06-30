@@ -2,6 +2,7 @@
 vhdl2008 xil_defaultlib  \
 "../../../../../HDL/rtl/AI_TRIGGER_PKG.vhd" \
 "../../../../../HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd" \
+"../../../../../HDL/rtl/RESET_SYNC.vhd" \
 "../../../../../HDL/rtl/CNN_CORE_LANE.vhd" \
 "../../../../../HDL/rtl/WAVEFORM_RING_BUFFER.vhd" \
 "../../../../../HDL/rtl/TRIGGER_DECISION.vhd" \
