@@ -41,7 +41,9 @@ entity CNN_CORE_LANE is
     port (
         CLK_ADC      : in  std_logic;
         CLK_CNN      : in  std_logic;
-        RST          : in  std_logic;   -- active-high, synchronous to CLK_ADC
+        RST_ASYNC    : in  std_logic;   -- active-high, async reset for FIFO IP
+        RST_ADC      : in  std_logic;   -- active-high, synchronous to CLK_ADC
+        RST_CNN      : in  std_logic;   -- active-high, synchronous to CLK_CNN
 
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
@@ -138,8 +140,6 @@ architecture rtl of CNN_CORE_LANE is
     -- -------------------------------------------------------------------------
     -- CLK_CNN domain
     -- -------------------------------------------------------------------------
-    -- RST synchronizer (init '1' so rst_n_cnn = '0' before any CNN clock edge)
-    signal rst_cnn_ff   : std_logic_vector(1 downto 0) := "11";
     signal rst_n_cnn    : std_logic;
 
     signal started_count_cnn : chunk_cnt_t := (others => '0');
@@ -195,7 +195,6 @@ architecture rtl of CNN_CORE_LANE is
 
     attribute ASYNC_REG : string;
     attribute ASYNC_REG of stream_done_adc_ff : signal is "TRUE";
-    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
 
 begin
 
@@ -211,7 +210,7 @@ begin
     process(CLK_ADC)
     begin
         if rising_edge(CLK_ADC) then
-            if RST = '1' then
+            if RST_ADC = '1' then
                 wr_count       <= 0;
                 chunk_count_adc <= (others => '0');
                 chunk_busy_adc  <= '0';
@@ -283,14 +282,7 @@ begin
     -- CLK_CNN DOMAIN
     -- =========================================================================
 
-    -- RST synchronizer
-    process(CLK_CNN)
-    begin
-        if rising_edge(CLK_CNN) then
-            rst_cnn_ff <= rst_cnn_ff(0) & RST;
-        end if;
-    end process;
-    rst_n_cnn <= not rst_cnn_ff(1);
+    rst_n_cnn <= not RST_CNN;
 
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
@@ -469,7 +461,7 @@ begin
     -- =========================================================================
     u_FIFO : fifo_async_1024_to_64
         port map (
-            rst         => RST,
+            rst         => RST_ASYNC,
             wr_clk      => CLK_ADC,
             rd_clk      => CLK_CNN,
             din         => BATCH_DATA,

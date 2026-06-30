@@ -115,8 +115,24 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("u_RST_ADC", top)
         self.assertIn("u_RST_CNN", top)
         self.assertRegex(top, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST\s*=>\s*rst_adc")
+        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ASYNC\s*=>\s*RST")
+        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ADC\s*=>\s*rst_adc")
+        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_CNN\s*=>\s*rst_cnn")
+        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_ADC\s*=>\s*rst_adc")
+        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_CNN\s*=>\s*rst_cnn")
+
+    def test_cross_domain_modules_do_not_derive_cnn_reset_from_adc_reset(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        event_path = read("HDL/rtl/EVENT_CAPTURE_PATH.vhd")
+
+        for source in (lane, event_path):
+            self.assertIn("RST_ADC", source)
+            self.assertIn("RST_CNN", source)
+            self.assertNotIn("rst_cnn_ff", source)
+            self.assertNotRegex(source, r"rst_n_cnn\s*<=\s*not\s+rst_cnn_ff")
+
+        self.assertIn("RST_ASYNC", lane)
+        self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*fifo_async_1024_to_64.*?rst\s*=>\s*RST_ASYNC")
 
 
 if __name__ == "__main__":

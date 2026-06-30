@@ -35,7 +35,8 @@ begin
         port map (
             CLK_ADC               => clk_adc,
             CLK_CNN               => clk_cnn,
-            RST                   => rst,
+            RST_ADC               => rst,
+            RST_CNN               => rst,
             DATA_STR              => data_str,
             ADC_DATA4             => adc_data4,
             SCORE_VALID           => score_valid,

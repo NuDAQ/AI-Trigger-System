@@ -99,9 +99,10 @@ triggered chunk to `EVENT_TIMESTAMP`.
 The reset input `RST` is active high and may be driven by an upper-level DAQ or
 global-control reset source. It is treated as an asynchronous assertion at the
 AI trigger boundary, then released through local reset synchronizers in the
-`CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. Each
-`CNN_CORE_LANE` still retimes the ADC-domain reset into its local CNN-side
-control before driving the active-low reset expected by `WRAPPER_TOP`.
+`CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. Cross-domain
+blocks receive both synchronized reset domains: ADC-side logic uses `RST_ADC`,
+CNN-side logic uses `RST_CNN`, and the per-lane Xilinx async FIFO keeps a
+separate `RST_ASYNC` connection for its vendor IP reset port.
 
 ### Event Timestamp
 

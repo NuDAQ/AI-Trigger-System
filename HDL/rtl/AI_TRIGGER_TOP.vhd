@@ -109,7 +109,9 @@ begin
             port map (
                 CLK_ADC    => CLK_ADC,
                 CLK_CNN    => CLK_CNN,
-                RST        => rst_adc,
+                RST_ASYNC  => RST,
+                RST_ADC    => rst_adc,
+                RST_CNN    => rst_cnn,
                 WR_EN      => lane_we(i),
                 BATCH_DATA => batch_data,
                 CHUNK_ID   => dist_chunk_id,
@@ -126,7 +128,8 @@ begin
         port map (
             CLK_ADC        => CLK_ADC,
             CLK_CNN        => CLK_CNN,
-            RST            => rst_adc,
+            RST_ADC        => rst_adc,
+            RST_CNN        => rst_cnn,
             DATA_STR       => DATA_STR,
             ADC_DATA4      => ADC_DATA4,
             SCORE_VALID    => agg_score_valid,

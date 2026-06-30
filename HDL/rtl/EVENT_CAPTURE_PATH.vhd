@@ -7,7 +7,8 @@ entity EVENT_CAPTURE_PATH is
     port (
         CLK_ADC        : in  std_logic;
         CLK_CNN        : in  std_logic;
-        RST            : in  std_logic;
+        RST_ADC        : in  std_logic;
+        RST_CNN        : in  std_logic;
 
         DATA_STR       : in  std_logic;
         ADC_DATA4      : in  adc_data4_t;
@@ -54,16 +55,11 @@ architecture structural of EVENT_CAPTURE_PATH is
     signal rb_rd_valid       : std_logic;
     signal rb_rd_hit         : std_logic;
     signal dropped_trigger_count_r : unsigned(31 downto 0) := (others => '0');
-    signal rst_cnn_ff        : std_logic_vector(1 downto 0) := "11";
-    signal rst_cnn           : std_logic := '1';
-
-    attribute ASYNC_REG : string;
-    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
 begin
     u_ring : entity work.WAVEFORM_RING_BUFFER
         port map (
             CLK             => CLK_ADC,
-            RST             => RST,
+            RST             => RST_ADC,
             DATA_STR        => DATA_STR,
             ADC_DATA4       => ADC_DATA4,
             CHUNK_COMMIT    => chunk_commit,
@@ -79,7 +75,7 @@ begin
     u_decision : entity work.TRIGGER_DECISION
         port map (
             CLK              => CLK_CNN,
-            RST              => rst_cnn,
+            RST              => RST_CNN,
             SCORE_VALID      => SCORE_VALID,
             SCORE_DATA       => SCORE_DATA,
             SCORE_CHUNK_ID   => SCORE_CHUNK_ID,
@@ -94,14 +90,14 @@ begin
     u_trigger_cdc : entity work.TRIGGER_CDC_FIFO
         port map (
             WR_CLK      => CLK_CNN,
-            WR_RST      => rst_cnn,
+            WR_RST      => RST_CNN,
             WR_VALID    => trigger_valid_cnn,
             WR_READY    => trigger_ready_cnn,
             WR_CHUNK_ID => trigger_id_cnn,
             WR_SCORE    => trigger_score_cnn,
             WR_TIMESTAMP => trigger_timestamp_cnn,
             RD_CLK      => CLK_ADC,
-            RD_RST      => RST,
+            RD_RST      => RST_ADC,
             RD_VALID    => trigger_valid_adc,
             RD_READY    => trigger_ready_adc,
             RD_CHUNK_ID => trigger_id_adc,
@@ -112,7 +108,7 @@ begin
     u_capture : entity work.EVENT_CAPTURE_CTRL
         port map (
             CLK              => CLK_ADC,
-            RST              => RST,
+            RST              => RST_ADC,
             CHUNK_COMMIT     => chunk_commit,
             COMMIT_CHUNK_ID  => commit_chunk_id,
             TRIGGER_VALID    => trigger_valid_adc,
@@ -139,15 +135,7 @@ begin
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
-            rst_cnn_ff <= rst_cnn_ff(0) & RST;
-        end if;
-    end process;
-    rst_cnn <= rst_cnn_ff(1);
-
-    process(CLK_CNN)
-    begin
-        if rising_edge(CLK_CNN) then
-            if rst_cnn = '1' then
+            if RST_CNN = '1' then
                 dropped_trigger_count_r <= (others => '0');
             elsif trigger_valid_cnn = '1' and trigger_ready_cnn = '0' then
                 dropped_trigger_count_r <= dropped_trigger_count_r + 1;
