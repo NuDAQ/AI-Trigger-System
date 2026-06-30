@@ -157,8 +157,8 @@ begin
                 dest_ack_r <= '0';
                 dest_seen_r <= '0';
             else
-                dest_ack_r <= '0';
                 if dest_req = '0' then
+                    dest_ack_r <= '0';
                     dest_seen_r <= '0';
                 elsif dest_seen_r = '0' and RD_READY = '1' then
                     dest_ack_r <= '1';

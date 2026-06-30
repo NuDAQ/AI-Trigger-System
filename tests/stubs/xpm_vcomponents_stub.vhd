@@ -90,7 +90,10 @@ begin
                 if DEST_EXT_HSK = 0 then
                     dest_req_r <= '0';
                 elsif dest_ack_seen = '1' then
-                    if dest_drop_count = DEST_REQ_HOLD_AFTER_ACK then
+                    if dest_ack = '0' then
+                        dest_drop_count <= 0;
+                    elsif dest_drop_count = DEST_REQ_HOLD_AFTER_ACK then
+                        ack_toggle_dest <= req_sync_dest(1);
                         dest_req_r <= '0';
                         dest_drop_count <= 0;
                         dest_ack_seen <= '0';
@@ -98,7 +101,6 @@ begin
                         dest_drop_count <= dest_drop_count + 1;
                     end if;
                 elsif dest_ack = '1' then
-                    ack_toggle_dest <= req_sync_dest(1);
                     dest_drop_count <= 0;
                     dest_ack_seen <= '1';
                 end if;
