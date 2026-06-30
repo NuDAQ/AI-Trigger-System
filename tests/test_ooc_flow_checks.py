@@ -106,6 +106,18 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
+    def test_top_synchronizes_external_reset_before_adc_domain_fanout(self) -> None:
+        bender = read("Bender.yml")
+        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
+
+        self.assertIn("HDL/rtl/RESET_SYNC.vhd", bender)
+        self.assertIn("signal rst_adc", top)
+        self.assertIn("u_RST_ADC", top)
+        self.assertIn("u_RST_CNN", top)
+        self.assertRegex(top, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
+        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST\s*=>\s*rst_adc")
+        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST\s*=>\s*rst_adc")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -96,9 +96,12 @@ triggered chunk to `EVENT_TIMESTAMP`.
 | `CLK_ADC` | 62.5 MHz | Accepts 16 ADC samples per cycle per channel, equivalent to 1 Gsps per channel. |
 | `CLK_CNN` | 200 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
 
-The reset input `RST` is active high and generated in the ADC domain. Each
-`CNN_CORE_LANE` retimes reset into the CNN clock domain before driving the
-active-low reset expected by `WRAPPER_TOP`.
+The reset input `RST` is active high and may be driven by an upper-level DAQ or
+global-control reset source. It is treated as an asynchronous assertion at the
+AI trigger boundary, then released through local reset synchronizers in the
+`CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. Each
+`CNN_CORE_LANE` still retimes the ADC-domain reset into its local CNN-side
+control before driving the active-low reset expected by `WRAPPER_TOP`.
 
 ### Event Timestamp
 

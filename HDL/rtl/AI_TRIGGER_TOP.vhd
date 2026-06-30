@@ -69,18 +69,28 @@ architecture structural of AI_TRIGGER_TOP is
     signal agg_score_chunk_id : chunk_id_t := (others => '0');
     signal agg_score_timestamp : timestamp_t := (others => '0');
     signal agg_score_valid : std_logic := '0';
-    signal rst_cnn_ff : std_logic_vector(1 downto 0) := "11";
+    signal rst_adc : std_logic := '1';
     signal rst_cnn : std_logic := '1';
 
-    attribute ASYNC_REG : string;
-    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
-
 begin
+    u_RST_ADC : entity work.RESET_SYNC
+        port map (
+            CLK       => CLK_ADC,
+            RST_ASYNC => RST,
+            RST_SYNC  => rst_adc
+        );
+
+    u_RST_CNN : entity work.RESET_SYNC
+        port map (
+            CLK       => CLK_CNN,
+            RST_ASYNC => RST,
+            RST_SYNC  => rst_cnn
+        );
 
     u_DIST : entity work.ADC_CHUNK_DISTRIBUTOR
         port map (
             CLK_ADC        => CLK_ADC,
-            RST            => RST,
+            RST            => rst_adc,
             DATA_STR       => DATA_STR,
             ADC_DATA4      => ADC_DATA4,
             LANE_BUSY      => lane_busy,
@@ -99,7 +109,7 @@ begin
             port map (
                 CLK_ADC    => CLK_ADC,
                 CLK_CNN    => CLK_CNN,
-                RST        => RST,
+                RST        => rst_adc,
                 WR_EN      => lane_we(i),
                 BATCH_DATA => batch_data,
                 CHUNK_ID   => dist_chunk_id,
@@ -116,7 +126,7 @@ begin
         port map (
             CLK_ADC        => CLK_ADC,
             CLK_CNN        => CLK_CNN,
-            RST            => RST,
+            RST            => rst_adc,
             DATA_STR       => DATA_STR,
             ADC_DATA4      => ADC_DATA4,
             SCORE_VALID    => agg_score_valid,
@@ -136,14 +146,6 @@ begin
         );
 
     -- Result aggregation (CLK_CNN): registered comparator per lane, OR result
-    process(CLK_CNN)
-    begin
-        if rising_edge(CLK_CNN) then
-            rst_cnn_ff <= rst_cnn_ff(0) & RST;
-        end if;
-    end process;
-    rst_cnn <= rst_cnn_ff(1);
-
     process(CLK_CNN)
         variable any_trig  : std_logic;
         variable last_data : std_logic_vector(31 downto 0);
