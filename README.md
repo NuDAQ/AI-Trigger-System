@@ -246,8 +246,11 @@ Common raw threshold values:
 | 0.5 | 1024 |
 | 1.0 | 2048 |
 
-The simulation default is `SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288`,
-matching the wrapper behavioral reference run.
+The testbench fallback is `SCORE_THRESHOLD=-6.0` and
+`CNN_THRESH_RAW=-12288`, matching the wrapper behavioral reference run.  The
+current full-system functional validation uses `SCORE_THRESHOLD=0.0` and
+`CNN_THRESH_RAW=0`, so pass those arguments explicitly when reproducing the
+reported accuracy and trigger-agreement numbers.
 
 ## Main RTL Files
 
@@ -267,16 +270,19 @@ matching the wrapper behavioral reference run.
 
 ## Simulation
 
-The recommended terminal flow is:
+The recommended terminal flow for the current functional validation point is:
 
 ```bash
-python3 scripts/run_vivado_sim.py --num-samples 1000
+python3 scripts/run_vivado_sim.py \
+  --num-samples 1000 \
+  --score-threshold 0.0 \
+  --cnn-thresh-raw 0
 ```
 
 The script opens `AI_Trigger_System/AI_Trigger_System.xpr`, sources
 `run_sim.tcl`, and runs the behavioral xsim testbench in Vivado batch mode.
 
-Useful options:
+To reproduce the wrapper-reference fallback threshold instead:
 
 ```bash
 python3 scripts/run_vivado_sim.py \
