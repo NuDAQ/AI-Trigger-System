@@ -43,6 +43,19 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_event_metadata_outputs_have_ooc_boundary_delay(self) -> None:
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+
+        event_output_delay_lines = [
+            line for line in xdc.splitlines()
+            if line.strip().startswith("set_output_delay") and "CLK_ADC" in line
+        ]
+        self.assertTrue(event_output_delay_lines)
+        event_output_delay = " ".join(event_output_delay_lines)
+        self.assertIn("EVENT_CHUNK_ID*", event_output_delay)
+        self.assertIn("EVENT_TIMESTAMP*", event_output_delay)
+        self.assertIn("EVENT_SCORE*", event_output_delay)
+
     def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
 
