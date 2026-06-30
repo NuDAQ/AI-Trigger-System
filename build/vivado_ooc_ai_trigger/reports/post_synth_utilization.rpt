@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Mon Jun 29 21:10:29 2026
+| Date         : Mon Jun 29 21:36:43 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_utilization -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_utilization.rpt
 | Design       : AI_TRIGGER_TOP
@@ -37,8 +37,8 @@ Table of Contents
 |   LUT as Memory            |  5660 |     0 |          0 |     99840 |  5.67 |
 |     LUT as Distributed RAM |   180 |     0 |            |           |       |
 |     LUT as Shift Register  |  5480 |     0 |            |           |       |
-| CLB Registers              | 18885 |     0 |          0 |    433920 |  4.35 |
-|   Register as Flip Flop    | 18885 |     0 |          0 |    433920 |  4.35 |
+| CLB Registers              | 18887 |     0 |          0 |    433920 |  4.35 |
+|   Register as Flip Flop    | 18887 |     0 |          0 |    433920 |  4.35 |
 |   Register as Latch        |     0 |     0 |          0 |    433920 |  0.00 |
 | CARRY8                     |  2608 |     0 |          0 |     27120 |  9.62 |
 | F7 Muxes                   |  1265 |     0 |          0 |    108480 |  1.17 |
@@ -61,10 +61,10 @@ Warning! LUT value is adjusted to account for LUT combining.
 | 0     |            _ |         Set |            - |
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
-| 0     |          Yes |           - |          Set |
+| 4     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 260   |          Yes |         Set |            - |
-| 18625 |          Yes |       Reset |            - |
+| 18623 |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -160,7 +160,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +----------+-------+---------------------+
 | Ref Name |  Used | Functional Category |
 +----------+-------+---------------------+
-| FDRE     | 18625 |            Register |
+| FDRE     | 18623 |            Register |
 | LUT2     |  9812 |                 CLB |
 | LUT6     |  8526 |                 CLB |
 | LUT4     |  6746 |                 CLB |
@@ -178,6 +178,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 | RAMD64E  |    20 |                 CLB |
 | DSP48E2  |    20 |          Arithmetic |
 | RAMB18E2 |     6 |            BLOCKRAM |
+| FDPE     |     4 |            Register |
 +----------+-------+---------------------+
 
 

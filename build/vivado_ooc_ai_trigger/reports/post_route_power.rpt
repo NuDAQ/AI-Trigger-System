@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date             : Mon Jun 29 21:13:09 2026
+| Date             : Mon Jun 29 21:39:23 2026
 | Host             : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command          : report_power -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_power.rpt
 | Design           : AI_TRIGGER_TOP
@@ -30,11 +30,11 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 1.680        |
+| Total On-Chip Power (W)  | 1.667        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 1.220        |
-| Device Static (W)        | 0.461        |
+| Dynamic (W)              | 1.207        |
+| Device Static (W)        | 0.460        |
 | Effective TJA (C/W)      | 1.7          |
 | Max Ambient (C)          | 97.1         |
 | Junction Temperature (C) | 27.9         |
@@ -52,20 +52,20 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.134 |        4 |       --- |             --- |
-| CLB Logic                |     0.457 |    65439 |       --- |             --- |
-|   LUT as Logic           |     0.400 |    25929 |    216960 |           11.95 |
+| Clocks                   |     0.133 |        4 |       --- |             --- |
+| CLB Logic                |     0.453 |    65445 |       --- |             --- |
+|   LUT as Logic           |     0.396 |    25928 |    216960 |           11.95 |
 |   CARRY8                 |     0.030 |     2608 |     27120 |            9.62 |
 |   LUT as Shift Register  |     0.016 |     2760 |     99840 |            2.76 |
-|   Register               |     0.011 |    18820 |    433920 |            4.34 |
+|   Register               |     0.010 |    18822 |    433920 |            4.34 |
 |   LUT as Distributed RAM |    <0.001 |      180 |     99840 |            0.18 |
-|   Others                 |     0.000 |     1038 |       --- |             --- |
+|   Others                 |     0.000 |     1042 |       --- |             --- |
 |   F7/F8 Muxes            |     0.000 |     1685 |    216960 |            0.78 |
-| Signals                  |     0.376 |    48756 |       --- |             --- |
+| Signals                  |     0.368 |    48752 |       --- |             --- |
 | Block RAM                |     0.236 |       94 |       480 |           19.58 |
 | DSPs                     |     0.016 |       20 |      1824 |            1.10 |
-| Static Power             |     0.461 |          |           |                 |
-| Total                    |     1.680 |          |           |                 |
+| Static Power             |     0.460 |          |           |                 |
+| Total                    |     1.667 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -75,7 +75,7 @@ Table of Contents
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source     | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint     |       0.850 |     1.566 |       1.416 |      0.150 |       NA    | Unspecified | NA         |
+| Vccint     |       0.850 |     1.551 |       1.400 |      0.150 |       NA    | Unspecified | NA         |
 | Vccint_io  |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
 | Vccbram    |       0.850 |     0.021 |       0.019 |      0.002 |       NA    | Unspecified | NA         |
 | Vccaux     |       1.800 |     0.128 |       0.000 |      0.128 |       NA    | Unspecified | NA         |
@@ -148,34 +148,34 @@ Table of Contents
 +-----------------------+-----------+
 | Name                  | Power (W) |
 +-----------------------+-----------+
-| AI_TRIGGER_TOP        |     1.220 |
-|   gen_lanes[0].u_LANE |     0.236 |
+| AI_TRIGGER_TOP        |     1.207 |
+|   gen_lanes[0].u_LANE |     0.229 |
+|     u_FIFO            |     0.046 |
+|       U0              |     0.046 |
+|     u_WRAPPER         |     0.182 |
+|       cnn_core_inst   |     0.182 |
+|   gen_lanes[1].u_LANE |     0.236 |
 |     u_FIFO            |     0.046 |
 |       U0              |     0.046 |
 |     u_WRAPPER         |     0.188 |
 |       cnn_core_inst   |     0.188 |
-|   gen_lanes[1].u_LANE |     0.237 |
+|   gen_lanes[2].u_LANE |     0.236 |
+|     u_FIFO            |     0.047 |
+|       U0              |     0.047 |
+|     u_WRAPPER         |     0.187 |
+|       cnn_core_inst   |     0.187 |
+|   gen_lanes[3].u_LANE |     0.236 |
 |     u_FIFO            |     0.046 |
 |       U0              |     0.046 |
-|     u_WRAPPER         |     0.189 |
-|       cnn_core_inst   |     0.189 |
-|   gen_lanes[2].u_LANE |     0.239 |
-|     u_FIFO            |     0.046 |
-|       U0              |     0.046 |
-|     u_WRAPPER         |     0.190 |
-|       cnn_core_inst   |     0.190 |
-|   gen_lanes[3].u_LANE |     0.237 |
-|     u_FIFO            |     0.046 |
-|       U0              |     0.046 |
-|     u_WRAPPER         |     0.189 |
-|       cnn_core_inst   |     0.189 |
-|   gen_lanes[4].u_LANE |     0.236 |
-|     u_FIFO            |     0.045 |
-|       U0              |     0.045 |
-|     u_WRAPPER         |     0.189 |
-|       cnn_core_inst   |     0.189 |
+|     u_WRAPPER         |     0.188 |
+|       cnn_core_inst   |     0.188 |
+|   gen_lanes[4].u_LANE |     0.234 |
+|     u_FIFO            |     0.044 |
+|       U0              |     0.044 |
+|     u_WRAPPER         |     0.188 |
+|       cnn_core_inst   |     0.188 |
 |   u_DIST              |     0.003 |
-|   u_EVENT_PATH        |     0.031 |
+|   u_EVENT_PATH        |     0.032 |
 |     u_capture         |     0.002 |
 |     u_ring            |     0.027 |
 |     u_trigger_cdc     |     0.002 |
