@@ -56,8 +56,8 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal chunk_timestamp_r : timestamp_t := (others => '0');
     signal chunk_timestamp_out_r : timestamp_t := (others => '0');
     signal drop_chunk : std_logic := '0';
-    signal overflow_r : std_logic := '0';
-    signal we_r       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
+    signal overflow_comb : std_logic := '0';
+    signal we_comb       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
     signal packed : std_logic_vector(N_BATCH_S*64-1 downto 0);
 
@@ -110,6 +110,24 @@ begin
 
     BATCH_DATA <= packed;
 
+    process(all)
+        variable selected_lane_accept : boolean;
+    begin
+        we_comb <= (others => '0');
+        overflow_comb <= '0';
+        selected_lane_accept :=
+            (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+            (batch_cnt /= 0 and drop_chunk = '0');
+
+        if DATA_STR = '1' then
+            if selected_lane_accept then
+                we_comb(lane_sel) <= '1';
+            else
+                overflow_comb <= '1';
+            end if;
+        end if;
+    end process;
+
     -- -------------------------------------------------------------------------
     -- Round-robin FSM (CLK_ADC)
     -- -------------------------------------------------------------------------
@@ -123,12 +141,7 @@ begin
                 chunk_timestamp_r <= (others => '0');
                 chunk_timestamp_out_r <= (others => '0');
                 drop_chunk <= '0';
-                we_r       <= (others => '0');
-                overflow_r <= '0';
             else
-                we_r       <= (others => '0');
-                overflow_r <= '0';
-
                 if DATA_STR = '1' then
                     chunk_timestamp_out_r <= chunk_timestamp_r;
 
@@ -147,11 +160,8 @@ begin
                         -- synthesis translate_on
                     end if;
 
-                    if (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
-                       (batch_cnt /= 0 and drop_chunk = '0') then
-                        we_r(lane_sel) <= '1';
-                    else
-                        overflow_r <= '1';
+                    if not ((batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+                            (batch_cnt /= 0 and drop_chunk = '0')) then
                         -- synthesis translate_off
                         if dbg_events < DEBUG_EVENTS then
                             report "DIST drop_batch seq=" &
@@ -187,9 +197,9 @@ begin
         end if;
     end process;
 
-    LANE_WE        <= we_r;
+    LANE_WE        <= we_comb;
     CHUNK_ID       <= chunk_id_r;
     CHUNK_TIMESTAMP <= chunk_timestamp_out_r;
-    CHUNK_OVERFLOW <= overflow_r;
+    CHUNK_OVERFLOW <= overflow_comb;
 
 end architecture rtl;
