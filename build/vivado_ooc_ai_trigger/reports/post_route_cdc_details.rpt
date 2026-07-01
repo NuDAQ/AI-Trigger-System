@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Tue Jun 30 20:49:37 2026
+| Date              : Wed Jul  1 11:49:07 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_cdc -details -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_cdc_details.rpt
 | Design            : AI_TRIGGER_TOP
@@ -15,7 +15,6 @@ CDC Report
 
 ID      Severity  Count  Description
 ------  --------  -----  ------------------------------------------
-CDC-1   Critical      8  1-bit unknown CDC circuitry
 CDC-3   Info         29  1-bit synchronized with ASYNC_REG property
 CDC-26  Warning      13  LUTRAM read/write potential collision
 
@@ -32,16 +31,8 @@ Destination Clock: ADC_SRC_CLK
 CDC Type: No Common Primary Clock
 
 Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
----  ------  --------  -------------------------------------  -----  ----------  -------------  ------------------------------------------------------------------------------------------------------------------------
-  1  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/FSM_onehot_gen_rst_ic.curr_wrst_state_reg[0]/D
-  2  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/FSM_onehot_gen_rst_ic.curr_wrst_state_reg[1]/D
-  3  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/FSM_onehot_gen_rst_ic.curr_wrst_state_reg[2]/D
-  4  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/FSM_onehot_gen_rst_ic.curr_wrst_state_reg[3]/D
-  5  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/FSM_onehot_gen_rst_ic.curr_wrst_state_reg[4]/D
-  6  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.fifo_wr_rst_ic_reg/D
-  7  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.rst_seq_reentered_reg/D
-  8  CDC-1   Critical  1-bit unknown CDC circuitry                0  False Path  RST            u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.wr_rst_busy_ic_reg/D
-  9  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_ADC_SRC/sync_ff_reg[0]/PRE
+---  ------  --------  -------------------------------------  -----  ----------  -------------  --------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_RST_ADC_SRC/sync_ff_reg[0]/PRE
 
 Source Clock: ADC_SRC_CLK
 Destination Clock: CLK_ADC

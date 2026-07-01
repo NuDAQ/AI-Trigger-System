@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date             : Tue Jun 30 20:49:44 2026
+| Date             : Wed Jul  1 11:49:14 2026
 | Host             : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command          : report_power -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_power.rpt
 | Design           : AI_TRIGGER_TOP
@@ -30,7 +30,7 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 1.661        |
+| Total On-Chip Power (W)  | 1.662        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
 | Dynamic (W)              | 1.201        |
@@ -54,18 +54,18 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | Clocks                   |     0.136 |        5 |       --- |             --- |
 | CLB Logic                |     0.456 |    66642 |       --- |             --- |
-|   LUT as Logic           |     0.398 |    26034 |    216960 |           12.00 |
+|   LUT as Logic           |     0.399 |    26041 |    216960 |           12.00 |
 |   CARRY8                 |     0.030 |     2612 |     27120 |            9.63 |
 |   LUT as Shift Register  |     0.016 |     2760 |     99840 |            2.76 |
 |   Register               |     0.010 |    19830 |    433920 |            4.57 |
 |   LUT as Distributed RAM |    <0.001 |      180 |     99840 |            0.18 |
 |   Others                 |     0.000 |     1077 |       --- |             --- |
 |   F7/F8 Muxes            |     0.000 |     1685 |    216960 |            0.78 |
-| Signals                  |     0.375 |    51435 |       --- |             --- |
+| Signals                  |     0.375 |    51451 |       --- |             --- |
 | Block RAM                |     0.218 |      117 |       480 |           24.38 |
 | DSPs                     |     0.016 |       20 |      1824 |            1.10 |
 | Static Power             |     0.461 |          |           |                 |
-| Total                    |     1.661 |          |           |                 |
+| Total                    |     1.662 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -75,7 +75,7 @@ Table of Contents
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source     | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint     |       0.850 |     1.548 |       1.397 |      0.150 |       NA    | Unspecified | NA         |
+| Vccint     |       0.850 |     1.548 |       1.398 |      0.150 |       NA    | Unspecified | NA         |
 | Vccint_io  |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
 | Vccbram    |       0.850 |     0.018 |       0.015 |      0.002 |       NA    | Unspecified | NA         |
 | Vccaux     |       1.800 |     0.128 |       0.000 |      0.128 |       NA    | Unspecified | NA         |
@@ -150,31 +150,31 @@ Table of Contents
 | Name                                       | Power (W) |
 +--------------------------------------------+-----------+
 | AI_TRIGGER_TOP                             |     1.201 |
-|   gen_lanes[0].u_LANE                      |     0.225 |
+|   gen_lanes[0].u_LANE                      |     0.226 |
 |     u_FIFO                                 |     0.041 |
 |       U0                                   |     0.041 |
 |     u_WRAPPER                              |     0.182 |
 |       cnn_core_inst                        |     0.182 |
-|   gen_lanes[1].u_LANE                      |     0.233 |
+|   gen_lanes[1].u_LANE                      |     0.234 |
 |     u_FIFO                                 |     0.043 |
 |       U0                                   |     0.043 |
 |     u_WRAPPER                              |     0.189 |
 |       cnn_core_inst                        |     0.189 |
-|   gen_lanes[2].u_LANE                      |     0.238 |
-|     u_FIFO                                 |     0.043 |
-|       U0                                   |     0.043 |
-|     u_WRAPPER                              |     0.193 |
-|       cnn_core_inst                        |     0.193 |
-|   gen_lanes[3].u_LANE                      |     0.232 |
-|     u_FIFO                                 |     0.043 |
-|       U0                                   |     0.043 |
-|     u_WRAPPER                              |     0.187 |
-|       cnn_core_inst                        |     0.187 |
-|   gen_lanes[4].u_LANE                      |     0.231 |
+|   gen_lanes[2].u_LANE                      |     0.233 |
 |     u_FIFO                                 |     0.042 |
 |       U0                                   |     0.042 |
-|     u_WRAPPER                              |     0.188 |
-|       cnn_core_inst                        |     0.188 |
+|     u_WRAPPER                              |     0.189 |
+|       cnn_core_inst                        |     0.189 |
+|   gen_lanes[3].u_LANE                      |     0.234 |
+|     u_FIFO                                 |     0.043 |
+|       U0                                   |     0.043 |
+|     u_WRAPPER                              |     0.189 |
+|       cnn_core_inst                        |     0.189 |
+|   gen_lanes[4].u_LANE                      |     0.234 |
+|     u_FIFO                                 |     0.042 |
+|       U0                                   |     0.042 |
+|     u_WRAPPER                              |     0.191 |
+|       cnn_core_inst                        |     0.191 |
 |   u_ADC_INPUT                              |     0.014 |
 |     u_FIFO                                 |     0.014 |
 |       gnuram_async_fifo.xpm_fifo_base_inst |     0.014 |
