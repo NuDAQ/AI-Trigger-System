@@ -60,6 +60,20 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+dropped_trigger_count")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+ring_miss_count")
 
+    def test_top_level_adc_input_uses_cdc_fifo_boundary(self) -> None:
+        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
+
+        self.assertRegex(top, r"ADC_SRC_CLK\s+:\s+in\s+std_logic")
+        self.assertRegex(top, r"ADC_SRC_VALID\s+:\s+in\s+std_logic")
+        self.assertRegex(top, r"ADC_SRC_READY\s+:\s+out\s+std_logic")
+        self.assertRegex(top, r"ADC_SRC_DATA4\s+:\s+in\s+adc_data4_t")
+        self.assertIn("u_ADC_INPUT", top)
+        self.assertIn("ADC_INPUT_CDC_FIFO", top)
+        self.assertIn("DATA_STR_INTERNAL", top)
+        self.assertIn("ADC_DATA4_INTERNAL", top)
+        self.assertRegex(wrap, r"ADC_SRC_READY\s+:\s+out\s+std_logic")
+
     def test_lane_streams_128_bit_beats_to_wrapper(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
 

@@ -29,7 +29,11 @@ class OocFlowChecks(unittest.TestCase):
 
         self.assertRegex(
             xdc,
-            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{DATA_STR ADC_DATA4\* EVENT_READY\}\]",
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{ADC_SRC_VALID ADC_SRC_DATA4\*\}\]",
+        )
+        self.assertRegex(
+            xdc,
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{EVENT_READY\}\]",
         )
         self.assertRegex(
             xdc,
@@ -55,6 +59,21 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("EVENT_CHUNK_ID*", event_output_delay)
         self.assertIn("EVENT_TIMESTAMP*", event_output_delay)
         self.assertIn("EVENT_SCORE*", event_output_delay)
+
+    def test_adc_source_boundary_has_own_clock_and_delays(self) -> None:
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+
+        self.assertRegex(xdc, r"create_clock\s+-name\s+ADC_SRC_CLK\s+-period\s+16\.000")
+        self.assertRegex(
+            xdc,
+            r"set_input_delay\s+0\.000\s+-clock\s+\[get_clocks\s+ADC_SRC_CLK\]\s+"
+            r"\[get_ports\s+-quiet\s+\{ADC_SRC_VALID ADC_SRC_DATA4\*\}\]",
+        )
+        self.assertRegex(
+            xdc,
+            r"set_output_delay\s+0\.000\s+-clock\s+\[get_clocks\s+ADC_SRC_CLK\]\s+"
+            r"\[get_ports\s+-quiet\s+\{ADC_SRC_READY ADC_INPUT_OVERFLOW_COUNT\*\}\]",
+        )
 
     def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
@@ -113,7 +132,10 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("HDL/rtl/RESET_SYNC.vhd", bender)
         self.assertIn("signal rst_adc", top)
         self.assertIn("u_RST_ADC", top)
+        self.assertIn("u_RST_ADC_SRC", top)
         self.assertIn("u_RST_CNN", top)
+        self.assertRegex(top, r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO.*?WR_RST\s*=>\s*rst_adc_src")
+        self.assertRegex(top, r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO.*?RD_RST\s*=>\s*rst_adc")
         self.assertRegex(top, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
         self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ASYNC\s*=>\s*RST")
         self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ADC\s*=>\s*rst_adc")

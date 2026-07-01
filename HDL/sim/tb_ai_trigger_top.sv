@@ -61,6 +61,7 @@ module tb_AI_TRIGGER_TOP;
     reg  [767:0] adc_data4_flat;  // 4 ch * 16 samples * 12-bit = 768 bits
     reg  [31:0]  cnn_thresh;
 
+    wire         adc_src_ready;
     wire         cnn_trig;
     wire [31:0]  cnn_out_data;
     wire [15:0]  cnn_out_chunk_id;
@@ -71,6 +72,7 @@ module tb_AI_TRIGGER_TOP;
     wire [15:0]  event_chunk_id;
     wire [23:0]  event_timestamp;
     wire [31:0]  event_score;
+    wire [31:0]  adc_input_overflow_count;
     wire [31:0]  dropped_trigger_count;
     wire [31:0]  ring_miss_count;
     wire         chunk_overflow;
@@ -83,6 +85,7 @@ module tb_AI_TRIGGER_TOP;
         .CLK_CNN        (clk_cnn),
         .RST            (rst),
         .DATA_STR       (data_str),
+        .ADC_SRC_READY  (adc_src_ready),
         .ADC_DATA4_FLAT (adc_data4_flat),
         .CNN_THRESH     (cnn_thresh),
         .CNN_TRIG       (cnn_trig),
@@ -96,6 +99,7 @@ module tb_AI_TRIGGER_TOP;
         .EVENT_CHUNK_ID (event_chunk_id),
         .EVENT_TIMESTAMP (event_timestamp),
         .EVENT_SCORE    (event_score),
+        .ADC_INPUT_OVERFLOW_COUNT (adc_input_overflow_count),
         .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
         .RING_MISS_COUNT       (ring_miss_count),
         .CHUNK_OVERFLOW (chunk_overflow)
@@ -461,6 +465,7 @@ module tb_AI_TRIGGER_TOP;
             $display("Output drain:     %0d quiet CLK_CNN cycles", OUTPUT_DRAIN_CYCLES);
             $display("Chunk overflows:  %0d (should be 0 in normal operation)",
                      overflow_count);
+            $display("ADC input overflows: %0d", adc_input_overflow_count);
             $display("Events saved:     %0d", event_count);
             $display("Event batches:    %0d", event_batch_count);
             $display("Dropped triggers: %0d", dropped_trigger_count);

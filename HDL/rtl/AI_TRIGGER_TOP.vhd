@@ -3,7 +3,8 @@
 -- Top-level structural wrapper for the parallel CNN trigger.
 --
 -- Instantiates:
---   - ADC_CHUNK_DISTRIBUTOR: accumulates ADC batches (DATA_STR always high),
+--   - ADC_INPUT_CDC_FIFO: crosses the ADC/decoder source stream into CLK_ADC
+--   - ADC_CHUNK_DISTRIBUTOR: accumulates valid ADC batches,
 --                             distributes chunks round-robin to CNN_CORE_LANE
 --   - CNN_CORE_LANE x N_LANES: FIFO buffer + CDC + CNN inference per lane
 --
@@ -28,8 +29,10 @@ entity AI_TRIGGER_TOP is
         CLK_CNN        : in  std_logic;
         RST            : in  std_logic;
 
-        DATA_STR       : in  std_logic;   -- always high in normal operation
-        ADC_DATA4      : in  adc_data4_t;
+        ADC_SRC_CLK    : in  std_logic;
+        ADC_SRC_VALID  : in  std_logic;
+        ADC_SRC_READY  : out std_logic;
+        ADC_SRC_DATA4  : in  adc_data4_t;
 
         CNN_THRESH     : in  std_logic_vector(31 downto 0);
 
@@ -45,6 +48,7 @@ entity AI_TRIGGER_TOP is
         EVENT_CHUNK_ID : out chunk_id_t;
         EVENT_TIMESTAMP : out timestamp_t;
         EVENT_SCORE    : out std_logic_vector(31 downto 0);
+        ADC_INPUT_OVERFLOW_COUNT : out unsigned(31 downto 0);
         DROPPED_TRIGGER_COUNT : out unsigned(31 downto 0);
         RING_MISS_COUNT       : out unsigned(31 downto 0);
 
@@ -69,10 +73,49 @@ architecture structural of AI_TRIGGER_TOP is
     signal agg_score_chunk_id : chunk_id_t := (others => '0');
     signal agg_score_timestamp : timestamp_t := (others => '0');
     signal agg_score_valid : std_logic := '0';
+    signal DATA_STR_INTERNAL : std_logic;
+    signal ADC_DATA4_INTERNAL : adc_data4_t;
+    signal adc_src_raw : raw_adc_batch_t;
+    signal adc_ingest_raw : raw_adc_batch_t;
+    signal rst_adc_src : std_logic := '1';
     signal rst_adc : std_logic := '1';
     signal rst_cnn : std_logic := '1';
 
+    function pack_adc_batch(d : adc_data4_t) return raw_adc_batch_t is
+        variable packed : raw_adc_batch_t := (others => '0');
+    begin
+        for ch in 0 to N_CH - 1 loop
+            for s in 0 to N_BATCH_S - 1 loop
+                packed((ch * N_BATCH_S + s) * 12 + 11 downto
+                       (ch * N_BATCH_S + s) * 12) := d(ch)(s);
+            end loop;
+        end loop;
+        return packed;
+    end function;
+
+    function unpack_adc_batch(d : raw_adc_batch_t) return adc_data4_t is
+        variable unpacked : adc_data4_t;
+    begin
+        for ch in 0 to N_CH - 1 loop
+            for s in 0 to N_BATCH_S - 1 loop
+                unpacked(ch)(s) := d((ch * N_BATCH_S + s) * 12 + 11 downto
+                                     (ch * N_BATCH_S + s) * 12);
+            end loop;
+        end loop;
+        return unpacked;
+    end function;
+
 begin
+    adc_src_raw <= pack_adc_batch(ADC_SRC_DATA4);
+    ADC_DATA4_INTERNAL <= unpack_adc_batch(adc_ingest_raw);
+
+    u_RST_ADC_SRC : entity work.RESET_SYNC
+        port map (
+            CLK       => ADC_SRC_CLK,
+            RST_ASYNC => RST,
+            RST_SYNC  => rst_adc_src
+        );
+
     u_RST_ADC : entity work.RESET_SYNC
         port map (
             CLK       => CLK_ADC,
@@ -87,12 +130,27 @@ begin
             RST_SYNC  => rst_cnn
         );
 
+    u_ADC_INPUT : entity work.ADC_INPUT_CDC_FIFO
+        port map (
+            WR_CLK         => ADC_SRC_CLK,
+            WR_RST         => rst_adc_src,
+            WR_VALID       => ADC_SRC_VALID,
+            WR_READY       => ADC_SRC_READY,
+            WR_DATA        => adc_src_raw,
+            RD_CLK         => CLK_ADC,
+            RD_RST         => rst_adc,
+            RD_VALID       => DATA_STR_INTERNAL,
+            RD_READY       => '1',
+            RD_DATA        => adc_ingest_raw,
+            OVERFLOW_COUNT => ADC_INPUT_OVERFLOW_COUNT
+        );
+
     u_DIST : entity work.ADC_CHUNK_DISTRIBUTOR
         port map (
             CLK_ADC        => CLK_ADC,
             RST            => rst_adc,
-            DATA_STR       => DATA_STR,
-            ADC_DATA4      => ADC_DATA4,
+            DATA_STR       => DATA_STR_INTERNAL,
+            ADC_DATA4      => ADC_DATA4_INTERNAL,
             LANE_BUSY      => lane_busy,
             LANE_WE        => lane_we,
             BATCH_DATA     => batch_data,
@@ -130,8 +188,8 @@ begin
             CLK_CNN        => CLK_CNN,
             RST_ADC        => rst_adc,
             RST_CNN        => rst_cnn,
-            DATA_STR       => DATA_STR,
-            ADC_DATA4      => ADC_DATA4,
+            DATA_STR       => DATA_STR_INTERNAL,
+            ADC_DATA4      => ADC_DATA4_INTERNAL,
             SCORE_VALID    => agg_score_valid,
             SCORE_DATA     => agg_score_data,
             SCORE_CHUNK_ID => agg_score_chunk_id,

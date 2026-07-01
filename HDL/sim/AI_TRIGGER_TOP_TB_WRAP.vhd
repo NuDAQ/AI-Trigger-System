@@ -23,6 +23,7 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         CLK_CNN         : in  std_logic;
         RST             : in  std_logic;
         DATA_STR        : in  std_logic;
+        ADC_SRC_READY   : out std_logic;
         ADC_DATA4_FLAT  : in  std_logic_vector(767 downto 0);  -- 4*16*12 = 768
         CNN_THRESH      : in  std_logic_vector(31 downto 0);
         CNN_TRIG        : out std_logic;
@@ -36,6 +37,7 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         EVENT_CHUNK_ID  : out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
         EVENT_TIMESTAMP : out std_logic_vector(TIMESTAMP_WIDTH - 1 downto 0);
         EVENT_SCORE     : out std_logic_vector(31 downto 0);
+        ADC_INPUT_OVERFLOW_COUNT : out std_logic_vector(31 downto 0);
         DROPPED_TRIGGER_COUNT : out std_logic_vector(31 downto 0);
         RING_MISS_COUNT       : out std_logic_vector(31 downto 0);
         CHUNK_OVERFLOW  : out std_logic
@@ -48,6 +50,7 @@ architecture rtl of AI_TRIGGER_TOP_TB_WRAP is
     signal cnn_out_chunk_id_i : chunk_id_t;
     signal event_chunk_id_i : chunk_id_t;
     signal event_timestamp_i : timestamp_t;
+    signal adc_input_overflow_count_i : unsigned(31 downto 0);
     signal dropped_trigger_count_i : unsigned(31 downto 0);
     signal ring_miss_count_i : unsigned(31 downto 0);
 
@@ -68,8 +71,10 @@ begin
             CLK_ADC        => CLK_ADC,
             CLK_CNN        => CLK_CNN,
             RST            => RST,
-            DATA_STR       => DATA_STR,
-            ADC_DATA4      => adc_internal,
+            ADC_SRC_CLK    => CLK_ADC,
+            ADC_SRC_VALID  => DATA_STR,
+            ADC_SRC_READY  => ADC_SRC_READY,
+            ADC_SRC_DATA4  => adc_internal,
             CNN_THRESH     => CNN_THRESH,
             CNN_TRIG       => CNN_TRIG,
             CNN_OUT_DATA   => CNN_OUT_DATA,
@@ -82,6 +87,7 @@ begin
             EVENT_CHUNK_ID => event_chunk_id_i,
             EVENT_TIMESTAMP => event_timestamp_i,
             EVENT_SCORE    => EVENT_SCORE,
+            ADC_INPUT_OVERFLOW_COUNT => adc_input_overflow_count_i,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count_i,
             RING_MISS_COUNT       => ring_miss_count_i,
             CHUNK_OVERFLOW => CHUNK_OVERFLOW
@@ -90,6 +96,7 @@ begin
     CNN_OUT_CHUNK_ID <= std_logic_vector(cnn_out_chunk_id_i);
     EVENT_CHUNK_ID <= std_logic_vector(event_chunk_id_i);
     EVENT_TIMESTAMP <= std_logic_vector(event_timestamp_i);
+    ADC_INPUT_OVERFLOW_COUNT <= std_logic_vector(adc_input_overflow_count_i);
     DROPPED_TRIGGER_COUNT <= std_logic_vector(dropped_trigger_count_i);
     RING_MISS_COUNT <= std_logic_vector(ring_miss_count_i);
 
