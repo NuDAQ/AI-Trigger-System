@@ -2,7 +2,7 @@
 """Run the Vivado xsim testbench from a plain terminal.
 
 Example:
-    python3 scripts/run_vivado_sim.py --num-samples 1000
+    python3 scripts/run_vivado_sim.py
 
 The script opens AI_Trigger_System/AI_Trigger_System.xpr in Vivado batch mode,
 sources run_sim.tcl, and streams Vivado output to the terminal.
@@ -95,7 +95,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--num-samples",
         type=int,
-        help="Pass +NUM_SAMPLES=<N> to tb_ai_trigger_top.sv.",
+        default=1000,
+        help="Pass +NUM_SAMPLES=<N> to tb_ai_trigger_top.sv. Default: 1000.",
     )
     parser.add_argument(
         "--testhex-dir",
@@ -112,12 +113,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--score-threshold",
         type=float,
-        help="Pass +SCORE_THRESHOLD=<f> to the testbench checker. Default is -6.0 in the testbench.",
+        default=0.0,
+        help="Pass +SCORE_THRESHOLD=<f> to the testbench checker. Default: 0.0.",
     )
     parser.add_argument(
         "--cnn-thresh-raw",
         type=int,
-        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default is -12288 in the testbench.",
+        default=0,
+        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default: 0.",
     )
     parser.add_argument(
         "--keep-tcl",

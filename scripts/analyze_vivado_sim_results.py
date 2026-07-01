@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expected-samples", type=int, default=1000)
     parser.add_argument("--expected-cores", type=int, default=5)
     parser.add_argument("--expected-cnn-mhz", type=float, default=200.0)
-    parser.add_argument("--expected-thresh-raw", type=int, default=-12288)
+    parser.add_argument("--expected-thresh-raw", type=int, default=0)
     parser.add_argument("--min-accuracy", type=float, default=0.90)
     parser.add_argument("--max-overflows", type=int, default=0)
     parser.add_argument(

@@ -20,8 +20,8 @@
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
 //   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
 // The core output is ap_fixed<22,11>, byte-aligned into a 32-bit TDATA word.
-// The wrapper behavioral reference run uses SCORE_THRESHOLD=-6.0, so the
-// matching CNN_THRESH default is 22'sd-12288.
+// The current full-system validation point uses SCORE_THRESHOLD=0.0, so the
+// matching CNN_THRESH default is 22'sd0.
 //
 // Clocks:
 //   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
@@ -32,8 +32,8 @@
 //   +OUT_CSV=<path>         output CSV path
 //   +EVENT_CSV=<path>       event waveform CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
-//   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
-//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -12288)
+//   +SCORE_THRESHOLD=<f>    classification threshold (default 0.0)
+//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default 0)
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -176,10 +176,10 @@ module tb_AI_TRIGGER_TOP;
         end
         has_score_threshold_arg = $value$plusargs("SCORE_THRESHOLD=%f", score_threshold);
         if (!has_score_threshold_arg)
-            score_threshold = -6.0;
+            score_threshold = 0.0;
         has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
         if (!has_cnn_thresh_raw_arg)
-            cnn_thresh_raw = -12288;  // -6.0 in ap_fixed<22,11>
+            cnn_thresh_raw = 0;  // 0.0 in ap_fixed<22,11>
         if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 

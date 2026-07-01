@@ -277,11 +277,10 @@ Common raw threshold values:
 | 0.5 | 1024 |
 | 1.0 | 2048 |
 
-The testbench fallback is `SCORE_THRESHOLD=-6.0` and
-`CNN_THRESH_RAW=-12288`, matching the wrapper behavioral reference run.  The
-current full-system functional validation uses `SCORE_THRESHOLD=0.0` and
-`CNN_THRESH_RAW=0`, so pass those arguments explicitly when reproducing the
-reported accuracy and trigger-agreement numbers.
+The default testbench and launcher configuration uses the current full-system
+functional validation point: `SCORE_THRESHOLD=0.0` and `CNN_THRESH_RAW=0`.
+The older wrapper-reference fallback threshold is still available by passing
+`SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288` explicitly.
 
 ## Main RTL Files
 
@@ -305,9 +304,7 @@ The recommended terminal flow for the current functional validation point is:
 
 ```bash
 python3 scripts/run_vivado_sim.py \
-  --num-samples 1000 \
-  --score-threshold 0.0 \
-  --cnn-thresh-raw 0
+  --num-samples 1000
 ```
 
 The script opens `AI_Trigger_System/AI_Trigger_System.xpr`, sources
@@ -518,16 +515,11 @@ On the reference Ubuntu run, the full-DUT object enumeration took about 67
 minutes. The 64-sample gate simulation then completed in about 2.2 minutes. The
 detailed xsim trace is kept in `build/vivado_post_impl_saif/xsim/xsim.log`.
 
-The current SAIF run used the default trigger threshold
-`CNN_THRESH_RAW = -12288` (`-6.0`). That threshold makes the post-implementation
-testbench trigger on nearly every sample and is useful for switching activity,
-but the behavioral functional validation above uses `CNN_THRESH_RAW = 0`.
-Use matching threshold arguments if the SAIF run also needs to report functional
-accuracy under the same operating point:
+The default SAIF wrapper now uses the same threshold-0 operating point as the
+behavioral functional validation.  Pass explicit threshold arguments only when
+you intentionally want a different activity profile:
 
 ```bash
 python3 scripts/run_post_impl_saif.py \
-  --samples 64 \
-  --score-threshold 0.0 \
-  --cnn-thresh-raw 0
+  --samples 64
 ```

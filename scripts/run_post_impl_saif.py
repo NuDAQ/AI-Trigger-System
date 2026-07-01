@@ -189,13 +189,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--score-threshold",
         type=float,
-        default=-6.0,
+        default=0.0,
         help="Classification threshold for the testbench checker.",
     )
     parser.add_argument(
         "--cnn-thresh-raw",
         type=int,
-        default=-12288,
+        default=0,
         help="Raw signed CNN_THRESH value driven into the DUT.",
     )
     parser.add_argument(

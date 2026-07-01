@@ -81,7 +81,7 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertRegex(top, r"lane_score\(i\)\(21 downto 0\)")
         self.assertRegex(top, r"CNN_THRESH\(21 downto 0\)")
         self.assertIn("/ 2048.0", sv_tb)
-        self.assertIn("-12288", sv_tb)
+        self.assertIn("cnn_thresh_raw = 0", sv_tb)
 
 
 if __name__ == "__main__":
