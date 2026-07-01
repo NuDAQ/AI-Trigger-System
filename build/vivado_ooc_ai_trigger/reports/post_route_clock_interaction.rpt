@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Mon Jun 29 21:51:46 2026
+| Date              : Tue Jun 30 17:56:47 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_clock_interaction -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_clock_interaction.rpt
 | Design            : AI_TRIGGER_TOP
@@ -19,9 +19,9 @@ Clock Interaction Table
                             WNS                            TNS Failing  TNS Total    WNS Path         Clock-Pair           Inter-Clock          
 From Clock    To Clock      Clock Edges  WNS(ns)  TNS(ns)    Endpoints    Endpoints  Requirement(ns)  Classification       Constraints          
 ------------  ------------  -----------  -------  -------  -----------  -----------  ---------------  -------------------  -------------------  
-CLK_ADC       CLK_ADC       rise - rise    11.65     0.00            0        13584            16.00  Clean                Timed                
+CLK_ADC       CLK_ADC       rise - rise    11.87     0.00            0        17314            16.00  Clean                Timed                
 CLK_ADC       CLK_CNN                                                0          236                   Ignored              Asynchronous Groups  
 CLK_CNN       CLK_ADC                                                0          103                   Ignored              Asynchronous Groups  
-CLK_CNN       CLK_CNN       rise - rise     0.99     0.00            0        50438             5.00  Clean                Timed                
+CLK_CNN       CLK_CNN       rise - rise     0.91     0.00            0        50440             5.00  Clean                Timed                
 
 
