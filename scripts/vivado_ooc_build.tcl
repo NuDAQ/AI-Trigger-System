@@ -114,16 +114,15 @@ synth_design \
     -mode out_of_context \
     -flatten_hierarchy none
 
-# Keep the OOC implementation from trimming CNN/FIFO internals across the block
-# boundary.  This flow is for subsystem resource/timing analysis, so preserving
-# lane hierarchy is more useful than cross-boundary optimization.
+# Keep the OOC implementation from trimming CNN internals across the block
+# boundary.  Do not lock lane FIFOs here: their BRAM-heavy read-side paths are
+# route-dominated at 200 MHz, so placement/physical optimization needs freedom.
 set preserve_cells [get_cells -quiet -hierarchical -filter {
     NAME =~ *u_WRAPPER ||
-    NAME =~ *cnn_core_inst ||
-    NAME =~ *u_FIFO
+    NAME =~ *cnn_core_inst
 }]
 if {[llength $preserve_cells] > 0} {
-    puts "INFO: preserving [llength $preserve_cells] CNN/FIFO hierarchy cells through implementation"
+    puts "INFO: preserving [llength $preserve_cells] CNN hierarchy cells through implementation"
     set_property DONT_TOUCH true $preserve_cells
 }
 

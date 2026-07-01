@@ -47,6 +47,20 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_ooc_flow_does_not_lock_lane_fifo_placement(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+        preserve_match = re.search(
+            r"(?s)set preserve_cells \[get_cells .*?-filter \{(.*?)\}\]",
+            tcl,
+        )
+
+        self.assertIsNotNone(preserve_match)
+        preserve_filter = preserve_match.group(1)
+        self.assertIn("u_WRAPPER", preserve_filter)
+        self.assertIn("cnn_core_inst", preserve_filter)
+        self.assertNotIn("u_FIFO", preserve_filter)
+        self.assertIn("set_property DONT_TOUCH true $preserve_cells", tcl)
+
     def test_rtl_avoids_vhdl_2008_only_process_all(self) -> None:
         rtl_sources = (ROOT / "HDL/rtl").glob("*.vhd")
 
