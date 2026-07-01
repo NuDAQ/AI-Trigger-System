@@ -33,7 +33,6 @@ begin
     dut : entity work.ADC_INPUT_CDC_FIFO
         port map (
             WR_CLK         => src_clk,
-            RST_ASYNC      => rst,
             WR_RST         => rst,
             WR_VALID       => wr_valid,
             WR_READY       => wr_ready,
