@@ -19,14 +19,18 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertIn("version: 4.0.0", lock)
         self.assertIn("revision: 1a9554f554c495730117a688b5bb953cfddb89f1", lock)
 
-    def test_system_uses_five_lanes_at_200_mhz(self) -> None:
+    def test_system_uses_five_lanes_with_70_mhz_ingest_and_200_mhz_cnn(self) -> None:
         pkg = read("HDL/rtl/AI_TRIGGER_PKG.vhd")
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
         sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
         saif = read("scripts/vivado_post_impl_saif.tcl")
 
         self.assertRegex(pkg, r"N_LANES\s+:\s+integer\s*:=\s*5")
+        self.assertRegex(xdc, r"create_clock\s+-name\s+ADC_SRC_CLK\s+-period\s+16\.000")
+        self.assertRegex(xdc, r"create_clock\s+-name\s+CLK_ADC\s+-period\s+14\.286")
         self.assertRegex(xdc, r"create_clock\s+-name\s+CLK_CNN\s+-period\s+5\.000")
+        self.assertIn("parameter ADC_SRC_CLK_PERIOD = 16.0", sv_tb)
+        self.assertIn("parameter CLK_ADC_PERIOD = 14.286", sv_tb)
         self.assertIn("parameter CLK_CNN_PERIOD =  5.000", sv_tb)
         self.assertIn("CNN cores:        5", sv_tb)
         self.assertIn(r"gen_lanes\[4\].u_LANE", saif)

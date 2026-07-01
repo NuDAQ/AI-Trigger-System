@@ -20,6 +20,7 @@ use work.AI_TRIGGER_PKG.all;
 entity AI_TRIGGER_TOP_TB_WRAP is
     port (
         CLK_ADC         : in  std_logic;
+        ADC_SRC_CLK     : in  std_logic;
         CLK_CNN         : in  std_logic;
         RST             : in  std_logic;
         DATA_STR        : in  std_logic;
@@ -71,7 +72,7 @@ begin
             CLK_ADC        => CLK_ADC,
             CLK_CNN        => CLK_CNN,
             RST            => RST,
-            ADC_SRC_CLK    => CLK_ADC,
+            ADC_SRC_CLK    => ADC_SRC_CLK,
             ADC_SRC_VALID  => DATA_STR,
             ADC_SRC_READY  => ADC_SRC_READY,
             ADC_SRC_DATA4  => adc_internal,

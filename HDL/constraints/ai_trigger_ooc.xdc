@@ -5,7 +5,7 @@
 # here.
 
 create_clock -name ADC_SRC_CLK -period 16.000 [get_ports ADC_SRC_CLK]
-create_clock -name CLK_ADC -period 16.000 [get_ports CLK_ADC]
+create_clock -name CLK_ADC -period 14.286 [get_ports CLK_ADC]
 create_clock -name CLK_CNN -period 5.000 [get_ports CLK_CNN]
 
 set_clock_groups -asynchronous \

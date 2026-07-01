@@ -15,7 +15,9 @@
 //     bits [63:48] = 0 (unused)
 //
 //   One sample = 256 timesteps = 16 batches x 16 timesteps/batch.
-//   The testbench presents 16 timesteps per DATA_STR pulse (one CLK_ADC cycle).
+//   The testbench presents 16 timesteps per DATA_STR pulse (one ADC source
+//   clock cycle). The trigger ingest clock is faster and drains the input CDC
+//   FIFO when valid batches are available.
 //
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
 //   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
@@ -24,7 +26,8 @@
 // matching CNN_THRESH default is 22'sd0.
 //
 // Clocks:
-//   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
+//   ADC_SRC_CLK: 16 ns period (62.5 MHz)  — 1 GSa/s source batch clock
+//   CLK_ADC: 14.286 ns period (70 MHz)    — trigger ingest clock
 //   CLK_CNN:  5.000 ns period (200 MHz) — CNN inference clock
 //
 // Plusargs:
@@ -41,7 +44,8 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Parameters
     // -------------------------------------------------------------------------
-    parameter CLK_ADC_PERIOD = 16.0;   // ns (62.5 MHz)
+    parameter ADC_SRC_CLK_PERIOD = 16.0;   // ns (62.5 MHz source batch clock)
+    parameter CLK_ADC_PERIOD = 14.286;     // ns (70 MHz trigger ingest clock)
     parameter CLK_CNN_PERIOD =  5.000; // ns (200 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
@@ -57,7 +61,7 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Signals
     // -------------------------------------------------------------------------
-    reg  clk_adc, clk_cnn, rst, data_str;
+    reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str;
     reg  [767:0] adc_data4_flat;  // 4 ch * 16 samples * 12-bit = 768 bits
     reg  [31:0]  cnn_thresh;
 
@@ -82,6 +86,7 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     AI_TRIGGER_TOP_TB_WRAP dut (
         .CLK_ADC        (clk_adc),
+        .ADC_SRC_CLK    (clk_adc_src),
         .CLK_CNN        (clk_cnn),
         .RST            (rst),
         .DATA_STR       (data_str),
@@ -108,6 +113,9 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Clock generation
     // -------------------------------------------------------------------------
+    initial clk_adc_src = 0;
+    always #(ADC_SRC_CLK_PERIOD / 2.0) clk_adc_src = ~clk_adc_src;
+
     initial clk_adc = 0;
     always #(CLK_ADC_PERIOD / 2.0) clk_adc = ~clk_adc;
 
@@ -217,6 +225,7 @@ module tb_AI_TRIGGER_TOP;
         data_str = 0;
         $display("[%0t] Asserting reset...", $time);
         repeat(10) @(posedge clk_cnn);
+        repeat(4)  @(posedge clk_adc_src);
         repeat(4)  @(posedge clk_adc);
         rst      = 0;
         // Let FIFO Generator reset-busy/full flags settle before presenting
@@ -253,13 +262,13 @@ module tb_AI_TRIGGER_TOP;
     end
 
     // =========================================================================
-    // Input driver (CLK_ADC domain)
+    // Input driver (ADC source domain)
     //
     // DATA_STR is high exactly while this finite test stream is active.
-    // The driver updates ADC_DATA4_FLAT every CLK_ADC cycle to simulate the
+    // The driver updates ADC_DATA4_FLAT every ADC source cycle to simulate the
     // continuous 1 Gsps ADC stream: 16 samples per cycle across 4 channels.
     //
-    // Each sample occupies exactly N_BATCHES (16) consecutive CLK_ADC cycles.
+    // Each sample occupies exactly N_BATCHES (16) consecutive source cycles.
     // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
@@ -290,7 +299,7 @@ module tb_AI_TRIGGER_TOP;
                 // Record send time for latency measurement by sample/chunk id.
                 start_time_by_sample[s_id] = $time;
 
-                // Drive 16 consecutive batches, one per CLK_ADC cycle.
+                // Drive 16 consecutive batches, one per source clock cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
                     batch_flat = 768'h0;
@@ -302,7 +311,9 @@ module tb_AI_TRIGGER_TOP;
                     end
                     adc_data4_flat = batch_flat;
                     data_str = 1;
-                    @(posedge clk_adc);   // hold for exactly 1 cycle; no gap
+                    do begin
+                        @(posedge clk_adc_src);
+                    end while (!adc_src_ready);
                 end
 
                 sent_count = sent_count + 1;
@@ -452,7 +463,9 @@ module tb_AI_TRIGGER_TOP;
             $display("=============================================================");
             $display("Top module:       AI_TRIGGER_TOP");
             $display("CNN cores:        5 (parallel, round-robin)");
-            $display("CLK_ADC:          %.1f MHz (%.0f ns period)",
+            $display("ADC_SRC_CLK:      %.1f MHz (%.3f ns period)",
+                     1000.0/ADC_SRC_CLK_PERIOD, ADC_SRC_CLK_PERIOD);
+            $display("CLK_ADC:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_ADC_PERIOD, CLK_ADC_PERIOD);
             $display("CLK_CNN:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
