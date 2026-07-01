@@ -32,11 +32,11 @@ python3 scripts/run_post_impl_saif.py
 
 ## Current Report Set
 
-The current routed reports were generated from the `AI_TRIGGER_TOP`
-out-of-context block implementation after the five-lane, 200 MHz `CLK_CNN`
-updates. They are suitable for the current block-level timing and resource
-assessment. SAIF power should be regenerated after functional or activity
-profile changes.
+The checked-in RTL now includes an input CDC FIFO between the ADC/decoder source
+stream and the trigger ingest domain. The previous routed reports were
+generated before this input CDC FIFO and 70 MHz `CLK_ADC` target were added, so
+they are historical reference data only. Rerun OOC implementation before using
+timing, resource, or power numbers for sign-off.
 
 Report context:
 
@@ -46,13 +46,15 @@ Report context:
 | Device | `xcku5p-ffvb676-2-e` |
 | Build style | Out-of-context block implementation |
 | CNN lanes | 5 |
-| `CLK_ADC` | 62.5 MHz |
+| `ADC_SRC_CLK` | 62.5 MHz nominal source-side batch clock |
+| `CLK_ADC` | 70 MHz target |
 | `CLK_CNN` | 200.000 MHz |
 
 ## Post-Implementation Simulation
 
-The latest behavioral Vivado simulation completed successfully with the
-existing testbench and the functional threshold used for validation:
+The latest pulled behavioral Vivado simulation completed successfully before
+the input CDC FIFO and 70 MHz ingest update, using the functional threshold
+used for validation:
 
 | Metric | Value |
 | --- | ---: |
@@ -69,7 +71,7 @@ post-route functional evidence is needed.
 
 ## Timing Result
 
-The routed timing report closes timing at the current clock targets:
+The previous routed timing report closed timing at the earlier clock targets:
 
 | Metric | Value |
 | --- | ---: |
@@ -127,7 +129,7 @@ Across five lanes this accounts for the reported 20 DSPs.
 
 ## SAIF Power Result
 
-The current routed OOC power report is vectorless and should be treated as an
+The previous routed OOC power report is vectorless and should be treated as an
 estimate until a fresh SAIF run is available:
 
 | Metric | Value |
