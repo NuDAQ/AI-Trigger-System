@@ -62,6 +62,7 @@ AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
     TRIGGER_DECISION        HDL/rtl/TRIGGER_DECISION.vhd
     TRIGGER_CDC_FIFO        HDL/rtl/TRIGGER_CDC_FIFO.vhd
     EVENT_CAPTURE_CTRL      HDL/rtl/EVENT_CAPTURE_CTRL.vhd
+    EVENT_OUTPUT_FIFO       HDL/rtl/EVENT_OUTPUT_FIFO.vhd
 ```
 
 Functional data flow:
@@ -83,7 +84,9 @@ crosses CNN_THRESH, TRIGGER_DECISION sends the trigger through TRIGGER_CDC_FIFO
 back to the ADC domain. TRIGGER_CDC_FIFO keeps a 32-entry trigger descriptor
 queue in the CNN clock domain and uses an XPM handshake CDC for the descriptor
 crossing. EVENT_CAPTURE_CTRL then reads the corresponding triggered-chunk
-waveform window from the ring buffer and streams it on EVENT_*.
+waveform window from the ring buffer and writes it into EVENT_OUTPUT_FIFO. The
+external EVENT_* ready/valid interface drains that FIFO, so short downstream
+stalls do not directly block the event capture controller.
 ```
 
 The event waveform window is currently one chunk: the chunk whose CNN score
@@ -106,8 +109,9 @@ AI trigger boundary, then released through local reset synchronizers in the
 `ADC_SRC_CLK`, `CLK_ADC`, and `CLK_CNN` domains before fanning out to domain
 logic. Cross-domain blocks receive the synchronized reset domains they need:
 source-side input FIFO logic uses `RST_ADC_SRC`, ADC ingest/event logic uses
-`RST_ADC`, CNN-side logic uses `RST_CNN`, and the per-lane Xilinx async FIFO
-keeps a separate `RST_ASYNC` connection for its vendor IP reset port.
+`RST_ADC`, CNN-side logic uses `RST_CNN`, the input XPM FIFO reset is driven
+from the source-clock reset, and the per-lane Xilinx async FIFO keeps a
+separate `RST_ASYNC` connection for its vendor IP reset port.
 
 ### Event Timestamp
 
@@ -192,6 +196,11 @@ accepted by the CNN input stream. It does not wait for the CNN score output.
 This allows the input side of a lane to accept a later chunk while the previous
 chunk is still propagating through the CNN pipeline.
 
+The event readout path includes a synchronous `EVENT_OUTPUT_FIFO` in the
+`CLK_ADC` domain. `EVENT_CAPTURE_CTRL` writes raw waveform batches plus
+`EVENT_LAST`, chunk id, timestamp, and score into this FIFO. The external
+`EVENT_READY` signal only controls FIFO drain, not immediate waveform capture.
+
 ## Timing and Throughput
 
 At 1 Gsps, one 256-sample chunk arrives every:
@@ -237,15 +246,16 @@ The latest full-system behavioral check, using 1000 samples at
 Samples sent:     1000
 Results received: 1000
 Chunk overflows:  0
+ADC input overflows: 0
 Events saved:     163
 Event batches:    2608
 Dropped triggers: 0
 Ring misses:      0
 Accuracy:         981 / 1000 = 98.10%
-Avg latency:      202.0 CNN cycles = 1.010 us
-Throughput:       3.34 Mchunks/s
+Avg latency:      223.4 CNN cycles = 1.117 us
+Reported TB throughput: 3.34 M samples/s
 RTL/Keras score correlation: 0.9759
-RTL/Keras trigger agreement: 987 / 1000 = 98.70%
+RTL/Keras trigger agreement: 986 / 1000 = 98.60%
 RTL/Keras mean absolute score difference: 0.647
 ```
 
@@ -295,11 +305,13 @@ The older wrapper-reference fallback threshold is still available by passing
 | --- | --- |
 | `HDL/rtl/AI_TRIGGER_PKG.vhd` | Shared constants and array types. `N_LANES` is currently 5. |
 | `HDL/rtl/AI_TRIGGER_TOP.vhd` | Structural top level, result aggregation, and threshold comparison. |
+| `HDL/rtl/ADC_INPUT_CDC_FIFO.vhd` | XPM async FIFO crossing ADC/decoder source batches into the trigger ingest clock domain. |
 | `HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd` | ADC-domain chunk formation and round-robin lane assignment. |
 | `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane async FIFO, CDC counters, AXI-stream input FSM, and CNN wrapper instance. |
 | `HDL/rtl/EVENT_CAPTURE_PATH.vhd` | Trigger decision, trigger CDC, waveform ring buffer, and event readout path. |
 | `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | ADC-domain circular storage for recent raw waveform chunks. |
 | `HDL/rtl/EVENT_CAPTURE_CTRL.vhd` | ADC-domain event window readout controller. |
+| `HDL/rtl/EVENT_OUTPUT_FIFO.vhd` | Synchronous output FIFO that decouples event capture from short downstream stalls. |
 | `HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd` | Mixed-language simulation wrapper for the VHDL top-level input type. |
 | `HDL/sim/tb_ai_trigger_top.sv` | SystemVerilog simulation testbench. |
 | `scripts/run_vivado_sim.py` | Batch-mode Vivado simulation launcher. |
@@ -435,35 +447,43 @@ Post-implementation SAIF and timing reports are written under:
 build/vivado_post_impl_saif/reports/
 ```
 
-Previous routed result summary, before the input CDC FIFO and 70 MHz ingest
-clock update:
+Current routed OOC result summary, after the input CDC FIFO, 70 MHz ingest
+clock target, CDC cleanup, and lane FIFO placement optimization:
 
-| Metric | Previous report |
+| Metric | Current report |
 | --- | ---: |
-| Timing | WNS 1.109 ns, TNS 0, WHS 0.007 ns |
-| `CLK_ADC` | 62.5 MHz |
+| Timing | WNS 1.176 ns, TNS 0, WHS 0.024 ns |
+| `ADC_SRC_CLK` | 62.5 MHz |
+| `CLK_ADC` | 70 MHz target |
 | `CLK_CNN` | 200 MHz target |
-| CLB LUT | 28,692 |
-| CLB registers | 17,886 |
-| BRAM tiles | 94 |
+| CDC | `CDC-1 Critical = 0`; only recognized CDC info/reset warnings remain |
+| CLB LUT | 28,990 |
+| CLB registers | 19,830 |
+| BRAM tiles | 112 |
 | DSP | 20 |
 | IOB | 0 |
-| Vectorless power | 1.676 W total, Medium confidence |
-| Dynamic power | 1.215 W |
-| Static power | 0.461 W |
+| Vectorless power | 1.652 W total, Medium confidence |
+| Dynamic power | 1.191 W |
+| Static power | 0.460 W |
 
-The next hierarchical utilization report should show all five lanes present. Each lane
-contains one CNN wrapper and one async FIFO, so the CNN datapath was not
+The hierarchical utilization report should show all five lanes present. Each
+lane contains one CNN wrapper and one async FIFO, so the CNN datapath was not
 optimized away in implementation.
 
 The previous SAIF hierarchy report showed dynamic power dominated by the five CNN
 lanes. Each lane is about 0.182-0.186 W, including about 0.146-0.150 W in the
 wrapper and about 0.035 W in the FIFO. The distributor is about 0.007 W.
 
-The next routed timing report must confirm the new `ADC_SRC_CLK` to `CLK_ADC`
-input CDC boundary and 70 MHz ingest target. The OOC constraints intentionally
-use zero-delay IO boundary assumptions, so methodology and CDC reports still
-need review before system-level sign-off.
+The OOC build flow preserves the CNN wrapper/core hierarchy but intentionally
+does not apply `DONT_TOUCH` to the per-lane FIFO Generator instances. Leaving
+the lane FIFOs optimizable restored the 200 MHz `CLK_CNN` margin by allowing
+Vivado to improve BRAM-heavy FIFO placement/routing.
+
+The routed timing report confirms the `ADC_SRC_CLK` to `CLK_ADC` input CDC
+boundary and 70 MHz ingest target. The OOC constraints intentionally use
+zero-delay IO boundary assumptions, so methodology warnings around IO delay and
+clock-group/max-delay interactions still need review before system-level
+sign-off.
 
 The main throughput target is one 256-sample chunk every 256 ns at the ADC
 input. At five lanes, the CNN domain should have enough margin if the single
