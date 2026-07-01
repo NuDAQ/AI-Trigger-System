@@ -49,6 +49,12 @@ architecture sim of tb_event_capture_path_output_backpressure is
         return packed;
     end function;
 
+    function sample_at(batch : raw_adc_batch_t; ch : integer; sample : integer) return integer is
+    begin
+        return to_integer(unsigned(batch((ch * N_BATCH_S + sample) * 12 + 11 downto
+                                         (ch * N_BATCH_S + sample) * 12)));
+    end function;
+
     procedure drive_batch(signal target : out adc_data4_t; chunk_id : integer; batch_id : integer) is
     begin
         for ch in 0 to N_CH - 1 loop
@@ -134,7 +140,6 @@ begin
         end loop;
         data_str <= '0';
 
-        event_ready <= '1';
         while seen < 2 * N_BATCHES loop
             wait until rising_edge(clk_adc);
             wait for 1 ns;
@@ -151,7 +156,12 @@ begin
                     report "buffered event score mismatch"
                     severity failure;
                 assert event_data = expected_batch(expected_chunk, expected_batch_idx)
-                    report "buffered event waveform was not preserved across output backpressure"
+                    report "buffered event waveform was not preserved across output backpressure seen=" &
+                           integer'image(seen) &
+                           " chunk=" & integer'image(expected_chunk) &
+                           " batch=" & integer'image(expected_batch_idx) &
+                           " got0=" & integer'image(sample_at(event_data, 0, 0)) &
+                           " exp0=" & integer'image(sample_at(expected_batch(expected_chunk, expected_batch_idx), 0, 0))
                     severity failure;
                 if expected_batch_idx = N_BATCHES - 1 then
                     assert event_last = '1'
@@ -164,6 +174,9 @@ begin
                 end if;
                 seen := seen + 1;
                 wait_cycles := 0;
+                event_ready <= '1';
+                wait until rising_edge(clk_adc);
+                event_ready <= '0';
             else
                 wait_cycles := wait_cycles + 1;
                 assert wait_cycles < 800

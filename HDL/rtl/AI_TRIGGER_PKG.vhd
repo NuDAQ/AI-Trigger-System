@@ -20,6 +20,8 @@ package AI_TRIGGER_PKG is
     constant CHUNK_ID_FIFO_DEPTH : integer := 2 ** CHUNK_ID_FIFO_ADDR_WIDTH;
     constant TRIGGER_FIFO_ADDR_WIDTH : integer := 5;
     constant TRIGGER_FIFO_DEPTH : integer := 2 ** TRIGGER_FIFO_ADDR_WIDTH;
+    constant EVENT_OUTPUT_FIFO_ADDR_WIDTH : integer := 6;
+    constant EVENT_OUTPUT_FIFO_DEPTH : integer := 2 ** EVENT_OUTPUT_FIFO_ADDR_WIDTH;
 
     -- ADC data types: 4 channels, 16 samples per batch, 12-bit per sample
     subtype adc_sample_t  is std_logic_vector(11 downto 0);

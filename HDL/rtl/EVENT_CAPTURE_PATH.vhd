@@ -55,6 +55,14 @@ architecture structural of EVENT_CAPTURE_PATH is
     signal rb_rd_valid       : std_logic;
     signal rb_rd_hit         : std_logic;
     signal dropped_trigger_count_r : unsigned(31 downto 0) := (others => '0');
+
+    signal capture_event_valid     : std_logic;
+    signal capture_event_ready     : std_logic;
+    signal capture_event_data      : raw_adc_batch_t;
+    signal capture_event_last      : std_logic;
+    signal capture_event_chunk_id  : chunk_id_t;
+    signal capture_event_timestamp : timestamp_t;
+    signal capture_event_score     : std_logic_vector(31 downto 0);
 begin
     u_ring : entity work.WAVEFORM_RING_BUFFER
         port map (
@@ -122,14 +130,34 @@ begin
             RB_RD_DATA       => rb_rd_data,
             RB_RD_VALID      => rb_rd_valid,
             RB_RD_HIT        => rb_rd_hit,
-            EVENT_VALID      => EVENT_VALID,
-            EVENT_READY      => EVENT_READY,
-            EVENT_DATA       => EVENT_DATA,
-            EVENT_LAST       => EVENT_LAST,
-            EVENT_CHUNK_ID   => EVENT_CHUNK_ID,
-            EVENT_TIMESTAMP  => EVENT_TIMESTAMP,
-            EVENT_SCORE      => EVENT_SCORE,
+            EVENT_VALID      => capture_event_valid,
+            EVENT_READY      => capture_event_ready,
+            EVENT_DATA       => capture_event_data,
+            EVENT_LAST       => capture_event_last,
+            EVENT_CHUNK_ID   => capture_event_chunk_id,
+            EVENT_TIMESTAMP  => capture_event_timestamp,
+            EVENT_SCORE      => capture_event_score,
             RING_MISS_COUNT  => RING_MISS_COUNT
+        );
+
+    u_output_fifo : entity work.EVENT_OUTPUT_FIFO
+        port map (
+            CLK          => CLK_ADC,
+            RST          => RST_ADC,
+            WR_VALID     => capture_event_valid,
+            WR_READY     => capture_event_ready,
+            WR_DATA      => capture_event_data,
+            WR_LAST      => capture_event_last,
+            WR_CHUNK_ID  => capture_event_chunk_id,
+            WR_TIMESTAMP => capture_event_timestamp,
+            WR_SCORE     => capture_event_score,
+            RD_VALID     => EVENT_VALID,
+            RD_READY     => EVENT_READY,
+            RD_DATA      => EVENT_DATA,
+            RD_LAST      => EVENT_LAST,
+            RD_CHUNK_ID  => EVENT_CHUNK_ID,
+            RD_TIMESTAMP => EVENT_TIMESTAMP,
+            RD_SCORE     => EVENT_SCORE
         );
 
     process(CLK_CNN)
