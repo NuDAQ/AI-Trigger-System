@@ -1,6 +1,6 @@
 -------------------------------------
 | Tool Version : Vivado v.2023.2
-| Date         : Wed Jul  1 11:47:18 2026
+| Date         : Wed Jul  1 12:01:52 2026
 | Host         : AlbertsUbuntu
 | Design       : design_1
 | Device       : xcku5p-ffvb676-2-E-
@@ -25,8 +25,36 @@ Clock Net Route Info (CRP Input)
 Clock 1: u_RST_ADC/sync_ff[1]_bufg_place
 	Clock source type: BUFGCE
 	Clock source region: X0Y1
-	Clock regions with locked loads: (0, 0) (0, 1) (0, 2) (1, 0) (1, 1) (1, 2) 
-	initial rect ((0, 0), (1, 2))
+	Clock regions with locked loads: (0, 0) (0, 1) (1, 0) (1, 1) (2, 1) 
+	initial rect ((0, 0), (2, 1))
+
+
+
+*****************
+User Constraints:
+*****************
+No user constraints found
+
+
+***********************
+Running Pre-CRP Checker
+***********************
+Number of global clocks: 1
+	Number of BUFGCE: 1
+	Number of BUFGCE_HDIO: 0
+	Number of BUFG_CTRL: 0
+	Number of BUFGCE_DIV: 0
+	Number of BUFG_GT: 0
+	Number of BUFG_PS: 0
+	Number of BUFG_FABRIC: 0
+********************************
+Clock Net Route Info (CRP Input)
+********************************
+Clock 1: u_RST_ADC/sync_ff[1]
+	Clock source type: BUFGCE
+	Clock source region: X0Y1
+	Clock regions with locked loads: (0, 0) (0, 1) (1, 0) (1, 1) (2, 1) 
+	initial rect ((0, 0), (2, 1))
 
 
 
