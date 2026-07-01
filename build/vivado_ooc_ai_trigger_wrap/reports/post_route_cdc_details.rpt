@@ -1,0 +1,111 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date              : Wed Jul  1 12:24:07 2026
+| Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_cdc -details -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger_wrap/reports/post_route_cdc_details.rpt
+| Design            : AI_TRIGGER_TOP_TB_WRAP
+| Device            : xcku5p-ffvb676
+| Speed File        : -2  PRODUCTION 1.29 05-01-2022
+| Design State      : Routed
+| Temperature Grade : E
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CDC Report
+
+ID      Severity  Count  Description
+------  --------  -----  ------------------------------------------
+CDC-3   Info         29  1-bit synchronized with ASYNC_REG property
+CDC-26  Warning      13  LUTRAM read/write potential collision
+
+Source Clock: CLK_ADC
+Destination Clock: ADC_SRC_CLK
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception            Source (From)                                                                                                    Destination (To)
+---  -----  --------  ------------------------------------------  -----  -------------------  ---------------------------------------------------------------------------------------------------------------  ------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.fifo_rd_rst_ic_reg/C  u_DUT/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.rrst_wr_inst/syncstages_ff_reg[0]/D
+
+Source Clock: input port clock
+Destination Clock: ADC_SRC_CLK
+CDC Type: No Common Primary Clock
+
+Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
+---  ------  --------  -------------------------------------  -----  ----------  -------------  --------------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/u_RST_ADC_SRC/sync_ff_reg[0]/PRE
+
+Source Clock: ADC_SRC_CLK
+Destination Clock: CLK_ADC
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception            Source (From)                                                                                                    Destination (To)
+---  -----  --------  ------------------------------------------  -----  -------------------  ---------------------------------------------------------------------------------------------------------------  ------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.fifo_wr_rst_ic_reg/C  u_DUT/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/xpm_fifo_rst_inst/gen_rst_ic.wrst_rd_inst/syncstages_ff_reg[0]/D
+
+Source Clock: CLK_CNN
+Destination Clock: CLK_ADC
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception            Source (From)                                                                                                                                Destination (To)
+---  -----  --------  ------------------------------------------  -----  -------------------  -------------------------------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[0].u_LANE/stream_done_toggle_cnn_reg/C                                                                                       u_DUT/gen_lanes[0].u_LANE/stream_done_adc_ff_reg[0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/dest_req_ff_reg/C                                                                                   u_DUT/gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  3  CDC-3  Info      1-bit synchronized with ASYNC_REG property      6  Asynch Clock Groups  u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_rd_rst_ic_reg/C  u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_rrst_wr/syncstages_ff_reg[0]/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[1].u_LANE/stream_done_toggle_cnn_reg/C                                                                                       u_DUT/gen_lanes[1].u_LANE/stream_done_adc_ff_reg[0]/D
+  5  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/dest_req_ff_reg/C                                                                                   u_DUT/gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  6  CDC-3  Info      1-bit synchronized with ASYNC_REG property      6  Asynch Clock Groups  u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_rd_rst_ic_reg/C  u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_rrst_wr/syncstages_ff_reg[0]/D
+  7  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[2].u_LANE/stream_done_toggle_cnn_reg/C                                                                                       u_DUT/gen_lanes[2].u_LANE/stream_done_adc_ff_reg[0]/D
+  8  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/dest_req_ff_reg/C                                                                                   u_DUT/gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  9  CDC-3  Info      1-bit synchronized with ASYNC_REG property      6  Asynch Clock Groups  u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_rd_rst_ic_reg/C  u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_rrst_wr/syncstages_ff_reg[0]/D
+ 10  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[3].u_LANE/stream_done_toggle_cnn_reg/C                                                                                       u_DUT/gen_lanes[3].u_LANE/stream_done_adc_ff_reg[0]/D
+ 11  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/dest_req_ff_reg/C                                                                                   u_DUT/gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+ 12  CDC-3  Info      1-bit synchronized with ASYNC_REG property      6  Asynch Clock Groups  u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_rd_rst_ic_reg/C  u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_rrst_wr/syncstages_ff_reg[0]/D
+ 13  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[4].u_LANE/stream_done_toggle_cnn_reg/C                                                                                       u_DUT/gen_lanes[4].u_LANE/stream_done_adc_ff_reg[0]/D
+ 14  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/dest_req_ff_reg/C                                                                                   u_DUT/gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+ 15  CDC-3  Info      1-bit synchronized with ASYNC_REG property      6  Asynch Clock Groups  u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_rd_rst_ic_reg/C  u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_rrst_wr/syncstages_ff_reg[0]/D
+ 16  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/src_sendd_ff_reg/C                                                                            u_DUT/u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+
+Source Clock: input port clock
+Destination Clock: CLK_ADC
+CDC Type: No Common Primary Clock
+
+Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
+---  ------  --------  -------------------------------------  -----  ----------  -------------  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  2  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  3  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  4  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  5  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  6  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/u_RST_ADC/sync_ff_reg[0]/PRE
+
+Source Clock: CLK_ADC
+Destination Clock: CLK_CNN
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception            Source (From)                                                                                                                                Destination (To)
+---  -----  --------  ------------------------------------------  -----  -------------------  -------------------------------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  u_DUT/gen_lanes[0].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  3  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  u_DUT/gen_lanes[1].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  5  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  u_DUT/gen_lanes[2].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  6  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  7  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  u_DUT/gen_lanes[3].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  8  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+  9  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/src_sendd_ff_reg/C                                                                                  u_DUT/gen_lanes[4].u_LANE/u_CHUNK_ID_CDC/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+ 10  CDC-3  Info      1-bit synchronized with ASYNC_REG property      7  Asynch Clock Groups  u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.sckt_wr_rst_ic_reg/C  u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_single_inst_wrst_rd/syncstages_ff_reg[0]/D
+ 11  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  Asynch Clock Groups  u_DUT/u_EVENT_PATH/u_trigger_cdc/dest_ack_r_reg/C                                                                                            u_DUT/u_EVENT_PATH/u_trigger_cdc/u_TRIGGER_CDC/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+
+Source Clock: input port clock
+Destination Clock: CLK_CNN
+CDC Type: No Common Primary Clock
+
+Row  ID      Severity  Description                            Depth  Exception   Source (From)  Destination (To)
+---  ------  --------  -------------------------------------  -----  ----------  -------------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[0].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  2  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[1].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  3  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[2].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  4  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[3].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  5  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/gen_lanes[4].u_LANE/u_FIFO/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gsckt_wrst.gic_rst.xpm_cdc_sync_rst_inst_wrst/syncstages_ff_reg[0]/D
+  6  CDC-26  Warning   LUTRAM read/write potential collision      0  False Path  RST            u_DUT/u_RST_CNN/sync_ff_reg[0]/PRE
+
