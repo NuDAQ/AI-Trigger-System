@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Tue Jun 30 20:07:36 2026
+| Date         : Tue Jun 30 20:49:34 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_methodology -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_methodology.rpt
 | Design       : AI_TRIGGER_TOP
@@ -23,22 +23,16 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 1811
+             Violations found: 1810
 +-----------+----------+------------------------------------------+------------+
 | Rule      | Severity | Description                              | Violations |
 +-----------+----------+------------------------------------------+------------+
-| TIMING-9  | Warning  | Unknown CDC Logic                        | 1          |
 | TIMING-24 | Warning  | Overridden Max delay datapath only       | 18         |
 | XDCH-2    | Warning  | Same min and max delay values on IO port | 1792       |
 +-----------+----------+------------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
-TIMING-9#1 Warning
-Unknown CDC Logic  
-One or more asynchronous Clock Domain Crossing has been detected between 2 clock domains through a set_false_path or a set_clock_groups or set_max_delay -datapath_only constraint but no double-registers logic synchronizer has been found on the side of the capture clock. It is recommended to run report_cdc for a complete and detailed CDC coverage. Please consider using XPM_CDC to avoid Critical severities
-Related violations: <none>
-
 TIMING-24#1 Warning
 Overridden Max delay datapath only  
 An asynchronous set_clock_groups or a set_false path (see constraint position 4 in the Timing Constraints window in Vivado IDE) between clocks ADC_SRC_CLK and CLK_ADC overrides a set_max_delay -datapath_only (position 37). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints

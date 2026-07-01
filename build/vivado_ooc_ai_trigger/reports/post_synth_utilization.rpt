@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Tue Jun 30 20:05:09 2026
+| Date         : Tue Jun 30 20:47:08 2026
 | Host         : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_utilization -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_synth_utilization.rpt
 | Design       : AI_TRIGGER_TOP
@@ -32,8 +32,8 @@ Table of Contents
 +----------------------------+-------+-------+------------+-----------+-------+
 |          Site Type         |  Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+-------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 32589 |     0 |          0 |    216960 | 15.02 |
-|   LUT as Logic             | 26929 |     0 |          0 |    216960 | 12.41 |
+| CLB LUTs*                  | 32588 |     0 |          0 |    216960 | 15.02 |
+|   LUT as Logic             | 26928 |     0 |          0 |    216960 | 12.41 |
 |   LUT as Memory            |  5660 |     0 |          0 |     99840 |  5.67 |
 |     LUT as Distributed RAM |   180 |     0 |            |           |       |
 |     LUT as Shift Register  |  5480 |     0 |            |           |       |
@@ -161,7 +161,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 | Ref Name |  Used | Functional Category |
 +----------+-------+---------------------+
 | FDRE     | 19685 |            Register |
-| LUT2     |  9867 |                 CLB |
+| LUT2     |  9866 |                 CLB |
 | LUT6     |  8564 |                 CLB |
 | LUT4     |  6788 |                 CLB |
 | LUT3     |  6071 |                 CLB |

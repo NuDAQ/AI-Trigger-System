@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date              : Tue Jun 30 20:07:38 2026
+| Date              : Tue Jun 30 20:49:36 2026
 | Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command           : report_clock_interaction -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_clock_interaction.rpt
 | Design            : AI_TRIGGER_TOP
@@ -19,12 +19,12 @@ Clock Interaction Table
                             WNS                            TNS Failing  TNS Total    WNS Path         Clock-Pair           Inter-Clock          
 From Clock    To Clock      Clock Edges  WNS(ns)  TNS(ns)    Endpoints    Endpoints  Requirement(ns)  Classification       Constraints          
 ------------  ------------  -----------  -------  -------  -----------  -----------  ---------------  -------------------  -------------------  
-ADC_SRC_CLK   ADC_SRC_CLK   rise - rise    13.69     0.00            0         1171            16.00  Clean                Timed                
+ADC_SRC_CLK   ADC_SRC_CLK   rise - rise    12.38     0.00            0         1171            16.00  Clean                Timed                
 ADC_SRC_CLK   CLK_ADC                                                0            8                   Ignored              Asynchronous Groups  
-CLK_ADC       ADC_SRC_CLK                                            0           16                   Ignored              Asynchronous Groups  
-CLK_ADC       CLK_ADC       rise - rise     9.46     0.00            0        17500            14.29  Clean                Timed                
+CLK_ADC       ADC_SRC_CLK                                            0            8                   Ignored              Asynchronous Groups  
+CLK_ADC       CLK_ADC       rise - rise     7.42     0.00            0        17500            14.29  Clean                Timed                
 CLK_ADC       CLK_CNN                                                0          236                   Ignored              Asynchronous Groups  
 CLK_CNN       CLK_ADC                                                0          103                   Ignored              Asynchronous Groups  
-CLK_CNN       CLK_CNN       rise - rise     1.12     0.00            0        50440             5.00  Clean                Timed                
+CLK_CNN       CLK_CNN       rise - rise     0.77     0.00            0        50440             5.00  Clean                Timed                
 
 
