@@ -2966,4 +2966,4 @@ Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
 $finish called at time : 299787180 ps : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 261
-INFO: xsimkernel Simulation Memory Usage: 165696 KB (Peak: 193148 KB), Simulation CPU Usage: 28090 ms
+INFO: xsimkernel Simulation Memory Usage: 165696 KB (Peak: 193148 KB), Simulation CPU Usage: 27850 ms
