@@ -55,7 +55,6 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal lane_sel   : integer range 0 to N_LANES-1   := 0;
     signal chunk_id_r : chunk_id_t := (others => '0');
     signal chunk_timestamp_r : timestamp_t := (others => '0');
-    signal chunk_timestamp_out_r : timestamp_t := (others => '0');
     signal drop_chunk : std_logic := '0';
     signal overflow_comb : std_logic := '0';
     signal we_comb       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
@@ -140,12 +139,9 @@ begin
                 lane_sel   <= 0;
                 chunk_id_r <= (others => '0');
                 chunk_timestamp_r <= (others => '0');
-                chunk_timestamp_out_r <= (others => '0');
                 drop_chunk <= '0';
             else
                 if DATA_STR = '1' then
-                    chunk_timestamp_out_r <= chunk_timestamp_r;
-
                     -- Decide once at the first batch of a chunk.  This avoids
                     -- partially writing a chunk if a lane becomes unavailable.
                     if batch_cnt = 0 then
@@ -200,7 +196,7 @@ begin
 
     LANE_WE        <= we_comb;
     CHUNK_ID       <= chunk_id_r;
-    CHUNK_TIMESTAMP <= chunk_timestamp_out_r;
+    CHUNK_TIMESTAMP <= chunk_timestamp_r;
     CHUNK_OVERFLOW <= overflow_comb;
 
 end architecture rtl;

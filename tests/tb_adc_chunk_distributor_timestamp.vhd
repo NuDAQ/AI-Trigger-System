@@ -18,6 +18,7 @@ architecture sim of tb_adc_chunk_distributor_timestamp is
     signal chunk_id        : chunk_id_t;
     signal chunk_timestamp : timestamp_t;
     signal chunk_overflow  : std_logic;
+    signal metadata_sample_error : std_logic := '0';
 
     function adc_sample(value : integer) return adc_sample_t is
     begin
@@ -46,7 +47,6 @@ begin
         );
 
     process
-        variable expected_chunk : integer;
     begin
         for ch in 0 to N_CH - 1 loop
             for s in 0 to N_BATCH_S - 1 loop
@@ -70,12 +70,11 @@ begin
             data_str <= '1';
             wait until rising_edge(clk);
             wait for 1 ns;
-            expected_chunk := batch / N_BATCHES;
             assert lane_we /= (lane_we'range => '0')
                 report "lane write should be asserted when all lanes are ready"
                 severity failure;
-            assert chunk_timestamp = to_unsigned(expected_chunk, TIMESTAMP_WIDTH)
-                report "chunk timestamp must match the 256 ns window id"
+            assert chunk_timestamp = resize(chunk_id, TIMESTAMP_WIDTH)
+                report "chunk timestamp must match chunk id"
                 severity failure;
 
             if batch = 0 then
@@ -98,5 +97,19 @@ begin
         wait until rising_edge(clk);
         report "tb_adc_chunk_distributor_timestamp passed";
         stop;
+    end process;
+
+    process(clk)
+    begin
+        if rising_edge(clk) then
+            if rst = '0' and data_str = '1' and lane_we /= (lane_we'range => '0') then
+                if chunk_timestamp /= resize(chunk_id, TIMESTAMP_WIDTH) then
+                    metadata_sample_error <= '1';
+                    assert false
+                        report "lane-sampled chunk timestamp must match chunk id"
+                        severity failure;
+                end if;
+            end if;
+        end if;
     end process;
 end architecture sim;
