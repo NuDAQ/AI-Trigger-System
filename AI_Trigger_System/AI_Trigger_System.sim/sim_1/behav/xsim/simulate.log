@@ -5,6 +5,8 @@ WARNING: Behavioral models for independent clock FIFO configurations do not mode
 WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
 WARNING: Behavioral models for independent clock FIFO configurations do not model synchronization delays. The behavioral models are functionally correct, and will represent the behavior of the configured FIFO. See the FIFO Generator User Guide for more information.
 [0] Asserting reset...
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_EVENT_PATH/u_output_fifo/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_1551  Scope: tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
 [616000] Starting AI_TRIGGER_TOP test
 [616000] TESTHEX_DIR: testhex_stream
 [616000] Samples: 1000  Threshold raw: 0 (0.0000)
@@ -2960,4 +2962,4 @@ Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
 $finish called at time : 299848 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 248
-INFO: xsimkernel Simulation Memory Usage: 165052 KB (Peak: 192684 KB), Simulation CPU Usage: 27270 ms
+INFO: xsimkernel Simulation Memory Usage: 165316 KB (Peak: 192868 KB), Simulation CPU Usage: 27890 ms

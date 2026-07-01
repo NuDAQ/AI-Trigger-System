@@ -8,6 +8,7 @@ vhdl2008 xil_defaultlib  \
 "../../../../../HDL/rtl/TRIGGER_DECISION.vhd" \
 "../../../../../HDL/rtl/TRIGGER_CDC_FIFO.vhd" \
 "../../../../../HDL/rtl/EVENT_CAPTURE_CTRL.vhd" \
+"../../../../../HDL/rtl/EVENT_OUTPUT_FIFO.vhd" \
 "../../../../../HDL/rtl/EVENT_CAPTURE_PATH.vhd" \
 "../../../../../HDL/rtl/AI_TRIGGER_TOP.vhd" \
 "../../../../../HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd" \

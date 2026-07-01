@@ -1,5 +1,5 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/TRIGGER_CDC_FIFO.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'TRIGGER_CDC_FIFO'
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_AI_TRIGGER_TOP
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/EVENT_CAPTURE_PATH.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'EVENT_CAPTURE_PATH'
 INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/AI_TRIGGER_TOP.vhd" into library xil_defaultlib
