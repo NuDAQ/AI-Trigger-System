@@ -7,7 +7,7 @@
 //   testhex_dir/test_input_sample{N}.hex  — 256 lines x 64-bit word
 //   testhex_dir/labels.hex                — 1000 x 32-bit label (0 or 1)
 //
-//   Each 64-bit hex word encodes one CNN timestep across 4 channels:
+//   Each 64-bit hex word encodes one CNN timestep across 4 trigger channels:
 //     bits [11: 0] = ch0,  12-bit signed (ap_fixed<12,6>)
 //     bits [23:12] = ch1
 //     bits [35:24] = ch2
@@ -16,8 +16,9 @@
 //
 //   One sample = 256 timesteps = 16 batches x 16 timesteps/batch.
 //   The testbench presents 16 timesteps per DATA_STR pulse (one ADC source
-//   clock cycle). The trigger ingest clock is faster and drains the input CDC
-//   FIFO when valid batches are available.
+//   clock cycle).  The DUT boundary is 8 raw ADC channels; this testbench
+//   mirrors ch0..ch3 into ch4..ch7 so the event payload exercises all 8
+//   channels while the CNN trigger still uses only ch0..ch3.
 //
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
 //   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
@@ -53,7 +54,8 @@ module tb_AI_TRIGGER_TOP;
     parameter TIMEOUT_CYCLES_CNN  = 100_000_000;  // watchdog on CLK_CNN
     parameter OUTPUT_DRAIN_CYCLES = 8192;         // finish after input done + quiet CNN cycles
 
-    parameter N_CH      = 4;
+    parameter N_ADC_CH  = 8;
+    parameter N_TRIGGER_CH = 4;
     parameter N_BATCH_S = 16;   // timesteps per batch
     parameter N_BATCHES = 16;   // batches per sample (16 * 16 = 256 timesteps)
     parameter N_CHUNK_W = 256;  // total CNN input words per sample
@@ -62,7 +64,7 @@ module tb_AI_TRIGGER_TOP;
     // Signals
     // -------------------------------------------------------------------------
     reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str;
-    reg  [767:0] adc_data4_flat;  // 4 ch * 16 samples * 12-bit = 768 bits
+    reg  [1535:0] adc_data4_flat;  // 8 ch * 16 samples * 12-bit = 1536 bits
     reg  [31:0]  cnn_thresh;
 
     wire         adc_src_ready;
@@ -71,7 +73,7 @@ module tb_AI_TRIGGER_TOP;
     wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
     wire         event_valid;
-    wire [767:0] event_data;
+    wire [1535:0] event_data;
     wire         event_last;
     wire [15:0]  event_chunk_id;
     wire [23:0]  event_timestamp;
@@ -196,7 +198,7 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 
         cnn_thresh    = cnn_thresh_raw;
-        adc_data4_flat = 768'h0;
+        adc_data4_flat = 1536'h0;
         data_str       = 0;
 
         // CSV output
@@ -266,7 +268,7 @@ module tb_AI_TRIGGER_TOP;
     //
     // DATA_STR is high exactly while this finite test stream is active.
     // The driver updates ADC_DATA4_FLAT every ADC source cycle to simulate the
-    // continuous 1 Gsps ADC stream: 16 samples per cycle across 4 channels.
+    // continuous 1 Gsps ADC stream: 16 samples per cycle across 8 raw channels.
     //
     // Each sample occupies exactly N_BATCHES (16) consecutive source cycles.
     // Samples are streamed back-to-back with no gaps.
@@ -274,7 +276,7 @@ module tb_AI_TRIGGER_TOP;
     task automatic input_driver_thread;
         integer s_id, b, s, ch, w, sample_file;
         string  filename;
-        reg [767:0] batch_flat;
+        reg [1535:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
@@ -302,11 +304,12 @@ module tb_AI_TRIGGER_TOP;
                 // Drive 16 consecutive batches, one per source clock cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
-                    batch_flat = 768'h0;
+                    batch_flat = 1536'h0;
                     for (s = 0; s < N_BATCH_S; s = s + 1) begin
-                        for (ch = 0; ch < N_CH; ch = ch + 1) begin
+                        for (ch = 0; ch < N_ADC_CH; ch = ch + 1) begin
                             batch_flat[(ch * N_BATCH_S + s) * 12 +: 12]
-                                = get_ch_sample(sample_hex[b * N_BATCH_S + s], ch);
+                                = get_ch_sample(sample_hex[b * N_BATCH_S + s],
+                                                ch % N_TRIGGER_CH);
                         end
                     end
                     adc_data4_flat = batch_flat;
@@ -319,7 +322,7 @@ module tb_AI_TRIGGER_TOP;
                 sent_count = sent_count + 1;
             end
             // After all requested samples, stop the finite test stream.
-            adc_data4_flat = 768'h0;
+            adc_data4_flat = 1536'h0;
             data_str = 0;
             input_done = 1;
         end
@@ -337,7 +340,7 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid) begin
-                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
+                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%0384h\n",
                             event_count,
                             event_chunk_id,
                             event_timestamp,

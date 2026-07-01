@@ -18,6 +18,16 @@ architecture sim of tb_adc_chunk_distributor_timestamp is
     signal chunk_id        : chunk_id_t;
     signal chunk_timestamp : timestamp_t;
     signal chunk_overflow  : std_logic;
+
+    function adc_sample(value : integer) return adc_sample_t is
+    begin
+        return std_logic_vector(to_signed(value, 12));
+    end function;
+
+    function axis_sample(value : integer) return std_logic_vector is
+    begin
+        return std_logic_vector(to_signed(value / 2, 16));
+    end function;
 begin
     clk <= not clk after 5 ns;
 
@@ -47,6 +57,15 @@ begin
         wait until rising_edge(clk);
         rst <= '0';
 
+        adc_data4(0)(0) <= adc_sample(2);
+        adc_data4(1)(0) <= adc_sample(4);
+        adc_data4(2)(0) <= adc_sample(6);
+        adc_data4(3)(0) <= adc_sample(8);
+        adc_data4(4)(0) <= adc_sample(1000);
+        adc_data4(5)(0) <= adc_sample(1002);
+        adc_data4(6)(0) <= adc_sample(1004);
+        adc_data4(7)(0) <= adc_sample(1006);
+
         for batch in 0 to 3 * N_BATCHES - 1 loop
             data_str <= '1';
             wait until rising_edge(clk);
@@ -58,6 +77,21 @@ begin
             assert chunk_timestamp = to_unsigned(expected_chunk, TIMESTAMP_WIDTH)
                 report "chunk timestamp must match the 256 ns window id"
                 severity failure;
+
+            if batch = 0 then
+                assert batch_data(911 downto 896) = axis_sample(2)
+                    report "CNN packed row0 ch0 must come from input ch0"
+                    severity failure;
+                assert batch_data(927 downto 912) = axis_sample(4)
+                    report "CNN packed row0 ch1 must come from input ch1"
+                    severity failure;
+                assert batch_data(943 downto 928) = axis_sample(6)
+                    report "CNN packed row0 ch2 must come from input ch2"
+                    severity failure;
+                assert batch_data(959 downto 944) = axis_sample(8)
+                    report "CNN packed row0 ch3 must come from input ch3"
+                    severity failure;
+            end if;
         end loop;
 
         data_str <= '0';

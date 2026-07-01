@@ -5,9 +5,10 @@
 ## Overview
 
 This repository contains an FPGA AI trigger path for continuous radio detector
-ADC data. The current top-level design accepts four channels of 1 Gsps ADC data,
-groups the stream into 256-sample chunks, and distributes those chunks across
-five parallel CNN inference lanes. The number of lanes is parameterized.
+ADC data. The current top-level design accepts eight channels of 1 Gsps ADC
+data, groups the stream into 256-sample chunks, and distributes the leading
+four channels across five parallel CNN inference lanes. The number of lanes is
+parameterized.
 
 The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
 dependencies.
@@ -79,14 +80,15 @@ ADC/decoder batches @ ADC_SRC_CLK
                        -> score aggregation and threshold compare
                           -> CNN_TRIG / CNN_OUT_DATA / CNN_OUT_CHUNK_ID
 
-The raw ADC stream is also written into WAVEFORM_RING_BUFFER.  When a CNN score
-crosses CNN_THRESH, TRIGGER_DECISION sends the trigger through TRIGGER_CDC_FIFO
-back to the ADC domain. TRIGGER_CDC_FIFO keeps a 32-entry trigger descriptor
-queue in the CNN clock domain and uses an XPM handshake CDC for the descriptor
-crossing. EVENT_CAPTURE_CTRL then reads the corresponding triggered-chunk
-waveform window from the ring buffer and writes it into EVENT_OUTPUT_FIFO. The
-external EVENT_* ready/valid interface drains that FIFO, so short downstream
-stalls do not directly block the event capture controller.
+The raw eight-channel ADC stream is also written into WAVEFORM_RING_BUFFER.
+When a CNN score from channels 0-3 crosses CNN_THRESH, TRIGGER_DECISION sends
+the trigger through TRIGGER_CDC_FIFO back to the ADC domain. TRIGGER_CDC_FIFO
+keeps a 32-entry trigger descriptor queue in the CNN clock domain and uses an
+XPM handshake CDC for the descriptor crossing. EVENT_CAPTURE_CTRL then reads
+the corresponding triggered-chunk waveform window from the ring buffer and
+writes all eight raw channels into EVENT_OUTPUT_FIFO. The external EVENT_*
+ready/valid interface drains that FIFO, so short downstream stalls do not
+directly block the event capture controller.
 ```
 
 The event waveform window is currently one chunk: the chunk whose CNN score
@@ -134,11 +136,11 @@ At the nominal 1 GSa/s source rate, the 24-bit timestamp wraps after about
 
 ### ADC Input Format
 
-The simulation wrapper exposes the four-channel ADC input as a flat 768-bit
+The simulation wrapper exposes the eight-channel ADC input as a flat 1536-bit
 vector:
 
 ```text
-4 channels x 16 samples per ADC cycle x 12 bits = 768 bits
+8 channels x 16 samples per ADC cycle x 12 bits = 1536 bits
 ```
 
 The SystemVerilog testbench and VHDL wrapper use this convention:
@@ -147,7 +149,10 @@ The SystemVerilog testbench and VHDL wrapper use this convention:
 ADC_DATA4_FLAT[(ch * 16 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
 ```
 
-The CNN test vectors store one timestep as four packed 12-bit values:
+The CNN test vectors store one timestep as four packed 12-bit values.  The
+Vivado testbench mirrors these four channels into input channels 4-7 so the
+event payload is eight channels while CNN trigger decisions remain based on
+channels 0-3:
 
 ```text
 raw[11: 0] = ch0
@@ -157,9 +162,14 @@ raw[47:36] = ch3
 raw[63:48] = unused
 ```
 
-The distributor scales each 12-bit channel value down by one bit, saturates it
-to the signed 9-bit CNN input range, and sign-extends it to the 16-bit
-AXI-stream lane container expected by the wrapper:
+DAQ-side logic provides 12-bit signed two's-complement samples for all eight
+channels in this packing.  The distributor performs the CNN-side fixed-point
+conversion internally only for channels 0-3.  It converts each
+`ap_fixed<12,6>`-style raw sample to the raw representation used by the CNN
+input `ap_fixed<9,4>` lane: arithmetic right shift by one bit, saturate to the
+9-bit raw range, then sign-extend into the 16-bit AXI-stream lane container
+expected by the wrapper.  The 9-bit raw range is `-256..255`, which corresponds
+to approximately `-8.0..7.96875` for `ap_fixed<9,4>`:
 
 ```text
 axis_word[15: 0] = sign_extend(saturate(ch0[11:0] >>> 1, -256, 255))
@@ -168,11 +178,15 @@ axis_word[47:32] = sign_extend(saturate(ch2[11:0] >>> 1, -256, 255))
 axis_word[63:48] = sign_extend(saturate(ch3[11:0] >>> 1, -256, 255))
 ```
 
+The saturation prevents fixed-point overflow wraparound.  Values already inside
+the `ap_fixed<9,4>` raw range are unchanged; values above the range clamp to
+`255`, and values below the range clamp to `-256`.
+
 ## Data Flow
 
 `ADC_INPUT_CDC_FIFO` accepts the ADC/decoder valid stream in the source clock
 domain and presents valid batches in the trigger ingest `CLK_ADC` domain.
-Each valid batch contains 16 timesteps for all four channels.
+Each valid batch contains 16 timesteps for all eight raw ADC channels.
 `ADC_CHUNK_DISTRIBUTOR` runs after this CDC boundary. A CNN chunk is 256
 timesteps, so one chunk is complete after 16 accepted valid batches.
 
@@ -269,9 +283,17 @@ HLS output.
 
 ## Output Score and Trigger Threshold
 
-`WRAPPER_TOP` returns an `ap_fixed<22,11>` score byte-aligned into a 32-bit output
-word. The score is decoded using the same convention as the wrapper reference
-testbench:
+`WRAPPER_TOP` returns the CNN score in a 32-bit output word for AXI-stream
+byte alignment.  The numerical score is only the low 22 bits:
+
+```text
+CNN_OUT_DATA[31:22] = padding / not used by the comparator
+CNN_OUT_DATA[21:0]  = signed ap_fixed<22,11> raw score
+```
+
+`ap_fixed<22,11>` has 22 total bits, 11 integer bits including the sign bit,
+and 11 fractional bits.  The score is decoded using the same convention as the
+wrapper reference testbench:
 
 ```text
 score_float = signed(CNN_OUT_DATA[21:0]) / 2048.0
@@ -282,6 +304,22 @@ score_float = signed(CNN_OUT_DATA[21:0]) / 2048.0
 
 ```text
 CNN_TRIG = 1 when signed(score[21:0]) > signed(CNN_THRESH[21:0])
+```
+
+From the host/software point of view, the hardware register or port to drive is
+`CNN_THRESH[31:0]`, but the comparator only uses `CNN_THRESH[21:0]`.  Configure
+it as a signed 22-bit raw fixed-point value:
+
+```text
+CNN_THRESH_raw = threshold_float * 2048
+threshold_float = CNN_THRESH_raw / 2048
+```
+
+The representable threshold range is:
+
+```text
+CNN_THRESH_raw: [-2097152, 2097151]
+threshold_float: [-1024.0, 1023.99951171875]
 ```
 
 Common raw threshold values:
@@ -298,6 +336,27 @@ The default testbench and launcher configuration uses the current full-system
 functional validation point: `SCORE_THRESHOLD=0.0` and `CNN_THRESH_RAW=0`.
 The older wrapper-reference fallback threshold is still available by passing
 `SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288` explicitly.
+
+## Output Interfaces
+
+`CNN_OUT_VALID` marks a valid CNN score.  On that cycle, `CNN_OUT_DATA[31:0]`
+is the 32-bit score container, `CNN_OUT_DATA[21:0]` contains the signed
+`ap_fixed<22,11>` raw score, `CNN_OUT_CHUNK_ID` identifies the 256-sample chunk
+that produced the score, and `CNN_TRIG` is asserted if any valid lane score is
+greater than `CNN_THRESH`.
+
+The event stream is a `CLK_ADC` ready/valid interface.  `EVENT_DATA` carries
+eight-channel raw ADC waveform batches, not the CNN fixed-point converted
+values.  Its bit packing matches the ADC batch packing:
+
+```text
+EVENT_DATA[(ch * 16 + sample) * 12 + 11 : (ch * 16 + sample) * 12]
+  = raw 12-bit signed ADC sample for channel ch, sample index sample
+```
+
+For the current one-chunk event window, each event emits 16 `EVENT_VALID` beats.
+`EVENT_CHUNK_ID`, `EVENT_TIMESTAMP`, and `EVENT_SCORE` remain constant across
+those 16 beats, and `EVENT_LAST` is asserted on the final beat.
 
 ## Main RTL Files
 

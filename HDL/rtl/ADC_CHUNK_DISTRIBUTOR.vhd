@@ -3,7 +3,8 @@
 -- CLK_ADC domain.
 --
 -- DATA_STR is asserted every CLK_ADC cycle (continuous 1 Gsps ADC stream).
--- Each cycle carries one 16-sample batch across 4 channels.
+-- Each cycle carries one 16-sample batch across 8 raw ADC channels.  Only the
+-- leading four channels are packed into the CNN trigger stream.
 -- After N_BATCHES (16) cycles the complete 256-sample chunk is committed to the
 -- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --

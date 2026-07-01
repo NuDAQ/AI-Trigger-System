@@ -375,8 +375,8 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
                 )
 
         data_hex = row.get("event_data_hex", "")
-        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{192}", data_hex):
-            fail(errors, f"event row {i} data is not 768-bit hex")
+        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{384}", data_hex):
+            fail(errors, f"event row {i} data is not 1536-bit hex")
 
     return {
         "exists": True,
