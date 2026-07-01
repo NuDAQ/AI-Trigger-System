@@ -47,6 +47,17 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_rtl_avoids_vhdl_2008_only_process_all(self) -> None:
+        rtl_sources = (ROOT / "HDL/rtl").glob("*.vhd")
+
+        for source in rtl_sources:
+            text = source.read_text(encoding="utf-8")
+            self.assertNotRegex(
+                text,
+                r"process\s*\(\s*all\s*\)",
+                msg=f"{source.relative_to(ROOT)} uses process(all), which the Vivado OOC flow does not parse as VHDL-2008",
+            )
+
     def test_event_metadata_outputs_have_ooc_boundary_delay(self) -> None:
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
 

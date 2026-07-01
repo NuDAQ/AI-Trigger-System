@@ -110,7 +110,7 @@ begin
 
     BATCH_DATA <= packed;
 
-    process(all)
+    process(DATA_STR, batch_cnt, LANE_BUSY, lane_sel, drop_chunk)
         variable selected_lane_accept : boolean;
     begin
         we_comb <= (others => '0');
