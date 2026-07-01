@@ -8,6 +8,7 @@ use work.AI_TRIGGER_PKG.all;
 entity ADC_INPUT_CDC_FIFO is
     port (
         WR_CLK         : in  std_logic;
+        RST_ASYNC      : in  std_logic;
         WR_RST         : in  std_logic;
         WR_VALID       : in  std_logic;
         WR_READY       : out std_logic;
@@ -67,7 +68,7 @@ begin
         )
         port map (
             sleep         => '0',
-            rst           => WR_RST or RD_RST,
+            rst           => RST_ASYNC,
             wr_clk        => WR_CLK,
             wr_en         => fifo_wr_en,
             din           => WR_DATA,

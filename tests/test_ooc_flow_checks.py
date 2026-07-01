@@ -167,6 +167,16 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("RST_ASYNC", lane)
         self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*fifo_async_1024_to_64.*?rst\s*=>\s*RST_ASYNC")
 
+    def test_adc_input_fifo_uses_single_async_reset_for_xpm(self) -> None:
+        fifo = read("HDL/rtl/ADC_INPUT_CDC_FIFO.vhd")
+        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
+
+        self.assertRegex(fifo, r"RST_ASYNC\s*:\s*in\s+std_logic")
+        self.assertNotIn("WR_RST or RD_RST", fifo)
+        self.assertNotIn("RD_RST or WR_RST", fifo)
+        self.assertRegex(fifo, r"(?s)u_FIFO\s*:\s*xpm_fifo_async.*?rst\s*=>\s*RST_ASYNC")
+        self.assertRegex(top, r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO.*?RST_ASYNC\s*=>\s*RST")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -133,6 +133,7 @@ begin
     u_ADC_INPUT : entity work.ADC_INPUT_CDC_FIFO
         port map (
             WR_CLK         => ADC_SRC_CLK,
+            RST_ASYNC      => RST,
             WR_RST         => rst_adc_src,
             WR_VALID       => ADC_SRC_VALID,
             WR_READY       => ADC_SRC_READY,
