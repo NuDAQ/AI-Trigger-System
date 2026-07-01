@@ -20,6 +20,8 @@ package AI_TRIGGER_PKG is
     constant CHUNK_ID_FIFO_DEPTH : integer := 2 ** CHUNK_ID_FIFO_ADDR_WIDTH;
     constant TRIGGER_FIFO_ADDR_WIDTH : integer := 5;
     constant TRIGGER_FIFO_DEPTH : integer := 2 ** TRIGGER_FIFO_ADDR_WIDTH;
+    constant ADC_INPUT_FIFO_ADDR_WIDTH : integer := 7;
+    constant ADC_INPUT_FIFO_DEPTH : integer := 2 ** ADC_INPUT_FIFO_ADDR_WIDTH;
     constant EVENT_OUTPUT_FIFO_ADDR_WIDTH : integer := 6;
     constant EVENT_OUTPUT_FIFO_DEPTH : integer := 2 ** EVENT_OUTPUT_FIFO_ADDR_WIDTH;
 
