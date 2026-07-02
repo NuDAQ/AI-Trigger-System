@@ -11,7 +11,7 @@ vhdl2008 xil_defaultlib  \
 "../../../../../HDL/rtl/EVENT_CAPTURE_CTRL.vhd" \
 "../../../../../HDL/rtl/EVENT_OUTPUT_FIFO.vhd" \
 "../../../../../HDL/rtl/EVENT_CAPTURE_PATH.vhd" \
-"../../../../../HDL/rtl/AI_TRIGGER_TOP.vhd" \
+"../../../../../HDL/rtl/AI_TRIGGER_CORE.vhd" \
 "../../../../../HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd" \
 
 # Do not sort compile order
