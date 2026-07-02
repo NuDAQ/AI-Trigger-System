@@ -5,7 +5,7 @@
 -- Vivado xsim cannot connect a SystemVerilog signal to a VHDL port of a
 -- user-defined composite type (adc_data4_t).  This wrapper exposes a flat
 -- std_logic_vector(1535 downto 0) instead (8 ch * 16 samples * 12 bits = 1536)
--- and unpacks it to adc_data4_t before driving AI_TRIGGER_TOP.
+-- and crosses the source-side test stream into AI_TRIGGER_CORE.
 --
 -- Bit packing (must match the SV testbench):
 --   ADC_DATA4_FLAT[(ch*16 + s)*12 +: 12]  <->  ADC_DATA4(ch)(s)
@@ -47,35 +47,68 @@ end entity AI_TRIGGER_TOP_TB_WRAP;
 
 architecture rtl of AI_TRIGGER_TOP_TB_WRAP is
 
-    signal adc_internal : adc_data4_t;
+    signal adc_ingest_raw : raw_adc_batch_t;
+    signal adc_core       : adc_data4_t;
     signal cnn_out_chunk_id_i : chunk_id_t;
     signal event_chunk_id_i : chunk_id_t;
     signal event_timestamp_i : timestamp_t;
     signal adc_input_overflow_count_i : unsigned(31 downto 0);
     signal dropped_trigger_count_i : unsigned(31 downto 0);
     signal ring_miss_count_i : unsigned(31 downto 0);
+    signal data_str_core : std_logic;
+    signal rst_adc_src : std_logic := '1';
+    signal rst_adc     : std_logic := '1';
 
 begin
 
-    -- Unpack flat vector into adc_data4_t.
-    -- ADC_DATA4_FLAT[(ch*16+s)*12 +: 12] -> adc_data4_t(ch)(s)
+    -- Simulation-only source-clock reset and input CDC.  The delivered
+    -- AI_TRIGGER_TOP starts after this boundary at CLK_ADC.
+    u_RST_ADC_SRC : entity work.RESET_SYNC
+        port map (
+            CLK       => ADC_SRC_CLK,
+            RST_ASYNC => RST,
+            RST_SYNC  => rst_adc_src
+        );
+
+    u_RST_ADC : entity work.RESET_SYNC
+        port map (
+            CLK       => CLK_ADC,
+            RST_ASYNC => RST,
+            RST_SYNC  => rst_adc
+        );
+
+    u_ADC_INPUT : entity work.ADC_INPUT_CDC_FIFO
+        port map (
+            WR_CLK         => ADC_SRC_CLK,
+            WR_RST         => rst_adc_src,
+            WR_VALID       => DATA_STR,
+            WR_READY       => ADC_SRC_READY,
+            WR_DATA        => ADC_DATA4_FLAT,
+            RD_CLK         => CLK_ADC,
+            RD_RST         => rst_adc,
+            RD_VALID       => data_str_core,
+            RD_READY       => '1',
+            RD_DATA        => adc_ingest_raw,
+            OVERFLOW_COUNT => adc_input_overflow_count_i
+        );
+
+    -- Unpack the CLK_ADC-domain flat vector into adc_data4_t.
+    -- adc_ingest_raw[(ch*16+s)*12 +: 12] -> adc_data4_t(ch)(s)
     gen_ch : for ch in 0 to N_ADC_CH-1 generate
         gen_s : for s in 0 to N_BATCH_S-1 generate
-            adc_internal(ch)(s) <=
-                ADC_DATA4_FLAT((ch * N_BATCH_S + s) * 12 + 11 downto
+            adc_core(ch)(s) <=
+                adc_ingest_raw((ch * N_BATCH_S + s) * 12 + 11 downto
                                (ch * N_BATCH_S + s) * 12);
         end generate;
     end generate;
 
-    u_DUT : entity work.AI_TRIGGER_TOP
+    u_DUT : entity work.AI_TRIGGER_CORE
         port map (
             CLK_ADC        => CLK_ADC,
             CLK_CNN        => CLK_CNN,
             RST            => RST,
-            ADC_SRC_CLK    => ADC_SRC_CLK,
-            ADC_SRC_VALID  => DATA_STR,
-            ADC_SRC_READY  => ADC_SRC_READY,
-            ADC_SRC_DATA4  => adc_internal,
+            DATA_STR       => data_str_core,
+            ADC_DATA4      => adc_core,
             CNN_THRESH     => CNN_THRESH,
             CNN_TRIG       => CNN_TRIG,
             CNN_OUT_DATA   => CNN_OUT_DATA,
@@ -88,7 +121,6 @@ begin
             EVENT_CHUNK_ID => event_chunk_id_i,
             EVENT_TIMESTAMP => event_timestamp_i,
             EVENT_SCORE    => EVENT_SCORE,
-            ADC_INPUT_OVERFLOW_COUNT => adc_input_overflow_count_i,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count_i,
             RING_MISS_COUNT       => ring_miss_count_i,
             CHUNK_OVERFLOW => CHUNK_OVERFLOW

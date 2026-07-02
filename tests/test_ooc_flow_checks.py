@@ -29,7 +29,7 @@ class OocFlowChecks(unittest.TestCase):
 
         self.assertRegex(
             xdc,
-            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{ADC_SRC_VALID ADC_SRC_DATA4\*\}\]",
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{DATA_STR ADC_DATA\*\}\]",
         )
         self.assertRegex(
             xdc,
@@ -81,24 +81,26 @@ class OocFlowChecks(unittest.TestCase):
         ]
         self.assertTrue(event_output_delay_lines)
         event_output_delay = " ".join(event_output_delay_lines)
-        self.assertIn("EVENT_CHUNK_ID*", event_output_delay)
         self.assertIn("EVENT_TIMESTAMP*", event_output_delay)
-        self.assertIn("EVENT_SCORE*", event_output_delay)
+        self.assertNotIn("EVENT_CHUNK_ID", event_output_delay)
+        self.assertNotIn("EVENT_SCORE", event_output_delay)
 
-    def test_adc_source_boundary_has_own_clock_and_delays(self) -> None:
+    def test_daq_top_has_only_adc_and_cnn_clocks(self) -> None:
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
 
-        self.assertRegex(xdc, r"create_clock\s+-name\s+ADC_SRC_CLK\s+-period\s+16\.000")
+        self.assertNotIn("ADC_SRC_CLK", xdc)
+        self.assertNotIn("ADC_SRC_CLK", top)
         self.assertRegex(
             xdc,
-            r"set_input_delay\s+0\.000\s+-clock\s+\[get_clocks\s+ADC_SRC_CLK\]\s+"
-            r"\[get_ports\s+-quiet\s+\{ADC_SRC_VALID ADC_SRC_DATA4\*\}\]",
+            r"create_clock\s+-name\s+CLK_ADC\s+-period\s+14\.286\s+\[get_ports\s+CLK_ADC\]",
         )
         self.assertRegex(
             xdc,
-            r"set_output_delay\s+0\.000\s+-clock\s+\[get_clocks\s+ADC_SRC_CLK\]\s+"
-            r"\[get_ports\s+-quiet\s+\{ADC_SRC_READY ADC_INPUT_OVERFLOW_COUNT\*\}\]",
+            r"create_clock\s+-name\s+CLK_CNN\s+-period\s+5\.000\s+\[get_ports\s+CLK_CNN\]",
         )
+        self.assertRegex(top, r"DATA_STR\s+:\s+in\s+std_logic")
+        self.assertRegex(top, r"ADC_DATA\s+:\s+in\s+std_logic_vector\(RAW_ADC_BATCH_WIDTH - 1 downto 0\)")
 
     def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
@@ -150,23 +152,22 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
-    def test_top_synchronizes_external_reset_before_adc_domain_fanout(self) -> None:
+    def test_core_synchronizes_external_reset_before_domain_fanout(self) -> None:
         bender = read("Bender.yml")
-        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
+        core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
 
         self.assertIn("HDL/rtl/RESET_SYNC.vhd", bender)
-        self.assertIn("signal rst_adc", top)
-        self.assertIn("u_RST_ADC", top)
-        self.assertIn("u_RST_ADC_SRC", top)
-        self.assertIn("u_RST_CNN", top)
-        self.assertRegex(top, r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO.*?WR_RST\s*=>\s*rst_adc_src")
-        self.assertRegex(top, r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO.*?RD_RST\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ASYNC\s*=>\s*RST")
-        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ADC\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_CNN\s*=>\s*rst_cnn")
-        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_ADC\s*=>\s*rst_adc")
-        self.assertRegex(top, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_CNN\s*=>\s*rst_cnn")
+        self.assertIn("signal rst_adc", core)
+        self.assertIn("u_RST_ADC", core)
+        self.assertNotIn("u_RST_ADC_SRC", core)
+        self.assertNotIn("rst_adc_src", core)
+        self.assertIn("u_RST_CNN", core)
+        self.assertRegex(core, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
+        self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ASYNC\s*=>\s*RST")
+        self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ADC\s*=>\s*rst_adc")
+        self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_CNN\s*=>\s*rst_cnn")
+        self.assertRegex(core, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_ADC\s*=>\s*rst_adc")
+        self.assertRegex(core, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_CNN\s*=>\s*rst_cnn")
 
     def test_cross_domain_modules_do_not_derive_cnn_reset_from_adc_reset(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
@@ -181,21 +182,14 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("RST_ASYNC", lane)
         self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*fifo_async_1024_to_64.*?rst\s*=>\s*RST_ASYNC")
 
-    def test_adc_input_fifo_uses_write_clock_reset_for_xpm(self) -> None:
-        fifo = read("HDL/rtl/ADC_INPUT_CDC_FIFO.vhd")
+    def test_sim_wrapper_owns_source_clock_cdc_not_synth_top(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
-        top_inst_match = re.search(
-            r"(?s)u_ADC_INPUT\s*:\s*entity work\.ADC_INPUT_CDC_FIFO\s*port map\s*\((.*?)\);",
-            top,
-        )
-        self.assertIsNotNone(top_inst_match)
-        top_inst = top_inst_match.group(1)
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
 
-        self.assertNotRegex(fifo, r"RST_ASYNC\s*:\s*in\s+std_logic")
-        self.assertNotIn("WR_RST or RD_RST", fifo)
-        self.assertNotIn("RD_RST or WR_RST", fifo)
-        self.assertRegex(fifo, r"(?s)u_FIFO\s*:\s*xpm_fifo_async.*?rst\s*=>\s*WR_RST")
-        self.assertNotIn("RST_ASYNC", top_inst)
+        self.assertNotIn("ADC_INPUT_CDC_FIFO", top)
+        self.assertNotIn("ADC_SRC_CLK", top)
+        self.assertIn("ADC_INPUT_CDC_FIFO", wrap)
+        self.assertIn("ADC_SRC_CLK", wrap)
 
 
 if __name__ == "__main__":
