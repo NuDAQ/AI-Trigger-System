@@ -47,6 +47,22 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_ooc_flow_rejects_stale_or_wrong_top_builds(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+
+        self.assertIn("file delete -force $rpt_dir $dcp_dir $gen_dir", tcl)
+        self.assertIn("assert_file_contains $bender_script {AI_TRIGGER_CORE.vhd}", tcl)
+        self.assertIn("assert_daq_top_boundary", tcl)
+        self.assertRegex(tcl, r"get_ports\s+-quiet\s+ADC_SRC_CLK")
+        self.assertRegex(tcl, r"get_clocks\s+-quiet\s+ADC_SRC_CLK")
+        self.assertRegex(tcl, r"get_cells\s+-quiet\s+-hierarchical\s+\*u_ADC_INPUT\*")
+
+    def test_ooc_flow_does_not_add_simulation_wrapper(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+
+        self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP.vhd", tcl)
+        self.assertNotIn("adding flat-port wrapper source", tcl)
+
     def test_ooc_flow_does_not_lock_lane_fifo_placement(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
         preserve_match = re.search(

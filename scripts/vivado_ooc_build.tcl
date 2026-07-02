@@ -29,10 +29,32 @@ set rpt_dir   [file join $out_dir reports]
 set dcp_dir   [file join $out_dir checkpoints]
 set gen_dir   [file join $out_dir generated]
 
+file delete -force $rpt_dir $dcp_dir $gen_dir
 file mkdir $out_dir
 file mkdir $rpt_dir
 file mkdir $dcp_dir
 file mkdir $gen_dir
+
+proc assert_file_contains {path pattern} {
+    set fp [open $path r]
+    set text [read $fp]
+    close $fp
+    if {[string first $pattern $text] < 0} {
+        error "Expected $path to contain '$pattern'. Check that Bender ran on the current checkout."
+    }
+}
+
+proc assert_daq_top_boundary {} {
+    if {[llength [get_ports -quiet ADC_SRC_CLK]] > 0} {
+        error "DAQ-facing OOC top must not expose ADC_SRC_CLK"
+    }
+    if {[llength [get_clocks -quiet ADC_SRC_CLK]] > 0} {
+        error "DAQ-facing OOC constraints must not create ADC_SRC_CLK"
+    }
+    if {[llength [get_cells -quiet -hierarchical *u_ADC_INPUT*]] > 0} {
+        error "DAQ-facing OOC top must not instantiate the source-clock input CDC"
+    }
+}
 
 proc write_cdc_reports {summary_path details_path} {
     report_cdc -file $summary_path
@@ -63,6 +85,7 @@ if {[catch {exec bender script vivado -t vivado > $bender_script} err]} {
 if {![file exists $bender_script] || [file size $bender_script] == 0} {
     error "bender generated an empty Vivado script. Run 'bender update' and check dependency paths before launching Vivado."
 }
+assert_file_contains $bender_script {AI_TRIGGER_CORE.vhd}
 
 create_project -in_memory -part $::RUN_BUILD_PART
 set_property target_language VHDL [current_project]
@@ -70,12 +93,6 @@ set_property simulator_language Mixed [current_project]
 
 puts "INFO: sourcing Bender-generated RTL file list..."
 source $bender_script
-
-set tb_wrap [file join $repo_root HDL sim AI_TRIGGER_TOP_TB_WRAP.vhd]
-if {[file exists $tb_wrap]} {
-    puts "INFO: adding flat-port wrapper source: $tb_wrap"
-    add_files -norecurse $tb_wrap
-}
 
 # Bender imports wrapper-level board constraints from the dependency.  Those
 # constraints describe a standalone wrapper project and are not valid for this
@@ -113,6 +130,7 @@ synth_design \
     -part $::RUN_BUILD_PART \
     -mode out_of_context \
     -flatten_hierarchy none
+assert_daq_top_boundary
 
 # Keep the OOC implementation from trimming CNN internals across the block
 # boundary.  Do not lock lane FIFOs here: their BRAM-heavy read-side paths are
@@ -151,6 +169,7 @@ if {$::RUN_BUILD_IMPL} {
     catch {phys_opt_design}
     route_design
     write_checkpoint -force [file join $dcp_dir post_route.dcp]
+    assert_daq_top_boundary
 
     report_utilization -file [file join $rpt_dir post_route_utilization.rpt]
     report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_route_utilization_hier.rpt]
