@@ -8,7 +8,7 @@ details that are too specific for the main README.
 
 The implementation flow is block-level and out-of-context. `AI_TRIGGER_TOP` is
 a DAQ subsystem block, not the package-level FPGA top, so the build avoids
-mapping the wide ADC and score interfaces to package IO.
+mapping the wide ADC/event interfaces to package IO.
 
 Run synthesis and implementation with:
 
@@ -32,12 +32,14 @@ python3 scripts/run_post_impl_saif.py
 
 ## Current Report Set
 
-The checked-in RTL includes an input CDC FIFO between the ADC/decoder source
-stream and the trigger ingest domain, a downstream event output FIFO, and
-XPM-based control CDC for lane metadata and CNN-to-ADC trigger descriptors. The
-current pulled OOC reports were generated after these CDC changes and after the
-OOC flow stopped applying `DONT_TOUCH` to the per-lane FIFO Generator
-instances.
+The checked-in RTL now uses `AI_TRIGGER_TOP` as a DAQ-facing two-clock OOC top:
+ADC input and event output are in `CLK_ADC`, and CNN inference is in `CLK_CNN`.
+`AI_TRIGGER_CORE` keeps the internal score/chunk metadata used by simulation and
+event capture. Source-clock input CDC is no longer part of the delivered OOC
+top; `ADC_INPUT_CDC_FIFO` is retained for simulation/helper use.
+
+The pulled OOC reports below predate this DAQ-facing top split and should be
+refreshed on the server before sign-off.
 
 Report context:
 
@@ -47,14 +49,13 @@ Report context:
 | Device | `xcku5p-ffvb676-2-e` |
 | Build style | Out-of-context block implementation |
 | CNN lanes | 5 |
-| `ADC_SRC_CLK` | 62.5 MHz nominal source-side batch clock |
 | `CLK_ADC` | 70 MHz target |
 | `CLK_CNN` | 200.000 MHz |
 
 ## Behavioral Simulation
 
-The latest pulled behavioral Vivado simulation completed successfully using the
-functional threshold used for validation:
+The latest pulled behavioral Vivado simulation completed successfully before
+the DAQ-facing top split using the functional threshold used for validation:
 
 | Metric | Value |
 | --- | ---: |
@@ -70,13 +71,13 @@ functional threshold used for validation:
 | Average latency | 223.4 `CLK_CNN` cycles |
 | Average latency | 1.117 us |
 
-The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. The routed
-gate-level and SAIF simulations should be rerun when sign-off power or
-post-route functional evidence is needed.
+The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. Behavioral
+simulation, routed implementation, gate-level simulation, and SAIF should be
+rerun on the server for the current two-clock OOC top.
 
 ## Timing Result
 
-The current routed timing report closes timing at the intended OOC clock
+The previous routed timing report closed timing at the then-current OOC clock
 targets:
 
 | Metric | Value |
@@ -90,7 +91,6 @@ Per-clock timing summary:
 
 | Clock | WNS | TNS | WHS | THS |
 | --- | ---: | ---: | ---: | ---: |
-| `ADC_SRC_CLK` | 12.972 ns | 0 ns | 0.041 ns | 0 ns |
 | `CLK_ADC` | 8.605 ns | 0 ns | 0.024 ns | 0 ns |
 | `CLK_CNN` | 1.176 ns | 0 ns | 0.027 ns | 0 ns |
 
@@ -146,7 +146,7 @@ optimization free to improve timing.
 
 ## CDC Result
 
-The current routed CDC report has no critical unknown CDC paths:
+The previous routed CDC report had no critical unknown CDC paths:
 
 | CDC item | Count |
 | --- | ---: |
@@ -156,9 +156,10 @@ The current routed CDC report has no critical unknown CDC paths:
 
 The `CDC-3` entries are recognized synchronizer/XPM crossings. The remaining
 `CDC-26` warnings are reset-related paths under the OOC false-path reset
-assumption. The input ADC source crossing is implemented by `ADC_INPUT_CDC_FIFO`
-with `xpm_fifo_async`; its XPM reset is driven by the source-clock synchronized
-reset. CNN lane metadata and trigger descriptors use XPM handshake CDC.
+assumption. For the current delivered top, the expected functional CDCs are the
+per-lane `CLK_ADC` to `CLK_CNN` crossings and the CNN-trigger descriptor return
+path from `CLK_CNN` to `CLK_ADC`. CNN lane metadata and trigger descriptors use
+XPM handshake CDC.
 
 ## SAIF Power Result
 
@@ -195,6 +196,13 @@ post-implementation simulation completed in less than one minute after the SAIF
 objects were registered.
 
 ## Sign-Off Checklist
+
+Server rerun commands for the current two-clock OOC top:
+
+```bash
+python3 scripts/run_vivado_sim.py --num-samples 1000
+python3 scripts/run_vivado_build.py --impl
+```
 
 Before treating the implementation as sign-off quality:
 
