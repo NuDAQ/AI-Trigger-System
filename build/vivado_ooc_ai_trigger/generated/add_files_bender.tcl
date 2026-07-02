@@ -64,6 +64,7 @@ add_files -norecurse -fileset [current_fileset] [list \
     $ROOT/HDL/rtl/EVENT_CAPTURE_PATH.vhd \
     $ROOT/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd \
     $ROOT/HDL/rtl/CNN_CORE_LANE.vhd \
+    $ROOT/HDL/rtl/AI_TRIGGER_CORE.vhd \
     $ROOT/HDL/rtl/AI_TRIGGER_TOP.vhd \
 ]
 
