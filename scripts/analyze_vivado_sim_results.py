@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 
-EVENT_BATCHES_PER_CAPTURE = 3 * 16
+EVENT_BATCHES_PER_CAPTURE = 16
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expected-samples", type=int, default=1000)
     parser.add_argument("--expected-cores", type=int, default=5)
     parser.add_argument("--expected-cnn-mhz", type=float, default=200.0)
-    parser.add_argument("--expected-thresh-raw", type=int, default=-12288)
+    parser.add_argument("--expected-thresh-raw", type=int, default=0)
     parser.add_argument("--min-accuracy", type=float, default=0.90)
     parser.add_argument("--max-overflows", type=int, default=0)
     parser.add_argument(
@@ -328,6 +328,7 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
     required_cols = {
         "event_index",
         "event_chunk_id",
+        "event_timestamp",
         "event_score_hex",
         "event_batch_index",
         "event_last",
@@ -339,10 +340,12 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
             fail(errors, f"event CSV missing columns: {sorted(missing)}")
 
     batches_by_event: dict[int, int] = {}
+    timestamp_by_event: dict[int, int] = {}
     complete_events = 0
     for i, row in enumerate(rows):
         try:
             event_index = int(row["event_index"])
+            event_timestamp = int(row["event_timestamp"])
             batch_index = int(row["event_batch_index"])
             event_last = int(row["event_last"])
         except (KeyError, ValueError) as exc:
@@ -354,6 +357,14 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
             fail(errors, f"event {event_index} row {i} batch {batch_index}, expected {expected_batch}")
         batches_by_event[event_index] = expected_batch + 1
 
+        expected_timestamp = timestamp_by_event.setdefault(event_index, event_timestamp)
+        if event_timestamp != expected_timestamp:
+            fail(
+                errors,
+                f"event {event_index} row {i} timestamp {event_timestamp}, "
+                f"expected {expected_timestamp}",
+            )
+
         if event_last:
             complete_events += 1
             if batches_by_event[event_index] != EVENT_BATCHES_PER_CAPTURE:
@@ -364,8 +375,8 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
                 )
 
         data_hex = row.get("event_data_hex", "")
-        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{192}", data_hex):
-            fail(errors, f"event row {i} data is not 768-bit hex")
+        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{384}", data_hex):
+            fail(errors, f"event row {i} data is not 1536-bit hex")
 
     return {
         "exists": True,

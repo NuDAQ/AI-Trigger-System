@@ -1,0 +1,4 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/rtl/AI_TRIGGER_CORE.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'AI_TRIGGER_CORE'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/work1/Works/AI-Trigger-System/HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'AI_TRIGGER_TOP_TB_WRAP'

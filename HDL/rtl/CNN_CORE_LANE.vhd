@@ -41,12 +41,15 @@ entity CNN_CORE_LANE is
     port (
         CLK_ADC      : in  std_logic;
         CLK_CNN      : in  std_logic;
-        RST          : in  std_logic;   -- active-high, synchronous to CLK_ADC
+        RST_ASYNC    : in  std_logic;   -- active-high, async reset for FIFO IP
+        RST_ADC      : in  std_logic;   -- active-high, synchronous to CLK_ADC
+        RST_CNN      : in  std_logic;   -- active-high, synchronous to CLK_CNN
 
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
         BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
         CHUNK_ID     : in  chunk_id_t;
+        CHUNK_TIMESTAMP : in timestamp_t;
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
@@ -54,6 +57,7 @@ entity CNN_CORE_LANE is
         -- Results (CLK_CNN domain)
         LANE_SCORE   : out std_logic_vector(31 downto 0);
         LANE_CHUNK_ID: out chunk_id_t;
+        LANE_TIMESTAMP: out timestamp_t;
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -61,6 +65,7 @@ end entity CNN_CORE_LANE;
 architecture rtl of CNN_CORE_LANE is
 
     constant CHUNK_CNT_W : integer := 4;
+    constant META_WIDTH : integer := CHUNK_ID_WIDTH + TIMESTAMP_WIDTH;
     subtype chunk_cnt_t is unsigned(CHUNK_CNT_W-1 downto 0);
 
     -- -------------------------------------------------------------------------
@@ -126,7 +131,7 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_id_src_send    : std_logic := '0';
     signal chunk_id_src_rcv     : std_logic;
     signal chunk_id_src_pending : std_logic := '0';
-    signal chunk_id_src_data    : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0) := (others => '0');
+    signal chunk_id_src_data    : std_logic_vector(META_WIDTH-1 downto 0) := (others => '0');
 
     -- 2-FF sync: stream_done_toggle_cnn -> CLK_ADC
     signal stream_done_adc_ff : std_logic_vector(1 downto 0) := (others => '0');
@@ -135,8 +140,6 @@ architecture rtl of CNN_CORE_LANE is
     -- -------------------------------------------------------------------------
     -- CLK_CNN domain
     -- -------------------------------------------------------------------------
-    -- RST synchronizer (init '1' so rst_n_cnn = '0' before any CNN clock edge)
-    signal rst_cnn_ff   : std_logic_vector(1 downto 0) := "11";
     signal rst_n_cnn    : std_logic;
 
     signal started_count_cnn : chunk_cnt_t := (others => '0');
@@ -144,9 +147,10 @@ architecture rtl of CNN_CORE_LANE is
 
     signal chunk_id_dest_req  : std_logic;
     signal chunk_id_dest_ack  : std_logic := '0';
-    signal chunk_id_dest_data : std_logic_vector(CHUNK_ID_WIDTH-1 downto 0);
+    signal chunk_id_dest_data : std_logic_vector(META_WIDTH-1 downto 0);
     signal chunk_id_meta_valid : std_logic := '0';
     signal chunk_id_meta_data  : chunk_id_t := (others => '0');
+    signal timestamp_meta_data : timestamp_t := (others => '0');
     signal chunk_id_dest_seen  : std_logic := '0';
 
     -- synthesis translate_off
@@ -181,14 +185,16 @@ architecture rtl of CNN_CORE_LANE is
 
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_chunk_id_r : chunk_id_t := (others => '0');
+    signal lane_timestamp_r : timestamp_t := (others => '0');
     signal lane_valid_r : std_logic := '0';
     signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
+    type timestamp_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of timestamp_t;
+    signal score_timestamp_mem : timestamp_mem_t := (others => (others => '0'));
     signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
     signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
 
     attribute ASYNC_REG : string;
     attribute ASYNC_REG of stream_done_adc_ff : signal is "TRUE";
-    attribute ASYNC_REG of rst_cnn_ff : signal is "TRUE";
 
 begin
 
@@ -204,7 +210,7 @@ begin
     process(CLK_ADC)
     begin
         if rising_edge(CLK_ADC) then
-            if RST = '1' then
+            if RST_ADC = '1' then
                 wr_count       <= 0;
                 chunk_count_adc <= (others => '0');
                 chunk_busy_adc  <= '0';
@@ -237,7 +243,8 @@ begin
                 if WR_EN = '1' then
                     if wr_count = 0 then
                         chunk_id_src_send <= '1';
-                        chunk_id_src_data <= std_logic_vector(CHUNK_ID);
+                        chunk_id_src_data <= std_logic_vector(CHUNK_TIMESTAMP) &
+                                             std_logic_vector(CHUNK_ID);
                         chunk_id_src_pending <= '1';
                         chunk_count_adc <= chunk_count_adc + 1;
                         chunk_busy_adc  <= '1';
@@ -275,14 +282,7 @@ begin
     -- CLK_CNN DOMAIN
     -- =========================================================================
 
-    -- RST synchronizer
-    process(CLK_CNN)
-    begin
-        if rising_edge(CLK_CNN) then
-            rst_cnn_ff <= rst_cnn_ff(0) & RST;
-        end if;
-    end process;
-    rst_n_cnn <= not rst_cnn_ff(1);
+    rst_n_cnn <= not RST_CNN;
 
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
@@ -301,11 +301,13 @@ begin
                 lane_valid_r <= '0';
                 lane_score_r <= (others => '0');
                 lane_chunk_id_r <= (others => '0');
+                lane_timestamp_r <= (others => '0');
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
                 chunk_id_dest_ack <= '0';
                 chunk_id_meta_valid <= '0';
                 chunk_id_meta_data <= (others => '0');
+                timestamp_meta_data <= (others => '0');
                 chunk_id_dest_seen <= '0';
             else
                 lane_valid_r <= '0';
@@ -314,13 +316,15 @@ begin
                 if chunk_id_dest_req = '0' then
                     chunk_id_dest_seen <= '0';
                 elsif chunk_id_dest_seen = '0' and chunk_id_meta_valid = '0' then
-                    chunk_id_meta_data <= unsigned(chunk_id_dest_data);
+                    chunk_id_meta_data <= unsigned(chunk_id_dest_data(CHUNK_ID_WIDTH - 1 downto 0));
+                    timestamp_meta_data <= unsigned(chunk_id_dest_data(META_WIDTH - 1 downto CHUNK_ID_WIDTH));
                     chunk_id_meta_valid <= '1';
                     chunk_id_dest_seen <= '1';
                 end if;
                 if cnn_out_valid = '1' then
                     lane_score_r <= cnn_out_data;
                     lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
+                    lane_timestamp_r <= score_timestamp_mem(score_id_rd_idx);
                     lane_valid_r <= '1';
                     if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
                         score_id_rd_idx <= 0;
@@ -356,6 +360,7 @@ begin
                             cnn_in_valid <= '1';
                             chunk_id_meta_valid <= '0';
                             score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
+                            score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -396,6 +401,7 @@ begin
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
                                     chunk_id_meta_valid <= '0';
                                     score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
+                                    score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
@@ -439,6 +445,7 @@ begin
 
     LANE_SCORE <= lane_score_r;
     LANE_CHUNK_ID <= lane_chunk_id_r;
+    LANE_TIMESTAMP <= lane_timestamp_r;
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================
@@ -454,7 +461,7 @@ begin
     -- =========================================================================
     u_FIFO : fifo_async_1024_to_64
         port map (
-            rst         => RST,
+            rst         => RST_ASYNC,
             wr_clk      => CLK_ADC,
             rd_clk      => CLK_CNN,
             din         => BATCH_DATA,
@@ -474,7 +481,7 @@ begin
             INIT_SYNC_FF   => 0,
             SIM_ASSERT_CHK => 0,
             SRC_SYNC_FF    => 2,
-            WIDTH          => CHUNK_ID_WIDTH
+            WIDTH          => META_WIDTH
         )
         port map (
             src_clk   => CLK_ADC,

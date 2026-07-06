@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date             : Sun Jun 28 02:14:27 2026
+| Date             : Wed Jul  1 13:35:09 2026
 | Host             : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
 | Command          : report_power -file /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/reports/post_route_power_saif.rpt
 | Design           : AI_TRIGGER_TOP_TB_WRAP
@@ -30,18 +30,18 @@ Table of Contents
 ----------
 
 +--------------------------+----------------------------------------------------------------------------------------------------+
-| Total On-Chip Power (W)  | 1.380                                                                                              |
+| Total On-Chip Power (W)  | 0.684                                                                                              |
 | Design Power Budget (W)  | Unspecified*                                                                                       |
 | Power Budget Margin (W)  | NA                                                                                                 |
-| Dynamic (W)              | 0.922                                                                                              |
-| Device Static (W)        | 0.458                                                                                              |
+| Dynamic (W)              | 0.231                                                                                              |
+| Device Static (W)        | 0.453                                                                                              |
 | Effective TJA (C/W)      | 1.7                                                                                                |
-| Max Ambient (C)          | 97.6                                                                                               |
-| Junction Temperature (C) | 27.4                                                                                               |
+| Max Ambient (C)          | 98.8                                                                                               |
+| Junction Temperature (C) | 26.2                                                                                               |
 | Confidence Level         | High                                                                                               |
 | Setting File             | ---                                                                                                |
 | Simulation Activity File | /home/work1/Works/AI-Trigger-System/build/vivado_post_impl_saif/activity/ai_trigger_post_impl.saif |
-| Design Nets Matched      | 99%   (73972/75062)                                                                                |
+| Design Nets Matched      | 93%   (81308/87220)                                                                                |
 +--------------------------+----------------------------------------------------------------------------------------------------+
 * Specify Design Power Budget using, set_operating_conditions -design_power_budget <value in Watts>
 
@@ -49,23 +49,25 @@ Table of Contents
 1.1 On-Chip Components
 ----------------------
 
-+-------------------------+-----------+----------+-----------+-----------------+
-| On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
-+-------------------------+-----------+----------+-----------+-----------------+
-| Clocks                  |     0.141 |        4 |       --- |             --- |
-| CLB Logic               |     0.314 |    61983 |       --- |             --- |
-|   LUT as Logic          |     0.242 |    25555 |    216960 |           11.78 |
-|   LUT as Shift Register |     0.040 |     2760 |     99840 |            2.76 |
-|   CARRY8                |     0.025 |     2585 |     27120 |            9.53 |
-|   Register              |     0.008 |    16283 |    433920 |            3.75 |
-|   Others                |     0.000 |      986 |       --- |             --- |
-|   F7/F8 Muxes           |     0.000 |     1685 |    216960 |            0.78 |
-| Signals                 |     0.293 |    45796 |       --- |             --- |
-| Block RAM               |     0.160 |     72.5 |       480 |           15.10 |
-| DSPs                    |     0.014 |       20 |      1824 |            1.10 |
-| Static Power            |     0.458 |          |           |                 |
-| Total                   |     1.380 |          |           |                 |
-+-------------------------+-----------+----------+-----------+-----------------+
++--------------------------+-----------+----------+-----------+-----------------+
+| On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
++--------------------------+-----------+----------+-----------+-----------------+
+| Clocks                   |     0.134 |        5 |       --- |             --- |
+| CLB Logic                |     0.027 |    66640 |       --- |             --- |
+|   LUT as Logic           |     0.017 |    26050 |    216960 |           12.01 |
+|   LUT as Shift Register  |     0.007 |     2760 |     99840 |            2.76 |
+|   CARRY8                 |     0.002 |     2612 |     27120 |            9.63 |
+|   Register               |    <0.001 |    19830 |    433920 |            4.57 |
+|   LUT as Distributed RAM |    <0.001 |      180 |     99840 |            0.18 |
+|   Others                 |     0.000 |     1062 |       --- |             --- |
+|   F7/F8 Muxes            |     0.000 |     1685 |    216960 |            0.78 |
+|   BUFG                   |     0.000 |        1 |        32 |            3.13 |
+| Signals                  |     0.022 |    51450 |       --- |             --- |
+| Block RAM                |     0.044 |      112 |       480 |           23.33 |
+| DSPs                     |     0.005 |       20 |      1824 |            1.10 |
+| Static Power             |     0.453 |          |           |                 |
+| Total                    |     0.684 |          |           |                 |
++--------------------------+-----------+----------+-----------+-----------------+
 
 
 1.2 Power Supply Summary
@@ -74,9 +76,9 @@ Table of Contents
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source     | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint     |       0.850 |     1.220 |       1.073 |      0.147 |       NA    | Unspecified | NA         |
-| Vccint_io  |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
-| Vccbram    |       0.850 |     0.014 |       0.012 |      0.002 |       NA    | Unspecified | NA         |
+| Vccint     |       0.850 |     0.410 |       0.270 |      0.140 |       NA    | Unspecified | NA         |
+| Vccint_io  |       0.850 |     0.035 |       0.000 |      0.035 |       NA    | Unspecified | NA         |
+| Vccbram    |       0.850 |     0.004 |       0.001 |      0.002 |       NA    | Unspecified | NA         |
 | Vccaux     |       1.800 |     0.128 |       0.000 |      0.128 |       NA    | Unspecified | NA         |
 | Vccaux_io  |       1.800 |     0.031 |       0.000 |      0.031 |       NA    | Unspecified | NA         |
 | Vcco33     |       3.300 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -130,12 +132,13 @@ Table of Contents
 2.2 Clock Constraints
 ---------------------
 
-+---------+---------+-----------------+
-| Clock   | Domain  | Constraint (ns) |
-+---------+---------+-----------------+
-| CLK_ADC | CLK_ADC |            16.0 |
-| CLK_CNN | CLK_CNN |             5.0 |
-+---------+---------+-----------------+
++-------------+-------------+-----------------+
+| Clock       | Domain      | Constraint (ns) |
++-------------+-------------+-----------------+
+| ADC_SRC_CLK | ADC_SRC_CLK |            16.0 |
+| CLK_ADC     | CLK_ADC     |            14.3 |
+| CLK_CNN     | CLK_CNN     |             5.0 |
++-------------+-------------+-----------------+
 
 
 3. Detailed Reports
@@ -147,24 +150,31 @@ Table of Contents
 +-------------------------+-----------+
 | Name                    | Power (W) |
 +-------------------------+-----------+
-| AI_TRIGGER_TOP_TB_WRAP  |     0.922 |
-|   u_DUT                 |     0.922 |
-|     gen_lanes[0].u_LANE |     0.182 |
-|       u_FIFO            |     0.035 |
-|       u_WRAPPER         |     0.147 |
-|     gen_lanes[1].u_LANE |     0.184 |
-|       u_FIFO            |     0.035 |
-|       u_WRAPPER         |     0.149 |
-|     gen_lanes[2].u_LANE |     0.182 |
-|       u_FIFO            |     0.035 |
-|       u_WRAPPER         |     0.147 |
-|     gen_lanes[3].u_LANE |     0.186 |
-|       u_FIFO            |     0.035 |
-|       u_WRAPPER         |     0.150 |
-|     gen_lanes[4].u_LANE |     0.182 |
-|       u_FIFO            |     0.035 |
-|       u_WRAPPER         |     0.146 |
-|     u_DIST              |     0.007 |
+| AI_TRIGGER_TOP_TB_WRAP  |     0.231 |
+|   u_DUT                 |     0.231 |
+|     gen_lanes[0].u_LANE |     0.045 |
+|       u_FIFO            |     0.008 |
+|       u_WRAPPER         |     0.035 |
+|     gen_lanes[1].u_LANE |     0.041 |
+|       u_FIFO            |     0.007 |
+|       u_WRAPPER         |     0.032 |
+|     gen_lanes[2].u_LANE |     0.041 |
+|       u_FIFO            |     0.007 |
+|       u_WRAPPER         |     0.032 |
+|     gen_lanes[3].u_LANE |     0.042 |
+|       u_FIFO            |     0.008 |
+|       u_WRAPPER         |     0.033 |
+|     gen_lanes[4].u_LANE |     0.044 |
+|       u_FIFO            |     0.008 |
+|       u_WRAPPER         |     0.035 |
+|     u_ADC_INPUT         |     0.004 |
+|       u_FIFO            |     0.004 |
+|     u_DIST              |     0.001 |
+|     u_EVENT_PATH        |     0.013 |
+|       u_capture         |     0.002 |
+|       u_output_fifo     |     0.003 |
+|       u_ring            |     0.006 |
+|       u_trigger_cdc     |     0.001 |
 +-------------------------+-----------+
 
 

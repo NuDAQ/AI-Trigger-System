@@ -7,7 +7,7 @@
 //   testhex_dir/test_input_sample{N}.hex  — 256 lines x 64-bit word
 //   testhex_dir/labels.hex                — 1000 x 32-bit label (0 or 1)
 //
-//   Each 64-bit hex word encodes one CNN timestep across 4 channels:
+//   Each 64-bit hex word encodes one CNN timestep across 4 trigger channels:
 //     bits [11: 0] = ch0,  12-bit signed (ap_fixed<12,6>)
 //     bits [23:12] = ch1
 //     bits [35:24] = ch2
@@ -15,16 +15,20 @@
 //     bits [63:48] = 0 (unused)
 //
 //   One sample = 256 timesteps = 16 batches x 16 timesteps/batch.
-//   The testbench presents 16 timesteps per DATA_STR pulse (one CLK_ADC cycle).
+//   The testbench presents 16 timesteps per DATA_STR pulse (one ADC source
+//   clock cycle).  The DUT boundary is 8 raw ADC channels; this testbench
+//   mirrors ch0..ch3 into ch4..ch7 so the event payload exercises all 8
+//   channels while the CNN trigger still uses only ch0..ch3.
 //
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
 //   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
 // The core output is ap_fixed<22,11>, byte-aligned into a 32-bit TDATA word.
-// The wrapper behavioral reference run uses SCORE_THRESHOLD=-6.0, so the
-// matching CNN_THRESH default is 22'sd-12288.
+// The current full-system validation point uses SCORE_THRESHOLD=0.0, so the
+// matching CNN_THRESH default is 22'sd0.
 //
 // Clocks:
-//   CLK_ADC: 16 ns period (62.5 MHz)  — ADC batch clock
+//   ADC_SRC_CLK: 16 ns period (62.5 MHz)  — 1 GSa/s source batch clock
+//   CLK_ADC: 14.286 ns period (70 MHz)    — trigger ingest clock
 //   CLK_CNN:  5.000 ns period (200 MHz) — CNN inference clock
 //
 // Plusargs:
@@ -32,8 +36,8 @@
 //   +OUT_CSV=<path>         output CSV path
 //   +EVENT_CSV=<path>       event waveform CSV path
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
-//   +SCORE_THRESHOLD=<f>    classification threshold (default -6.0)
-//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default -12288)
+//   +SCORE_THRESHOLD=<f>    classification threshold (default 0.0)
+//   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default 0)
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -41,7 +45,8 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Parameters
     // -------------------------------------------------------------------------
-    parameter CLK_ADC_PERIOD = 16.0;   // ns (62.5 MHz)
+    parameter ADC_SRC_CLK_PERIOD = 16.0;   // ns (62.5 MHz source batch clock)
+    parameter CLK_ADC_PERIOD = 14.286;     // ns (70 MHz trigger ingest clock)
     parameter CLK_CNN_PERIOD =  5.000; // ns (200 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
@@ -49,7 +54,8 @@ module tb_AI_TRIGGER_TOP;
     parameter TIMEOUT_CYCLES_CNN  = 100_000_000;  // watchdog on CLK_CNN
     parameter OUTPUT_DRAIN_CYCLES = 8192;         // finish after input done + quiet CNN cycles
 
-    parameter N_CH      = 4;
+    parameter N_ADC_CH  = 8;
+    parameter N_TRIGGER_CH = 4;
     parameter N_BATCH_S = 16;   // timesteps per batch
     parameter N_BATCHES = 16;   // batches per sample (16 * 16 = 256 timesteps)
     parameter N_CHUNK_W = 256;  // total CNN input words per sample
@@ -57,19 +63,22 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Signals
     // -------------------------------------------------------------------------
-    reg  clk_adc, clk_cnn, rst, data_str;
-    reg  [767:0] adc_data4_flat;  // 4 ch * 16 samples * 12-bit = 768 bits
+    reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str;
+    reg  [1535:0] adc_data4_flat;  // 8 ch * 16 samples * 12-bit = 1536 bits
     reg  [31:0]  cnn_thresh;
 
+    wire         adc_src_ready;
     wire         cnn_trig;
     wire [31:0]  cnn_out_data;
     wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
     wire         event_valid;
-    wire [767:0] event_data;
+    wire [1535:0] event_data;
     wire         event_last;
     wire [15:0]  event_chunk_id;
+    wire [23:0]  event_timestamp;
     wire [31:0]  event_score;
+    wire [31:0]  adc_input_overflow_count;
     wire [31:0]  dropped_trigger_count;
     wire [31:0]  ring_miss_count;
     wire         chunk_overflow;
@@ -79,9 +88,11 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     AI_TRIGGER_TOP_TB_WRAP dut (
         .CLK_ADC        (clk_adc),
+        .ADC_SRC_CLK    (clk_adc_src),
         .CLK_CNN        (clk_cnn),
         .RST            (rst),
         .DATA_STR       (data_str),
+        .ADC_SRC_READY  (adc_src_ready),
         .ADC_DATA4_FLAT (adc_data4_flat),
         .CNN_THRESH     (cnn_thresh),
         .CNN_TRIG       (cnn_trig),
@@ -93,7 +104,9 @@ module tb_AI_TRIGGER_TOP;
         .EVENT_DATA     (event_data),
         .EVENT_LAST     (event_last),
         .EVENT_CHUNK_ID (event_chunk_id),
+        .EVENT_TIMESTAMP (event_timestamp),
         .EVENT_SCORE    (event_score),
+        .ADC_INPUT_OVERFLOW_COUNT (adc_input_overflow_count),
         .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
         .RING_MISS_COUNT       (ring_miss_count),
         .CHUNK_OVERFLOW (chunk_overflow)
@@ -102,6 +115,9 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Clock generation
     // -------------------------------------------------------------------------
+    initial clk_adc_src = 0;
+    always #(ADC_SRC_CLK_PERIOD / 2.0) clk_adc_src = ~clk_adc_src;
+
     initial clk_adc = 0;
     always #(CLK_ADC_PERIOD / 2.0) clk_adc = ~clk_adc;
 
@@ -174,15 +190,15 @@ module tb_AI_TRIGGER_TOP;
         end
         has_score_threshold_arg = $value$plusargs("SCORE_THRESHOLD=%f", score_threshold);
         if (!has_score_threshold_arg)
-            score_threshold = -6.0;
+            score_threshold = 0.0;
         has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
         if (!has_cnn_thresh_raw_arg)
-            cnn_thresh_raw = -12288;  // -6.0 in ap_fixed<22,11>
+            cnn_thresh_raw = 0;  // 0.0 in ap_fixed<22,11>
         if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 
         cnn_thresh    = cnn_thresh_raw;
-        adc_data4_flat = 768'h0;
+        adc_data4_flat = 1536'h0;
         data_str       = 0;
 
         // CSV output
@@ -199,7 +215,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
         end
         $fwrite(event_csv_file,
-            "event_index,event_chunk_id,event_score_hex,event_batch_index,event_last,event_data_hex\n");
+            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex\n");
         $fflush(event_csv_file);
 
         // Load labels
@@ -211,6 +227,7 @@ module tb_AI_TRIGGER_TOP;
         data_str = 0;
         $display("[%0t] Asserting reset...", $time);
         repeat(10) @(posedge clk_cnn);
+        repeat(4)  @(posedge clk_adc_src);
         repeat(4)  @(posedge clk_adc);
         rst      = 0;
         // Let FIFO Generator reset-busy/full flags settle before presenting
@@ -247,19 +264,19 @@ module tb_AI_TRIGGER_TOP;
     end
 
     // =========================================================================
-    // Input driver (CLK_ADC domain)
+    // Input driver (ADC source domain)
     //
     // DATA_STR is high exactly while this finite test stream is active.
-    // The driver updates ADC_DATA4_FLAT every CLK_ADC cycle to simulate the
-    // continuous 1 Gsps ADC stream: 16 samples per cycle across 4 channels.
+    // The driver updates ADC_DATA4_FLAT every ADC source cycle to simulate the
+    // continuous 1 Gsps ADC stream: 16 samples per cycle across 8 raw channels.
     //
-    // Each sample occupies exactly N_BATCHES (16) consecutive CLK_ADC cycles.
+    // Each sample occupies exactly N_BATCHES (16) consecutive source cycles.
     // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
         integer s_id, b, s, ch, w, sample_file;
         string  filename;
-        reg [767:0] batch_flat;
+        reg [1535:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
@@ -284,25 +301,28 @@ module tb_AI_TRIGGER_TOP;
                 // Record send time for latency measurement by sample/chunk id.
                 start_time_by_sample[s_id] = $time;
 
-                // Drive 16 consecutive batches, one per CLK_ADC cycle.
+                // Drive 16 consecutive batches, one per source clock cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
-                    batch_flat = 768'h0;
+                    batch_flat = 1536'h0;
                     for (s = 0; s < N_BATCH_S; s = s + 1) begin
-                        for (ch = 0; ch < N_CH; ch = ch + 1) begin
+                        for (ch = 0; ch < N_ADC_CH; ch = ch + 1) begin
                             batch_flat[(ch * N_BATCH_S + s) * 12 +: 12]
-                                = get_ch_sample(sample_hex[b * N_BATCH_S + s], ch);
+                                = get_ch_sample(sample_hex[b * N_BATCH_S + s],
+                                                ch % N_TRIGGER_CH);
                         end
                     end
                     adc_data4_flat = batch_flat;
                     data_str = 1;
-                    @(posedge clk_adc);   // hold for exactly 1 cycle; no gap
+                    do begin
+                        @(posedge clk_adc_src);
+                    end while (!adc_src_ready);
                 end
 
                 sent_count = sent_count + 1;
             end
             // After all requested samples, stop the finite test stream.
-            adc_data4_flat = 768'h0;
+            adc_data4_flat = 1536'h0;
             data_str = 0;
             input_done = 1;
         end
@@ -311,7 +331,7 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     // Event monitor (CLK_ADC domain)
     // Records the raw waveform event stream. One complete event is:
-    // previous chunk, triggered chunk, next chunk = 48 ADC batches.
+    // triggered chunk = 16 ADC batches.
     // =========================================================================
     task automatic event_monitor_thread;
         integer batch_in_event;
@@ -320,9 +340,10 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid) begin
-                    $fwrite(event_csv_file, "%0d,%0d,0x%08h,%0d,%0d,0x%0192h\n",
+                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%0384h\n",
                             event_count,
                             event_chunk_id,
+                            event_timestamp,
                             event_score,
                             batch_in_event,
                             event_last,
@@ -345,7 +366,7 @@ module tb_AI_TRIGGER_TOP;
     // Event drain
     //
     // CNN results can arrive before the event-capture stream has finished
-    // writing the corresponding 3-chunk waveform.  Let the ADC-domain stream
+    // writing the corresponding triggered-chunk waveform.  Let the ADC-domain stream
     // settle before ending the testbench and killing event_monitor_thread().
     // =========================================================================
     task automatic drain_event_stream;
@@ -445,7 +466,9 @@ module tb_AI_TRIGGER_TOP;
             $display("=============================================================");
             $display("Top module:       AI_TRIGGER_TOP");
             $display("CNN cores:        5 (parallel, round-robin)");
-            $display("CLK_ADC:          %.1f MHz (%.0f ns period)",
+            $display("ADC_SRC_CLK:      %.1f MHz (%.3f ns period)",
+                     1000.0/ADC_SRC_CLK_PERIOD, ADC_SRC_CLK_PERIOD);
+            $display("CLK_ADC:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_ADC_PERIOD, CLK_ADC_PERIOD);
             $display("CLK_CNN:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
@@ -458,6 +481,7 @@ module tb_AI_TRIGGER_TOP;
             $display("Output drain:     %0d quiet CLK_CNN cycles", OUTPUT_DRAIN_CYCLES);
             $display("Chunk overflows:  %0d (should be 0 in normal operation)",
                      overflow_count);
+            $display("ADC input overflows: %0d", adc_input_overflow_count);
             $display("Events saved:     %0d", event_count);
             $display("Event batches:    %0d", event_batch_count);
             $display("Dropped triggers: %0d", dropped_trigger_count);

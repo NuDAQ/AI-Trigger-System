@@ -16,12 +16,14 @@ architecture sim of tb_event_drop_counters is
     signal score_valid           : std_logic := '0';
     signal score_data            : std_logic_vector(31 downto 0) := (others => '0');
     signal score_chunk_id        : chunk_id_t := (others => '0');
+    signal score_timestamp       : timestamp_t := (others => '0');
     signal cnn_thresh            : std_logic_vector(31 downto 0) := (others => '0');
     signal event_valid           : std_logic;
     signal event_ready           : std_logic := '0';
     signal event_data            : raw_adc_batch_t;
     signal event_last            : std_logic;
     signal event_chunk_id        : chunk_id_t;
+    signal event_timestamp       : timestamp_t;
     signal event_score           : std_logic_vector(31 downto 0);
     signal dropped_trigger_count : unsigned(31 downto 0);
     signal ring_miss_count       : unsigned(31 downto 0);
@@ -33,18 +35,21 @@ begin
         port map (
             CLK_ADC               => clk_adc,
             CLK_CNN               => clk_cnn,
-            RST                   => rst,
+            RST_ADC               => rst,
+            RST_CNN               => rst,
             DATA_STR              => data_str,
             ADC_DATA4             => adc_data4,
             SCORE_VALID           => score_valid,
             SCORE_DATA            => score_data,
             SCORE_CHUNK_ID        => score_chunk_id,
+            SCORE_TIMESTAMP       => score_timestamp,
             CNN_THRESH            => cnn_thresh,
             EVENT_VALID           => event_valid,
             EVENT_READY           => event_ready,
             EVENT_DATA            => event_data,
             EVENT_LAST            => event_last,
             EVENT_CHUNK_ID        => event_chunk_id,
+            EVENT_TIMESTAMP       => event_timestamp,
             EVENT_SCORE           => event_score,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count,
             RING_MISS_COUNT       => ring_miss_count
@@ -67,6 +72,7 @@ begin
             score_valid    <= '1';
             score_data     <= std_logic_vector(to_signed(2048 + i, 32));
             score_chunk_id <= to_unsigned(i + 1, CHUNK_ID_WIDTH);
+            score_timestamp <= to_unsigned(i + 1, TIMESTAMP_WIDTH);
             wait until rising_edge(clk_cnn);
             score_valid <= '0';
             wait until rising_edge(clk_cnn);

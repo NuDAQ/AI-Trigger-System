@@ -21,10 +21,10 @@ if {![info exists ::RUN_SAIF_NUM_SAMPLES]} {
     set ::RUN_SAIF_NUM_SAMPLES 16
 }
 if {![info exists ::RUN_SAIF_SCORE_THRESHOLD]} {
-    set ::RUN_SAIF_SCORE_THRESHOLD -6.0
+    set ::RUN_SAIF_SCORE_THRESHOLD 0.0
 }
 if {![info exists ::RUN_SAIF_CNN_THRESH_RAW]} {
-    set ::RUN_SAIF_CNN_THRESH_RAW -12288
+    set ::RUN_SAIF_CNN_THRESH_RAW 0
 }
 if {![info exists ::RUN_SAIF_SDF_MODE]} {
     set ::RUN_SAIF_SDF_MODE none

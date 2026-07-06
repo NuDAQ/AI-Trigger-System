@@ -15,6 +15,7 @@ entity EVENT_CAPTURE_CTRL is
         TRIGGER_READY    : out std_logic;
         TRIGGER_CHUNK_ID : in  chunk_id_t;
         TRIGGER_SCORE    : in  std_logic_vector(31 downto 0);
+        TRIGGER_TIMESTAMP : in timestamp_t;
 
         RB_RD_EN         : out std_logic;
         RB_RD_CHUNK_ID   : out chunk_id_t;
@@ -28,6 +29,7 @@ entity EVENT_CAPTURE_CTRL is
         EVENT_DATA       : out raw_adc_batch_t;
         EVENT_LAST       : out std_logic;
         EVENT_CHUNK_ID   : out chunk_id_t;
+        EVENT_TIMESTAMP  : out timestamp_t;
         EVENT_SCORE      : out std_logic_vector(31 downto 0);
 
         RING_MISS_COUNT  : out unsigned(31 downto 0)
@@ -43,6 +45,7 @@ architecture rtl of EVENT_CAPTURE_CTRL is
 
     signal active_chunk_id : chunk_id_t := (others => '0');
     signal active_score    : std_logic_vector(31 downto 0) := (others => '0');
+    signal active_timestamp : timestamp_t := (others => '0');
     signal chunk_offset    : integer range 0 to EVENT_CHUNKS - 1 := 0;
     signal batch_idx       : integer range 0 to N_BATCHES - 1 := 0;
 
@@ -54,6 +57,7 @@ architecture rtl of EVENT_CAPTURE_CTRL is
     signal event_data_r     : raw_adc_batch_t := (others => '0');
     signal event_last_r     : std_logic := '0';
     signal event_chunk_id_r : chunk_id_t := (others => '0');
+    signal event_timestamp_r : timestamp_t := (others => '0');
     signal event_score_r    : std_logic_vector(31 downto 0) := (others => '0');
     signal ring_miss_count_r : unsigned(31 downto 0) := (others => '0');
 
@@ -63,12 +67,22 @@ architecture rtl of EVENT_CAPTURE_CTRL is
         trigger_id  : chunk_id_t
     ) return boolean is
     begin
-        return have_latest = '1' and latest_id >= trigger_id + 1;
+        return have_latest = '1' and latest_id >= trigger_id;
+    end function;
+
+    function trigger_too_old(
+        have_latest : std_logic;
+        latest_id   : chunk_id_t;
+        trigger_id  : chunk_id_t
+    ) return boolean is
+    begin
+        return have_latest = '1' and
+               latest_id >= trigger_id + to_unsigned(WAVEFORM_RING_DEPTH, CHUNK_ID_WIDTH);
     end function;
 
     function capture_chunk_id(trigger_id : chunk_id_t; offset : integer) return chunk_id_t is
     begin
-        return trigger_id + to_unsigned(offset, CHUNK_ID_WIDTH) - 1;
+        return trigger_id + to_unsigned(offset, CHUNK_ID_WIDTH);
     end function;
 
     procedure advance_position(
@@ -101,6 +115,7 @@ begin
                 have_commit        <= '0';
                 active_chunk_id    <= (others => '0');
                 active_score       <= (others => '0');
+                active_timestamp   <= (others => '0');
                 chunk_offset       <= 0;
                 batch_idx          <= 0;
                 rb_rd_en_r         <= '0';
@@ -110,6 +125,7 @@ begin
                 event_data_r       <= (others => '0');
                 event_last_r       <= '0';
                 event_chunk_id_r   <= (others => '0');
+                event_timestamp_r  <= (others => '0');
                 event_score_r      <= (others => '0');
                 ring_miss_count_r  <= (others => '0');
             else
@@ -131,9 +147,12 @@ begin
                             if TRIGGER_VALID = '1' then
                                 active_chunk_id <= TRIGGER_CHUNK_ID;
                                 active_score    <= TRIGGER_SCORE;
+                                active_timestamp <= TRIGGER_TIMESTAMP;
                                 chunk_offset    <= 0;
                                 batch_idx       <= 0;
-                                if next_chunk_ready(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
+                                if trigger_too_old(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
+                                    ring_miss_count_r <= ring_miss_count_r + 1;
+                                elsif next_chunk_ready(have_commit, latest_commit_id, TRIGGER_CHUNK_ID) then
                                     state <= ISSUE_READ;
                                 else
                                     state <= WAIT_NEXT;
@@ -141,8 +160,13 @@ begin
                             end if;
 
                         when WAIT_NEXT =>
-                            if next_chunk_ready(have_commit, latest_commit_id, active_chunk_id) or
-                               (CHUNK_COMMIT = '1' and COMMIT_CHUNK_ID >= active_chunk_id + 1) then
+                            if trigger_too_old(have_commit, latest_commit_id, active_chunk_id) or
+                               (CHUNK_COMMIT = '1' and
+                                COMMIT_CHUNK_ID >= active_chunk_id + to_unsigned(WAVEFORM_RING_DEPTH, CHUNK_ID_WIDTH)) then
+                                ring_miss_count_r <= ring_miss_count_r + 1;
+                                state <= IDLE;
+                            elsif next_chunk_ready(have_commit, latest_commit_id, active_chunk_id) or
+                               (CHUNK_COMMIT = '1' and COMMIT_CHUNK_ID >= active_chunk_id) then
                                 state <= ISSUE_READ;
                             end if;
 
@@ -163,6 +187,7 @@ begin
                                         event_last_r <= '0';
                                     end if;
                                     event_chunk_id_r <= active_chunk_id;
+                                    event_timestamp_r <= active_timestamp;
                                     event_score_r    <= active_score;
                                 else
                                     ring_miss_count_r <= ring_miss_count_r + 1;
@@ -182,6 +207,7 @@ begin
     EVENT_DATA      <= event_data_r;
     EVENT_LAST      <= event_last_r;
     EVENT_CHUNK_ID  <= event_chunk_id_r;
+    EVENT_TIMESTAMP <= event_timestamp_r;
     EVENT_SCORE     <= event_score_r;
     TRIGGER_READY   <= '1' when state = IDLE and event_valid_r = '0' else '0';
     RING_MISS_COUNT <= ring_miss_count_r;

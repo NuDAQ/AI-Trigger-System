@@ -3,7 +3,8 @@
 -- CLK_ADC domain.
 --
 -- DATA_STR is asserted every CLK_ADC cycle (continuous 1 Gsps ADC stream).
--- Each cycle carries one 16-sample batch across 4 channels.
+-- Each cycle carries one 16-sample batch across 8 raw ADC channels.  Only the
+-- leading four channels are packed into the CNN trigger stream.
 -- After N_BATCHES (16) cycles the complete 256-sample chunk is committed to the
 -- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --
@@ -42,6 +43,7 @@ entity ADC_CHUNK_DISTRIBUTOR is
         LANE_WE        : out std_logic_vector(N_LANES-1 downto 0);
         BATCH_DATA     : out std_logic_vector(N_BATCH_S*64-1 downto 0);
         CHUNK_ID       : out chunk_id_t;
+        CHUNK_TIMESTAMP : out timestamp_t;
 
         CHUNK_OVERFLOW : out std_logic
     );
@@ -52,9 +54,10 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal batch_cnt  : integer range 0 to N_BATCHES-1 := 0;
     signal lane_sel   : integer range 0 to N_LANES-1   := 0;
     signal chunk_id_r : chunk_id_t := (others => '0');
+    signal chunk_timestamp_r : timestamp_t := (others => '0');
     signal drop_chunk : std_logic := '0';
-    signal overflow_r : std_logic := '0';
-    signal we_r       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
+    signal overflow_comb : std_logic := '0';
+    signal we_comb       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
     signal packed : std_logic_vector(N_BATCH_S*64-1 downto 0);
 
@@ -107,6 +110,24 @@ begin
 
     BATCH_DATA <= packed;
 
+    process(DATA_STR, batch_cnt, LANE_BUSY, lane_sel, drop_chunk)
+        variable selected_lane_accept : boolean;
+    begin
+        we_comb <= (others => '0');
+        overflow_comb <= '0';
+        selected_lane_accept :=
+            (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+            (batch_cnt /= 0 and drop_chunk = '0');
+
+        if DATA_STR = '1' then
+            if selected_lane_accept then
+                we_comb(lane_sel) <= '1';
+            else
+                overflow_comb <= '1';
+            end if;
+        end if;
+    end process;
+
     -- -------------------------------------------------------------------------
     -- Round-robin FSM (CLK_ADC)
     -- -------------------------------------------------------------------------
@@ -117,13 +138,9 @@ begin
                 batch_cnt  <= 0;
                 lane_sel   <= 0;
                 chunk_id_r <= (others => '0');
+                chunk_timestamp_r <= (others => '0');
                 drop_chunk <= '0';
-                we_r       <= (others => '0');
-                overflow_r <= '0';
             else
-                we_r       <= (others => '0');
-                overflow_r <= '0';
-
                 if DATA_STR = '1' then
                     -- Decide once at the first batch of a chunk.  This avoids
                     -- partially writing a chunk if a lane becomes unavailable.
@@ -140,11 +157,8 @@ begin
                         -- synthesis translate_on
                     end if;
 
-                    if (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
-                       (batch_cnt /= 0 and drop_chunk = '0') then
-                        we_r(lane_sel) <= '1';
-                    else
-                        overflow_r <= '1';
+                    if not ((batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+                            (batch_cnt /= 0 and drop_chunk = '0')) then
                         -- synthesis translate_off
                         if dbg_events < DEBUG_EVENTS then
                             report "DIST drop_batch seq=" &
@@ -167,6 +181,7 @@ begin
                             lane_sel <= lane_sel + 1;
                         end if;
                         chunk_id_r <= chunk_id_r + 1;
+                        chunk_timestamp_r <= chunk_timestamp_r + 1;
                         drop_chunk <= '0';
                         -- synthesis translate_off
                         dbg_chunk_seq <= dbg_chunk_seq + 1;
@@ -179,8 +194,9 @@ begin
         end if;
     end process;
 
-    LANE_WE        <= we_r;
+    LANE_WE        <= we_comb;
     CHUNK_ID       <= chunk_id_r;
-    CHUNK_OVERFLOW <= overflow_r;
+    CHUNK_TIMESTAMP <= chunk_timestamp_r;
+    CHUNK_OVERFLOW <= overflow_comb;
 
 end architecture rtl;
