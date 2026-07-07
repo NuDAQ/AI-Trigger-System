@@ -47,6 +47,16 @@ begin
 
     stimulus : process
     begin
+        wait until rising_edge(src_clk);
+        wr_valid <= '1';
+        wr_data <= batch_word(16#0FF#);
+        wait until rising_edge(src_clk);
+        wait for 1 ns;
+        assert wr_ready = '0'
+            report "input FIFO advertised ready while reset was active"
+            severity failure;
+        wr_valid <= '0';
+
         wait for 40 ns;
         rst <= '0';
         wait until rising_edge(src_clk);
