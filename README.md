@@ -5,13 +5,14 @@
 ## Overview
 
 This repository contains an FPGA AI trigger path for continuous radio detector
-ADC data. The DAQ-facing interface is being standardized on a single
-250 MHz `CLK_ADC` interface clock for both input and event output. Each accepted
-beat carries eight channels with four 12-bit samples per channel, so the
-external data interface sustains 1 Gsps/channel without a source-side gearbox at
-the trigger-system boundary. Internally, the stream is grouped into 256-sample
-chunks and the leading four channels are distributed across five parallel CNN
-inference lanes. The number of lanes is parameterized.
+ADC data. The external interface is standardized on `CLK_ADC`, the 250 MHz
+clock arriving from the frontend ADC side. Both input and event output are
+synchronous to this clock. Each accepted beat carries eight channels with four
+12-bit samples per channel, so the external data interface sustains
+1 Gsps/channel without a source-side gearbox at the trigger-system boundary.
+Internally, the stream is grouped into 256-sample CNN trigger chunks and the
+leading four channels are distributed across five parallel CNN inference lanes.
+The number of lanes is parameterized.
 
 The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
 dependencies.
@@ -93,42 +94,45 @@ writes all eight raw channels into EVENT_OUTPUT_FIFO. The DAQ-facing EVENT_*
 ready/valid interface drains that FIFO.
 ```
 
-The event waveform window is currently one chunk: the chunk whose CNN score
-crossed `CNN_THRESH`.  Each event therefore emits 64 ADC-domain beats, with
-`EVENT_LAST` asserted on the final beat.  A 24-bit timestamp is assigned after
-64 accepted `DATA_STR` beats and is carried with the
-triggered chunk to `EVENT_TIMESTAMP`.
+The current trigger source is only the CNN trigger wrapper path. The event
+waveform window is one chunk: the same 256-sample chunk whose CNN score crossed
+`CNN_THRESH`, with no pre-trigger or post-trigger chunks. Each event therefore
+emits 64 ADC-domain beats, with `EVENT_LAST` asserted on the final beat. A
+24-bit chunk-index timestamp is carried with the triggered chunk to
+`EVENT_TIMESTAMP` and remains unchanged on all 64 output beats.
 
 ### Clock Domains
 
 | Clock | Nominal rate | Function |
 | --- | ---: | --- |
-| `CLK_ADC` | 250 MHz target | DAQ-facing ADC ingest and event output clock. |
+| `CLK_ADC` | 250 MHz target | Frontend ADC clock used for both ADC ingest and event output. |
 | `CLK_CNN` | 200 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
 
 The reset input `RST` is active high and may be driven by an upper-level DAQ or
 global-control reset source. It is treated as an asynchronous assertion at the
 AI trigger boundary, then released through local reset synchronizers in the
 `CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. The
-delivered OOC top has no ADC source-clock domain. The DAQ-facing input and
-event-output interfaces are synchronous to the same `CLK_ADC`; only the
-internal `CLK_ADC` <-> `CLK_CNN` crossings should remain in the trigger block.
+delivered OOC top has no extra source-clock or downstream-clock domain. The
+input and event-output interfaces are synchronous to the same `CLK_ADC`; only
+the internal `CLK_ADC` <-> `CLK_CNN` crossings should remain in the trigger
+block.
 
 ### Event Timestamp
 
-`EVENT_TIMESTAMP` is a 24-bit relative timestamp in the trigger ingest
+`EVENT_TIMESTAMP` is a 24-bit chunk-index timestamp in the trigger ingest
 `CLK_ADC` domain. It increments once per accepted 256-sample chunk:
 
 ```text
 1 timestamp tick = 64 accepted ADC beats = 256 samples/channel
 ```
 
-The timestamp is generated before the CNN chunk assembly/distribution path, so
-it can be shared by the current CNN trigger path and future trigger paths that
-may bypass the CNN chunk assembler.  In the current contiguous stream, the
-timestamp advances with the chunk window.  When a chunk triggers, the trigger
-descriptor carries the timestamp through the CNN-to-ADC trigger CDC FIFO, and
-the event readout presents it on every beat of the corresponding event.
+The timestamp labels the 256-sample chunk, not the later event output time.
+`CHUNK_ID` and `CHUNK_TIMESTAMP` advance at the same chunk cadence in the
+current version, but their meanings stay separate: `CHUNK_ID` is the internal
+ring-buffer and metadata matching tag, while `EVENT_TIMESTAMP` is the externally
+visible chunk-index timestamp. When a chunk triggers, the trigger descriptor
+carries the timestamp through the CNN-to-ADC trigger CDC FIFO, and the event
+readout presents it unchanged on every beat of the corresponding event.
 
 At the nominal 1 GSa/s source rate, the 24-bit timestamp wraps after about
 4.29 s. Relative time comparisons should be performed modulo 24 bits.
@@ -142,7 +146,7 @@ vector in the `CLK_ADC` domain:
 8 channels x 4 samples per ADC cycle x 12 bits = 384 bits
 ```
 
-The top-level port and SystemVerilog testbench use this convention:
+The top-level port and SystemVerilog testbench use a channel-major convention:
 
 ```text
 ADC_DATA[(ch * 4 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
@@ -162,7 +166,9 @@ raw[63:48] = unused
 ```
 
 DAQ-side logic provides 12-bit signed two's-complement samples for all eight
-channels in this packing.  The distributor performs the CNN-side fixed-point
+channels in this packing. There is no external 16-bit sample container and no
+low-bit zero padding at the trigger-system boundary. The distributor performs
+the CNN-side fixed-point
 conversion internally only for channels 0-3.  It converts each
 `ap_fixed<12,6>`-style raw sample to the raw representation used by the CNN
 input `ap_fixed<9,4>` lane: arithmetic right shift by one bit, saturate to the
@@ -184,24 +190,31 @@ the `ap_fixed<9,4>` raw range are unchanged; values above the range clamp to
 ## Data Flow
 
 `AI_TRIGGER_TOP` accepts `DATA_STR` and a flat 384-bit `ADC_DATA` bus directly
-in the `CLK_ADC` domain. Each valid beat contains four timesteps for all eight
-raw ADC channels. `ADC_CHUNK_DISTRIBUTOR` runs in this same domain. A CNN chunk
-is 256 timesteps, so one chunk is complete after 64 accepted `DATA_STR` beats.
+in the `CLK_ADC` domain. `DATA_STR` is a beat-valid signal: each accepted beat
+contains four timesteps for all eight raw ADC channels, and continuous input can
+hold `DATA_STR` high every `CLK_ADC` cycle. `ADC_CHUNK_DISTRIBUTOR` runs in this
+same domain. A CNN chunk is 256 timesteps, so one chunk is complete after
+64 accepted `DATA_STR` beats.
 
 For every chunk:
 
 1. The distributor selects a lane in round-robin order.
 2. If the selected lane is available, all 64 ADC beats are written into that
    lane's async FIFO as CNN input words.
-3. If the selected lane is busy at the start of the chunk, the whole chunk is
-   dropped and `CHUNK_OVERFLOW` is asserted for that ADC cycle.
+3. The normal design assumption is that round-robin lane assignment and CNN
+   throughput keep the selected lane available. Internal overflow/status signals
+   may be retained for simulation and debug, but they are not first-version
+   delivered external ports.
 4. The CNN side reads the FIFO as 128-bit words and emits 128 consecutive
    128-bit AXI-stream words to `WRAPPER_TOP`.
 
 The lane input FIFO crosses from `CLK_ADC` to `CLK_CNN`. Its write-side packing
 must preserve chronological order while converting the four-sample external
 beat stream into the 128 consecutive 128-bit AXI-stream words consumed by
-`WRAPPER_TOP`.
+`WRAPPER_TOP`. The ADC-domain aggregation should operate as a pipeline: it
+should form CNN input write units as accepted beats arrive instead of waiting to
+buffer a full 256-sample chunk before feeding the lane FIFO. Timestamp/chunk-id
+alignment across this aggregation boundary is a required verification point.
 
 `CNN_CORE_LANE` releases `CHUNK_BUSY` after the 128 input beats have been
 accepted by the CNN input stream. It does not wait for the CNN score output.
@@ -209,10 +222,11 @@ This allows the input side of a lane to accept a later chunk while the previous
 chunk is still propagating through the CNN pipeline.
 
 The event readout path includes a synchronous `EVENT_OUTPUT_FIFO` in the
-`CLK_ADC` domain. `EVENT_CAPTURE_CTRL` writes raw waveform batches plus
-internal chunk id, timestamp, and score into this FIFO. The delivered top
-exports only `EVENT_DATA`, `EVENT_LAST`, and `EVENT_TIMESTAMP`; chunk id, score,
-and health counters remain internal/debug-only.
+`CLK_ADC` domain. `EVENT_CAPTURE_CTRL` writes raw waveform batches plus internal
+chunk id, timestamp, and score into this FIFO. The delivered top exports only
+`EVENT_VALID`, `EVENT_READY`, `EVENT_DATA`, `EVENT_LAST`, and
+`EVENT_TIMESTAMP`; chunk id, score, overflow/status, and trigger debug pulses
+remain internal/debug-only.
 
 ## Timing and Throughput
 

@@ -35,9 +35,10 @@ python3 scripts/run_post_impl_saif.py
 
 The intended delivery model uses `AI_TRIGGER_TOP` as a DAQ-facing two-clock OOC
 top: ADC input and event output are in `CLK_ADC`, and CNN inference is in
-`CLK_CNN`. The DAQ-facing `CLK_ADC` interface target is 250 MHz with four
-samples/channel per beat. Source-clock input CDC, upstream async FIFOs, and
-input gearboxes are no longer part of the trigger-system boundary.
+`CLK_CNN`. `CLK_ADC` is the 250 MHz clock arriving from the frontend ADC side,
+with four samples/channel per beat. Source-clock input CDC, upstream async
+FIFOs, and input gearboxes are no longer part of the trigger-system boundary.
+The current version scope is only the CNN trigger wrapper path.
 
 Current interface target:
 
@@ -50,6 +51,38 @@ Current interface target:
 | Input beat | `ADC_DATA[383:0]` = 8 channels x 4 samples/channel x 12 bits |
 | Event beat | `EVENT_DATA[383:0]`, same packing as `ADC_DATA` |
 | Event length | 64 beats for one 256-sample chunk |
+| Trigger source | CNN trigger wrapper only |
+
+Interface semantics:
+
+- External input and event samples are clean 12-bit signed values; there is no
+  external 16-bit container or low-bit zero padding.
+- `DATA_STR` is beat-valid. Continuous input may assert it every `CLK_ADC`
+  cycle.
+- `EVENT_VALID=0` is normal idle when no event data is available. Downstream
+  samples event outputs only on `EVENT_VALID && EVENT_READY`.
+- `EVENT_READY` describes peak sink capability. The trigger normally reduces
+  data volume, so the output FIFO may often be empty.
+
+Aggregation and metadata rules:
+
+- CNN chunks remain 256 samples/channel, so one chunk is 64 accepted `CLK_ADC`
+  beats at four samples/channel per beat.
+- ADC-domain aggregation should be streaming/pipelined: form CNN input write
+  units as accepted beats arrive rather than buffering a full chunk before
+  feeding the lane FIFO.
+- `EVENT_TIMESTAMP` is a chunk-index timestamp. It labels the triggered
+  256-sample chunk, not the output time, and is repeated across all 64 output
+  beats for that event.
+- `CHUNK_ID` and `CHUNK_TIMESTAMP` may increment at the same cadence, but keep
+  their roles distinct: `CHUNK_ID` is for internal ring-buffer/metadata
+  matching; `EVENT_TIMESTAMP` is externally visible.
+- Event output contains only the triggered chunk itself. Do not add pre-trigger
+  or post-trigger chunks in the current version.
+- Internal status such as `CHUNK_OVERFLOW` may remain for simulation/debug, but
+  it is not part of the first-version delivered external interface. The normal
+  throughput assumption is that round-robin lane assignment plus CNN processing
+  rate prevents chunk drops.
 
 Historical report context:
 
@@ -90,7 +123,9 @@ simulation, routed implementation, gate-level simulation, and SAIF should be
 rerun on the server for the 250 MHz `CLK_ADC` interface. The post-migration
 behavioral run should show zero chunk overflows, zero dropped triggers, zero
 ring misses, and one complete 64-beat event for every chunk whose
-`score > CNN_THRESH`.
+`score > CNN_THRESH`. It should also explicitly check that trigger chunk id,
+ring-buffer chunk id, and `EVENT_TIMESTAMP` remain aligned after the streaming
+4-sample-beat aggregation.
 
 ## Timing Result
 
@@ -230,10 +265,13 @@ Before treating the implementation as sign-off quality:
 2. Confirm `CLK_ADC` closes at 250 MHz and `CLK_CNN` closes at 200 MHz.
 3. Confirm hierarchical utilization still shows five CNN lanes and 20 DSPs
    after any RTL or constraint change.
-4. Confirm the event path emits 64 beats per triggered 256-sample chunk.
-5. Re-run post-implementation simulation when changing the testbench stimulus,
+4. Confirm the event path emits only the triggered chunk itself: 64 beats per
+   triggered 256-sample chunk, no pre/post chunks.
+5. Confirm `EVENT_TIMESTAMP` is constant across those 64 beats and aligned with
+   the triggered chunk id.
+6. Re-run post-implementation simulation when changing the testbench stimulus,
    threshold, lane count, CDC logic, or CNN clock.
-6. Re-run SAIF power after any timing, placement, CDC, or activity-profile
+7. Re-run SAIF power after any timing, placement, CDC, or activity-profile
    change.
-7. For higher workload coverage, compare a short smoke power run against a
+8. For higher workload coverage, compare a short smoke power run against a
    longer SAIF stimulus window.

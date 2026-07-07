@@ -5,8 +5,9 @@
 This version of the system receives 8 channels of 1 Gsa/s data. After
 inference, it internally compares CNN scores with the configured threshold,
 retains only events above threshold, and outputs the original waveform samples
-with a timestamp. The intended delivery model is a black-box trigger block with
-one DAQ-facing interface clock and one CNN inference clock.
+with a timestamp. The intended delivery model is a black-box CNN-trigger block
+with `CLK_ADC`, the clock arriving from the frontend ADC side, and `CLK_CNN`,
+the CNN inference clock.
 
 There are three interface groups:
 
@@ -16,9 +17,9 @@ There are three interface groups:
 
 ## Upstream ADC Input Format
 
-The upstream DAQ logic drives the AI Trigger System directly with a 250 MHz
-`CLK_ADC`. No separate source clock, async FIFO, or gearbox is required at the
-AI Trigger System boundary.
+The upstream ADC-side logic drives the AI Trigger System directly with a
+250 MHz `CLK_ADC`. No separate source clock, async FIFO, or gearbox is required
+at the AI Trigger System boundary.
 
 Each accepted input beat contains:
 
@@ -39,26 +40,36 @@ ADC_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
   = raw 12-bit signed ADC sample for channel ch, sample index sample
 ```
 
+The external interface uses clean 12-bit signed samples. It does not use a
+16-bit sample container and does not require low-bit zero padding.
+
 ### Upstream Interface
 
 | Signal | Direction | Function |
 | --- | --- | --- |
-| `CLK_ADC` | in | 250 MHz DAQ-facing input and event-output clock. |
-| `DATA_STR` | in | Input beat valid. When `1`, the trigger system accepts `ADC_DATA`. |
+| `CLK_ADC` | in | 250 MHz frontend ADC clock used for input and event output. |
+| `DATA_STR` | in | Input beat valid. When `1`, the trigger system accepts `ADC_DATA`. Continuous input may hold this high every `CLK_ADC` cycle. |
 | `ADC_DATA[383:0]` | in | One ADC beat: 8 channels x 4 samples/channel x 12 bits/sample. |
 
 ## Trigger Function
 
-The system reduces data volume by retaining only triggered waveform events. The
-CNN trigger path uses channels 0-3 for inference. Event output preserves all
-8 raw ADC channels in the same 384-bit beat format as the input interface.
+The system reduces data volume by retaining only CNN-triggered waveform events.
+The current version has only the CNN trigger wrapper path; forced triggers,
+Hi-Lo triggers, and pre/post-trigger windows are outside this version. The CNN
+trigger path uses channels 0-3 for inference. Event output preserves all 8 raw
+ADC channels in the same 384-bit beat format as the input interface.
 
-CNN chunks remain 256 samples/channel. With four samples/channel per
-`CLK_ADC` beat, one chunk spans:
+CNN chunks remain 256 samples/channel. With four samples/channel per `CLK_ADC`
+beat, one chunk spans:
 
 ```text
 256 samples/channel / 4 samples per beat = 64 CLK_ADC beats
 ```
+
+The trigger-system frontend should aggregate the 4-sample beats into the
+256-sample CNN window as a pipeline. The aggregation should preserve continuous
+input throughput and keep chunk id/timestamp metadata aligned with the data sent
+to the CNN trigger.
 
 ## System and Control Interface
 
@@ -78,19 +89,20 @@ EVENT_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
   = raw 12-bit signed ADC sample for channel ch, sample index sample
 ```
 
-For the current one-chunk event window, each event emits 64 `EVENT_VALID`
-beats. `EVENT_TIMESTAMP` remains constant across those 64 beats, and
-`EVENT_LAST` is asserted on the final beat.
+For the current one-chunk event window, each event emits only the triggered
+chunk itself: 64 `EVENT_VALID` beats, no pre-trigger chunk, and no post-trigger
+chunk. `EVENT_TIMESTAMP` is a chunk-index timestamp and remains constant across
+those 64 beats. `EVENT_LAST` is asserted on the final beat.
 
 ### Downstream Interface
 
 | Signal | Direction | Function |
 | --- | --- | --- |
-| `EVENT_VALID` | out | Current event beat is valid. |
-| `EVENT_READY` | in | DAQ can accept the current event beat. |
+| `EVENT_VALID` | out | Current event beat is valid. `0` is the normal idle state when no event data is available. |
+| `EVENT_READY` | in | DAQ can accept the current event beat. This describes peak sink capability, not the normal average event rate. |
 | `EVENT_DATA[383:0]` | out | Original waveform beat, in the same format as `ADC_DATA`. |
 | `EVENT_LAST` | out | Last beat of the current event. |
-| `EVENT_TIMESTAMP[23:0]` | out | Event timestamp, constant for all beats of one event. |
+| `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one event. |
 
 DAQ-side sampling contract:
 
