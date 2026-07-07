@@ -271,6 +271,16 @@ class OocFlowChecks(unittest.TestCase):
         # Without it the port is stuck at '0', so the stream FSM never starts.
         self.assertRegex(lane, r'USE_ADV_FEATURES\s*=>\s*"1[0-9A-Fa-f]{3}"')
 
+    def test_adc_input_cdc_qualifies_core_data_with_xpm_data_valid(self) -> None:
+        adc_input = read("HDL/rtl/ADC_INPUT_CDC_FIFO.vhd")
+
+        self.assertIn("signal fifo_data_valid", adc_input)
+        self.assertRegex(adc_input, r"fifo_rd_en\s*<=\s*RD_READY\s+and\s+fifo_data_valid")
+        self.assertRegex(adc_input, r'USE_ADV_FEATURES\s*=>\s*"1[0-9A-Fa-f]{3}"')
+        self.assertRegex(adc_input, r"data_valid\s+=>\s+fifo_data_valid")
+        self.assertRegex(adc_input, r"RD_VALID\s+<=\s+fifo_data_valid")
+        self.assertNotRegex(adc_input, r"RD_VALID\s+<=\s+not\s+fifo_empty")
+
     def test_sim_wrapper_owns_source_clock_cdc_not_synth_top(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
