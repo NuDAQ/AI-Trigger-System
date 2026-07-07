@@ -559,9 +559,11 @@ Vivado to improve BRAM-heavy FIFO placement/routing.
 
 The refreshed routed timing report confirms the two-clock OOC boundary:
 `CLK_ADC` at 250 MHz and `CLK_CNN` at 200 MHz. The OOC constraints intentionally
-use zero-delay IO boundary assumptions, so methodology warnings around IO delay
-and clock-group/max-delay interactions still need review before system-level
-sign-off.
+use zero-delay IO boundary assumptions. Vivado reports 828 `XDCH-2` methodology
+warnings because the OOC input/output delays use the same 0 ns min/max value on
+wide ADC/event ports. This is expected for the current block-level report, but
+the board-level integration must replace or justify these boundary assumptions
+with system timing constraints.
 
 The main throughput target is one 256-sample chunk every 256 ns at the ADC
 input. At five lanes, the CNN domain should have enough margin if the single

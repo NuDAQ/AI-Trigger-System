@@ -173,9 +173,14 @@ a tighter `CLK_CNN` path through the per-lane FIFO Generator BRAM read side.
 Removing `DONT_TOUCH` from those FIFO instances remains the intended placement
 policy.
 
-The methodology report still flags zero-delay OOC boundary assumptions and
-clock-group constraints that override several point-to-point max-delay checks.
-These are OOC constraint-quality items, not current timing failures.
+Timing lint is clean at the register level: the post-route report shows zero
+unconstrained internal endpoints, zero unclocked register/latch pins, and zero
+multiple-clock register/latch pins. The remaining methodology noise is
+constraint-boundary related: Vivado reports 828 `XDCH-2` warnings because the
+OOC input/output delays use the same 0 ns min/max value on the wide ADC/event
+ports. These warnings document the current block-level zero-delay boundary
+assumption; they are not routed timing failures. Board-level integration should
+replace or justify these OOC boundary delays with system timing constraints.
 
 ## Resource Result
 
@@ -233,6 +238,10 @@ The safe CDC crossings are the per-lane async FIFOs, XPM handshake metadata,
 and the CNN-trigger descriptor return path. The `CDC-1` entries are tied to the
 OOC input-port/reset false-path context and should remain a constraint-quality
 review item before board-level sign-off, not a current routed timing failure.
+The clock-interaction report classifies the two intra-clock domains as clean and
+timed, while the `CLK_ADC` to `CLK_CNN` and `CLK_CNN` to `CLK_ADC` crossings are
+intentionally ignored by asynchronous clock groups and covered by explicit FIFO
+or handshake CDC structures.
 
 ## SAIF Power Result
 
