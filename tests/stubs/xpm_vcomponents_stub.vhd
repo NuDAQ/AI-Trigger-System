@@ -23,6 +23,22 @@ package vcomponents is
         );
     end component;
 
+    component xpm_cdc_array_single
+        generic (
+            DEST_SYNC_FF   : integer := 2;
+            INIT_SYNC_FF   : integer := 0;
+            SIM_ASSERT_CHK : integer := 0;
+            SRC_INPUT_REG  : integer := 0;
+            WIDTH          : integer := 1
+        );
+        port (
+            src_clk  : in  std_logic;
+            src_in   : in  std_logic_vector(WIDTH-1 downto 0);
+            dest_clk : in  std_logic;
+            dest_out : out std_logic_vector(WIDTH-1 downto 0)
+        );
+    end component;
+
     component xpm_fifo_sync
         generic (
             DOUT_RESET_VALUE    : string  := "0";
@@ -114,6 +130,42 @@ package vcomponents is
         );
     end component;
 end package vcomponents;
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity xpm_cdc_array_single is
+    generic (
+        DEST_SYNC_FF   : integer := 2;
+        INIT_SYNC_FF   : integer := 0;
+        SIM_ASSERT_CHK : integer := 0;
+        SRC_INPUT_REG  : integer := 0;
+        WIDTH          : integer := 1
+    );
+    port (
+        src_clk  : in  std_logic;
+        src_in   : in  std_logic_vector(WIDTH-1 downto 0);
+        dest_clk : in  std_logic;
+        dest_out : out std_logic_vector(WIDTH-1 downto 0)
+    );
+end entity xpm_cdc_array_single;
+
+architecture sim of xpm_cdc_array_single is
+    type sync_arr_t is array (natural range <>) of std_logic_vector(WIDTH-1 downto 0);
+    signal sync_regs : sync_arr_t(0 to DEST_SYNC_FF - 1) := (others => (others => '0'));
+begin
+    process(dest_clk)
+    begin
+        if rising_edge(dest_clk) then
+            sync_regs(0) <= src_in;
+            for i in 1 to DEST_SYNC_FF - 1 loop
+                sync_regs(i) <= sync_regs(i - 1);
+            end loop;
+        end if;
+    end process;
+
+    dest_out <= sync_regs(DEST_SYNC_FF - 1);
+end architecture sim;
 
 library ieee;
 use ieee.std_logic_1164.all;

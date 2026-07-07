@@ -48,6 +48,7 @@ entity CNN_CORE_LANE is
         BATCH_DATA   : in  std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
         CHUNK_ID     : in  chunk_id_t;
         CHUNK_TIMESTAMP : in timestamp_t;
+        CNN_THRESH   : in  std_logic_vector(31 downto 0);
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
@@ -56,6 +57,7 @@ entity CNN_CORE_LANE is
         LANE_SCORE   : out std_logic_vector(31 downto 0);
         LANE_CHUNK_ID: out chunk_id_t;
         LANE_TIMESTAMP: out timestamp_t;
+        LANE_THRESH  : out std_logic_vector(31 downto 0);
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -159,10 +161,13 @@ architecture rtl of CNN_CORE_LANE is
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_chunk_id_r : chunk_id_t := (others => '0');
     signal lane_timestamp_r : timestamp_t := (others => '0');
+    signal lane_thresh_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_valid_r : std_logic := '0';
     signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
     type timestamp_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of timestamp_t;
+    type thresh_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of std_logic_vector(31 downto 0);
     signal score_timestamp_mem : timestamp_mem_t := (others => (others => '0'));
+    signal score_thresh_mem : thresh_mem_t := (others => (others => '0'));
     signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
     signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
 
@@ -275,6 +280,7 @@ begin
                 lane_score_r <= (others => '0');
                 lane_chunk_id_r <= (others => '0');
                 lane_timestamp_r <= (others => '0');
+                lane_thresh_r <= (others => '0');
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
                 chunk_id_dest_ack <= '0';
@@ -298,6 +304,7 @@ begin
                     lane_score_r <= cnn_out_data;
                     lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
                     lane_timestamp_r <= score_timestamp_mem(score_id_rd_idx);
+                    lane_thresh_r <= score_thresh_mem(score_id_rd_idx);
                     lane_valid_r <= '1';
                     if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
                         score_id_rd_idx <= 0;
@@ -334,6 +341,7 @@ begin
                             chunk_id_meta_valid <= '0';
                             score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                             score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
+                            score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -375,6 +383,7 @@ begin
                                     chunk_id_meta_valid <= '0';
                                     score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                                     score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
+                                    score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
@@ -419,6 +428,7 @@ begin
     LANE_SCORE <= lane_score_r;
     LANE_CHUNK_ID <= lane_chunk_id_r;
     LANE_TIMESTAMP <= lane_timestamp_r;
+    LANE_THRESH <= lane_thresh_r;
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================

@@ -191,6 +191,25 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
+    def test_cnn_threshold_uses_config_cdc_and_lane_snapshot(self) -> None:
+        core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        event_path = read("HDL/rtl/EVENT_CAPTURE_PATH.vhd")
+
+        self.assertIn("xpm_cdc_array_single", core)
+        self.assertIn("cnn_thresh_cnn", core)
+        self.assertIn("agg_score_thresh", core)
+        self.assertRegex(core, r"LANE_THRESH\s*=>\s*lane_thresh\(i\)")
+        self.assertRegex(core, r"(?s)CNN_THRESH\s*=>\s*agg_score_thresh")
+        self.assertNotRegex(core, r"signed\(CNN_THRESH\(21 downto 0\)\)")
+
+        self.assertIn("score_thresh_mem", lane)
+        self.assertIn("LANE_THRESH", lane)
+        self.assertRegex(lane, r"score_thresh_mem\(score_id_wr_idx\)\s*<=\s*CNN_THRESH")
+        self.assertRegex(lane, r"lane_thresh_r\s*<=\s*score_thresh_mem\(score_id_rd_idx\)")
+
+        self.assertRegex(event_path, r"CNN_THRESH\s+:\s+in\s+std_logic_vector\(31 downto 0\)")
+
     def test_core_synchronizes_external_reset_before_domain_fanout(self) -> None:
         bender = read("Bender.yml")
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
