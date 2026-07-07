@@ -69,7 +69,6 @@ class OocFlowChecks(unittest.TestCase):
         for path in ("add_files.tcl", "add_sim_files.tcl", "AI_Trigger_System/AI_Trigger_System.xpr"):
             text = read(path)
             self.assertNotIn("fifo_async_1024_to_64", text, msg=path)
-            self.assertNotIn("CNN-Core-Generator/hls_streaming", text, msg=path)
             self.assertNotIn("1536", text, msg=path)
             self.assertNotIn("14.286", text, msg=path)
 

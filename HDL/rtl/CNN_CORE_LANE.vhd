@@ -151,9 +151,9 @@ architecture rtl of CNN_CORE_LANE is
 
     -- Stream FSM.  Output capture is intentionally independent: LANE_BUSY is
     -- released when the 128-beat AXIS input transaction has been accepted, not
-    -- when the later CNN output arrives.  The HLS dataflow core behaves like a
-    -- continuously-started pipeline, so adjacent accepted chunks are streamed
-    -- back-to-back instead of waiting for done/idle.
+    -- when the later CNN output arrives.  HLS ap_start is a transaction request:
+    -- pulse it at a chunk boundary and keep the payload flow on AXIS
+    -- input_valid/input_ready.
     type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
@@ -333,9 +333,8 @@ begin
 
                         if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
-                            -- Keep start asserted through the input stream; the
-                            -- wrapper/HLS TB treats ap_start as a continuous
-                            -- enable and ap_done is only an output completion.
+                            -- start is a one-cycle transaction request; the
+                            -- 128-beat payload is governed by AXIS ready/valid.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
                             chunk_id_meta_valid <= '0';
@@ -364,10 +363,9 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
-                        -- Keep ap_start high while actively feeding the HLS
-                        -- dataflow pipeline.  Do not wait for ap_done, and do
-                        -- not use ap_ready as the stream-completion condition.
-                        cnn_start <= '1';
+                        -- Keep ap_start low after the transaction request.
+                        -- The HLS wrapper accepts payload through AXIS.
+                        cnn_start <= '0';
 
                         if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
