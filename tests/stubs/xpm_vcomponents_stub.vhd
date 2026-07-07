@@ -363,7 +363,7 @@ architecture sim of xpm_fifo_async is
         if ratio = 1 then
             result := word(READ_DATA_WIDTH-1 downto 0);
         else
-            idx := ratio - 1 - seg;
+            idx := seg;
             result := word((idx + 1) * READ_DATA_WIDTH - 1 downto
                            idx * READ_DATA_WIDTH);
         end if;
