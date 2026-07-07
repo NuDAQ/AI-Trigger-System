@@ -5,10 +5,13 @@
 ## Overview
 
 This repository contains an FPGA AI trigger path for continuous radio detector
-ADC data. The current top-level design accepts eight channels of 1 Gsps ADC
-data, groups the stream into 256-sample chunks, and distributes the leading
-four channels across five parallel CNN inference lanes. The number of lanes is
-parameterized.
+ADC data. The DAQ-facing interface is being standardized on a single
+250 MHz `CLK_ADC` interface clock for both input and event output. Each accepted
+beat carries eight channels with four 12-bit samples per channel, so the
+external data interface sustains 1 Gsps/channel without a source-side gearbox at
+the trigger-system boundary. Internally, the stream is grouped into 256-sample
+chunks and the leading four channels are distributed across five parallel CNN
+inference lanes. The number of lanes is parameterized.
 
 The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
 dependencies.
@@ -70,7 +73,7 @@ Functional data flow:
 
 ```text
 DAQ ADC batches @ CLK_ADC
-  -> DATA_STR + ADC_DATA[1535:0]
+  -> DATA_STR + ADC_DATA[383:0]
      -> AI_TRIGGER_TOP flat-bus unpack
         -> AI_TRIGGER_CORE
            -> ADC_CHUNK_DISTRIBUTOR
@@ -91,25 +94,25 @@ ready/valid interface drains that FIFO.
 ```
 
 The event waveform window is currently one chunk: the chunk whose CNN score
-crossed `CNN_THRESH`.  Each event therefore emits 16 ADC-domain batches, with
-`EVENT_LAST` asserted on the final batch.  A 24-bit timestamp is assigned after
-16 accepted `DATA_STR` beats and is carried with the
+crossed `CNN_THRESH`.  Each event therefore emits 64 ADC-domain beats, with
+`EVENT_LAST` asserted on the final beat.  A 24-bit timestamp is assigned after
+64 accepted `DATA_STR` beats and is carried with the
 triggered chunk to `EVENT_TIMESTAMP`.
 
 ### Clock Domains
 
 | Clock | Nominal rate | Function |
 | --- | ---: | --- |
-| `CLK_ADC` | 70 MHz target | DAQ-facing ADC ingest and event output clock. |
+| `CLK_ADC` | 250 MHz target | DAQ-facing ADC ingest and event output clock. |
 | `CLK_CNN` | 200 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
 
 The reset input `RST` is active high and may be driven by an upper-level DAQ or
 global-control reset source. It is treated as an asynchronous assertion at the
 AI trigger boundary, then released through local reset synchronizers in the
 `CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. The
-delivered OOC top has no ADC source-clock domain; any 62.5 MHz source-side
-stimulus or CDC belongs outside the delivered trigger block. The simulation
-wrapper still uses `ADC_SRC_CLK` to model 1 GSa/s test input batches.
+delivered OOC top has no ADC source-clock domain. The DAQ-facing input and
+event-output interfaces are synchronous to the same `CLK_ADC`; only the
+internal `CLK_ADC` <-> `CLK_CNN` crossings should remain in the trigger block.
 
 ### Event Timestamp
 
@@ -117,7 +120,7 @@ wrapper still uses `ADC_SRC_CLK` to model 1 GSa/s test input batches.
 `CLK_ADC` domain. It increments once per accepted 256-sample chunk:
 
 ```text
-1 timestamp tick = 16 accepted ADC batches = 256 samples/channel
+1 timestamp tick = 64 accepted ADC beats = 256 samples/channel
 ```
 
 The timestamp is generated before the CNN chunk assembly/distribution path, so
@@ -132,17 +135,17 @@ At the nominal 1 GSa/s source rate, the 24-bit timestamp wraps after about
 
 ### ADC Input Format
 
-The DAQ-facing top exposes the eight-channel ADC input as a flat 1536-bit
+The DAQ-facing top exposes the eight-channel ADC input as a flat 384-bit
 vector in the `CLK_ADC` domain:
 
 ```text
-8 channels x 16 samples per ADC cycle x 12 bits = 1536 bits
+8 channels x 4 samples per ADC cycle x 12 bits = 384 bits
 ```
 
 The top-level port and SystemVerilog testbench use this convention:
 
 ```text
-ADC_DATA[(ch * 16 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
+ADC_DATA[(ch * 4 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
 ```
 
 The CNN test vectors store one timestep as four packed 12-bit values.  The
@@ -180,25 +183,25 @@ the `ap_fixed<9,4>` raw range are unchanged; values above the range clamp to
 
 ## Data Flow
 
-`AI_TRIGGER_TOP` accepts `DATA_STR` and a flat 1536-bit `ADC_DATA` bus directly
-in the `CLK_ADC` domain. Each valid batch contains 16 timesteps for all eight
+`AI_TRIGGER_TOP` accepts `DATA_STR` and a flat 384-bit `ADC_DATA` bus directly
+in the `CLK_ADC` domain. Each valid beat contains four timesteps for all eight
 raw ADC channels. `ADC_CHUNK_DISTRIBUTOR` runs in this same domain. A CNN chunk
-is 256 timesteps, so one chunk is complete after 16 accepted `DATA_STR` beats.
+is 256 timesteps, so one chunk is complete after 64 accepted `DATA_STR` beats.
 
 For every chunk:
 
 1. The distributor selects a lane in round-robin order.
-2. If the selected lane is available, all 16 ADC batches are written into that
-   lane's async FIFO as 1024-bit words.
+2. If the selected lane is available, all 64 ADC beats are written into that
+   lane's async FIFO as CNN input words.
 3. If the selected lane is busy at the start of the chunk, the whole chunk is
    dropped and `CHUNK_OVERFLOW` is asserted for that ADC cycle.
 4. The CNN side reads the FIFO as 128-bit words and emits 128 consecutive
    128-bit AXI-stream words to `WRAPPER_TOP`.
 
-The async FIFO uses a 1024-bit write port and a 128-bit read port. Xilinx FIFO
-Generator emits the high 128-bit segment of each 1024-bit write first, so the
-distributor stores the eight 128-bit CNN beats in reverse segment order. This
-preserves chronological CNN input order at the FIFO read side.
+The lane input FIFO crosses from `CLK_ADC` to `CLK_CNN`. Its write-side packing
+must preserve chronological order while converting the four-sample external
+beat stream into the 128 consecutive 128-bit AXI-stream words consumed by
+`WRAPPER_TOP`.
 
 `CNN_CORE_LANE` releases `CHUNK_BUSY` after the 128 input beats have been
 accepted by the CNN input stream. It does not wait for the CNN score output.
@@ -249,28 +252,14 @@ f_CNN >= 183 / 1280 ns = 143.0 MHz
 The current 200 MHz CNN clock target leaves margin while matching the poster
 architecture with five replicated cores.
 
-The latest full-system behavioral check, using 1000 samples at
-`CLK_CNN = 200 MHz` and `CNN_THRESH_RAW = 0`, reports:
+The full-system behavioral check must be rerun after the 250 MHz, four-sample
+per beat interface migration. The required validation point is `CLK_CNN =
+200 MHz` with `CNN_THRESH_RAW = 0`, zero chunk overflows, zero dropped triggers,
+zero ring misses, and one complete 64-beat event for every chunk whose
+`score > CNN_THRESH`.
 
-```text
-Samples sent:     1000
-Results received: 1000
-Chunk overflows:  0
-ADC input overflows: 0
-Events saved:     163
-Event batches:    2608
-Dropped triggers: 0
-Ring misses:      0
-Accuracy:         981 / 1000 = 98.10%
-Avg latency:      223.4 CNN cycles = 1.117 us
-Reported TB throughput: 3.34 M samples/s
-RTL/Keras score correlation: 0.9759
-RTL/Keras trigger agreement: 986 / 1000 = 98.60%
-RTL/Keras mean absolute score difference: 0.647
-```
-
-The reported latency is end-to-end from the start of the ADC chunk to
-`CNN_OUT_VALID`. It includes ADC batching, FIFO/CDC, CNN input streaming, CNN
+Measured latency should be reported end-to-end from the start of the ADC chunk
+to `CNN_OUT_VALID`. It includes ADC batching, FIFO/CDC, CNN input streaming, CNN
 pipeline latency, and output aggregation. It is not the steady-state output
 interval. In steady state, accepted chunks are launched at the ADC chunk rate
 across the five lanes. Keras comparison is used as a sanity check for score
@@ -340,12 +329,12 @@ eight-channel raw ADC waveform batches, not the CNN fixed-point converted
 values.  Its bit packing matches the ADC batch packing:
 
 ```text
-EVENT_DATA[(ch * 16 + sample) * 12 + 11 : (ch * 16 + sample) * 12]
+EVENT_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
   = raw 12-bit signed ADC sample for channel ch, sample index sample
 ```
 
-For the current one-chunk event window, each event emits 16 `EVENT_VALID` beats.
-`EVENT_TIMESTAMP` remains constant across those 16 beats, and `EVENT_LAST` is
+For the current one-chunk event window, each event emits 64 `EVENT_VALID` beats.
+`EVENT_TIMESTAMP` remains constant across those 64 beats, and `EVENT_LAST` is
 asserted on the final beat. The delivered top does not expose CNN score, chunk
 id, overflow counters, or trigger debug pulses.
 
@@ -414,7 +403,7 @@ AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv
 ```
 
 The event CSV includes `event_timestamp`, a 24-bit chunk timestamp that is
-constant across all 16 batches of a triggered-chunk event.
+constant across all 64 beats of a triggered-chunk event.
 
 After a full-system run, validate the score CSV, event CSV, and simulation log
 with:
@@ -432,9 +421,8 @@ python3 scripts/analyze_vivado_sim_results.py \
 ```
 
 At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
-expected to produce exactly one 16-batch event. The latest checked run has 163
-positive-score chunks and 163 complete events, with no missing, duplicate, or
-extra event chunks.
+expected to produce exactly one 64-beat event. The post-migration run should
+confirm there are no missing, duplicate, or extra event chunks.
 
 ## Continuous Validation Plots
 
@@ -467,7 +455,7 @@ AI_Trigger_System/AI_Trigger_System.xpr
 Primary checks for the next analysis step:
 
 1. Confirm `CLK_CNN` timing closure at 200 MHz.
-2. Confirm `CLK_ADC` timing closure at 70 MHz.
+2. Confirm `CLK_ADC` timing closure at 250 MHz.
 3. Review resource use for five CNN wrappers plus the event/lane FIFOs.
 4. Check XPM/FIFO Generator resource mapping and reset behavior.
 5. Review inter-clock timing constraints between `CLK_ADC` and `CLK_CNN`.
@@ -497,10 +485,10 @@ Post-implementation SAIF and timing reports are written under:
 build/vivado_post_impl_saif/reports/
 ```
 
-The current checked-in reports predate the DAQ-facing top split and should be
-refreshed on the server before sign-off. The previous routed OOC result
-summary, after the input CDC FIFO, 70 MHz ingest clock target, CDC cleanup, and
-lane FIFO placement optimization, was:
+The current checked-in reports are historical and should be refreshed on the
+server before sign-off for the 250 MHz `CLK_ADC` interface. The previous routed
+OOC result summary, after the input CDC FIFO, 70 MHz ingest clock target, CDC
+cleanup, and lane FIFO placement optimization, was:
 
 | Metric | Current report |
 | --- | ---: |
@@ -531,7 +519,7 @@ the lane FIFOs optimizable restored the 200 MHz `CLK_CNN` margin by allowing
 Vivado to improve BRAM-heavy FIFO placement/routing.
 
 The refreshed routed timing report should confirm the two-clock OOC boundary:
-`CLK_ADC` at 70 MHz and `CLK_CNN` at 200 MHz. The OOC constraints intentionally
+`CLK_ADC` at 250 MHz and `CLK_CNN` at 200 MHz. The OOC constraints intentionally
 use zero-delay IO boundary assumptions, so methodology warnings around IO delay
 and clock-group/max-delay interactions still need review before system-level
 sign-off.
