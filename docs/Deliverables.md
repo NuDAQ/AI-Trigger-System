@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This version of the system receives 8 channels of 1 Gsa/s data. After inference, it internally compares CNN scores with the configured threshold, retains only events above threshold, and outputs the original waveform samples with a timestamp. The intended delivery model is a black-box CNN-trigger block with `CLK_ADC`, the clock arriving from the frontend ADC side, and `CLK_CNN`, the CNN inference clock.
+This version of the system receives 8 channels of 1 Gsa/s data. After inference, it internally compares CNN scores with the configured threshold, retains only events above the threshold, and outputs the original waveform samples with a timestamp. The intended delivery model is a black-box CNN-trigger block with `CLK_ADC`, the clock arriving from the frontend ADC side, and `CLK_CNN`, the CNN inference clock.
 
 The delivered top-level interface has three groups:
 
