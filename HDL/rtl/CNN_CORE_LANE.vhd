@@ -452,7 +452,7 @@ begin
             READ_DATA_WIDTH     => LANE_FIFO_READ_WIDTH,
             READ_MODE           => "fwft",
             RELATED_CLOCKS      => 0,
-            USE_ADV_FEATURES    => "0000",
+            USE_ADV_FEATURES    => "1000",
             WAKEUP_TIME         => 0,
             WRITE_DATA_WIDTH    => LANE_FIFO_WRITE_WIDTH,
             WR_DATA_COUNT_WIDTH => LANE_FIFO_WRITE_ADDR_WIDTH + 1

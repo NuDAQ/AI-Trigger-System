@@ -259,6 +259,12 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(lane, r"cnn_in_ready\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
         self.assertNotRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_empty\s*=\s*'0'")
 
+    def test_lane_fifo_use_adv_features_enables_data_valid(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        # USE_ADV_FEATURES bit 12 enables the data_valid output port on xpm_fifo_async.
+        # Without it the port is stuck at '0', so the stream FSM never starts.
+        self.assertRegex(lane, r'USE_ADV_FEATURES\s*=>\s*"1[0-9A-Fa-f]{3}"')
+
     def test_sim_wrapper_owns_source_clock_cdc_not_synth_top(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
