@@ -258,6 +258,17 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
         self.assertNotRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_empty\s*=\s*'0'")
 
+    def test_adc_distributor_fifo_segment_order_high_first(self) -> None:
+        dist = read("HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd")
+        # XPM xpm_fifo_async 2:1 asymmetric read presents the HIGH 128-bit segment
+        # of a 256-bit write first (MSB-first per UG974).  Chronological timesteps
+        # must therefore be stored in DESCENDING segment order so that the read side
+        # sees ts[4b+0], ts[4b+1] first (high segment) then ts[4b+2], ts[4b+3].
+        # Commit e92e52a reversed this to ascending order and dropped accuracy from
+        # 98% to 50% because even-/odd-ts pairs within each ADC beat were swapped.
+        self.assertRegex(dist, r"N_BATCH_S/2\s*-\s*1\s*-\s*p\s*\)\s*\*\s*128")
+        self.assertNotRegex(dist, r"SEG_BASE\s*:\s*integer\s*:=\s*p\s*\*\s*128")
+
     def test_lane_stream_cnn_in_valid_asserted_throughout_cc_stream(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
         # cnn_in_valid must stay '1' throughout CC_STREAM (matching v3.0 / commit 158751a).
