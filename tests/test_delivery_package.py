@@ -62,17 +62,17 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertTrue((package / "VERSION.txt").exists())
             self.assertTrue((package / "constraints" / "ai_trigger_ooc.xdc").exists())
             self.assertTrue((package / "rtl" / "cnn-core" / "cnn_core.v").exists())
-            self.assertTrue((package / "rtl" / "cnn-core-wrapper" / "cnn_core_wrapper_top.v").exists())
+            self.assertTrue((package / "rtl" / "cnn-core-wrapper" / "hw" / "rtl" / "cnn_core_wrapper_top.v").exists())
             self.assertTrue((package / "rtl" / "ai-trigger" / "AI_TRIGGER_TOP.vhd").exists())
 
             self.assertNotIn(str(ROOT), add_files)
             self.assertNotIn(str(ROOT), manifest)
             self.assertIn("rtl/cnn-core/cnn_core.v", manifest)
-            self.assertIn("rtl/cnn-core-wrapper/cnn_core_wrapper_top.v", manifest)
+            self.assertIn("rtl/cnn-core-wrapper/hw/rtl/cnn_core_wrapper_top.v", manifest)
             self.assertIn("rtl/ai-trigger/AI_TRIGGER_PKG.vhd", manifest)
 
             core_idx = add_files.index("rtl cnn-core cnn_core.v")
-            wrapper_idx = add_files.index("rtl cnn-core-wrapper cnn_core_wrapper_top.v")
+            wrapper_idx = add_files.index("rtl cnn-core-wrapper hw rtl cnn_core_wrapper_top.v")
             pkg_idx = add_files.index("rtl ai-trigger AI_TRIGGER_PKG.vhd")
             top_idx = add_files.index("rtl ai-trigger AI_TRIGGER_TOP.vhd")
 

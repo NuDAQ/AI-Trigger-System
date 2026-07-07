@@ -18,3 +18,5 @@ dist/ai-trigger-daq-v3.2.0-daq-test.zip
 Upload the zip file as a GitHub Release asset. The GitHub auto-generated source archives are full repository snapshots and are not the intended DAQ handoff package.
 
 The package contains one user-facing interface document, all required RTL sources, the OOC constraint file, a Vivado `add_files.tcl`, and version/manifest files. The copied RTL is self-contained for Vivado integration except for vendor-provided Xilinx XPM primitives.
+
+The CNN wrapper dependency contributes one RTL source at `rtl/cnn-core-wrapper/hw/rtl/cnn_core_wrapper_top.v`. The generated HLS CNN implementation sources are copied separately under `rtl/cnn-core/`.

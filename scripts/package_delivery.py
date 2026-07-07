@@ -321,7 +321,7 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
         rtl_paths.append(rel)
 
     for source in wrap_sources:
-        dest = package_dir / "rtl" / "cnn-core-wrapper" / source.name
+        dest = package_dir / "rtl" / "cnn-core-wrapper" / "hw" / "rtl" / source.name
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, dest)
         rel = dest.relative_to(package_dir)
