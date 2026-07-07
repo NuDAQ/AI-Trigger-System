@@ -268,6 +268,8 @@ begin
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
     -- -------------------------------------------------------------------------
+    fifo_rd_en <= cnn_in_valid and cnn_in_ready;
+
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
@@ -275,7 +277,6 @@ begin
                 cnn_state    <= CC_IDLE;
                 cnn_start    <= '0';
                 cnn_in_valid <= '0';
-                fifo_rd_en   <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
                 stream_done_toggle_cnn <= '0';
@@ -293,7 +294,6 @@ begin
                 chunk_id_dest_seen <= '0';
             else
                 lane_valid_r <= '0';
-                fifo_rd_en   <= '0';   -- default: don't pop
                 chunk_id_dest_ack <= '0';
                 if chunk_id_dest_req = '0' then
                     chunk_id_dest_seen <= '0';
@@ -371,7 +371,6 @@ begin
 
                         if cnn_in_ready = '1' and fifo_data_valid = '1' then
                             stream_cnt <= stream_cnt - 1;
-                            fifo_rd_en <= '1';
 
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
