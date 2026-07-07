@@ -256,8 +256,14 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("signal fifo_data_valid", lane)
         self.assertRegex(lane, r"data_valid\s+=>\s+fifo_data_valid")
         self.assertRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
-        self.assertRegex(lane, r"cnn_in_ready\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
         self.assertNotRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_empty\s*=\s*'0'")
+
+    def test_lane_stream_cnn_in_valid_asserted_throughout_cc_stream(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        # cnn_in_valid must stay '1' throughout CC_STREAM (matching v3.0 / commit 158751a).
+        # Gating it from fifo_data_valid shifts stream timing by CDC latency, causing
+        # lane result collisions in AI_TRIGGER_CORE → one result swallowed → 999 not 1000.
+        self.assertNotIn("cnn_in_valid <= fifo_data_valid", lane)
 
     def test_lane_fifo_use_adv_features_enables_data_valid(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")

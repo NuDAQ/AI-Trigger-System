@@ -367,9 +367,8 @@ begin
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
                         cnn_start <= '1';
-                        cnn_in_valid <= fifo_data_valid;
 
-                        if cnn_in_ready = '1' and fifo_data_valid = '1' then
+                        if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
 
                             if stream_cnt = 1 then
