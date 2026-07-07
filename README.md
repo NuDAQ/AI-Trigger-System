@@ -115,7 +115,9 @@ AI trigger boundary, then released through local reset synchronizers in the
 delivered OOC top has no extra source-clock or downstream-clock domain. The
 input and event-output interfaces are synchronous to the same `CLK_ADC`; only
 the internal `CLK_ADC` <-> `CLK_CNN` crossings should remain in the trigger
-block.
+block. Reset must clear state machines, FIFO/ring pointers, metadata-valid
+flags, and output-valid flags so reset release cannot create a false chunk or
+false event.
 
 ### Event Timestamp
 
@@ -196,6 +198,12 @@ hold `DATA_STR` high every `CLK_ADC` cycle. `ADC_CHUNK_DISTRIBUTOR` runs in this
 same domain. A CNN chunk is 256 timesteps, so one chunk is complete after
 64 accepted `DATA_STR` beats.
 
+The input side has no `ADC_READY` backpressure signal. When `DATA_STR` is high,
+the trigger system must synchronously accept the 384-bit ADC beat. If
+`DATA_STR` is low, that cycle is not an accepted beat and does not advance the
+chunk beat counter, chunk timestamp, waveform ring write pointer, or lane FIFO
+write.
+
 For every chunk:
 
 1. The distributor selects a lane in round-robin order.
@@ -207,6 +215,13 @@ For every chunk:
    delivered external ports.
 4. The CNN side reads the FIFO as 128-bit words and emits 128 consecutive
    128-bit AXI-stream words to `WRAPPER_TOP`.
+
+The first 250 MHz / 4-sample interface migration keeps the existing five CNN
+lanes. These lanes are duplicate CNN processing resources for throughput, not
+separate configuration domains. Round-robin assignment to fixed-latency,
+matching CNN lanes is expected to preserve result order; `CHUNK_ID` remains in
+the internal metadata path to check and match lane results, but the first
+version does not add a complex reorder buffer.
 
 The lane input FIFO crosses from `CLK_ADC` to `CLK_CNN`. Its write-side packing
 must preserve chronological order while converting the four-sample external
@@ -222,8 +237,10 @@ This allows the input side of a lane to accept a later chunk while the previous
 chunk is still propagating through the CNN pipeline.
 
 The event readout path includes a synchronous `EVENT_OUTPUT_FIFO` in the
-`CLK_ADC` domain. `EVENT_CAPTURE_CTRL` writes raw waveform batches plus internal
-chunk id, timestamp, and score into this FIFO. The delivered top exports only
+`CLK_ADC` domain. Its first-version depth target is 128 event beats, enough to
+buffer two complete 64-beat triggered chunks during short downstream stalls.
+`EVENT_CAPTURE_CTRL` writes raw waveform batches plus internal chunk id,
+timestamp, and score into this FIFO. The delivered top exports only
 `EVENT_VALID`, `EVENT_READY`, `EVENT_DATA`, `EVENT_LAST`, and
 `EVENT_TIMESTAMP`; chunk id, score, overflow/status, and trigger debug pulses
 remain internal/debug-only.
@@ -335,6 +352,14 @@ The default testbench and launcher configuration uses the current full-system
 functional validation point: `SCORE_THRESHOLD=0.0` and `CNN_THRESH_RAW=0`.
 The older wrapper-reference fallback threshold is still available by passing
 `SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288` explicitly.
+
+`CNN_THRESH` is a single global threshold for the whole CNN trigger. It is not
+per-channel, per-lane, or per-class. Although the threshold is consumed in the
+`CLK_CNN` domain, the external configuration source may be driven from
+`CLK_ADC` or from another DAQ/control clock, so the design must cross it through
+an explicit configuration CDC path before CNN-domain comparison. The CNN-domain
+control path latches a threshold snapshot when starting a 256-sample chunk, and
+that snapshot is used for the full chunk decision.
 
 ## Output Interfaces
 

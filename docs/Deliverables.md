@@ -51,6 +51,11 @@ The external interface uses clean 12-bit signed samples. It does not use a
 | `DATA_STR` | in | Input beat valid. When `1`, the trigger system accepts `ADC_DATA`. Continuous input may hold this high every `CLK_ADC` cycle. |
 | `ADC_DATA[383:0]` | in | One ADC beat: 8 channels x 4 samples/channel x 12 bits/sample. |
 
+There is no upstream `ADC_READY` backpressure signal. When `DATA_STR=1`, the
+trigger system must synchronously accept the beat. When `DATA_STR=0`, the beat
+is invalid and must not advance chunk assembly, timestamp generation, waveform
+ring writes, or lane FIFO writes.
+
 ## Trigger Function
 
 The system reduces data volume by retaining only CNN-triggered waveform events.
@@ -79,6 +84,18 @@ to the CNN trigger.
 | `RST` | in | Active-high reset for the trigger system. |
 | `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. |
 
+`RST` remains the delivered top-level reset input. Internally, reset release is
+synchronized into the `CLK_ADC` and `CLK_CNN` domains. Reset must clear state
+machines, FIFO/ring pointers, metadata-valid flags, and output-valid flags so
+release cannot create a false chunk or false event.
+
+`CNN_THRESH` is a single global CNN trigger threshold, not a per-channel,
+per-lane, or per-class setting. It is a configuration input consumed in the
+`CLK_CNN` domain after a configuration CDC path. A threshold update takes effect
+on a CNN chunk boundary: the CNN-domain control path latches a threshold
+snapshot when starting a 256-sample chunk and uses that snapshot for the full
+chunk decision.
+
 ## Downstream Event Output Format
 
 The event stream is a `CLK_ADC` ready/valid interface. It uses the same beat
@@ -104,6 +121,9 @@ those 64 beats. `EVENT_LAST` is asserted on the final beat.
 | `EVENT_LAST` | out | Last beat of the current event. |
 | `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one event. |
 
+The delivered event interface does not expose CNN score, chunk id, overflow
+counters, or trigger debug pulses.
+
 DAQ-side sampling contract:
 
 ```text
@@ -120,4 +140,6 @@ if EVENT_VALID && EVENT_READY:
 system boundary therefore does not need to solve a separate upstream or
 downstream clock-domain crossing. The remaining internal clock-domain crossings
 are the data/metadata path from `CLK_ADC` to `CLK_CNN` and the trigger
-descriptor path from `CLK_CNN` back to `CLK_ADC`.
+descriptor path from `CLK_CNN` back to `CLK_ADC`. Configuration values such as
+`CNN_THRESH` also require explicit control/configuration CDC before use in the
+CNN domain; they are not part of the high-speed sample/event data path.

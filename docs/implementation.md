@@ -51,6 +51,7 @@ Current interface target:
 | Input beat | `ADC_DATA[383:0]` = 8 channels x 4 samples/channel x 12 bits |
 | Event beat | `EVENT_DATA[383:0]`, same packing as `ADC_DATA` |
 | Event length | 64 beats for one 256-sample chunk |
+| Event output FIFO target | 128 beats |
 | Trigger source | CNN trigger wrapper only |
 
 Interface semantics:
@@ -59,10 +60,18 @@ Interface semantics:
   external 16-bit container or low-bit zero padding.
 - `DATA_STR` is beat-valid. Continuous input may assert it every `CLK_ADC`
   cycle.
+- There is no upstream `ADC_READY` backpressure. When `DATA_STR=1`, the
+  frontend must synchronously accept the 384-bit beat. When `DATA_STR=0`, the
+  frontend must not advance chunk assembly, timestamp generation, waveform ring
+  writes, or lane FIFO writes.
 - `EVENT_VALID=0` is normal idle when no event data is available. Downstream
   samples event outputs only on `EVENT_VALID && EVENT_READY`.
 - `EVENT_READY` describes peak sink capability. The trigger normally reduces
   data volume, so the output FIFO may often be empty.
+- The delivered top keeps the active-high `RST` input. Internally, reset release
+  is synchronized into the `CLK_ADC` and `CLK_CNN` domains and must clear state
+  machines, FIFO/ring pointers, metadata-valid flags, and output-valid flags so
+  reset release cannot create a false chunk or false event.
 
 Aggregation and metadata rules:
 
@@ -83,6 +92,20 @@ Aggregation and metadata rules:
   it is not part of the first-version delivered external interface. The normal
   throughput assumption is that round-robin lane assignment plus CNN processing
   rate prevents chunk drops.
+- Keep the existing five CNN lanes for the 250 MHz / 4-sample interface
+  migration. The duplicate lanes are throughput resources, not separate
+  configuration domains. Round-robin assignment to fixed-latency, matching CNN
+  lanes is expected to preserve result order; use `CHUNK_ID` metadata to match
+  and check results, but do not add a complex reorder buffer in the first
+  version.
+- `EVENT_OUTPUT_FIFO` should be widened/kept to the canonical 384-bit event
+  beat and targeted to 128 beats of depth, buffering two complete triggered
+  chunks for short downstream stalls.
+- `CNN_THRESH` remains a single global 32-bit threshold container. Only bits
+  `[21:0]` are interpreted as signed `ap_fixed<22,11>`. Since the external
+  configuration source may not be synchronous to `CLK_CNN`, implement an
+  explicit configuration CDC path and latch a threshold snapshot at CNN chunk
+  start so one chunk is compared against one stable threshold value.
 
 Historical report context:
 
