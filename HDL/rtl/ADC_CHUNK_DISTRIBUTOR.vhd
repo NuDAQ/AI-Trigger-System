@@ -10,7 +10,7 @@
 --
 -- CHUNK_BUSY feedback (CLK_ADC domain) means the selected lane cannot accept
 -- a complete 16-batch chunk.  The decision is made once at the chunk boundary:
--- either all 16 batches are written, or the whole chunk is dropped.
+-- either all 64 beats are written, or the whole chunk is dropped.
 --
 -- BATCH_DATA packing (256-bit = 2 words x 128-bit):
 --   The downstream Xilinx asymmetric FIFO emits the high 128-bit segment of a
@@ -36,7 +36,7 @@ entity ADC_CHUNK_DISTRIBUTOR is
         CLK_ADC        : in  std_logic;
         RST            : in  std_logic;
 
-        DATA_STR       : in  std_logic;   -- always high in normal operation
+        DATA_STR       : in  std_logic;   -- beat-valid, normally continuous
         ADC_DATA4      : in  adc_data4_t;
 
         LANE_BUSY      : in  lane_busy_t; -- FIFO full per lane (CLK_ADC domain)
