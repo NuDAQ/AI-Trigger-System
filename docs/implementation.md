@@ -236,4 +236,4 @@ Before treating the implementation as sign-off quality:
 6. Re-run SAIF power after any timing, placement, CDC, or activity-profile
    change.
 7. For higher workload coverage, compare a short smoke power run against a
-   longer 32- or 64-sample SAIF run.
+   longer SAIF stimulus window.
