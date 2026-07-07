@@ -49,6 +49,19 @@ bender script vivado-sim -t sim > add_sim_files.tcl
 If the generated Tcl files contain a hardcoded `ROOT`, update it for the local
 checkout or regenerate the scripts on the target machine.
 
+## DAQ Delivery Package
+
+For first DAQ integration testing, generate a small release package instead of
+sharing the full development repository:
+
+```bash
+python3 scripts/package_delivery.py --version v3.2.0-daq-test
+```
+
+The generated `dist/ai-trigger-daq-*.zip` contains the delivery README, all
+required RTL, the OOC constraint file, a Vivado `add_files.tcl`, and version
+metadata. `dist/` is generated output and is not committed.
+
 ## Current Architecture
 
 Top-level hierarchy:

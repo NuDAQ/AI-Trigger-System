@@ -37,8 +37,15 @@ analysis/**/*.pyc
 !docs/
 !docs/**
 
+!delivery/
+!delivery/**
+
 # Local planning and grill-with-docs notes. Keep these out of commits.
 /notes/
+
+# Generated DAQ delivery packages. Release assets are built from these files,
+# not committed back into the repository.
+/dist/
 
 !scripts/
 !scripts/**
