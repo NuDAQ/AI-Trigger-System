@@ -65,6 +65,14 @@ class OocFlowChecks(unittest.TestCase):
         self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP.vhd", tcl)
         self.assertNotIn("adding flat-port wrapper source", tcl)
 
+    def test_tracked_vivado_source_lists_do_not_keep_stale_sources(self) -> None:
+        for path in ("add_files.tcl", "add_sim_files.tcl", "AI_Trigger_System/AI_Trigger_System.xpr"):
+            text = read(path)
+            self.assertNotIn("fifo_async_1024_to_64", text, msg=path)
+            self.assertNotIn("CNN-Core-Generator/hls_streaming", text, msg=path)
+            self.assertNotIn("1536", text, msg=path)
+            self.assertNotIn("14.286", text, msg=path)
+
     def test_ooc_flow_does_not_lock_lane_fifo_placement(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
         preserve_match = re.search(
