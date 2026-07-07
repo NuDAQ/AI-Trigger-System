@@ -60,9 +60,9 @@ Interface semantics:
 - `DATA_STR` is beat-valid. Continuous input may assert it every `CLK_ADC`
   cycle.
 - There is no upstream `ADC_READY` backpressure. When `DATA_STR=1`, the
-  frontend must synchronously accept the 384-bit beat. When `DATA_STR=0`, the
-  frontend must not advance chunk assembly, timestamp generation, waveform ring
-  writes, or lane FIFO writes.
+  trigger system must synchronously accept the 384-bit beat. When `DATA_STR=0`,
+  the trigger system must not advance chunk assembly, timestamp generation,
+  waveform ring writes, or lane FIFO writes.
 - `EVENT_VALID=0` is normal idle when no event data is available. Downstream
   samples event outputs only on `EVENT_VALID && EVENT_READY`.
 - `EVENT_READY` describes peak sink capability. The trigger normally reduces

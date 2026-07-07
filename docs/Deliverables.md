@@ -9,11 +9,11 @@ with a timestamp. The intended delivery model is a black-box CNN-trigger block
 with `CLK_ADC`, the clock arriving from the frontend ADC side, and `CLK_CNN`,
 the CNN inference clock.
 
-There are three interface groups:
+The delivered top-level interface has three groups:
 
 - Upstream ADC input, synchronous to `CLK_ADC`
 - Downstream event output, synchronous to `CLK_ADC`
-- System/control inputs, including `CLK_CNN`, `RST`, and `CNN_THRESH`
+- Clock/reset/configuration inputs: `CLK_CNN`, `RST`, and `CNN_THRESH`
 
 ## Upstream ADC Input Format
 
@@ -71,10 +71,10 @@ beat, one chunk spans:
 256 samples/channel / 4 samples per beat = 64 CLK_ADC beats
 ```
 
-The trigger-system frontend should aggregate the 4-sample beats into the
-256-sample CNN window as a pipeline. The aggregation should preserve continuous
-input throughput and keep chunk id/timestamp metadata aligned with the data sent
-to the CNN trigger.
+Inside the trigger block, ADC-domain aggregation groups the 4-sample beats into
+the 256-sample CNN window as a pipeline. This preserves continuous input
+throughput and keeps chunk id/timestamp metadata aligned with the data sent to
+the CNN trigger.
 
 ## System and Control Interface
 
