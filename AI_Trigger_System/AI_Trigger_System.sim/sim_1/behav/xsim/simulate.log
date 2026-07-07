@@ -2929,6 +2929,7 @@ Time: 51966 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4
    996 | 0x003fdedd    |     -4.142090 |     1 |    0 |      1.040
    997 | 0x003fd50b    |     -5.369629 |     0 |    0 |      1.040
    998 | 0x003fe5a5    |     -3.294434 |     0 |    0 |      1.045
+   999 | 0x003fe0e8    |     -3.886719 |     0 |    0 |      1.045
 
 =============================================================
                     SIMULATION SUMMARY
@@ -2942,7 +2943,7 @@ CNN_THRESH:       0 raw (0.0000 float)
 Score threshold:  0.0000 float
 -------------------------------------------------------------
 Samples sent:     1000
-Results received: 999
+Results received: 1000
 Output drain:     8192 quiet CLK_CNN cycles
 Chunk overflows:  0 (should be 0 in normal operation)
 ADC input overflows: 0
@@ -2950,14 +2951,14 @@ Events saved:     20
 Event batches:    1280
 Dropped triggers: 0
 Ring misses:      0
-Correct:          839 / 999 (83.98%)
+Correct:          840 / 1000 (84.00%)
 -------------------------------------------------------------
 Avg latency:      208.4 CLK_CNN cycles  (1.042 us)
-Total sim time:   297.872 us
-Throughput:       3353789.55 samples/sec
+Total sim time:   298.128 us
+Throughput:       3354263.94 samples/sec
 =============================================================
 Results saved to: ai_trigger_results.csv
 Events saved to:  ai_trigger_events.csv
 Simulation complete.
-$finish called at time : 298078 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 263
-INFO: xsimkernel Simulation Memory Usage: 167180 KB (Peak: 194388 KB), Simulation CPU Usage: 29420 ms
+$finish called at time : 298334 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 263
+INFO: xsimkernel Simulation Memory Usage: 167180 KB (Peak: 194388 KB), Simulation CPU Usage: 29760 ms

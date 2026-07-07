@@ -998,3 +998,4 @@ sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_
 996,0x003fdedd,-4.142090,1,0,0,208,1.040
 997,0x003fd50b,-5.369629,0,0,1,208,1.040
 998,0x003fe5a5,-3.294434,0,0,1,209,1.045
+999,0x003fe0e8,-3.886719,0,0,1,209,1.045
