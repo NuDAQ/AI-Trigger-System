@@ -140,6 +140,7 @@ architecture rtl of CNN_CORE_LANE is
 
     -- CNN interface
     signal cnn_start     : std_logic := '0';
+    signal cnn_start_pending : std_logic := '0';
     signal cnn_done      : std_logic;
     signal cnn_idle      : std_logic;
     signal cnn_ready     : std_logic;
@@ -152,8 +153,8 @@ architecture rtl of CNN_CORE_LANE is
     -- Stream FSM.  Output capture is intentionally independent: LANE_BUSY is
     -- released when the 128-beat AXIS input transaction has been accepted, not
     -- when the later CNN output arrives.  HLS ap_start is a transaction request:
-    -- pulse it at a chunk boundary and keep the payload flow on AXIS
-    -- input_valid/input_ready.
+    -- hold it from a chunk boundary until ap_ready acknowledges it, while the
+    -- payload flow remains governed by AXIS input_valid/input_ready.
     type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
@@ -271,6 +272,7 @@ begin
             if rst_n_cnn = '0' then
                 cnn_state    <= CC_IDLE;
                 cnn_start    <= '0';
+                cnn_start_pending <= '0';
                 cnn_in_valid <= '0';
                 fifo_rd_en   <= '0';
                 stream_cnt   <= 0;
@@ -292,6 +294,15 @@ begin
                 lane_valid_r <= '0';
                 fifo_rd_en   <= '0';   -- default: don't pop
                 chunk_id_dest_ack <= '0';
+                if cnn_start_pending = '1' then
+                    cnn_start <= '1';
+                    if cnn_ready = '1' then
+                        cnn_start <= '0';
+                        cnn_start_pending <= '0';
+                    end if;
+                else
+                    cnn_start <= '0';
+                end if;
                 if chunk_id_dest_req = '0' then
                     chunk_id_dest_seen <= '0';
                 elsif chunk_id_dest_seen = '0' and chunk_id_meta_valid = '0' then
@@ -333,9 +344,10 @@ begin
 
                         if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                             -- Assert start and first word simultaneously.
-                            -- start is a one-cycle transaction request; the
-                            -- 128-beat payload is governed by AXIS ready/valid.
+                            -- Start the HLS transaction and hold ap_start until
+                            -- the wrapper raises ap_ready.
                             cnn_start    <= '1';
+                            cnn_start_pending <= not cnn_ready;
                             cnn_in_valid <= '1';
                             chunk_id_meta_valid <= '0';
                             score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
@@ -363,10 +375,6 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
-                        -- Keep ap_start low after the transaction request.
-                        -- The HLS wrapper accepts payload through AXIS.
-                        cnn_start <= '0';
-
                         if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
                             fifo_rd_en <= '1';
@@ -376,6 +384,7 @@ begin
 
                                 if chunk_id_meta_valid = '1' and fifo_empty = '0' then
                                     cnn_start    <= '1';
+                                    cnn_start_pending <= not cnn_ready;
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
                                     chunk_id_meta_valid <= '0';

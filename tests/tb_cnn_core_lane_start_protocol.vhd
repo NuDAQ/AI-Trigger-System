@@ -30,9 +30,11 @@ end entity WRAPPER_TOP;
 architecture sim of WRAPPER_TOP is
     signal input_count : integer range 0 to N_CHUNK_BEATS_CNN := 0;
     signal start_seen_in_txn : std_logic := '0';
+    signal ready_r : std_logic := '0';
+    signal ready_delay : integer range 0 to 7 := 0;
 begin
     input_ready <= '1';
-    ready <= '1';
+    ready <= ready_r;
     idle <= '1' when input_count = 0 else '0';
     done <= output_valid;
     output_data <= std_logic_vector(to_signed(2048, 32));
@@ -44,14 +46,27 @@ begin
                 input_count <= 0;
                 output_valid <= '0';
                 start_seen_in_txn <= '0';
+                ready_r <= '0';
+                ready_delay <= 0;
             else
                 output_valid <= '0';
+                if input_count = 0 then
+                    ready_r <= '0';
+                    ready_delay <= 0;
+                elsif ready_delay = 3 then
+                    ready_r <= '1';
+                else
+                    ready_delay <= ready_delay + 1;
+                end if;
 
                 if start = '1' then
-                    assert start_seen_in_txn = '0'
-                        report "CNN_CORE_LANE must not hold HLS start high after the transaction request"
-                        severity failure;
                     start_seen_in_txn <= '1';
+                elsif start_seen_in_txn = '1' and ready_r = '0' then
+                    assert false
+                        report "CNN_CORE_LANE must hold HLS start until ready is observed"
+                        severity failure;
+                elsif start_seen_in_txn = '1' and ready_r = '1' then
+                    start_seen_in_txn <= '0';
                 end if;
 
                 if input_valid = '1' then
