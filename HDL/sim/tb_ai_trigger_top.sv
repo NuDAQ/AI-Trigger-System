@@ -14,8 +14,8 @@
 //     bits [47:36] = ch3
 //     bits [63:48] = 0 (unused)
 //
-//   One sample = 256 timesteps = 16 batches x 16 timesteps/batch.
-//   The testbench presents 16 timesteps per DATA_STR pulse (one ADC source
+//   One sample = 256 timesteps = 64 beats x 4 timesteps/beat.
+//   The testbench presents 4 timesteps per DATA_STR pulse (one ADC source
 //   clock cycle).  The DUT boundary is 8 raw ADC channels; this testbench
 //   mirrors ch0..ch3 into ch4..ch7 so the event payload exercises all 8
 //   channels while the CNN trigger still uses only ch0..ch3.
@@ -27,8 +27,8 @@
 // matching CNN_THRESH default is 22'sd0.
 //
 // Clocks:
-//   ADC_SRC_CLK: 16 ns period (62.5 MHz)  — 1 GSa/s source batch clock
-//   CLK_ADC: 14.286 ns period (70 MHz)    — trigger ingest clock
+//   ADC_SRC_CLK: 4 ns period (250 MHz)  — 1 GSa/s source beat clock
+//   CLK_ADC: 4 ns period (250 MHz)      — trigger ingest clock
 //   CLK_CNN:  5.000 ns period (200 MHz) — CNN inference clock
 //
 // Plusargs:
@@ -45,8 +45,8 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Parameters
     // -------------------------------------------------------------------------
-    parameter ADC_SRC_CLK_PERIOD = 16.0;   // ns (62.5 MHz source batch clock)
-    parameter CLK_ADC_PERIOD = 14.286;     // ns (70 MHz trigger ingest clock)
+    parameter ADC_SRC_CLK_PERIOD = 4.0;    // ns (250 MHz source beat clock)
+    parameter CLK_ADC_PERIOD = 4.000;      // ns (250 MHz trigger ingest clock)
     parameter CLK_CNN_PERIOD =  5.000; // ns (200 MHz)
 
     parameter NUM_SAMPLES_DEFAULT = 1000;
@@ -56,15 +56,15 @@ module tb_AI_TRIGGER_TOP;
 
     parameter N_ADC_CH  = 8;
     parameter N_TRIGGER_CH = 4;
-    parameter N_BATCH_S = 16;   // timesteps per batch
-    parameter N_BATCHES = 16;   // batches per sample (16 * 16 = 256 timesteps)
+    parameter N_BATCH_S = 4;    // timesteps per beat
+    parameter N_BATCHES = 64;   // beats per sample (64 * 4 = 256 timesteps)
     parameter N_CHUNK_W = 256;  // total CNN input words per sample
 
     // -------------------------------------------------------------------------
     // Signals
     // -------------------------------------------------------------------------
     reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str;
-    reg  [1535:0] adc_data4_flat;  // 8 ch * 16 samples * 12-bit = 1536 bits
+    reg  [383:0] adc_data4_flat;  // 8 ch * 4 samples * 12-bit = 384 bits
     reg  [31:0]  cnn_thresh;
 
     wire         adc_src_ready;
@@ -73,7 +73,7 @@ module tb_AI_TRIGGER_TOP;
     wire [15:0]  cnn_out_chunk_id;
     wire         cnn_out_valid;
     wire         event_valid;
-    wire [1535:0] event_data;
+    wire [383:0] event_data;
     wire         event_last;
     wire [15:0]  event_chunk_id;
     wire [23:0]  event_timestamp;
@@ -198,7 +198,7 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
 
         cnn_thresh    = cnn_thresh_raw;
-        adc_data4_flat = 1536'h0;
+        adc_data4_flat = 384'h0;
         data_str       = 0;
 
         // CSV output
@@ -268,15 +268,15 @@ module tb_AI_TRIGGER_TOP;
     //
     // DATA_STR is high exactly while this finite test stream is active.
     // The driver updates ADC_DATA4_FLAT every ADC source cycle to simulate the
-    // continuous 1 Gsps ADC stream: 16 samples per cycle across 8 raw channels.
+    // continuous 1 Gsps ADC stream: 4 samples per cycle across 8 raw channels.
     //
-    // Each sample occupies exactly N_BATCHES (16) consecutive source cycles.
+    // Each sample occupies exactly N_BATCHES (64) consecutive source cycles.
     // Samples are streamed back-to-back with no gaps.
     // =========================================================================
     task automatic input_driver_thread;
         integer s_id, b, s, ch, w, sample_file;
         string  filename;
-        reg [1535:0] batch_flat;
+        reg [383:0] batch_flat;
         begin
             for (s_id = 0; s_id < num_samples; s_id = s_id + 1) begin
                 filename = $sformatf("%s/test_input_sample%0d.hex", testhex_dir, s_id);
@@ -301,10 +301,10 @@ module tb_AI_TRIGGER_TOP;
                 // Record send time for latency measurement by sample/chunk id.
                 start_time_by_sample[s_id] = $time;
 
-                // Drive 16 consecutive batches, one per source clock cycle.
+                // Drive 64 consecutive beats, one per source clock cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
-                    batch_flat = 1536'h0;
+                    batch_flat = 384'h0;
                     for (s = 0; s < N_BATCH_S; s = s + 1) begin
                         for (ch = 0; ch < N_ADC_CH; ch = ch + 1) begin
                             batch_flat[(ch * N_BATCH_S + s) * 12 +: 12]
@@ -322,7 +322,7 @@ module tb_AI_TRIGGER_TOP;
                 sent_count = sent_count + 1;
             end
             // After all requested samples, stop the finite test stream.
-            adc_data4_flat = 1536'h0;
+            adc_data4_flat = 384'h0;
             data_str = 0;
             input_done = 1;
         end
@@ -331,7 +331,7 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     // Event monitor (CLK_ADC domain)
     // Records the raw waveform event stream. One complete event is:
-    // triggered chunk = 16 ADC batches.
+    // triggered chunk = 64 ADC beats.
     // =========================================================================
     task automatic event_monitor_thread;
         integer batch_in_event;
@@ -340,7 +340,7 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid) begin
-                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%0384h\n",
+                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h\n",
                             event_count,
                             event_chunk_id,
                             event_timestamp,

@@ -106,15 +106,6 @@ if {[llength $dep_xdcs] > 0} {
     remove_files $dep_xdcs
 }
 
-set fifo_xci [file join $repo_root AI_Trigger_System AI_Trigger_System.srcs sources_1 ip fifo_async_1024_to_64 fifo_async_1024_to_64.xci]
-if {![file exists $fifo_xci]} {
-    error "Required FIFO IP not found: $fifo_xci"
-}
-puts "INFO: adding FIFO IP: $fifo_xci"
-add_files -norecurse $fifo_xci
-generate_target all [get_files $fifo_xci]
-catch {synth_ip [get_ips fifo_async_1024_to_64] -force}
-
 set ooc_xdc [file join $repo_root HDL constraints ai_trigger_ooc.xdc]
 if {![file exists $ooc_xdc]} {
     error "OOC constraint file not found: $ooc_xdc"

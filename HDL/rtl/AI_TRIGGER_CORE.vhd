@@ -46,7 +46,7 @@ end entity AI_TRIGGER_CORE;
 architecture structural of AI_TRIGGER_CORE is
 
     signal lane_we    : std_logic_vector(N_LANES-1 downto 0);
-    signal batch_data : std_logic_vector(N_BATCH_S*64-1 downto 0);
+    signal batch_data : std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
     signal dist_chunk_id : chunk_id_t;
     signal dist_timestamp : timestamp_t;
     signal lane_busy  : lane_busy_t;

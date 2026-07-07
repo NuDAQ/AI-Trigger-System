@@ -3,14 +3,12 @@
 -- One parallel CNN inference lane.
 --
 -- Buffer architecture (replaces register array from v1):
---   fifo_async_1024_to_64 — same Xilinx IP used in the original
---   CNN_FIFO_CONNECTOR.  Write port: 1024-bit x 16 deep (CLK_ADC).
---   Read port: 128-bit x 128 deep (CLK_CNN).  The FIFO is the CDC mechanism.
+--   XPM async FIFO.  Write port: 256-bit x 128 deep (CLK_ADC).
+--   Read port: 128-bit x 256 deep (CLK_CNN).  The FIFO is the CDC mechanism.
 --
---   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
+--   One 256-bit FIFO write per ADC beat (4 timesteps x 4 ch x 16-bit).
 --   The CNN input stream may start after the first FIFO write of a chunk.
---   The remaining FIFO writes arrive faster than the 200 MHz stream consumes
---   them, so this hides the 256 ns ADC capture time.
+--   Each write produces two chronological 128-bit CNN input words.
 --   The CNN input FSM reads 128 x 128-bit entries, where each entry contains
 --   two timesteps x four 16-bit lanes for WRAPPER_TOP 4.x.
 --
@@ -47,7 +45,7 @@ entity CNN_CORE_LANE is
 
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
-        BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
+        BATCH_DATA   : in  std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
         CHUNK_ID     : in  chunk_id_t;
         CHUNK_TIMESTAMP : in timestamp_t;
 
@@ -91,31 +89,6 @@ architecture rtl of CNN_CORE_LANE is
             output_data  : out std_logic_vector(31 downto 0);
             output_valid : out std_logic;
             output_ready : in  std_logic
-        );
-    end component;
-
-    -- -------------------------------------------------------------------------
-    -- Async FIFO: 1024-bit write (CLK_ADC) / 128-bit read (CLK_CNN)
-    -- Depth: 16 write entries = 128 read entries.
-    -- FWFT mode: dout valid when not empty, rd_en pops current entry.
-    -- Must be generated as Xilinx FIFO Generator IP with these settings:
-    --   Write Width = 1024, Write Depth = 16
-    --   Read  Width = 128,  (asymmetric, auto-calculated depth = 128)
-    --   Independent Clocks, First Word Fall Through
-    -- -------------------------------------------------------------------------
-    component fifo_async_1024_to_64
-        port (
-            rst         : in  std_logic;
-            wr_clk      : in  std_logic;
-            rd_clk      : in  std_logic;
-            din         : in  std_logic_vector(1023 downto 0);
-            wr_en       : in  std_logic;
-            rd_en       : in  std_logic;
-            dout        : out std_logic_vector(127 downto 0);
-            full        : out std_logic;
-            empty       : out std_logic;
-            wr_rst_busy : out std_logic;   -- high while write port is in reset
-            rd_rst_busy : out std_logic    -- high while read port is in reset
         );
     end component;
 
@@ -449,29 +422,53 @@ begin
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================
-    -- FIFO instantiation
-    -- IP settings (Xilinx FIFO Generator 13.2):
-    --   Basic       : Independent Clocks Block RAM, Sync Stages = 2
-    --   Native Ports: First Word Fall Through, Asymmetric Port Width
-    --                 Write Width = 1024, Write Depth = 32  (actual ~31)
-    --                 Read  Width = 128,  Read  Depth = 128 (auto)
-    --                 Output Registers = off (FWFT uses embedded BRAM reg)
-    --   Status Flags: all off
-    --   Data Counts : all off
+    -- FIFO instantiation.  XPM is used instead of a fixed generated FIFO IP so
+    -- the width tracks the 250 MHz / 4-sample ADC beat contract.
     -- =========================================================================
-    u_FIFO : fifo_async_1024_to_64
+    u_FIFO : xpm_fifo_async
+        generic map (
+            CDC_SYNC_STAGES     => 2,
+            DOUT_RESET_VALUE    => "0",
+            ECC_MODE            => "no_ecc",
+            FIFO_MEMORY_TYPE    => "block",
+            FIFO_READ_LATENCY   => 0,
+            FIFO_WRITE_DEPTH    => LANE_FIFO_WRITE_DEPTH,
+            FULL_RESET_VALUE    => 0,
+            PROG_EMPTY_THRESH   => 10,
+            PROG_FULL_THRESH    => LANE_FIFO_WRITE_DEPTH - 4,
+            RD_DATA_COUNT_WIDTH => LANE_FIFO_WRITE_ADDR_WIDTH + 2,
+            READ_DATA_WIDTH     => LANE_FIFO_READ_WIDTH,
+            READ_MODE           => "fwft",
+            RELATED_CLOCKS      => 0,
+            USE_ADV_FEATURES    => "0000",
+            WAKEUP_TIME         => 0,
+            WRITE_DATA_WIDTH    => LANE_FIFO_WRITE_WIDTH,
+            WR_DATA_COUNT_WIDTH => LANE_FIFO_WRITE_ADDR_WIDTH + 1
+        )
         port map (
+            sleep       => '0',
             rst         => RST_ASYNC,
             wr_clk      => CLK_ADC,
-            rd_clk      => CLK_CNN,
-            din         => BATCH_DATA,
             wr_en       => WR_EN,
+            din         => BATCH_DATA,
+            full        => fifo_full_s,
+            overflow    => open,
+            wr_rst_busy => open,
+            rd_clk      => CLK_CNN,
             rd_en       => fifo_rd_en,
             dout        => fifo_dout,
-            full        => fifo_full_s,
             empty       => fifo_empty,
-            wr_rst_busy => open,
-            rd_rst_busy => open
+            underflow   => open,
+            rd_rst_busy => open,
+            prog_full   => open,
+            prog_empty  => open,
+            data_valid  => open,
+            wr_data_count => open,
+            rd_data_count => open,
+            injectsbiterr => '0',
+            injectdbiterr => '0',
+            sbiterr       => open,
+            dbiterr       => open
         );
 
     u_CHUNK_ID_CDC : xpm_cdc_handshake

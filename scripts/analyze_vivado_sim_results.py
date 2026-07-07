@@ -12,7 +12,8 @@ import sys
 from pathlib import Path
 
 
-EVENT_BATCHES_PER_CAPTURE = 16
+EVENT_BATCHES_PER_CAPTURE = 64
+EVENT_DATA_HEX_DIGITS = 96
 
 
 def parse_args() -> argparse.Namespace:
@@ -375,8 +376,8 @@ def analyze_event_csv(path: Path, errors: list[str]) -> dict[str, int | bool | s
                 )
 
         data_hex = row.get("event_data_hex", "")
-        if data_hex and not re.fullmatch(r"0x[0-9a-fA-F]{384}", data_hex):
-            fail(errors, f"event row {i} data is not 1536-bit hex")
+        if data_hex and not re.fullmatch(rf"0x[0-9a-fA-F]{{{EVENT_DATA_HEX_DIGITS}}}", data_hex):
+            fail(errors, f"event row {i} data is not 384-bit hex")
 
     return {
         "exists": True,

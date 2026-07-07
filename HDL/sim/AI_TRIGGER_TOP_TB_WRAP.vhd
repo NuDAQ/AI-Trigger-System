@@ -4,12 +4,13 @@
 --
 -- Vivado xsim cannot connect a SystemVerilog signal to a VHDL port of a
 -- user-defined composite type (adc_data4_t).  This wrapper exposes a flat
--- std_logic_vector(1535 downto 0) instead (8 ch * 16 samples * 12 bits = 1536)
+-- std_logic_vector(RAW_ADC_BATCH_WIDTH - 1 downto 0) instead
+-- (8 ch * 4 samples * 12 bits = 384)
 -- and crosses the source-side test stream into AI_TRIGGER_CORE.
 --
 -- Bit packing (must match the SV testbench):
---   ADC_DATA4_FLAT[(ch*16 + s)*12 +: 12]  <->  ADC_DATA4(ch)(s)
---   ch = 0..7,  s = 0..15
+--   ADC_DATA4_FLAT[(ch*N_BATCH_S + s)*12 +: 12]  <->  ADC_DATA4(ch)(s)
+--   ch = 0..7,  s = 0..N_BATCH_S-1
 -- =============================================================================
 
 library ieee;
@@ -93,7 +94,7 @@ begin
         );
 
     -- Unpack the CLK_ADC-domain flat vector into adc_data4_t.
-    -- adc_ingest_raw[(ch*16+s)*12 +: 12] -> adc_data4_t(ch)(s)
+    -- adc_ingest_raw[(ch*N_BATCH_S+s)*12 +: 12] -> adc_data4_t(ch)(s)
     gen_ch : for ch in 0 to N_ADC_CH-1 generate
         gen_s : for s in 0 to N_BATCH_S-1 generate
             adc_core(ch)(s) <=

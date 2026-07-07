@@ -78,16 +78,16 @@ begin
                 severity failure;
 
             if batch = 0 then
-                assert batch_data(911 downto 896) = axis_sample(2)
+                assert batch_data(143 downto 128) = axis_sample(2)
                     report "CNN packed row0 ch0 must come from input ch0"
                     severity failure;
-                assert batch_data(927 downto 912) = axis_sample(4)
+                assert batch_data(159 downto 144) = axis_sample(4)
                     report "CNN packed row0 ch1 must come from input ch1"
                     severity failure;
-                assert batch_data(943 downto 928) = axis_sample(6)
+                assert batch_data(175 downto 160) = axis_sample(6)
                     report "CNN packed row0 ch2 must come from input ch2"
                     severity failure;
-                assert batch_data(959 downto 944) = axis_sample(8)
+                assert batch_data(191 downto 176) = axis_sample(8)
                     report "CNN packed row0 ch3 must come from input ch3"
                     severity failure;
             end if;

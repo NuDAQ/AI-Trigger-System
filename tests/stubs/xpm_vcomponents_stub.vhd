@@ -285,7 +285,8 @@ architecture sim of xpm_fifo_async is
     signal mem : mem_t := (others => (others => '0'));
     signal wr_ptr : integer range 0 to FIFO_WRITE_DEPTH - 1 := 0;
     signal rd_ptr : integer range 0 to FIFO_WRITE_DEPTH - 1 := 0;
-    signal count  : integer range 0 to FIFO_WRITE_DEPTH := 0;
+    signal rd_seg : integer range 0 to 1 := 0;
+    signal count  : integer range 0 to FIFO_WRITE_DEPTH * 2 := 0;
     signal dout_r : std_logic_vector(READ_DATA_WIDTH-1 downto 0) := (others => '0');
 
     function inc_idx(i : integer) return integer is
@@ -300,12 +301,28 @@ architecture sim of xpm_fifo_async is
     begin
         return std_logic_vector(to_unsigned(value, width));
     end function;
+
+    function read_segment(word : std_logic_vector(WRITE_DATA_WIDTH-1 downto 0); seg : integer)
+        return std_logic_vector is
+        variable result : std_logic_vector(READ_DATA_WIDTH-1 downto 0);
+        variable ratio  : integer := WRITE_DATA_WIDTH / READ_DATA_WIDTH;
+        variable idx    : integer;
+    begin
+        if ratio = 1 then
+            result := word(READ_DATA_WIDTH-1 downto 0);
+        else
+            idx := ratio - 1 - seg;
+            result := word((idx + 1) * READ_DATA_WIDTH - 1 downto
+                           idx * READ_DATA_WIDTH);
+        end if;
+        return result;
+    end function;
 begin
     assert READ_MODE = "fwft"
         report "xpm_fifo_async stub currently models READ_MODE=fwft only"
         severity failure;
-    assert READ_DATA_WIDTH = WRITE_DATA_WIDTH
-        report "xpm_fifo_async stub currently models symmetric widths only"
+    assert WRITE_DATA_WIDTH = READ_DATA_WIDTH or WRITE_DATA_WIDTH = 2 * READ_DATA_WIDTH
+        report "xpm_fifo_async stub currently models 1:1 or 2:1 write:read widths only"
         severity failure;
 
     process(wr_clk, rd_clk, rst)
@@ -313,11 +330,14 @@ begin
         variable pop_v  : boolean;
         variable wr_ptr_v : integer range 0 to FIFO_WRITE_DEPTH - 1;
         variable rd_ptr_v : integer range 0 to FIFO_WRITE_DEPTH - 1;
-        variable count_v  : integer range 0 to FIFO_WRITE_DEPTH;
+        variable rd_seg_v : integer range 0 to 1;
+        variable count_v  : integer range 0 to FIFO_WRITE_DEPTH * 2;
+        variable ratio_v  : integer range 1 to 2;
     begin
         if rst = '1' then
             wr_ptr <= 0;
             rd_ptr <= 0;
+            rd_seg <= 0;
             count  <= 0;
             dout_r <= (others => '0');
         elsif sleep = '0' and (rising_edge(wr_clk) or rising_edge(rd_clk)) then
@@ -325,7 +345,9 @@ begin
             pop_v  := rd_en = '1' and count > 0 and rising_edge(rd_clk);
             wr_ptr_v := wr_ptr;
             rd_ptr_v := rd_ptr;
+            rd_seg_v := rd_seg;
             count_v  := count;
+            ratio_v := WRITE_DATA_WIDTH / READ_DATA_WIDTH;
 
             if push_v then
                 mem(wr_ptr) <= din;
@@ -333,34 +355,42 @@ begin
             end if;
 
             if pop_v then
-                rd_ptr_v := inc_idx(rd_ptr);
+                if rd_seg = ratio_v - 1 then
+                    rd_seg_v := 0;
+                    rd_ptr_v := inc_idx(rd_ptr);
+                else
+                    rd_seg_v := rd_seg + 1;
+                end if;
             end if;
 
             if push_v and not pop_v then
-                count_v := count + 1;
+                count_v := count + ratio_v;
             elsif pop_v and not push_v then
                 count_v := count - 1;
+            elsif push_v and pop_v then
+                count_v := count + ratio_v - 1;
             end if;
 
             wr_ptr <= wr_ptr_v;
             rd_ptr <= rd_ptr_v;
+            rd_seg <= rd_seg_v;
             count  <= count_v;
 
-            if push_v and (count = 0 or (pop_v and count = 1)) then
-                dout_r <= din;
+            if push_v and count = 0 then
+                dout_r <= read_segment(din, 0);
             elsif count_v > 0 then
-                dout_r <= mem(rd_ptr_v);
+                dout_r <= read_segment(mem(rd_ptr_v), rd_seg_v);
             else
                 dout_r <= (others => '0');
             end if;
         end if;
     end process;
 
-    full          <= '1' when count = FIFO_WRITE_DEPTH else '0';
+    full          <= '1' when count > (FIFO_WRITE_DEPTH - 1) * (WRITE_DATA_WIDTH / READ_DATA_WIDTH) else '0';
     empty         <= '1' when count = 0 else '0';
     prog_full     <= '1' when count >= PROG_FULL_THRESH else '0';
     prog_empty    <= '1' when count <= PROG_EMPTY_THRESH else '0';
-    overflow      <= '1' when wr_en = '1' and count = FIFO_WRITE_DEPTH else '0';
+    overflow      <= '1' when wr_en = '1' and count > (FIFO_WRITE_DEPTH - 1) * (WRITE_DATA_WIDTH / READ_DATA_WIDTH) else '0';
     underflow     <= '1' when rd_en = '1' and count = 0 else '0';
     wr_rst_busy   <= rst;
     rd_rst_busy   <= rst;

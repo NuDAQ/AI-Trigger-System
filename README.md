@@ -59,7 +59,7 @@ AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
   AI_TRIGGER_PKG            HDL/rtl/AI_TRIGGER_PKG.vhd
   ADC_CHUNK_DISTRIBUTOR     HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
   CNN_CORE_LANE x 5         HDL/rtl/CNN_CORE_LANE.vhd
-    fifo_async_1024_to_64   Vivado FIFO Generator IP
+    xpm_fifo_async          256-bit write / 128-bit read lane FIFO
     WRAPPER_TOP             cnn-core-wrapper dependency
       cnn_core              cnn-core dependency
   EVENT_CAPTURE_PATH        HDL/rtl/EVENT_CAPTURE_PATH.vhd
