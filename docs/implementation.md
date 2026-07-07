@@ -1,8 +1,9 @@
 # Implementation Notes
 
-This document summarizes the current synthesis, implementation, and power
-analysis status for `AI_TRIGGER_TOP`. It is intended to capture report-level
-details that are too specific for the main README.
+This document summarizes implementation and report status for `AI_TRIGGER_TOP`.
+It separates the current 250 MHz DAQ-facing interface target from historical
+Vivado reports that were produced for the earlier 70 MHz, 16-sample-per-beat
+interface.
 
 ## Flow
 
@@ -32,16 +33,25 @@ python3 scripts/run_post_impl_saif.py
 
 ## Current Report Set
 
-The checked-in RTL now uses `AI_TRIGGER_TOP` as a DAQ-facing two-clock OOC top:
-ADC input and event output are in `CLK_ADC`, and CNN inference is in `CLK_CNN`.
-`AI_TRIGGER_CORE` keeps the internal score/chunk metadata used by simulation and
-event capture. Source-clock input CDC is no longer part of the delivered OOC
-top; `ADC_INPUT_CDC_FIFO` is retained for simulation/helper use.
+The intended delivery model uses `AI_TRIGGER_TOP` as a DAQ-facing two-clock OOC
+top: ADC input and event output are in `CLK_ADC`, and CNN inference is in
+`CLK_CNN`. The DAQ-facing `CLK_ADC` interface target is 250 MHz with four
+samples/channel per beat. Source-clock input CDC, upstream async FIFOs, and
+input gearboxes are no longer part of the trigger-system boundary.
 
-The pulled OOC reports below predate this DAQ-facing top split and should be
-refreshed on the server before sign-off.
+Current interface target:
 
-Report context:
+| Item | Value |
+| --- | --- |
+| Build style | Out-of-context block implementation |
+| CNN lanes | 5 |
+| `CLK_ADC` | 250 MHz target |
+| `CLK_CNN` | 200.000 MHz |
+| Input beat | `ADC_DATA[383:0]` = 8 channels x 4 samples/channel x 12 bits |
+| Event beat | `EVENT_DATA[383:0]`, same packing as `ADC_DATA` |
+| Event length | 64 beats for one 256-sample chunk |
+
+Historical report context:
 
 | Item | Value |
 | --- | --- |
@@ -52,10 +62,14 @@ Report context:
 | `CLK_ADC` | 70 MHz target |
 | `CLK_CNN` | 200.000 MHz |
 
+The pulled OOC reports below are historical 70 MHz results and should be
+refreshed on the server before sign-off for the 250 MHz interface.
+
 ## Behavioral Simulation
 
 The latest pulled behavioral Vivado simulation completed successfully before
-the DAQ-facing top split using the functional threshold used for validation:
+the 250 MHz, four-sample-per-beat interface migration using the functional
+threshold used for validation:
 
 | Metric | Value |
 | --- | ---: |
@@ -73,12 +87,15 @@ the DAQ-facing top split using the functional threshold used for validation:
 
 The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. Behavioral
 simulation, routed implementation, gate-level simulation, and SAIF should be
-rerun on the server for the current two-clock OOC top.
+rerun on the server for the 250 MHz `CLK_ADC` interface. The post-migration
+behavioral run should show zero chunk overflows, zero dropped triggers, zero
+ring misses, and one complete 64-beat event for every chunk whose
+`score > CNN_THRESH`.
 
 ## Timing Result
 
-The previous routed timing report closed timing at the then-current OOC clock
-targets:
+The previous routed timing report closed timing at the historical 70 MHz
+`CLK_ADC` and 200 MHz `CLK_CNN` OOC clock targets:
 
 | Metric | Value |
 | --- | ---: |
@@ -94,12 +111,13 @@ Per-clock timing summary:
 | `CLK_ADC` | 8.605 ns | 0 ns | 0.024 ns | 0 ns |
 | `CLK_CNN` | 1.176 ns | 0 ns | 0.027 ns | 0 ns |
 
-The routed report has no failing setup or hold endpoints and all
-user-specified timing constraints are met. The worst setup margin is still in
-the `CLK_CNN` domain. Earlier runs showed a tighter `CLK_CNN` path through the
-per-lane FIFO Generator BRAM read side. Removing `DONT_TOUCH` from those FIFO
-instances allowed placement/routing optimization and restored WNS from
-0.654 ns to 1.176 ns.
+The historical routed report has no failing setup or hold endpoints and all
+user-specified timing constraints were met for that run. It is not sign-off
+evidence for 250 MHz `CLK_ADC`. The worst setup margin was in the `CLK_CNN`
+domain. Earlier runs showed a tighter `CLK_CNN` path through the per-lane FIFO
+Generator BRAM read side. Removing `DONT_TOUCH` from those FIFO instances
+allowed placement/routing optimization and restored WNS from 0.654 ns to
+1.176 ns.
 
 The methodology report still flags zero-delay OOC boundary assumptions and
 clock-group constraints that override several point-to-point max-delay checks.
@@ -107,7 +125,7 @@ These are OOC constraint-quality items, not current timing failures.
 
 ## Resource Result
 
-The routed utilization result is:
+The historical routed utilization result is:
 
 | Resource | Used | Device utilization |
 | --- | ---: | ---: |
@@ -118,11 +136,12 @@ The routed utilization result is:
 | IOB | 0 | 0.00% |
 
 The zero IOB count is intentional for the OOC flow. It indicates that the DAQ
-subsystem was not implemented as a package-level IO top.
+subsystem was not implemented as a package-level IO top. Resource use should be
+rechecked after the 384-bit input/output interface migration.
 
 ## Hierarchy Preservation
 
-The hierarchical utilization report shows all five generated lanes after
+The historical hierarchical utilization report shows all five generated lanes after
 implementation. Each lane contains one `WRAPPER_TOP` CNN wrapper, one async
 FIFO, and 4 DSPs. This is the main check that the CNN datapath was preserved
 and not optimized away as unused logic.
@@ -156,15 +175,15 @@ The previous routed CDC report had no critical unknown CDC paths:
 
 The `CDC-3` entries are recognized synchronizer/XPM crossings. The remaining
 `CDC-26` warnings are reset-related paths under the OOC false-path reset
-assumption. For the current delivered top, the expected functional CDCs are the
-per-lane `CLK_ADC` to `CLK_CNN` crossings and the CNN-trigger descriptor return
-path from `CLK_CNN` to `CLK_ADC`. CNN lane metadata and trigger descriptors use
-XPM handshake CDC.
+assumption. For the intended 250 MHz delivered top, the expected functional CDCs
+are the per-lane `CLK_ADC` to `CLK_CNN` crossings and the CNN-trigger descriptor
+return path from `CLK_CNN` to `CLK_ADC`. CNN lane metadata and trigger
+descriptors use XPM handshake CDC.
 
 ## SAIF Power Result
 
-The current routed OOC power report is vectorless and should be treated as an
-estimate until a fresh SAIF run is available:
+The historical routed OOC power report is vectorless and should be treated as
+an estimate until a fresh 250 MHz-interface SAIF run is available:
 
 | Metric | Value |
 | --- | ---: |
@@ -174,7 +193,7 @@ estimate until a fresh SAIF run is available:
 | Confidence | Medium |
 | Design nets matched | NA |
 
-The main dynamic contributors are:
+The historical main dynamic contributors are:
 
 | Component | Dynamic power |
 | --- | ---: |
@@ -197,7 +216,7 @@ objects were registered.
 
 ## Sign-Off Checklist
 
-Server rerun commands for the current two-clock OOC top:
+Server rerun commands for the two-clock OOC top after the interface migration:
 
 ```bash
 python3 scripts/run_vivado_sim.py --num-samples 1000
@@ -208,11 +227,13 @@ Before treating the implementation as sign-off quality:
 
 1. Confirm whether the remaining input/output delay warnings are acceptable for
    this OOC block context.
-2. Confirm hierarchical utilization still shows five CNN lanes and 20 DSPs
+2. Confirm `CLK_ADC` closes at 250 MHz and `CLK_CNN` closes at 200 MHz.
+3. Confirm hierarchical utilization still shows five CNN lanes and 20 DSPs
    after any RTL or constraint change.
-3. Re-run post-implementation simulation when changing the testbench stimulus,
+4. Confirm the event path emits 64 beats per triggered 256-sample chunk.
+5. Re-run post-implementation simulation when changing the testbench stimulus,
    threshold, lane count, CDC logic, or CNN clock.
-4. Re-run SAIF power after any timing, placement, CDC, or activity-profile
+6. Re-run SAIF power after any timing, placement, CDC, or activity-profile
    change.
-5. For higher workload coverage, compare a short 16-sample power run against a
+7. For higher workload coverage, compare a short smoke power run against a
    longer 32- or 64-sample SAIF run.

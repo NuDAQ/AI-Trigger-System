@@ -2,77 +2,99 @@
 
 ## Introduction
 
-This version of the system receives 8 channels of 1 Gsa/s data. After inference, it internally compares the CNN scores with the configured CNN threshold, retaining only events above the threshold and outputting them along with their timestamps in the same format. The goal is to significantly reduce data traffic. At the moment, you can take it as a black box.
+This version of the system receives 8 channels of 1 Gsa/s data. After
+inference, it internally compares CNN scores with the configured threshold,
+retains only events above threshold, and outputs the original waveform samples
+with a timestamp. The intended delivery model is a black-box trigger block with
+one DAQ-facing interface clock and one CNN inference clock.
 
-There are three kinds of interfaces:  with upstream, with downstream, and with system (clk, monitoring...).
+There are three interface groups:
 
-## Desired upstream data format
+- Upstream ADC input, synchronous to `CLK_ADC`
+- Downstream event output, synchronous to `CLK_ADC`
+- System/control inputs, including `CLK_CNN`, `RST`, and `CNN_THRESH`
 
-The system prefers upstream data with any configuration that `samples/clk = 1 Gsa/s` (for example, `16-sample * 16 bits * 8 channels / 3 beats` on average at `187.5 MHz clk` ), buffered in an `8-channel 16-bit-width Async FIFO`. 
+## Upstream ADC Input Format
 
-**Therefore, I would like the upstream system to have an `8-channel, 16-bit-width Async FIFO` right before the AI Trigger System's interface, that pulls the `DATA_STR` signal high immediately when there are 16 or more samples in it.** Therefore, the AI Trigger System can read 16 samples per beat based on its clock.
+The upstream DAQ logic drives the AI Trigger System directly with a 250 MHz
+`CLK_ADC`. No separate source clock, async FIFO, or gearbox is required at the
+AI Trigger System boundary.
 
-**Therefore, I would like the upstream system to provide an async FIFO / gearbox right before the AI Trigger System interface.** On the AI Trigger read side, it should output packets of `8 channels * 16 consecutive samples per channel * 16 bits per sample`, and assert `DATA_STR`  immediately whenever a full packet is available. The AI Trigger System then consumes one 16-sample-per-channel packet per valid `CLK_ADC` beat.
+Each accepted input beat contains:
 
-For each sample point: 
-
+```text
+8 channels x 4 samples/channel x 12 bits/sample = 384 bits
 ```
-[15:0] in ch0 = [15:0] in the AI Trigger = ch0 (in [15:4]) + 4'b0000 (in [3:0])
-[15:0] in ch1 = [31:16] in the AI Trigger = ch1 + 4'b0000
-[15:0] in ch2 = [47:32] in the AI Trigger = ch2 + 4'b0000
-[15:0] in ch3 = [63:48] in the AI Trigger = ch3 + 4'b0000
-...
-[15:0] in ch7 = [127:112] in the AI Trigger = ch7 + 4'b0000
+
+At 250 MHz, four samples per channel per beat sustains:
+
+```text
+250 MHz x 4 samples/beat = 1 Gsa/s/channel
 ```
 
-In other words, all that is needed is to place an **8-channel asynchronous FIFO** in front of this system. Each channel is **16 bits wide**, with the upper 12 bits representing the data and the lower 4 bits set to 0.
+The top-level packing convention is:
 
-#### All interfaces with upstream systems: 
-
-| Signal             | Direction | Function                                                     |
-| ------------------ | --------- | ------------------------------------------------------------ |
-| `CLK_ADC`          | in        | Around `70MHz`. No slower than `60 MHz`.                     |
-| `DATA_STR`         | in        | The input batch is valid. When it's `1`, the Trigger System accepts the current `ADC_DATA`. |
-| `ADC_DATA[1535:0]` | in        | One canonical ADC batch：8 channel x 16 sample/channel x 12 bit |
-
-## Functions of the trigger system
-
-Simply put, this involves reducing the data rate and retaining only the events of interest. The system takes **8 channels of 1 Gsa/s data as input**, processes it, and **outputs 8 channels of data at an extremely low rate.** This data is output in exactly the **same format**, along with a **timestamp**, and is **stored in an async FIFO** to await read by downstream systems.
-
-#### All interfaces with the DAQ system for the purpose of control & configuration:
-
-| Signal             | Direction | Function                                    |
-| ------------------ | --------- | ------------------------------------------- |
-| `CLK_CNN`          | in        | Around `200 MHz`. No slower than `184 MHz`. |
-| `RST`              | in        | Reset for the whole Trigger System          |
-| `CNN_THRESH[31:0]` | in        | Ttrigger threshold configuration.           |
-
-For `CNN_THRESH[31:0]` , only `[21:0]` is useful. 
-
-## Desired downstream data format
-
-Simply put, this system aims to preserve the original data format while reducing the data volume and including a timestamp in the output.
-
-In addition to maintaining the same format, each event will be chunked into 256 samples in length. Each chunk is assigned a timestamp. During a 16-beat period with a 256-chunk output, `EVENT_TIMESTAMP` remains unchanged.
-
-At a clock speed of 70 MHz (`CLK_ADC`), 16 samples with 16-bit width are output per beat if data is allowed to pass through the trigger. The real data rate in the field will be very low-frequency, at about 1 Hz. 
-
-Each event has a corresponding timestamp `EVENT_TIMESTAMP[23:0]`. 
-
-All samples will be placed in an **8-channel asynchronous FIFO** with **16 bits wide**, waiting to be read by downstream processes.
-
-#### All interfaces with downstream systems: 
-
-| Signal                  | Direction | Function                                                     |
-| ----------------------- | --------- | ------------------------------------------------------------ |
-| `EVENT_VALID`           | out       | There is currently event data beat                           |
-| `EVENT_READY`           | in        | DAQ tells the Trigger System that it can receive the current beat |
-| `EVENT_DATA[1535:0]`    | out       | Original waveform batch, in the same format as `ADC_DATA`    |
-| `EVENT_LAST`            | out       | This is the last beat of the current event                   |
-| `EVENT_TIMESTAMP[23:0]` | out       | Event relative to timestamp                                  |
-
-For DAQ: 
+```text
+ADC_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
+  = raw 12-bit signed ADC sample for channel ch, sample index sample
 ```
+
+### Upstream Interface
+
+| Signal | Direction | Function |
+| --- | --- | --- |
+| `CLK_ADC` | in | 250 MHz DAQ-facing input and event-output clock. |
+| `DATA_STR` | in | Input beat valid. When `1`, the trigger system accepts `ADC_DATA`. |
+| `ADC_DATA[383:0]` | in | One ADC beat: 8 channels x 4 samples/channel x 12 bits/sample. |
+
+## Trigger Function
+
+The system reduces data volume by retaining only triggered waveform events. The
+CNN trigger path uses channels 0-3 for inference. Event output preserves all
+8 raw ADC channels in the same 384-bit beat format as the input interface.
+
+CNN chunks remain 256 samples/channel. With four samples/channel per
+`CLK_ADC` beat, one chunk spans:
+
+```text
+256 samples/channel / 4 samples per beat = 64 CLK_ADC beats
+```
+
+## System and Control Interface
+
+| Signal | Direction | Function |
+| --- | --- | --- |
+| `CLK_CNN` | in | CNN inference clock, target 200 MHz. |
+| `RST` | in | Active-high reset for the trigger system. |
+| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. |
+
+## Downstream Event Output Format
+
+The event stream is a `CLK_ADC` ready/valid interface. It uses the same beat
+shape and packing as `ADC_DATA`:
+
+```text
+EVENT_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
+  = raw 12-bit signed ADC sample for channel ch, sample index sample
+```
+
+For the current one-chunk event window, each event emits 64 `EVENT_VALID`
+beats. `EVENT_TIMESTAMP` remains constant across those 64 beats, and
+`EVENT_LAST` is asserted on the final beat.
+
+### Downstream Interface
+
+| Signal | Direction | Function |
+| --- | --- | --- |
+| `EVENT_VALID` | out | Current event beat is valid. |
+| `EVENT_READY` | in | DAQ can accept the current event beat. |
+| `EVENT_DATA[383:0]` | out | Original waveform beat, in the same format as `ADC_DATA`. |
+| `EVENT_LAST` | out | Last beat of the current event. |
+| `EVENT_TIMESTAMP[23:0]` | out | Event timestamp, constant for all beats of one event. |
+
+DAQ-side sampling contract:
+
+```text
 if EVENT_VALID && EVENT_READY:
     read EVENT_DATA
     read EVENT_TIMESTAMP
@@ -80,9 +102,10 @@ if EVENT_VALID && EVENT_READY:
         event finished
 ```
 
-During a 16-beat period with a 256-chunk output, `EVENT_TIMESTAMP` remains unchanged.
+## Clock-Domain Boundary
 
-
-
-
-
+`CLK_ADC` owns both the upstream input and downstream event output. The trigger
+system boundary therefore does not need to solve a separate upstream or
+downstream clock-domain crossing. The remaining internal clock-domain crossings
+are the data/metadata path from `CLK_ADC` to `CLK_CNN` and the trigger
+descriptor path from `CLK_CNN` back to `CLK_ADC`.
