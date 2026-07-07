@@ -37,6 +37,9 @@ analysis/**/*.pyc
 !docs/
 !docs/**
 
+# Local planning and grill-with-docs notes. Keep these out of commits.
+/notes/
+
 !scripts/
 !scripts/**
 scripts/__pycache__/
