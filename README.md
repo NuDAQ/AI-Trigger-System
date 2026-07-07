@@ -1,6 +1,6 @@
 # AI-Trigger-System
 
-[![MIT license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![License: Apache-2.0 WITH SHL-2.1](https://img.shields.io/badge/license-Apache--2.0%20WITH%20SHL--2.1-green)](LICENSE)
 
 ## Overview
 
