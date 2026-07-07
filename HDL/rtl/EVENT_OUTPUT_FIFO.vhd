@@ -47,9 +47,9 @@ architecture rtl of EVENT_OUTPUT_FIFO is
     signal fifo_empty : std_logic;
     signal fifo_wr_en : std_logic;
     signal fifo_rd_en : std_logic;
-
     signal rd_valid_r : std_logic := '0';
     signal rd_word_r  : std_logic_vector(EVENT_OUTPUT_WORD_WIDTH - 1 downto 0) := (others => '0');
+    signal rd_can_load : std_logic;
 begin
     fifo_din(DATA_MSB downto DATA_LSB) <= WR_DATA;
     fifo_din(LAST_BIT) <= WR_LAST;
@@ -58,7 +58,8 @@ begin
     fifo_din(SCORE_MSB downto SCORE_LSB) <= WR_SCORE;
 
     fifo_wr_en <= WR_VALID and not fifo_full;
-    fifo_rd_en <= not rd_valid_r and not fifo_empty;
+    rd_can_load <= (not rd_valid_r) or RD_READY;
+    fifo_rd_en <= rd_can_load and not fifo_empty;
 
     u_FIFO : xpm_fifo_sync
         generic map (
@@ -109,12 +110,12 @@ begin
             if RST = '1' then
                 rd_valid_r <= '0';
                 rd_word_r  <= (others => '0');
-            else
-                if rd_valid_r = '1' and RD_READY = '1' then
-                    rd_valid_r <= '0';
-                elsif rd_valid_r = '0' and fifo_empty = '0' then
+            elsif rd_can_load = '1' then
+                if fifo_empty = '0' then
                     rd_word_r  <= fifo_dout;
                     rd_valid_r <= '1';
+                else
+                    rd_valid_r <= '0';
                 end if;
             end if;
         end if;
