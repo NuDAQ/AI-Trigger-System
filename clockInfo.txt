@@ -1,6 +1,6 @@
 -------------------------------------
 | Tool Version : Vivado v.2023.2
-| Date         : Wed Jul  1 17:22:15 2026
+| Date         : Mon Jul  6 22:04:23 2026
 | Host         : AlbertsUbuntu
 | Design       : design_1
 | Device       : xcku5p-ffvb676-2-E-
@@ -19,13 +19,15 @@ Number of global clocks: 1
 	Number of BUFG_GT: 0
 	Number of BUFG_PS: 0
 	Number of BUFG_FABRIC: 0
+	Running suboptimal placement checker for 1 clocks (and their loads) which do not have the CLOCK_LOW_FANOUT property but have a fanout less than 2000...
+		No sub-optimality found
 ********************************
 Clock Net Route Info (CRP Input)
 ********************************
 Clock 1: u_CORE/u_RST_ADC/sync_ff[1]_bufg_place
 	Clock source type: BUFGCE
-	Clock source region: X0Y0
-	Clock regions with locked loads: (0, 0) (1, 0) (1, 1) (2, 0) 
+	Clock source region: X0Y1
+	Clock regions with locked loads: (1, 0) (1, 1) (2, 0) (2, 1) 
 	initial rect ((0, 0), (2, 1))
 
 
@@ -47,13 +49,15 @@ Number of global clocks: 1
 	Number of BUFG_GT: 0
 	Number of BUFG_PS: 0
 	Number of BUFG_FABRIC: 0
+	Running suboptimal placement checker for 1 clocks (and their loads) which do not have the CLOCK_LOW_FANOUT property but have a fanout less than 2000...
+		No sub-optimality found
 ********************************
 Clock Net Route Info (CRP Input)
 ********************************
 Clock 1: u_CORE/u_RST_ADC/sync_ff[1]
 	Clock source type: BUFGCE
-	Clock source region: X0Y0
-	Clock regions with locked loads: (0, 0) (1, 0) (1, 1) (2, 0) 
+	Clock source region: X0Y1
+	Clock regions with locked loads: (1, 0) (1, 1) (2, 0) (2, 1) 
 	initial rect ((0, 0), (2, 1))
 
 
