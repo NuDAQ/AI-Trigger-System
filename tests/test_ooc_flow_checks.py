@@ -250,6 +250,15 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(lane, r"READ_DATA_WIDTH\s+=>\s+LANE_FIFO_READ_WIDTH")
         self.assertRegex(lane, r"FIFO_WRITE_DEPTH\s+=>\s+LANE_FIFO_WRITE_DEPTH")
 
+    def test_lane_stream_uses_xpm_data_valid_for_fifo_output(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertIn("signal fifo_data_valid", lane)
+        self.assertRegex(lane, r"data_valid\s+=>\s+fifo_data_valid")
+        self.assertRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
+        self.assertRegex(lane, r"cnn_in_ready\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
+        self.assertNotRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_empty\s*=\s*'0'")
+
     def test_sim_wrapper_owns_source_clock_cdc_not_synth_top(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")

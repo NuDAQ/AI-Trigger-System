@@ -21,7 +21,9 @@
 --   CDC primitive carries the matching chunk_id metadata.  The CNN side
 --   acknowledges metadata only when the matching FIFO data is also available.
 --
--- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
+-- FIFO mode: First-Word-Fall-Through (FWFT).  The read side uses data_valid,
+-- not empty, as the AXIS beat-valid qualifier because XPM may deassert empty
+-- before dout is safe to consume after CDC/FWFT priming.
 -- =============================================================================
 
 library ieee;
@@ -136,6 +138,7 @@ architecture rtl of CNN_CORE_LANE is
     -- FIFO read side
     signal fifo_dout  : std_logic_vector(127 downto 0);
     signal fifo_empty : std_logic;
+    signal fifo_data_valid : std_logic;
     signal fifo_rd_en : std_logic := '0';
 
     -- CNN interface
@@ -331,7 +334,7 @@ begin
                         cnn_in_valid <= '0';
                         stream_cnt    <= N_CHUNK_BEATS_CNN;
 
-                        if chunk_id_meta_valid = '1' and fifo_empty = '0' then
+                        if chunk_id_meta_valid = '1' and fifo_data_valid = '1' then
                             -- Assert start and first word simultaneously.
                             -- Keep start asserted through the input stream.
                             cnn_start    <= '1';
@@ -353,6 +356,7 @@ begin
                                        " started_next=" &
                                        integer'image(to_integer(started_count_cnn + 1)) &
                                        " fifo_empty=" & std_logic'image(fifo_empty) &
+                                       " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                        " ready=" & std_logic'image(cnn_ready) &
                                        " idle=" & std_logic'image(cnn_idle);
                                 dbg_cnn_events <= dbg_cnn_events + 1;
@@ -363,15 +367,16 @@ begin
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
                         cnn_start <= '1';
+                        cnn_in_valid <= fifo_data_valid;
 
-                        if cnn_in_ready = '1' then
+                        if cnn_in_ready = '1' and fifo_data_valid = '1' then
                             stream_cnt <= stream_cnt - 1;
                             fifo_rd_en <= '1';
 
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
-                                if chunk_id_meta_valid = '1' and fifo_empty = '0' then
+                                if chunk_id_meta_valid = '1' and fifo_data_valid = '1' then
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
@@ -392,6 +397,7 @@ begin
                                                " started_next=" &
                                                integer'image(to_integer(started_count_cnn + 1)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                                " ready=" & std_logic'image(cnn_ready) &
                                                " idle=" & std_logic'image(cnn_idle);
                                         dbg_cnn_events <= dbg_cnn_events + 1;
@@ -407,6 +413,7 @@ begin
                                                " started=" &
                                                integer'image(to_integer(started_count_cnn)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                                " ready=" & std_logic'image(cnn_ready);
                                         dbg_cnn_events <= dbg_cnn_events + 1;
                                     end if;
@@ -467,7 +474,7 @@ begin
             rd_rst_busy => open,
             prog_full   => open,
             prog_empty  => open,
-            data_valid  => open,
+            data_valid  => fifo_data_valid,
             wr_data_count => open,
             rd_data_count => open,
             injectsbiterr => '0',
