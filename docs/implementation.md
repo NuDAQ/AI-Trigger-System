@@ -1,9 +1,8 @@
 # Implementation Notes
 
 This document summarizes implementation and report status for `AI_TRIGGER_TOP`.
-It separates the current 250 MHz DAQ-facing interface target from historical
-Vivado reports that were produced for the earlier 70 MHz, 16-sample-per-beat
-interface.
+It records the current 250 MHz DAQ-facing interface implementation result and
+keeps historical report context separate where it still matters.
 
 ## Flow
 
@@ -107,7 +106,7 @@ Aggregation and metadata rules:
   explicit configuration CDC path and latch a threshold snapshot at CNN chunk
   start so one chunk is compared against one stable threshold value.
 
-Historical report context:
+Current report context:
 
 | Item | Value |
 | --- | --- |
@@ -115,17 +114,17 @@ Historical report context:
 | Device | `xcku5p-ffvb676-2-e` |
 | Build style | Out-of-context block implementation |
 | CNN lanes | 5 |
-| `CLK_ADC` | 70 MHz target |
+| `CLK_ADC` | 250 MHz target |
 | `CLK_CNN` | 200.000 MHz |
 
-The pulled OOC reports below are historical 70 MHz results and should be
-refreshed on the server before sign-off for the 250 MHz interface.
+The pulled OOC reports below are the current 250 MHz / four-sample-per-beat
+implementation record.
 
 ## Behavioral Simulation
 
-The latest pulled behavioral Vivado simulation completed successfully before
-the 250 MHz, four-sample-per-beat interface migration using the functional
-threshold used for validation:
+The latest pulled behavioral Vivado simulation completed successfully for the
+250 MHz, four-sample-per-beat interface using the functional threshold used for
+validation:
 
 | Metric | Value |
 | --- | ---: |
@@ -135,47 +134,44 @@ threshold used for validation:
 | ADC input overflows | 0 |
 | Dropped triggers | 0 |
 | Ring misses | 0 |
-| Events saved | 163 |
-| Event batches | 2608 |
-| Correct predictions | 981 / 1000 |
-| Average latency | 223.4 `CLK_CNN` cycles |
-| Average latency | 1.117 us |
+| Events saved | 162 |
+| Event batches | 10368 |
+| Correct predictions | 982 / 1000 |
+| Average latency | 203.6 `CLK_CNN` cycles |
+| Average latency | 1.018 us |
 
-The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. Behavioral
-simulation, routed implementation, gate-level simulation, and SAIF should be
-rerun on the server for the 250 MHz `CLK_ADC` interface. The post-migration
-behavioral run should show zero chunk overflows, zero dropped triggers, zero
-ring misses, and one complete 64-beat event for every chunk whose
-`score > CNN_THRESH`. It should also explicitly check that trigger chunk id,
-ring-buffer chunk id, and `EVENT_TIMESTAMP` remain aligned after the streaming
-4-sample-beat aggregation.
+The run used `CNN_THRESH_RAW = 0` and `SCORE_THRESHOLD = 0.0`. Payload reverse
+matching showed all 10368 event beats aligned to the same sample/chunk and
+batch index (`delta = 0`), confirming that trigger chunk id, ring-buffer chunk
+id, and `EVENT_TIMESTAMP` remain aligned after the streaming 4-sample-beat
+aggregation.
 
 ## Timing Result
 
-The previous routed timing report closed timing at the historical 70 MHz
-`CLK_ADC` and 200 MHz `CLK_CNN` OOC clock targets:
+The current routed timing report closes timing at the 250 MHz `CLK_ADC` and
+200 MHz `CLK_CNN` OOC clock targets:
 
 | Metric | Value |
 | --- | ---: |
-| WNS | 1.176 ns |
+| WNS | 1.085 ns |
 | TNS | 0 ns |
-| WHS | 0.024 ns |
+| WHS | 0.009 ns |
 | THS | 0 ns |
 
 Per-clock timing summary:
 
 | Clock | WNS | TNS | WHS | THS |
 | --- | ---: | ---: | ---: | ---: |
-| `CLK_ADC` | 8.605 ns | 0 ns | 0.024 ns | 0 ns |
-| `CLK_CNN` | 1.176 ns | 0 ns | 0.027 ns | 0 ns |
+| `CLK_ADC` | 1.085 ns | 0 ns | 0.039 ns | 0 ns |
+| `CLK_CNN` | 1.208 ns | 0 ns | 0.009 ns | 0 ns |
 
-The historical routed report has no failing setup or hold endpoints and all
-user-specified timing constraints were met for that run. It is not sign-off
-evidence for 250 MHz `CLK_ADC`. The worst setup margin was in the `CLK_CNN`
-domain. Earlier runs showed a tighter `CLK_CNN` path through the per-lane FIFO
-Generator BRAM read side. Removing `DONT_TOUCH` from those FIFO instances
-allowed placement/routing optimization and restored WNS from 0.654 ns to
-1.176 ns.
+The routed report has no failing setup or hold endpoints and all user-specified
+timing constraints were met. The worst `CLK_ADC` setup path is in
+`WAVEFORM_RING_BUFFER` tag-memory write enable logic. The worst `CLK_CNN` setup
+path is inside the HLS dense layer pipeline in one CNN lane. Earlier runs showed
+a tighter `CLK_CNN` path through the per-lane FIFO Generator BRAM read side.
+Removing `DONT_TOUCH` from those FIFO instances remains the intended placement
+policy.
 
 The methodology report still flags zero-delay OOC boundary assumptions and
 clock-group constraints that override several point-to-point max-delay checks.
@@ -183,23 +179,23 @@ These are OOC constraint-quality items, not current timing failures.
 
 ## Resource Result
 
-The historical routed utilization result is:
+The current routed utilization result is:
 
 | Resource | Used | Device utilization |
 | --- | ---: | ---: |
-| CLB LUT | 28,990 | 13.36% |
-| CLB register | 19,830 | 4.57% |
-| BRAM tile | 112 | 23.33% |
+| CLB LUT | 28,864 | 13.30% |
+| CLB register | 18,847 | 4.34% |
+| BRAM tile | 26 | 5.42% |
+| URAM | 6 | 9.38% |
 | DSP | 20 | 1.10% |
 | IOB | 0 | 0.00% |
 
 The zero IOB count is intentional for the OOC flow. It indicates that the DAQ
-subsystem was not implemented as a package-level IO top. Resource use should be
-rechecked after the 384-bit input/output interface migration.
+subsystem was not implemented as a package-level IO top.
 
 ## Hierarchy Preservation
 
-The historical hierarchical utilization report shows all five generated lanes after
+The current hierarchical utilization report shows all five generated lanes after
 implementation. Each lane contains one `WRAPPER_TOP` CNN wrapper, one async
 FIFO, and 4 DSPs. This is the main check that the CNN datapath was preserved
 and not optimized away as unused logic.
@@ -210,8 +206,7 @@ Typical per-lane usage:
 | --- | ---: |
 | CLB LUT | about 5.6k |
 | CLB register | about 3.4k |
-| RAMB36/FIFO | about 13-14 |
-| RAMB18 | 1 |
+| RAMB36/FIFO | 4 |
 | DSP | 4 |
 
 Across five lanes this accounts for the reported 20 DSPs.
@@ -223,43 +218,46 @@ optimization free to improve timing.
 
 ## CDC Result
 
-The previous routed CDC report had no critical unknown CDC paths:
+The current routed CDC report contains the expected XPM/handshake CDC structures
+plus an OOC input-port/reset item:
 
 | CDC item | Count |
 | --- | ---: |
-| `CDC-1 Critical` | 0 |
-| `CDC-3 Info` | 29 |
-| `CDC-26 Warning` | 13 |
+| `CDC-1 Critical` | 40 |
+| `CDC-3 Info` | 27 |
+| `CDC-6 Warning` | 10 |
+| `CDC-15 Warning` | 247 |
+| `CDC-26 Warning` | 2 |
 
-The `CDC-3` entries are recognized synchronizer/XPM crossings. The remaining
-`CDC-26` warnings are reset-related paths under the OOC false-path reset
-assumption. For the intended 250 MHz delivered top, the expected functional CDCs
-are the per-lane `CLK_ADC` to `CLK_CNN` crossings and the CNN-trigger descriptor
-return path from `CLK_CNN` to `CLK_ADC`. CNN lane metadata and trigger
-descriptors use XPM handshake CDC.
+The safe CDC crossings are the per-lane async FIFOs, XPM handshake metadata,
+and the CNN-trigger descriptor return path. The `CDC-1` entries are tied to the
+OOC input-port/reset false-path context and should remain a constraint-quality
+review item before board-level sign-off, not a current routed timing failure.
 
 ## SAIF Power Result
 
-The historical routed OOC power report is vectorless and should be treated as
-an estimate until a fresh 250 MHz-interface SAIF run is available:
+The current routed OOC power report is vectorless and should be treated as an
+estimate until a fresh 250 MHz-interface SAIF run is available:
 
 | Metric | Value |
 | --- | ---: |
-| Total on-chip power | 1.652 W |
-| Dynamic power | 1.191 W |
-| Static power | 0.460 W |
+| Total on-chip power | 1.301 W |
+| Dynamic power | 0.844 W |
+| Static power | 0.458 W |
 | Confidence | Medium |
 | Design nets matched | NA |
 
-The historical main dynamic contributors are:
+The current hierarchy report shows power dominated by the five CNN lanes:
 
-| Component | Dynamic power |
+| Component | Power |
 | --- | ---: |
-| CLB logic | 0.455 W |
-| Signals | 0.370 W |
-| Block RAM | 0.214 W |
-| Clocks | 0.135 W |
-| DSPs | 0.016 W |
+| `gen_lanes[0].u_LANE` | 0.151 W |
+| `gen_lanes[1].u_LANE` | 0.152 W |
+| `gen_lanes[2].u_LANE` | 0.154 W |
+| `gen_lanes[3].u_LANE` | 0.155 W |
+| `gen_lanes[4].u_LANE` | 0.153 W |
+| `u_EVENT_PATH` | 0.073 W |
+| `u_DIST` | 0.005 W |
 
 The SAIF logging script first tries explicit hierarchy scopes, then falls back
 to full-DUT recursive logging if too few objects are matched. Previous SAIF

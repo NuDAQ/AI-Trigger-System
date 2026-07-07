@@ -524,40 +524,40 @@ Post-implementation SAIF and timing reports are written under:
 build/vivado_post_impl_saif/reports/
 ```
 
-The current checked-in reports are historical and should be refreshed on the
-server before sign-off for the 250 MHz `CLK_ADC` interface. The previous routed
-OOC result summary, after the input CDC FIFO, 70 MHz ingest clock target, CDC
-cleanup, and lane FIFO placement optimization, was:
+The current checked-in OOC reports were refreshed on the server for the
+250 MHz `CLK_ADC` interface. The routed result summary is:
 
 | Metric | Current report |
 | --- | ---: |
-| Timing | WNS 1.176 ns, TNS 0, WHS 0.024 ns |
-| `CLK_ADC` | 70 MHz target |
+| Timing | WNS 1.085 ns, TNS 0, WHS 0.009 ns |
+| `CLK_ADC` | 250 MHz target |
 | `CLK_CNN` | 200 MHz target |
-| CDC | `CDC-1 Critical = 0`; only recognized CDC info/reset warnings remain |
-| CLB LUT | 28,990 |
-| CLB registers | 19,830 |
-| BRAM tiles | 112 |
+| CDC | Known OOC/input-port reset item plus recognized XPM/handshake crossings |
+| CLB LUT | 28,864 |
+| CLB registers | 18,847 |
+| BRAM tiles | 26 |
+| URAM | 6 |
 | DSP | 20 |
 | IOB | 0 |
-| Vectorless power | 1.652 W total, Medium confidence |
-| Dynamic power | 1.191 W |
-| Static power | 0.460 W |
+| Vectorless power | 1.301 W total, Medium confidence |
+| Dynamic power | 0.844 W |
+| Static power | 0.458 W |
 
 The hierarchical utilization report should show all five lanes present. Each
 lane contains one CNN wrapper and one async FIFO, so the CNN datapath was not
 optimized away in implementation.
 
-The previous SAIF hierarchy report showed dynamic power dominated by the five CNN
-lanes. Each lane is about 0.182-0.186 W, including about 0.146-0.150 W in the
-wrapper and about 0.035 W in the FIFO. The distributor is about 0.007 W.
+The current vectorless hierarchy report shows dynamic power dominated by the five
+CNN lanes. Each lane is about 0.151-0.155 W, including about 0.137-0.141 W in
+the wrapper and about 0.010-0.012 W in the FIFO. The distributor is about
+0.005 W.
 
 The OOC build flow preserves the CNN wrapper/core hierarchy but intentionally
 does not apply `DONT_TOUCH` to the per-lane FIFO Generator instances. Leaving
 the lane FIFOs optimizable restored the 200 MHz `CLK_CNN` margin by allowing
 Vivado to improve BRAM-heavy FIFO placement/routing.
 
-The refreshed routed timing report should confirm the two-clock OOC boundary:
+The refreshed routed timing report confirms the two-clock OOC boundary:
 `CLK_ADC` at 250 MHz and `CLK_CNN` at 200 MHz. The OOC constraints intentionally
 use zero-delay IO boundary assumptions, so methodology warnings around IO delay
 and clock-group/max-delay interactions still need review before system-level
