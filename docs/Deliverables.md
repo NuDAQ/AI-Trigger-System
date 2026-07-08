@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This version of the system receives 8 channels of 1 Gsa/s data. After inference, it internally compares CNN scores with the configured threshold, retains only events above the threshold, and outputs the original waveform samples with a timestamp. The intended delivery model is a black-box CNN-trigger block with `CLK_ADC`, the clock arriving from the frontend ADC side, and `CLK_CNN`, the CNN inference clock.
+This version of the system receives 8 channels of 1 Gsa/s data. It splits the continuous waveform into 256 ns chunks for inference. After inference, it internally compares CNN scores with the configured threshold, retains only events above the threshold, and outputs the original waveform samples with a timestamp.
 
 The delivered top-level interface has three groups:
 
@@ -10,11 +10,9 @@ The delivered top-level interface has three groups:
 - Downstream event output, synchronous to `CLK_ADC = 250 MHz`
 - Clock/reset/configuration inputs: `CLK_CNN = 200 MHz`, `RST`, and `CNN_THRESH`
 
-It typically takes ~1.5 us for a 256-sample input to pass through this trigger if it is triggered.
-
 ## Upstream ADC Input Format
 
-The upstream ADC-side logic drives the AI Trigger System directly with a 250 MHz `CLK_ADC`. 
+The upstream ADC-side logic is driven directly with a 250 MHz `CLK_ADC`. So, no CDC needed.
 
 Each accepted input beat contains:
 
@@ -28,7 +26,7 @@ At 250 MHz, four samples per channel per beat sustains:
 250 MHz x 4 samples/beat = 1 Gsa/s/channel
 ```
 
-The top-level packing convention is:
+The top-level packing convention is (more details below):
 
 ```text
 ADC_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
@@ -94,9 +92,11 @@ ADC_DATA[383:372] = ch7 sample3
 
 ## Trigger Function
 
-The system reduces data volume by retaining only CNN-triggered waveform events. The current version includes only the CNN trigger wrapper path; forced triggers and Hi-Lo triggers are not included. The CNN trigger path uses channels 0-3 for inference. Event output preserves all 8 raw ADC channels in the same 384-bit beat format as the input interface, but adds timestamps.
+The system reduces data volume by retaining only CNN-triggered waveform events. The current version includes only the CNN trigger wrapper path. The CNN trigger path uses channels 0-3 for inference. Event output preserves all 8 raw ADC channels in the same 384-bit beat format as the input interface, but adds timestamps.
 
-Each trigger outputs a chunk of 256 samples. When samples from the same chunk are output to downstream systems at a rate of 3 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
+Each output contains a 256 samples chunk, outputted within 64 beats. When samples from the same chunk are output to downstream systems at a rate of 3 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
+
+For testing purposes, you can ignore timestamp in this version.
 
 ## System and Control Interface
 
@@ -104,9 +104,7 @@ Each trigger outputs a chunk of 256 samples. When samples from the same chunk ar
 | --- | --- | --- |
 | `CLK_CNN` | in | CNN inference clock, target 200 MHz. It can vary slightly, but no less than 180 MHz. |
 | `RST` | in | Active-high reset for the trigger system. |
-| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. Also `[MSB:LSB]`. |
-
-All thresholds use the low 22 bits of `CNN_THRESH[31:0]` as signed `ap_fixed<22,11>` raw data. `CNN_THRESH[31:22]` is ignored by the comparator.
+| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. `CNN_THRESH[31:22]` is ignored. Also `[MSB:LSB]`. |
 
 In current version, for testing purpose, please configure `CNN_THRESH=2`. Specifically, give a constant input:
 
@@ -140,9 +138,9 @@ For the current one-chunk event window, each event emits only the triggered chun
 | `EVENT_READY` | in | DAQ can accept the current event beat. This describes peak sink capability, not the normal average event rate. I think it should always be `1`. |
 | `EVENT_DATA[383:0]` | out | Original waveform beat, in the same format as `ADC_DATA`. |
 | `EVENT_LAST` | out | Last beat of the current event. |
-| `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. |
+| `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. Resets every 4.3 seconds. |
 
-The delivered event interface does not expose CNN score, chunk id, overflow counters, or trigger debug pulses.
+The delivered interface does not expose CNN score, chunk id, overflow counters, or trigger debug pulses.
 
 DAQ-side sampling contract:
 
@@ -154,7 +152,7 @@ if EVENT_VALID && EVENT_READY:
         event finished
 ```
 
-### How to test?
+## How to test?
 
 These are the scores for some typical inputs. By adjusting the threshold, you can allow certain waveforms to trigger. A trigger rate that is too high may cause overflow, so we use bipolar square pulse for testing.
 
