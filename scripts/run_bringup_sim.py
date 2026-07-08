@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Generate and run DAQ bring-up simulation stimuli.
+
+The generated ``testhex_stream`` directories use the existing Vivado
+testbench input format: one chunk/sample is 256 lines of 64-bit hex, with
+channels 0..3 packed into the low 48 bits of each timestep word.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+
+N_CHUNK_WORDS = 256
+DEFAULT_ADC_VFS_MV = 800.0
+DEFAULT_PULSE_MV = 50.0
+PULSE_SEGMENT_SAMPLES = 5
+PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 3
+
+
+@dataclass(frozen=True)
+class StimulusCase:
+    name: str
+    samples: list[list[int]]
+    manifest_rows: list[dict[str, str]]
+
+
+def voltage_to_adc_code(voltage_mv: float, adc_vfs_mv: float) -> int:
+    raw = round(voltage_mv * 4096.0 / adc_vfs_mv)
+    return max(-2048, min(2047, raw))
+
+
+def twos_complement_12(value: int) -> int:
+    if value < -2048 or value > 2047:
+        raise ValueError(f"12-bit ADC code out of range: {value}")
+    return value & 0xFFF
+
+
+def pack_timestep(ch_codes: list[int]) -> str:
+    if len(ch_codes) != 4:
+        raise ValueError("testhex timestep requires exactly four trigger channels")
+    word = 0
+    for channel, code in enumerate(ch_codes):
+        word |= twos_complement_12(code) << (channel * 12)
+    return f"{word:016x}"
+
+
+def zero_chunk() -> list[int]:
+    return [0] * N_CHUNK_WORDS
+
+
+def bipolar_chunk(offset: int, pos_code: int, neg_code: int) -> list[int]:
+    if offset < 0 or offset + PULSE_TOTAL_SAMPLES > N_CHUNK_WORDS:
+        raise ValueError(f"bipolar offset {offset} does not fit in one chunk")
+    chunk = zero_chunk()
+    for idx in range(offset, offset + PULSE_SEGMENT_SAMPLES):
+        chunk[idx] = pos_code
+    for idx in range(offset + PULSE_SEGMENT_SAMPLES * 2, offset + PULSE_TOTAL_SAMPLES):
+        chunk[idx] = neg_code
+    return chunk
+
+
+def chunk_to_testhex_lines(chunk_ch0: list[int], pulse_channel: int) -> list[str]:
+    if pulse_channel < 0 or pulse_channel > 3:
+        raise ValueError("pulse_channel must be in trigger channel range 0..3")
+    lines = []
+    for code in chunk_ch0:
+        channels = [0, 0, 0, 0]
+        channels[pulse_channel] = code
+        lines.append(pack_timestep(channels))
+    return lines
+
+
+def build_zero_case(num_samples: int, pulse_channel: int) -> StimulusCase:
+    samples = [zero_chunk() for _ in range(num_samples)]
+    rows = [
+        {
+            "sample_id": str(sample_id),
+            "stim_kind": "zero",
+            "pulse_offset_sample": "-1",
+            "pulse_start_ns": "-1",
+            "pulse_width_samples": "0",
+            "pulse_peak_mv": "0.000",
+            "adc_code_pos": "0",
+            "adc_code_neg": "0",
+            "pulse_channel": str(pulse_channel),
+        }
+        for sample_id in range(num_samples)
+    ]
+    return StimulusCase("zero", samples, rows)
+
+
+def build_bipolar_sweep_case(
+    pulse_mv: float,
+    adc_vfs_mv: float,
+    pulse_channel: int,
+) -> StimulusCase:
+    pos_code = voltage_to_adc_code(pulse_mv, adc_vfs_mv)
+    neg_code = voltage_to_adc_code(-pulse_mv, adc_vfs_mv)
+    max_offset = N_CHUNK_WORDS - PULSE_TOTAL_SAMPLES
+    samples = [bipolar_chunk(offset, pos_code, neg_code) for offset in range(max_offset + 1)]
+    rows = [
+        {
+            "sample_id": str(offset),
+            "stim_kind": "bipolar_sweep",
+            "pulse_offset_sample": str(offset),
+            "pulse_start_ns": str(offset),
+            "pulse_width_samples": str(PULSE_TOTAL_SAMPLES),
+            "pulse_peak_mv": f"{pulse_mv:.3f}",
+            "adc_code_pos": str(pos_code),
+            "adc_code_neg": str(neg_code),
+            "pulse_channel": str(pulse_channel),
+        }
+        for offset in range(max_offset + 1)
+    ]
+    return StimulusCase("bipolar_sweep", samples, rows)
+
+
+def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
+    case_dir = out_dir / case.name
+    testhex_dir = case_dir / "testhex_stream"
+    testhex_dir.mkdir(parents=True, exist_ok=True)
+
+    for sample_id, chunk in enumerate(case.samples):
+        lines = chunk_to_testhex_lines(chunk, pulse_channel)
+        (testhex_dir / f"test_input_sample{sample_id}.hex").write_text(
+            "\n".join(lines) + "\n",
+            encoding="utf-8",
+        )
+
+    (testhex_dir / "labels.hex").write_text(
+        "\n".join("0" for _ in case.samples) + "\n",
+        encoding="utf-8",
+    )
+
+    manifest_path = case_dir / "manifest.csv"
+    with manifest_path.open("w", newline="", encoding="utf-8") as csv_file:
+        fieldnames = list(case.manifest_rows[0])
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(case.manifest_rows)
+
+    return testhex_dir
+
+
+def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
+    cases: list[StimulusCase] = []
+    if args.stimulus in ("zero", "all"):
+        cases.append(build_zero_case(args.num_zero_samples, args.pulse_channel))
+    if args.stimulus in ("bipolar-sweep", "all"):
+        cases.append(build_bipolar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
+    return cases
+
+
+def run_vivado_case(args: argparse.Namespace, repo_root: Path, case: StimulusCase, testhex_dir: Path) -> int:
+    case_dir = args.out_dir / case.name
+    cmd = [
+        sys.executable,
+        str(repo_root / "scripts" / "run_vivado_sim.py"),
+        "--project",
+        args.project,
+        "--num-samples",
+        str(len(case.samples)),
+        "--testhex-dir",
+        str(testhex_dir),
+        "--out-csv",
+        str(case_dir / "scores.csv"),
+        "--event-csv",
+        str(case_dir / "events.csv"),
+        "--score-threshold",
+        str(args.score_threshold),
+        "--cnn-thresh-raw",
+        str(args.cnn_thresh_raw),
+    ]
+    if args.vivado:
+        cmd.extend(["--vivado", args.vivado])
+    print("INFO: running:", " ".join(cmd), flush=True)
+    return subprocess.call(cmd, cwd=repo_root)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Generate zero-input and ch0 bipolar-pulse bring-up simulation stimuli."
+    )
+    parser.add_argument(
+        "--stimulus",
+        choices=("zero", "bipolar-sweep", "all"),
+        default="all",
+        help="Stimulus set to generate or run. Default: all.",
+    )
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("build/bringup_sim"),
+        help="Output directory for generated testhex streams and CSVs.",
+    )
+    parser.add_argument(
+        "--generate-only",
+        action="store_true",
+        help="Only generate stimulus files; do not launch Vivado.",
+    )
+    parser.add_argument("--num-zero-samples", type=int, default=256)
+    parser.add_argument("--pulse-mv", type=float, default=DEFAULT_PULSE_MV)
+    parser.add_argument("--adc-vfs-mv", type=float, default=DEFAULT_ADC_VFS_MV)
+    parser.add_argument("--pulse-channel", type=int, default=0)
+    parser.add_argument("--score-threshold", type=float, default=0.0)
+    parser.add_argument("--cnn-thresh-raw", type=int, default=0)
+    parser.add_argument("--project", default="AI_Trigger_System/AI_Trigger_System.xpr")
+    parser.add_argument("--vivado", help="Vivado executable path passed to run_vivado_sim.py.")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    repo_root = Path(__file__).resolve().parents[1]
+    args.out_dir = args.out_dir.expanduser()
+    if not args.out_dir.is_absolute():
+        args.out_dir = repo_root / args.out_dir
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.num_zero_samples <= 0:
+        raise SystemExit("--num-zero-samples must be positive")
+    if args.pulse_channel < 0 or args.pulse_channel > 3:
+        raise SystemExit("--pulse-channel must be in range 0..3")
+
+    for case in selected_cases(args):
+        testhex_dir = write_case(case, args.out_dir, args.pulse_channel)
+        print(f"INFO: generated {case.name}: {len(case.samples)} samples -> {testhex_dir}")
+        if not args.generate_only:
+            result = run_vivado_case(args, repo_root, case, testhex_dir)
+            if result != 0:
+                return result
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
