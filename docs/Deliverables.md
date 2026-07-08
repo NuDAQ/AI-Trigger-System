@@ -108,13 +108,15 @@ Each trigger outputs a chunk of 256 samples. When samples from the same chunk ar
 
 All thresholds use the low 22 bits of `CNN_THRESH[31:0]` as signed `ap_fixed<22,11>` raw data. `CNN_THRESH[31:22]` is ignored by the comparator.
 
-| Purpose                                          | CNN_THRESH[31:0] | Raw threshold | Float threshold | Notes                                                    |
-| ------------------------------------------------ | ---------------- | ------------: | --------------: | -------------------------------------------------------- |
-| Guarantee all possible scores trigger            | 32'hFFE00000     |      -2097152 |         -1024.0 | Lowest representable signed `ap_fixed<22,11> `threshold. |
-| Approximate threshold for bipolar waveform input | TBD              |           TBD |             TBD |                                                          |
-| Approximate threshold for all-zero input         | TBD              |           TBD |             TBD |                                                          |
+In current version, for testing purpose, please configure `CNN_THRESH=2`. Specifically, give a constant input:
 
-`CNN_THRESH` is a single global CNN trigger threshold. Although the threshold update takes effect on a CNN chunk boundary, you'd better configure it before you start running it in this version.
+```
+use ieee.numeric_std.all;
+
+CNN_THRESH <= std_logic_vector(to_signed(8192, 32));  -- 32'h00002000
+```
+
+See below for more details. 
 
 ## Downstream Event Output Format
 
@@ -152,3 +154,33 @@ if EVENT_VALID && EVENT_READY:
         event finished
 ```
 
+### How to test?
+
+These are the scores for some typical inputs. By adjusting the threshold, you can allow certain waveforms to trigger. A trigger rate that is too high may cause overflow, so we use bipolar square pulse for testing.
+
+| Purpose                               | CNN_THRESH[31:0] | Raw threshold | Float threshold | Notes                                                        |
+| ------------------------------------- | ---------------- | ------------: | --------------: | ------------------------------------------------------------ |
+| Guarantee all possible scores trigger | 32'hFFE00000     |      -2097152 |         -1024.0 | Lowest representable signed `ap_fixed<22,11> `threshold.     |
+| Score for all-zero input              | 32'hFFFFEE53     |         -4525 |       -2.209473 | All-zero input measured score is raw -4524, float -2.208984. |
+
+For testing purpose, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
+```
+0000000000000100  x5   # ch0 = +0x100 = +256
+0000000000000000  x5   # ch0 = 0
+0000000000000f00  x5   # ch0 = 0xf00 = signed -256
+0000000000000000       # other channels
+```
+
+However, I converted the values to mV based on the [ADC chip's datasheet](https://www.ti.com/lit/ds/symlink/adc12dj1600.pdf), page 58. If I'm wrong, it would be best to calculate the voltage corresponding to that 12-bit input, although the actual voltage may not make much difference, since this trigger is primarily based on the waveform shape.
+
+Simply put, the input is: 
+
+1. Connect the waveform generator only to `ch0`. 
+2. Set the input of other 7 channels to 0
+3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 1/6, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
+
+*Note: Since we set the CNN threshold to 4, only pulses that start between approximately 50th and 80th ns within a 256ns-chunk will be triggered. You'll notice that the recorded waveforms are mostly pulses that start during this time period:*
+
+![score_vs_offset](/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/docs/score_vs_offset.png)
+
+*Since this trigger is not yet a mature version, bipolar pulses starting at different positions (The trigger processes each 256 ns as a chunk) will receive different scores. This is why you should use a period that isn't a multiple of 256; otherwise, there's a chance you'll never see the trigger.*
