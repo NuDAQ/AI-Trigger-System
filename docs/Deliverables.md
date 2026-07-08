@@ -12,7 +12,7 @@ The delivered top-level interface has three groups:
 
 ## Upstream ADC Input Format
 
-The upstream ADC-side logic is driven directly with a 250 MHz `CLK_ADC`. So, no CDC needed.
+The upstream ADC-side logic is driven directly with a 250 MHz `CLK_ADC`. So, no additional source-clock CDC is required at the delivered top-level ADC input.
 
 Each accepted input beat contains:
 
@@ -94,7 +94,7 @@ ADC_DATA[383:372] = ch7 sample3
 
 The system reduces data volume by retaining only CNN-triggered waveform events. The current version includes only the CNN trigger wrapper path. The CNN trigger path uses channels 0-3 for inference. Event output preserves all 8 raw ADC channels in the same 384-bit beat format as the input interface, but adds timestamps.
 
-Each output contains a 256 samples chunk, outputted within 64 beats. When samples from the same chunk are output to downstream systems at a rate of 3 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
+Each output contains a 256 samples chunk, outputted within 64 beats. When samples from the same chunk are output to downstream systems at a rate of 4 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
 
 For testing purposes, you can ignore timestamp in this version.
 
@@ -106,7 +106,7 @@ For testing purposes, you can ignore timestamp in this version.
 | `RST` | in | Active-high reset for the trigger system. |
 | `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. `CNN_THRESH[31:22]` is ignored. Also `[MSB:LSB]`. |
 
-In current version, for testing purpose, please configure `CNN_THRESH=2`. Specifically, give a constant input:
+In current version, for testing purpose, please configure `CNN_THRESH=4.0`. Specifically, give a constant input:
 
 ```
 use ieee.numeric_std.all;
@@ -138,7 +138,7 @@ For the current one-chunk event window, each event emits only the triggered chun
 | `EVENT_READY` | in | DAQ can accept the current event beat. This describes peak sink capability, not the normal average event rate. I think it should always be `1`. |
 | `EVENT_DATA[383:0]` | out | Original waveform beat, in the same format as `ADC_DATA`. |
 | `EVENT_LAST` | out | Last beat of the current event. |
-| `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. Resets every 4.3 seconds. |
+| `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. Wraps around every about 4.3 seconds. |
 
 The delivered interface does not expose CNN score, chunk id, overflow counters, or trigger debug pulses.
 
@@ -175,9 +175,9 @@ Simply put, the input is:
 
 1. Connect the waveform generator only to `ch0`. 
 2. Set the input of other 7 channels to 0
-3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 1/6, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
+3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 12.0%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
 
-*Note: Since we set the CNN threshold to 4, only pulses that start between approximately 50th and 80th ns within a 256ns-chunk will be triggered. You'll notice that the recorded waveforms are mostly pulses that start during this time period:*
+*Note: Since we set the CNN threshold to 4, only pulses that start between approximately 56th and 84th ns within a 256ns-chunk will be triggered. You'll notice that the recorded waveforms are mostly pulses that start during this time period:*
 
 ![score_vs_offset](/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/docs/score_vs_offset.png)
 
