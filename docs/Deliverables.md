@@ -94,7 +94,7 @@ ADC_DATA[383:372] = ch7 sample3
 
 The system reduces data volume by retaining only CNN-triggered waveform events. The current version includes only the CNN trigger wrapper path. The CNN trigger path uses channels 0-3 for inference. Event output preserves all 8 raw ADC channels in the same 384-bit beat format as the input interface, but adds timestamps.
 
-Each output contains a 256 samples chunk, outputted within 64 beats. When samples from the same chunk are output to downstream systems at a rate of 4 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
+Each event contains one 256-sample chunk, output over 64 beats. When samples from the same chunk are output to downstream systems at a rate of 4 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
 
 For testing purposes, you can ignore timestamp in this version.
 
@@ -163,10 +163,10 @@ These are the scores for some typical inputs. By adjusting the threshold, you ca
 
 For testing purpose, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
 ```
-0000000000000100  x5   # ch0 = +0x100 = +256
-0000000000000000  x5   # ch0 = 0
-0000000000000f00  x5   # ch0 = 0xf00 = signed -256
-0000000000000000       # other channels
+0000000000000100  x5   # ch0 = +0x100 = +256; ch1..ch3 = 0
+0000000000000000  x5   # ch0..ch3 = 0
+0000000000000f00  x5   # ch0 = 0xf00 = signed -256; ch1..ch3 = 0
+0000000000000000       # remaining samples are zero; full input ch1..ch7 are held at 0
 ```
 
 However, I converted the values to mV based on the [ADC chip's datasheet](https://www.ti.com/lit/ds/symlink/adc12dj1600.pdf), page 58. If I'm wrong, it would be best to calculate the voltage corresponding to that 12-bit input, although the actual voltage may not make much difference, since this trigger is primarily based on the waveform shape.
