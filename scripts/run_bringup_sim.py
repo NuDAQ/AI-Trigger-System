@@ -148,6 +148,44 @@ def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
     return testhex_dir
 
 
+def annotate_scores(case_dir: Path) -> Path:
+    manifest_path = case_dir / "manifest.csv"
+    scores_path = case_dir / "scores.csv"
+    out_path = case_dir / "scores_annotated.csv"
+
+    if not manifest_path.exists():
+        raise SystemExit(f"manifest not found: {manifest_path}")
+    if not scores_path.exists():
+        raise SystemExit(f"score CSV not found: {scores_path}")
+
+    with manifest_path.open(newline="", encoding="utf-8") as csv_file:
+        manifest_rows = list(csv.DictReader(csv_file))
+    with scores_path.open(newline="", encoding="utf-8") as csv_file:
+        score_rows = list(csv.DictReader(csv_file))
+
+    manifest_by_id = {row["sample_id"]: row for row in manifest_rows}
+    annotated = []
+    for score_row in score_rows:
+        sample_id = score_row["sample_id"]
+        if sample_id not in manifest_by_id:
+            raise SystemExit(f"score row sample_id={sample_id} missing from {manifest_path}")
+        combined = dict(manifest_by_id[sample_id])
+        for key, value in score_row.items():
+            if key != "sample_id":
+                combined[key] = value
+        annotated.append(combined)
+
+    if not annotated:
+        raise SystemExit(f"no score rows found in {scores_path}")
+
+    with out_path.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=list(annotated[0]))
+        writer.writeheader()
+        writer.writerows(annotated)
+
+    return out_path
+
+
 def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
     cases: list[StimulusCase] = []
     if args.stimulus in ("zero", "all"):
@@ -206,6 +244,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Only generate stimulus files; do not launch Vivado.",
     )
+    parser.add_argument(
+        "--annotate-only",
+        action="store_true",
+        help="Only merge existing manifest.csv and scores.csv files into scores_annotated.csv.",
+    )
     parser.add_argument("--num-zero-samples", type=int, default=256)
     parser.add_argument("--pulse-mv", type=float, default=DEFAULT_PULSE_MV)
     parser.add_argument("--adc-vfs-mv", type=float, default=DEFAULT_ADC_VFS_MV)
@@ -230,13 +273,23 @@ def main() -> int:
     if args.pulse_channel < 0 or args.pulse_channel > 3:
         raise SystemExit("--pulse-channel must be in range 0..3")
 
-    for case in selected_cases(args):
+    cases = selected_cases(args)
+
+    if args.annotate_only:
+        for case in cases:
+            annotated = annotate_scores(args.out_dir / case.name)
+            print(f"INFO: wrote {annotated}")
+        return 0
+
+    for case in cases:
         testhex_dir = write_case(case, args.out_dir, args.pulse_channel)
         print(f"INFO: generated {case.name}: {len(case.samples)} samples -> {testhex_dir}")
         if not args.generate_only:
             result = run_vivado_case(args, repo_root, case, testhex_dir)
             if result != 0:
                 return result
+            annotated = annotate_scores(args.out_dir / case.name)
+            print(f"INFO: wrote {annotated}")
 
     return 0
 

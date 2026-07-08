@@ -509,6 +509,84 @@ At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
 expected to produce exactly one 64-beat event. The post-migration run should
 confirm there are no missing, duplicate, or extra event chunks.
 
+## DAQ Bring-Up Score Simulation
+
+For delivery bring-up, use the dedicated script to generate two simple
+stimulus sets and run them through the same Vivado/xsim testbench:
+
+```bash
+python3 scripts/run_bringup_sim.py \
+  --stimulus all \
+  --out-dir build/bringup_sim
+```
+
+The script creates local `testhex_stream` directories, then launches
+`scripts/run_vivado_sim.py` for each case.  It keeps the existing Bender/Vivado
+source refresh path through `run_sim.tcl`, but supplies generated stimulus
+instead of the wrapper validation dataset.
+
+The generated bring-up cases are:
+
+| Case | Input |
+| --- | --- |
+| `zero` | Valid continuous ADC input, all eight channels at signed code `0`. |
+| `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 15-sample pulse is swept across one 256-sample chunk. |
+
+The default bipolar pulse is `+50 mV` for 5 ns, `0 mV` for 5 ns, then
+`-50 mV` for 5 ns.  At 1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
+
+```text
++256 ADC code for 5 samples
+   0 ADC code for 5 samples
+-256 ADC code for 5 samples
+```
+
+The pulse start offset is swept from sample `0` through sample `241`, so every
+15-sample pulse remains inside one 256-sample CNN chunk.  The bring-up runner
+passes `MIRROR_RAW_CHANNELS=0` to the testbench so raw event channels `ch1..ch7`
+remain zero unless explicitly driven.
+
+To generate stimulus files without launching Vivado:
+
+```bash
+python3 scripts/run_bringup_sim.py \
+  --generate-only \
+  --stimulus all \
+  --out-dir build/bringup_sim
+```
+
+After Vivado completes, the runner writes annotated score CSVs:
+
+```text
+build/bringup_sim/zero/scores_annotated.csv
+build/bringup_sim/bipolar_sweep/scores_annotated.csv
+```
+
+If Vivado was run manually and only raw `scores.csv` files are present, rebuild
+the annotated CSVs with:
+
+```bash
+python3 scripts/run_bringup_sim.py \
+  --annotate-only \
+  --stimulus all \
+  --out-dir build/bringup_sim
+```
+
+Plot the zero baseline and bipolar score distribution with:
+
+```bash
+python3 scripts/plot_bringup_scores.py \
+  --out-dir build/bringup_sim
+```
+
+The plot script writes:
+
+```text
+build/bringup_sim/score_vs_offset.png
+build/bringup_sim/score_histogram.png
+build/bringup_sim/bringup_score_summary.csv
+```
+
 ## Continuous Validation Plots
 
 Full-dataset score validation plots are generated with PyROOT:

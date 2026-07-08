@@ -92,6 +92,9 @@ build/vivado_sim/*
 !build/vivado_sim_analysis*/
 !build/vivado_sim_analysis*/**
 
+# Generated zero-input and bipolar-pulse bring-up simulation artifacts.
+build/bringup_sim/
+
 # Ignore bender dependency cache (large git objects)
 .bender/
 
