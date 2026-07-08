@@ -1,0 +1,28 @@
+package:
+  name_prefix: ai-trigger-daq
+  top: AI_TRIGGER_TOP
+  generated_output: dist/
+
+documentation:
+  readme_source: docs/Deliverables.md
+  package_readme: README.md
+  assets:
+    - docs/score_vs_offset.png -> assets/score_vs_offset.png
+
+rtl:
+  source_order_policy: >
+    Use Bender source order for repository RTL and cnn-core-wrapper RTL.
+    Include generated cnn-core HLS Verilog before the wrapper because Bender
+    may resolve cnn-core through a local override or a machine-specific lock
+    path.
+  ai_trigger_sources: Bender.yml
+  cnn_core_wrapper_sources: bender dependency cnn-core-wrapper
+  cnn_core_sources: bender dependency cnn-core
+
+constraints:
+  - HDL/constraints/ai_trigger_ooc.xdc
+
+generated_files:
+  - VERSION.txt
+  - MANIFEST.txt
+  - scripts/add_files.tcl

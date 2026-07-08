@@ -19,7 +19,7 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertIn("version: 4.0.0", lock)
         self.assertIn("revision: 1a9554f554c495730117a688b5bb953cfddb89f1", lock)
 
-    def test_system_uses_five_lanes_with_70_mhz_ingest_and_200_mhz_cnn(self) -> None:
+    def test_system_uses_five_lanes_with_250_mhz_ingest_and_200_mhz_cnn(self) -> None:
         pkg = read("HDL/rtl/AI_TRIGGER_PKG.vhd")
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
         sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
@@ -27,11 +27,11 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
 
         self.assertRegex(pkg, r"N_LANES\s+:\s+integer\s*:=\s*5")
         self.assertNotIn("ADC_SRC_CLK", xdc)
-        self.assertRegex(xdc, r"create_clock\s+-name\s+CLK_ADC\s+-period\s+14\.286")
+        self.assertRegex(xdc, r"create_clock\s+-name\s+CLK_ADC\s+-period\s+4\.000")
         self.assertRegex(xdc, r"create_clock\s+-name\s+CLK_CNN\s+-period\s+5\.000")
         # The source clock is simulation stimulus only; the OOC trigger top starts at CLK_ADC.
-        self.assertIn("parameter ADC_SRC_CLK_PERIOD = 16.0", sv_tb)
-        self.assertIn("parameter CLK_ADC_PERIOD = 14.286", sv_tb)
+        self.assertIn("parameter ADC_SRC_CLK_PERIOD = 4.0", sv_tb)
+        self.assertIn("parameter CLK_ADC_PERIOD = 4.000", sv_tb)
         self.assertIn("parameter CLK_CNN_PERIOD =  5.000", sv_tb)
         self.assertIn("CNN cores:        5", sv_tb)
         self.assertIn(r"gen_lanes\[4\].u_LANE", saif)
@@ -65,7 +65,7 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertRegex(sv_tb, r"reg\s+\[31:0\]\s+cnn_thresh")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+cnn_out_data")
         self.assertRegex(sv_tb, r"wire\s+\[15:0\]\s+cnn_out_chunk_id")
-        self.assertRegex(sv_tb, r"wire\s+\[1535:0\]\s+event_data")
+        self.assertRegex(sv_tb, r"wire\s+\[383:0\]\s+event_data")
         self.assertRegex(sv_tb, r"wire\s+\[23:0\]\s+event_timestamp")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+dropped_trigger_count")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+ring_miss_count")
@@ -109,7 +109,7 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
 
         self.assertIn("ap_fixed<22,11>", core)
         self.assertRegex(core, r"lane_score\(i\)\(21 downto 0\)")
-        self.assertRegex(core, r"CNN_THRESH\(21 downto 0\)")
+        self.assertRegex(core, r"lane_thresh\(i\)\(21 downto 0\)")
         self.assertIn("/ 2048.0", sv_tb)
         self.assertIn("cnn_thresh_raw = 0", sv_tb)
 

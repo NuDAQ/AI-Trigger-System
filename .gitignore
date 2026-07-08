@@ -37,6 +37,16 @@ analysis/**/*.pyc
 !docs/
 !docs/**
 
+!delivery/
+!delivery/**
+
+# Local planning and grill-with-docs notes. Keep these out of commits.
+/notes/
+
+# Generated DAQ delivery packages. Release assets are built from these files,
+# not committed back into the repository.
+/dist/
+
 !scripts/
 !scripts/**
 scripts/__pycache__/
@@ -81,6 +91,9 @@ build/vivado_sim/*
 !build/vivado_sim/generated/*.tcl
 !build/vivado_sim_analysis*/
 !build/vivado_sim_analysis*/**
+
+# Generated zero-input and bipolar-pulse bring-up simulation artifacts.
+build/bringup_sim/
 
 # Ignore bender dependency cache (large git objects)
 .bender/

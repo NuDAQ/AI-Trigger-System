@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""Behavior checks for DAQ bring-up simulation stimulus generation."""
+
+from __future__ import annotations
+
+import csv
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPT = ROOT / "scripts" / "run_bringup_sim.py"
+
+
+class BringupSimulationTest(unittest.TestCase):
+    def run_generate(self, *args: str) -> Path:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-"))
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--generate-only",
+                "--out-dir",
+                str(out_dir),
+                *args,
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        return out_dir
+
+    def test_bipolar_sweep_generates_ch0_only_50mv_pulse_manifest(self) -> None:
+        out_dir = self.run_generate("--stimulus", "bipolar-sweep")
+
+        testhex_dir = out_dir / "bipolar_sweep" / "testhex_stream"
+        labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
+        with (out_dir / "bipolar_sweep" / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+            manifest_rows = list(csv.DictReader(csv_file))
+        sample0 = (testhex_dir / "test_input_sample0.hex").read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(len(labels), 242)
+        self.assertTrue(all(label == "0" for label in labels))
+        self.assertEqual(len(manifest_rows), 242)
+        self.assertEqual(manifest_rows[0]["stim_kind"], "bipolar_sweep")
+        self.assertEqual(manifest_rows[0]["pulse_offset_sample"], "0")
+        self.assertEqual(manifest_rows[-1]["pulse_offset_sample"], "241")
+        self.assertEqual(manifest_rows[0]["pulse_peak_mv"], "50.000")
+        self.assertEqual(manifest_rows[0]["adc_code_pos"], "256")
+        self.assertEqual(manifest_rows[0]["adc_code_neg"], "-256")
+        self.assertEqual(manifest_rows[0]["pulse_channel"], "0")
+
+        self.assertEqual(len(sample0), 256)
+        self.assertEqual(sample0[0:5], ["0000000000000100"] * 5)
+        self.assertEqual(sample0[5:10], ["0000000000000000"] * 5)
+        self.assertEqual(sample0[10:15], ["0000000000000f00"] * 5)
+        self.assertEqual(sample0[15:], ["0000000000000000"] * (256 - 15))
+
+    def test_zero_stimulus_generates_all_zero_chunks(self) -> None:
+        out_dir = self.run_generate("--stimulus", "zero", "--num-zero-samples", "3")
+
+        testhex_dir = out_dir / "zero" / "testhex_stream"
+        labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
+        sample2 = (testhex_dir / "test_input_sample2.hex").read_text(encoding="utf-8").splitlines()
+        with (out_dir / "zero" / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+            manifest_rows = list(csv.DictReader(csv_file))
+
+        self.assertEqual(labels, ["0", "0", "0"])
+        self.assertEqual(len(sample2), 256)
+        self.assertEqual(set(sample2), {"0000000000000000"})
+        self.assertEqual([row["stim_kind"] for row in manifest_rows], ["zero", "zero", "zero"])
+        self.assertEqual([row["pulse_offset_sample"] for row in manifest_rows], ["-1", "-1", "-1"])
+
+    def test_bringup_runner_disables_raw_channel_mirroring(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(encoding="utf-8")
+        run_sim_tcl = (ROOT / "run_sim.tcl").read_text(encoding="utf-8")
+        run_vivado_sim = (ROOT / "scripts" / "run_vivado_sim.py").read_text(encoding="utf-8")
+        bringup_runner = SCRIPT.read_text(encoding="utf-8")
+
+        self.assertIn("MIRROR_RAW_CHANNELS", testbench)
+        self.assertIn("RUN_SIM_MIRROR_RAW_CHANNELS", run_sim_tcl)
+        self.assertIn("--mirror-raw-channels", run_vivado_sim)
+        self.assertIn('"--mirror-raw-channels"', bringup_runner)
+        self.assertIn('"0"', bringup_runner)
+
+    def test_annotate_and_plot_scores_from_vivado_csv(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-results-"))
+        zero_dir = out_dir / "zero"
+        bipolar_dir = out_dir / "bipolar_sweep"
+        zero_dir.mkdir(parents=True)
+        bipolar_dir.mkdir(parents=True)
+
+        self.write_manifest(zero_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "zero", "pulse_offset_sample": "-1", "pulse_start_ns": "-1", "pulse_width_samples": "0", "pulse_peak_mv": "0.000", "adc_code_pos": "0", "adc_code_neg": "0", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "zero", "pulse_offset_sample": "-1", "pulse_start_ns": "-1", "pulse_width_samples": "0", "pulse_peak_mv": "0.000", "adc_code_pos": "0", "adc_code_neg": "0", "pulse_channel": "0"},
+        ])
+        self.write_manifest(bipolar_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "bipolar_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "15", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "-256", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "bipolar_sweep", "pulse_offset_sample": "1", "pulse_start_ns": "1", "pulse_width_samples": "15", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "-256", "pulse_channel": "0"},
+        ])
+        self.write_scores(zero_dir / "scores.csv", [("0", "-1.000000"), ("1", "-1.250000")])
+        self.write_scores(bipolar_dir / "scores.csv", [("0", "0.500000"), ("1", "0.750000")])
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--annotate-only",
+                "--stimulus",
+                "all",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "plot_bringup_scores.py"),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        with (zero_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            zero_rows = list(csv.DictReader(csv_file))
+        with (bipolar_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            bipolar_rows = list(csv.DictReader(csv_file))
+
+        self.assertEqual(zero_rows[0]["stim_kind"], "zero")
+        self.assertEqual(zero_rows[0]["float_out"], "-1.000000")
+        self.assertEqual(bipolar_rows[1]["pulse_offset_sample"], "1")
+        self.assertEqual(bipolar_rows[1]["float_out"], "0.750000")
+        self.assertTrue((out_dir / "score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "score_histogram.png").exists())
+        self.assertTrue((out_dir / "bringup_score_summary.csv").exists())
+
+    @staticmethod
+    def write_manifest(path: Path, rows: list[dict[str, str]]) -> None:
+        with path.open("w", newline="", encoding="utf-8") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+
+    @staticmethod
+    def write_scores(path: Path, rows: list[tuple[str, str]]) -> None:
+        with path.open("w", newline="", encoding="utf-8") as csv_file:
+            writer = csv.DictWriter(
+                csv_file,
+                fieldnames=[
+                    "sample_id",
+                    "hex_out",
+                    "float_out",
+                    "label",
+                    "prediction",
+                    "correct",
+                    "latency_cycles_cnn",
+                    "latency_us",
+                ],
+            )
+            writer.writeheader()
+            for sample_id, score in rows:
+                writer.writerow({
+                    "sample_id": sample_id,
+                    "hex_out": "0x00000000",
+                    "float_out": score,
+                    "label": "0",
+                    "prediction": "0",
+                    "correct": "1",
+                    "latency_cycles_cnn": "200",
+                    "latency_us": "1.000",
+                })
+
+
+if __name__ == "__main__":
+    unittest.main()

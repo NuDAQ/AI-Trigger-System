@@ -11,6 +11,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library xpm;
+use xpm.vcomponents.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity AI_TRIGGER_CORE is
@@ -46,20 +48,23 @@ end entity AI_TRIGGER_CORE;
 architecture structural of AI_TRIGGER_CORE is
 
     signal lane_we    : std_logic_vector(N_LANES-1 downto 0);
-    signal batch_data : std_logic_vector(N_BATCH_S*64-1 downto 0);
+    signal batch_data : std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
     signal dist_chunk_id : chunk_id_t;
     signal dist_timestamp : timestamp_t;
     signal lane_busy  : lane_busy_t;
 
     type score_arr_t is array (0 to N_LANES-1) of std_logic_vector(31 downto 0);
     signal lane_score : score_arr_t;
+    signal lane_thresh : score_arr_t;
     signal lane_chunk_id : chunk_id_arr_t;
     signal lane_timestamp : timestamp_arr_t;
     signal lane_valid : std_logic_vector(N_LANES-1 downto 0);
     signal agg_score_data : std_logic_vector(31 downto 0) := (others => '0');
+    signal agg_score_thresh : std_logic_vector(31 downto 0) := (others => '0');
     signal agg_score_chunk_id : chunk_id_t := (others => '0');
     signal agg_score_timestamp : timestamp_t := (others => '0');
     signal agg_score_valid : std_logic := '0';
+    signal cnn_thresh_cnn : std_logic_vector(31 downto 0) := (others => '0');
     signal rst_adc : std_logic := '1';
     signal rst_cnn : std_logic := '1';
 
@@ -77,6 +82,21 @@ begin
             CLK       => CLK_CNN,
             RST_ASYNC => RST,
             RST_SYNC  => rst_cnn
+        );
+
+    u_CNN_THRESH_CDC : xpm_cdc_array_single
+        generic map (
+            DEST_SYNC_FF   => 2,
+            INIT_SYNC_FF   => 0,
+            SIM_ASSERT_CHK => 0,
+            SRC_INPUT_REG  => 0,
+            WIDTH          => 32
+        )
+        port map (
+            src_clk  => CLK_ADC,
+            src_in   => CNN_THRESH,
+            dest_clk => CLK_CNN,
+            dest_out => cnn_thresh_cnn
         );
 
     u_DIST : entity work.ADC_CHUNK_DISTRIBUTOR
@@ -108,10 +128,12 @@ begin
                 BATCH_DATA => batch_data,
                 CHUNK_ID   => dist_chunk_id,
                 CHUNK_TIMESTAMP => dist_timestamp,
+                CNN_THRESH => cnn_thresh_cnn,
                 CHUNK_BUSY => lane_busy(i),
                 LANE_SCORE => lane_score(i),
                 LANE_CHUNK_ID => lane_chunk_id(i),
                 LANE_TIMESTAMP => lane_timestamp(i),
+                LANE_THRESH => lane_thresh(i),
                 LANE_VALID => lane_valid(i)
             );
     end generate;
@@ -128,7 +150,7 @@ begin
             SCORE_DATA     => agg_score_data,
             SCORE_CHUNK_ID => agg_score_chunk_id,
             SCORE_TIMESTAMP => agg_score_timestamp,
-            CNN_THRESH     => CNN_THRESH,
+            CNN_THRESH     => agg_score_thresh,
             EVENT_VALID    => EVENT_VALID,
             EVENT_READY    => EVENT_READY,
             EVENT_DATA     => EVENT_DATA,
@@ -157,23 +179,26 @@ begin
                 CNN_OUT_CHUNK_ID <= (others => '0');
                 CNN_OUT_VALID <= '0';
                 agg_score_data <= (others => '0');
+                agg_score_thresh <= (others => '0');
                 agg_score_chunk_id <= (others => '0');
                 agg_score_timestamp <= (others => '0');
                 agg_score_valid <= '0';
             else
                 any_trig   := '0';
                 last_data  := (others => '0');
+                agg_score_thresh <= (others => '0');
                 last_chunk_id := (others => '0');
                 last_timestamp := (others => '0');
                 last_valid := '0';
                 for i in 0 to N_LANES-1 loop
                     if lane_valid(i) = '1' then
                         last_data  := lane_score(i);
+                        agg_score_thresh <= lane_thresh(i);
                         last_chunk_id := lane_chunk_id(i);
                         last_timestamp := lane_timestamp(i);
                         last_valid := '1';
                         if signed(lane_score(i)(21 downto 0)) >
-                           signed(CNN_THRESH(21 downto 0)) then
+                           signed(lane_thresh(i)(21 downto 0)) then
                             any_trig := '1';
                         end if;
                     end if;

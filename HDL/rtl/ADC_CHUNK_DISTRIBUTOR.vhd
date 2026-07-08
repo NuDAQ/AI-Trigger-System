@@ -3,19 +3,19 @@
 -- CLK_ADC domain.
 --
 -- DATA_STR is asserted every CLK_ADC cycle (continuous 1 Gsps ADC stream).
--- Each cycle carries one 16-sample batch across 8 raw ADC channels.  Only the
+-- Each cycle carries one 4-sample beat across 8 raw ADC channels.  Only the
 -- leading four channels are packed into the CNN trigger stream.
--- After N_BATCHES (16) cycles the complete 256-sample chunk is committed to the
+-- After N_BATCHES (64) cycles the complete 256-sample chunk is committed to the
 -- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --
 -- CHUNK_BUSY feedback (CLK_ADC domain) means the selected lane cannot accept
 -- a complete 16-batch chunk.  The decision is made once at the chunk boundary:
--- either all 16 batches are written, or the whole chunk is dropped.
+-- either all 64 beats are written, or the whole chunk is dropped.
 --
--- BATCH_DATA packing (1024-bit = 8 words x 128-bit):
---   The downstream Xilinx asymmetric FIFO emits the high 128-bit segment of a
---   1024-bit write first.  Store chronological CNN beats in reverse 128-bit
---   segment order so the read side sees beat 0, beat 1, ... beat 7.
+-- BATCH_DATA packing (256-bit = 2 words x 128-bit):
+--   XPM width-conversion FIFO readout emits the low 128-bit segment of a
+--   256-bit write first.  Keep chronological CNN beats in ascending 128-bit
+--   segment order so the read side sees samples 0-1, then samples 2-3.
 --
 --   beat[p] low  64 bits = row 2*p:
 --     bits [15: 0] = ch0, quantized 12-bit ADC -> ap_fixed<9,4>
@@ -35,13 +35,13 @@ entity ADC_CHUNK_DISTRIBUTOR is
         CLK_ADC        : in  std_logic;
         RST            : in  std_logic;
 
-        DATA_STR       : in  std_logic;   -- always high in normal operation
+        DATA_STR       : in  std_logic;   -- beat-valid, normally continuous
         ADC_DATA4      : in  adc_data4_t;
 
         LANE_BUSY      : in  lane_busy_t; -- FIFO full per lane (CLK_ADC domain)
 
         LANE_WE        : out std_logic_vector(N_LANES-1 downto 0);
-        BATCH_DATA     : out std_logic_vector(N_BATCH_S*64-1 downto 0);
+        BATCH_DATA     : out std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
         CHUNK_ID       : out chunk_id_t;
         CHUNK_TIMESTAMP : out timestamp_t;
 
@@ -59,7 +59,7 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal overflow_comb : std_logic := '0';
     signal we_comb       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
-    signal packed : std_logic_vector(N_BATCH_S*64-1 downto 0);
+    signal packed : std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
 
     -- synthesis translate_off
     constant DEBUG_EVENTS : integer := 160;
@@ -87,13 +87,13 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
 begin
 
     -- -------------------------------------------------------------------------
-    -- Combinational packing: 4 ch x 16 samples -> 1024-bit FIFO write.
+    -- Combinational packing: 4 ch x 4 samples -> 256-bit FIFO write.
     -- Each 128-bit segment contains two consecutive timesteps.  Segments are
-    -- written in reverse bit order to compensate for FIFO high-segment-first
-    -- asymmetric reads.
+    -- written in chronological order because the asymmetric FIFO read side
+    -- returns the low segment before the high segment.
     -- -------------------------------------------------------------------------
     gen_pack : for p in 0 to N_BATCH_S/2-1 generate
-        constant SEG_BASE : integer := (N_BATCH_S/2 - 1 - p) * 128;
+        constant SEG_BASE : integer := p * 128;
         constant ROW0     : integer := 2 * p;
         constant ROW1     : integer := 2 * p + 1;
     begin

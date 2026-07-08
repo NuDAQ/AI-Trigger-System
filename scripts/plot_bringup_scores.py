@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""Plot DAQ bring-up score CSVs produced by scripts/run_bringup_sim.py."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import os
+from pathlib import Path
+from statistics import mean
+
+
+def read_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8") as csv_file:
+        return list(csv.DictReader(csv_file))
+
+
+def score_values(rows: list[dict[str, str]]) -> list[float]:
+    return [float(row["float_out"]) for row in rows]
+
+
+def write_summary(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: list[dict[str, str]]) -> Path:
+    out_path = out_dir / "bringup_score_summary.csv"
+    summaries = []
+    for name, rows in (("zero", zero_rows), ("bipolar_sweep", bipolar_rows)):
+        values = score_values(rows)
+        if values:
+            summaries.append({
+                "stim_kind": name,
+                "count": str(len(values)),
+                "score_min": f"{min(values):.6f}",
+                "score_max": f"{max(values):.6f}",
+                "score_mean": f"{mean(values):.6f}",
+            })
+
+    if not summaries:
+        raise SystemExit(f"no annotated score rows found under {out_dir}")
+
+    with out_path.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=list(summaries[0]))
+        writer.writeheader()
+        writer.writerows(summaries)
+    return out_path
+
+
+def build_plots(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: list[dict[str, str]]) -> None:
+    mpl_config = out_dir / ".mplconfig"
+    mpl_config.mkdir(parents=True, exist_ok=True)
+    xdg_cache = out_dir / ".cache"
+    xdg_cache.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", str(mpl_config))
+    os.environ.setdefault("XDG_CACHE_HOME", str(xdg_cache))
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    zero_scores = score_values(zero_rows)
+    bipolar_scores = score_values(bipolar_rows)
+
+    if bipolar_rows:
+        offsets = [int(row["pulse_offset_sample"]) for row in bipolar_rows]
+        plt.figure(figsize=(10, 4.8))
+        plt.plot(offsets, bipolar_scores, marker=".", linewidth=1.0, label="ch0 bipolar pulse")
+        if zero_scores:
+            zero_mean = mean(zero_scores)
+            plt.axhline(zero_mean, color="tab:orange", linestyle="--", label="zero mean")
+            plt.fill_between(
+                [min(offsets), max(offsets)],
+                [min(zero_scores), min(zero_scores)],
+                [max(zero_scores), max(zero_scores)],
+                color="tab:orange",
+                alpha=0.15,
+                label="zero min/max",
+            )
+        plt.xlabel("Pulse start offset in 256-sample chunk")
+        plt.ylabel("CNN score")
+        plt.title("DAQ bring-up bipolar pulse score vs offset")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_dir / "score_vs_offset.png", dpi=160)
+        plt.close()
+
+    if zero_scores or bipolar_scores:
+        plt.figure(figsize=(8, 4.8))
+        if zero_scores:
+            plt.hist(zero_scores, bins=min(30, max(1, len(zero_scores))), alpha=0.65, label="zero")
+        if bipolar_scores:
+            plt.hist(bipolar_scores, bins=min(40, max(1, len(bipolar_scores))), alpha=0.65, label="bipolar sweep")
+        plt.xlabel("CNN score")
+        plt.ylabel("Count")
+        plt.title("DAQ bring-up score distribution")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_dir / "score_histogram.png", dpi=160)
+        plt.close()
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Plot zero and bipolar bring-up score distributions.")
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("build/bringup_sim"),
+        help="Directory containing zero/ and bipolar_sweep/ annotated score CSVs.",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    out_dir = args.out_dir.expanduser()
+    zero_rows = read_rows(out_dir / "zero" / "scores_annotated.csv")
+    bipolar_rows = read_rows(out_dir / "bipolar_sweep" / "scores_annotated.csv")
+
+    summary = write_summary(out_dir, zero_rows, bipolar_rows)
+    build_plots(out_dir, zero_rows, bipolar_rows)
+    print(f"INFO: wrote {summary}")
+    print(f"INFO: wrote {out_dir / 'score_vs_offset.png'}")
+    print(f"INFO: wrote {out_dir / 'score_histogram.png'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

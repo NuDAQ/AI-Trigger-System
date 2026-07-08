@@ -63,6 +63,8 @@ def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
         lines.append(f"set ::RUN_SIM_SCORE_THRESHOLD {args.score_threshold}")
     if args.cnn_thresh_raw is not None:
         lines.append(f"set ::RUN_SIM_CNN_THRESH_RAW {args.cnn_thresh_raw}")
+    if args.mirror_raw_channels is not None:
+        lines.append(f"set ::RUN_SIM_MIRROR_RAW_CHANNELS {args.mirror_raw_channels}")
 
     lines.extend(
         [
@@ -121,6 +123,15 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=0,
         help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default: 0.",
+    )
+    parser.add_argument(
+        "--mirror-raw-channels",
+        type=int,
+        choices=(0, 1),
+        help=(
+            "Pass +MIRROR_RAW_CHANNELS=<0|1>. Default testbench behavior is 1; "
+            "DAQ bring-up runs use 0 so channels 4-7 stay zero unless driven."
+        ),
     )
     parser.add_argument(
         "--keep-tcl",

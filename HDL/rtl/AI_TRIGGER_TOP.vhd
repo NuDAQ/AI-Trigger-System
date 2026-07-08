@@ -3,7 +3,7 @@
 -- DAQ-facing out-of-context top.
 --
 -- Public interface:
---   * CLK_ADC domain ADC stream: DATA_STR + flat 1536-bit ADC_DATA
+--   * CLK_ADC domain ADC stream: DATA_STR + flat 384-bit ADC_DATA
 --   * CLK_CNN domain CNN inference clock
 --   * CLK_ADC domain event stream: waveform batch, LAST, and timestamp
 --

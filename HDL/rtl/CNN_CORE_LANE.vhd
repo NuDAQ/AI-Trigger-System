@@ -3,14 +3,12 @@
 -- One parallel CNN inference lane.
 --
 -- Buffer architecture (replaces register array from v1):
---   fifo_async_1024_to_64 — same Xilinx IP used in the original
---   CNN_FIFO_CONNECTOR.  Write port: 1024-bit x 16 deep (CLK_ADC).
---   Read port: 128-bit x 128 deep (CLK_CNN).  The FIFO is the CDC mechanism.
+--   XPM async FIFO.  Write port: 256-bit x 128 deep (CLK_ADC).
+--   Read port: 128-bit x 256 deep (CLK_CNN).  The FIFO is the CDC mechanism.
 --
---   One 1024-bit FIFO write per ADC batch (16 timesteps x 4 ch x 16-bit).
+--   One 256-bit FIFO write per ADC beat (4 timesteps x 4 ch x 16-bit).
 --   The CNN input stream may start after the first FIFO write of a chunk.
---   The remaining FIFO writes arrive faster than the 200 MHz stream consumes
---   them, so this hides the 256 ns ADC capture time.
+--   Each write produces two chronological 128-bit CNN input words.
 --   The CNN input FSM reads 128 x 128-bit entries, where each entry contains
 --   two timesteps x four 16-bit lanes for WRAPPER_TOP 4.x.
 --
@@ -23,7 +21,9 @@
 --   CDC primitive carries the matching chunk_id metadata.  The CNN side
 --   acknowledges metadata only when the matching FIFO data is also available.
 --
--- FIFO mode: First-Word-Fall-Through (FWFT).  dout is valid whenever not empty.
+-- FIFO mode: First-Word-Fall-Through (FWFT).  The read side uses data_valid,
+-- not empty, as the AXIS beat-valid qualifier because XPM may deassert empty
+-- before dout is safe to consume after CDC/FWFT priming.
 -- =============================================================================
 
 library ieee;
@@ -47,9 +47,10 @@ entity CNN_CORE_LANE is
 
         -- From ADC_CHUNK_DISTRIBUTOR (CLK_ADC domain)
         WR_EN        : in  std_logic;
-        BATCH_DATA   : in  std_logic_vector(N_BATCH_S*64-1 downto 0);
+        BATCH_DATA   : in  std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
         CHUNK_ID     : in  chunk_id_t;
         CHUNK_TIMESTAMP : in timestamp_t;
+        CNN_THRESH   : in  std_logic_vector(31 downto 0);
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
@@ -58,6 +59,7 @@ entity CNN_CORE_LANE is
         LANE_SCORE   : out std_logic_vector(31 downto 0);
         LANE_CHUNK_ID: out chunk_id_t;
         LANE_TIMESTAMP: out timestamp_t;
+        LANE_THRESH  : out std_logic_vector(31 downto 0);
         LANE_VALID   : out std_logic
     );
 end entity CNN_CORE_LANE;
@@ -91,31 +93,6 @@ architecture rtl of CNN_CORE_LANE is
             output_data  : out std_logic_vector(31 downto 0);
             output_valid : out std_logic;
             output_ready : in  std_logic
-        );
-    end component;
-
-    -- -------------------------------------------------------------------------
-    -- Async FIFO: 1024-bit write (CLK_ADC) / 128-bit read (CLK_CNN)
-    -- Depth: 16 write entries = 128 read entries.
-    -- FWFT mode: dout valid when not empty, rd_en pops current entry.
-    -- Must be generated as Xilinx FIFO Generator IP with these settings:
-    --   Write Width = 1024, Write Depth = 16
-    --   Read  Width = 128,  (asymmetric, auto-calculated depth = 128)
-    --   Independent Clocks, First Word Fall Through
-    -- -------------------------------------------------------------------------
-    component fifo_async_1024_to_64
-        port (
-            rst         : in  std_logic;
-            wr_clk      : in  std_logic;
-            rd_clk      : in  std_logic;
-            din         : in  std_logic_vector(1023 downto 0);
-            wr_en       : in  std_logic;
-            rd_en       : in  std_logic;
-            dout        : out std_logic_vector(127 downto 0);
-            full        : out std_logic;
-            empty       : out std_logic;
-            wr_rst_busy : out std_logic;   -- high while write port is in reset
-            rd_rst_busy : out std_logic    -- high while read port is in reset
         );
     end component;
 
@@ -161,6 +138,7 @@ architecture rtl of CNN_CORE_LANE is
     -- FIFO read side
     signal fifo_dout  : std_logic_vector(127 downto 0);
     signal fifo_empty : std_logic;
+    signal fifo_data_valid : std_logic;
     signal fifo_rd_en : std_logic := '0';
 
     -- CNN interface
@@ -177,8 +155,8 @@ architecture rtl of CNN_CORE_LANE is
     -- Stream FSM.  Output capture is intentionally independent: LANE_BUSY is
     -- released when the 128-beat AXIS input transaction has been accepted, not
     -- when the later CNN output arrives.  The HLS dataflow core behaves like a
-    -- continuously-started pipeline, so adjacent accepted chunks are streamed
-    -- back-to-back instead of waiting for done/idle.
+    -- continuously-started pipeline, so keep ap_start asserted while streaming
+    -- payload beats.
     type cnn_fsm_t is (CC_IDLE, CC_STREAM);
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
@@ -186,10 +164,13 @@ architecture rtl of CNN_CORE_LANE is
     signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_chunk_id_r : chunk_id_t := (others => '0');
     signal lane_timestamp_r : timestamp_t := (others => '0');
+    signal lane_thresh_r : std_logic_vector(31 downto 0) := (others => '0');
     signal lane_valid_r : std_logic := '0';
     signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
     type timestamp_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of timestamp_t;
+    type thresh_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of std_logic_vector(31 downto 0);
     signal score_timestamp_mem : timestamp_mem_t := (others => (others => '0'));
+    signal score_thresh_mem : thresh_mem_t := (others => (others => '0'));
     signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
     signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
 
@@ -287,6 +268,8 @@ begin
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
     -- -------------------------------------------------------------------------
+    fifo_rd_en <= cnn_in_valid and cnn_in_ready;
+
     process(CLK_CNN)
     begin
         if rising_edge(CLK_CNN) then
@@ -294,7 +277,6 @@ begin
                 cnn_state    <= CC_IDLE;
                 cnn_start    <= '0';
                 cnn_in_valid <= '0';
-                fifo_rd_en   <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
                 stream_done_toggle_cnn <= '0';
@@ -302,6 +284,7 @@ begin
                 lane_score_r <= (others => '0');
                 lane_chunk_id_r <= (others => '0');
                 lane_timestamp_r <= (others => '0');
+                lane_thresh_r <= (others => '0');
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
                 chunk_id_dest_ack <= '0';
@@ -311,7 +294,6 @@ begin
                 chunk_id_dest_seen <= '0';
             else
                 lane_valid_r <= '0';
-                fifo_rd_en   <= '0';   -- default: don't pop
                 chunk_id_dest_ack <= '0';
                 if chunk_id_dest_req = '0' then
                     chunk_id_dest_seen <= '0';
@@ -325,6 +307,7 @@ begin
                     lane_score_r <= cnn_out_data;
                     lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
                     lane_timestamp_r <= score_timestamp_mem(score_id_rd_idx);
+                    lane_thresh_r <= score_thresh_mem(score_id_rd_idx);
                     lane_valid_r <= '1';
                     if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
                         score_id_rd_idx <= 0;
@@ -351,16 +334,15 @@ begin
                         cnn_in_valid <= '0';
                         stream_cnt    <= N_CHUNK_BEATS_CNN;
 
-                        if chunk_id_meta_valid = '1' and fifo_empty = '0' then
+                        if chunk_id_meta_valid = '1' and fifo_data_valid = '1' then
                             -- Assert start and first word simultaneously.
-                            -- Keep start asserted through the input stream; the
-                            -- wrapper/HLS TB treats ap_start as a continuous
-                            -- enable and ap_done is only an output completion.
+                            -- Keep start asserted through the input stream.
                             cnn_start    <= '1';
                             cnn_in_valid <= '1';
                             chunk_id_meta_valid <= '0';
                             score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                             score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
+                            score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -374,6 +356,7 @@ begin
                                        " started_next=" &
                                        integer'image(to_integer(started_count_cnn + 1)) &
                                        " fifo_empty=" & std_logic'image(fifo_empty) &
+                                       " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                        " ready=" & std_logic'image(cnn_ready) &
                                        " idle=" & std_logic'image(cnn_idle);
                                 dbg_cnn_events <= dbg_cnn_events + 1;
@@ -383,25 +366,22 @@ begin
 
                     -- ---------------------------------------------------------
                     when CC_STREAM =>
-                        -- Keep ap_start high while actively feeding the HLS
-                        -- dataflow pipeline.  Do not wait for ap_done, and do
-                        -- not use ap_ready as the stream-completion condition.
                         cnn_start <= '1';
 
                         if cnn_in_ready = '1' then
                             stream_cnt <= stream_cnt - 1;
-                            fifo_rd_en <= '1';
 
                             if stream_cnt = 1 then
                                 stream_done_toggle_cnn <= not stream_done_toggle_cnn;
 
-                                if chunk_id_meta_valid = '1' and fifo_empty = '0' then
+                                if chunk_id_meta_valid = '1' and fifo_data_valid = '1' then
                                     cnn_start    <= '1';
                                     cnn_in_valid <= '1';
                                     stream_cnt   <= N_CHUNK_BEATS_CNN;
                                     chunk_id_meta_valid <= '0';
                                     score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                                     score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
+                                    score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
@@ -415,6 +395,7 @@ begin
                                                " started_next=" &
                                                integer'image(to_integer(started_count_cnn + 1)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                                " ready=" & std_logic'image(cnn_ready) &
                                                " idle=" & std_logic'image(cnn_idle);
                                         dbg_cnn_events <= dbg_cnn_events + 1;
@@ -430,6 +411,7 @@ begin
                                                " started=" &
                                                integer'image(to_integer(started_count_cnn)) &
                                                " fifo_empty=" & std_logic'image(fifo_empty) &
+                                               " fifo_data_valid=" & std_logic'image(fifo_data_valid) &
                                                " ready=" & std_logic'image(cnn_ready);
                                         dbg_cnn_events <= dbg_cnn_events + 1;
                                     end if;
@@ -446,32 +428,57 @@ begin
     LANE_SCORE <= lane_score_r;
     LANE_CHUNK_ID <= lane_chunk_id_r;
     LANE_TIMESTAMP <= lane_timestamp_r;
+    LANE_THRESH <= lane_thresh_r;
     LANE_VALID <= lane_valid_r;
 
     -- =========================================================================
-    -- FIFO instantiation
-    -- IP settings (Xilinx FIFO Generator 13.2):
-    --   Basic       : Independent Clocks Block RAM, Sync Stages = 2
-    --   Native Ports: First Word Fall Through, Asymmetric Port Width
-    --                 Write Width = 1024, Write Depth = 32  (actual ~31)
-    --                 Read  Width = 128,  Read  Depth = 128 (auto)
-    --                 Output Registers = off (FWFT uses embedded BRAM reg)
-    --   Status Flags: all off
-    --   Data Counts : all off
+    -- FIFO instantiation.  XPM is used instead of a fixed generated FIFO IP so
+    -- the width tracks the 250 MHz / 4-sample ADC beat contract.
     -- =========================================================================
-    u_FIFO : fifo_async_1024_to_64
+    u_FIFO : xpm_fifo_async
+        generic map (
+            CDC_SYNC_STAGES     => 2,
+            DOUT_RESET_VALUE    => "0",
+            ECC_MODE            => "no_ecc",
+            FIFO_MEMORY_TYPE    => "block",
+            FIFO_READ_LATENCY   => 0,
+            FIFO_WRITE_DEPTH    => LANE_FIFO_WRITE_DEPTH,
+            FULL_RESET_VALUE    => 0,
+            PROG_EMPTY_THRESH   => 10,
+            PROG_FULL_THRESH    => LANE_FIFO_WRITE_DEPTH - 4,
+            RD_DATA_COUNT_WIDTH => LANE_FIFO_WRITE_ADDR_WIDTH + 2,
+            READ_DATA_WIDTH     => LANE_FIFO_READ_WIDTH,
+            READ_MODE           => "fwft",
+            RELATED_CLOCKS      => 0,
+            USE_ADV_FEATURES    => "1000",
+            WAKEUP_TIME         => 0,
+            WRITE_DATA_WIDTH    => LANE_FIFO_WRITE_WIDTH,
+            WR_DATA_COUNT_WIDTH => LANE_FIFO_WRITE_ADDR_WIDTH + 1
+        )
         port map (
+            sleep       => '0',
             rst         => RST_ASYNC,
             wr_clk      => CLK_ADC,
-            rd_clk      => CLK_CNN,
-            din         => BATCH_DATA,
             wr_en       => WR_EN,
+            din         => BATCH_DATA,
+            full        => fifo_full_s,
+            overflow    => open,
+            wr_rst_busy => open,
+            rd_clk      => CLK_CNN,
             rd_en       => fifo_rd_en,
             dout        => fifo_dout,
-            full        => fifo_full_s,
             empty       => fifo_empty,
-            wr_rst_busy => open,
-            rd_rst_busy => open
+            underflow   => open,
+            rd_rst_busy => open,
+            prog_full   => open,
+            prog_empty  => open,
+            data_valid  => fifo_data_valid,
+            wr_data_count => open,
+            rd_data_count => open,
+            injectsbiterr => '0',
+            injectdbiterr => '0',
+            sbiterr       => open,
+            dbiterr       => open
         );
 
     u_CHUNK_ID_CDC : xpm_cdc_handshake

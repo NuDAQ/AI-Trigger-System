@@ -8,6 +8,7 @@
 #   vivado -mode batch -source run_sim.tcl -tclargs \
 #       -num_samples 64 \
 #       -cnn_thresh_raw 0 \
+#       -mirror_raw_channels 1 \
 #       -out_csv ai_trigger_results.csv \
 #       -event_csv ai_trigger_events.csv
 #
@@ -35,6 +36,7 @@ set event_csv_arg [sim_arg_value $argv "-event_csv" "ai_trigger_events.csv"]
 set num_samples_arg [sim_arg_value $argv "-num_samples" ""]
 set score_threshold_arg [sim_arg_value $argv "-score_threshold" ""]
 set cnn_thresh_raw_arg [sim_arg_value $argv "-cnn_thresh_raw" ""]
+set mirror_raw_channels_arg [sim_arg_value $argv "-mirror_raw_channels" ""]
 
 if {[info exists ::RUN_SIM_REPO_ROOT] && $::RUN_SIM_REPO_ROOT ne ""} {
     set repo_root [file normalize $::RUN_SIM_REPO_ROOT]
@@ -76,6 +78,7 @@ dict set plusarg_values EVENT_CSV $event_csv_arg
 dict set plusarg_values NUM_SAMPLES $num_samples_arg
 dict set plusarg_values SCORE_THRESHOLD $score_threshold_arg
 dict set plusarg_values CNN_THRESH_RAW $cnn_thresh_raw_arg
+dict set plusarg_values MIRROR_RAW_CHANNELS $mirror_raw_channels_arg
 
 foreach {var plusarg} {
     RUN_SIM_TESTHEX_DIR       TESTHEX_DIR
@@ -84,6 +87,7 @@ foreach {var plusarg} {
     RUN_SIM_NUM_SAMPLES       NUM_SAMPLES
     RUN_SIM_SCORE_THRESHOLD   SCORE_THRESHOLD
     RUN_SIM_CNN_THRESH_RAW    CNN_THRESH_RAW
+    RUN_SIM_MIRROR_RAW_CHANNELS MIRROR_RAW_CHANNELS
 } {
     if {[info exists ::$var] && [set ::$var] ne ""} {
         dict set plusarg_values $plusarg [set ::$var]

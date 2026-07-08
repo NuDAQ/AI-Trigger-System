@@ -1,0 +1,8 @@
+!.gitignore
+!bringup_sim/
+!bringup_sim/*.csv
+!bringup_sim/*.png
+!bringup_sim/zero/
+!bringup_sim/zero/*.csv
+!bringup_sim/bipolar_sweep/
+!bringup_sim/bipolar_sweep/*.csv

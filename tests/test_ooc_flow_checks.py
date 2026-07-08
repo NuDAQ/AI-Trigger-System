@@ -56,12 +56,21 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(tcl, r"get_ports\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_clocks\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_cells\s+-quiet\s+-hierarchical\s+\*u_ADC_INPUT\*")
+        self.assertNotIn("fifo_async_1024_to_64", tcl)
+        self.assertNotIn("synth_ip", tcl)
 
     def test_ooc_flow_does_not_add_simulation_wrapper(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
 
         self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP.vhd", tcl)
         self.assertNotIn("adding flat-port wrapper source", tcl)
+
+    def test_tracked_vivado_source_lists_do_not_keep_stale_sources(self) -> None:
+        for path in ("add_files.tcl", "add_sim_files.tcl", "AI_Trigger_System/AI_Trigger_System.xpr"):
+            text = read(path)
+            self.assertNotIn("fifo_async_1024_to_64", text, msg=path)
+            self.assertNotIn("1536", text, msg=path)
+            self.assertNotIn("14.286", text, msg=path)
 
     def test_ooc_flow_does_not_lock_lane_fifo_placement(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
@@ -109,7 +118,7 @@ class OocFlowChecks(unittest.TestCase):
         self.assertNotIn("ADC_SRC_CLK", top)
         self.assertRegex(
             xdc,
-            r"create_clock\s+-name\s+CLK_ADC\s+-period\s+14\.286\s+\[get_ports\s+CLK_ADC\]",
+            r"create_clock\s+-name\s+CLK_ADC\s+-period\s+4\.000\s+\[get_ports\s+CLK_ADC\]",
         )
         self.assertRegex(
             xdc,
@@ -117,6 +126,27 @@ class OocFlowChecks(unittest.TestCase):
         )
         self.assertRegex(top, r"DATA_STR\s+:\s+in\s+std_logic")
         self.assertRegex(top, r"ADC_DATA\s+:\s+in\s+std_logic_vector\(RAW_ADC_BATCH_WIDTH - 1 downto 0\)")
+
+    def test_public_adc_interface_contract_uses_four_sample_beats(self) -> None:
+        pkg = read("HDL/rtl/AI_TRIGGER_PKG.vhd")
+        top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+        analyzer = read("scripts/analyze_vivado_sim_results.py")
+
+        self.assertRegex(pkg, r"constant\s+N_BATCH_S\s*:\s*integer\s*:=\s*4\b")
+        self.assertRegex(pkg, r"constant\s+N_BATCHES\s*:\s*integer\s*:=\s*64\b")
+        self.assertRegex(pkg, r"constant\s+RAW_ADC_BATCH_WIDTH\s*:\s*integer\s*:=\s*N_ADC_CH\s*\*\s*N_BATCH_S\s*\*\s*12\b")
+        self.assertRegex(pkg, r"constant\s+EVENT_OUTPUT_FIFO_ADDR_WIDTH\s*:\s*integer\s*:=\s*7\b")
+        self.assertRegex(pkg, r"constant\s+LANE_FIFO_WRITE_WIDTH\s*:\s*integer\s*:=\s*N_BATCH_S\s*\*\s*64\b")
+        self.assertRegex(pkg, r"constant\s+LANE_FIFO_READ_WIDTH\s*:\s*integer\s*:=\s*128\b")
+        self.assertRegex(pkg, r"constant\s+LANE_FIFO_WRITE_DEPTH\s*:\s*integer\s*:=\s*2\s+\*\*\s+LANE_FIFO_WRITE_ADDR_WIDTH\b")
+        self.assertNotIn("1536-bit ADC_DATA", top)
+        self.assertIn("EVENT_BATCHES_PER_CAPTURE = 64", analyzer)
+        self.assertIn("EVENT_DATA_HEX_DIGITS = 96", analyzer)
+        self.assertRegex(
+            xdc,
+            r"create_clock\s+-name\s+CLK_ADC\s+-period\s+4\.000\s+\[get_ports\s+CLK_ADC\]",
+        )
 
     def test_lane_chunk_id_metadata_uses_xpm_handshake(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
@@ -168,6 +198,25 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
+    def test_cnn_threshold_uses_config_cdc_and_lane_snapshot(self) -> None:
+        core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        event_path = read("HDL/rtl/EVENT_CAPTURE_PATH.vhd")
+
+        self.assertIn("xpm_cdc_array_single", core)
+        self.assertIn("cnn_thresh_cnn", core)
+        self.assertIn("agg_score_thresh", core)
+        self.assertRegex(core, r"LANE_THRESH\s*=>\s*lane_thresh\(i\)")
+        self.assertRegex(core, r"(?s)CNN_THRESH\s*=>\s*agg_score_thresh")
+        self.assertNotRegex(core, r"signed\(CNN_THRESH\(21 downto 0\)\)")
+
+        self.assertIn("score_thresh_mem", lane)
+        self.assertIn("LANE_THRESH", lane)
+        self.assertRegex(lane, r"score_thresh_mem\(score_id_wr_idx\)\s*<=\s*CNN_THRESH")
+        self.assertRegex(lane, r"lane_thresh_r\s*<=\s*score_thresh_mem\(score_id_rd_idx\)")
+
+        self.assertRegex(event_path, r"CNN_THRESH\s+:\s+in\s+std_logic_vector\(31 downto 0\)")
+
     def test_core_synchronizes_external_reset_before_domain_fanout(self) -> None:
         bender = read("Bender.yml")
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
@@ -196,7 +245,48 @@ class OocFlowChecks(unittest.TestCase):
             self.assertNotRegex(source, r"rst_n_cnn\s*<=\s*not\s+rst_cnn_ff")
 
         self.assertIn("RST_ASYNC", lane)
-        self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*fifo_async_1024_to_64.*?rst\s*=>\s*RST_ASYNC")
+        self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*xpm_fifo_async.*?rst\s*=>\s*RST_ASYNC")
+        self.assertRegex(lane, r"WRITE_DATA_WIDTH\s+=>\s+LANE_FIFO_WRITE_WIDTH")
+        self.assertRegex(lane, r"READ_DATA_WIDTH\s+=>\s+LANE_FIFO_READ_WIDTH")
+        self.assertRegex(lane, r"FIFO_WRITE_DEPTH\s+=>\s+LANE_FIFO_WRITE_DEPTH")
+
+    def test_lane_stream_uses_xpm_data_valid_for_fifo_output(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+
+        self.assertIn("signal fifo_data_valid", lane)
+        self.assertRegex(lane, r"data_valid\s+=>\s+fifo_data_valid")
+        self.assertRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_data_valid\s*=\s*'1'")
+        self.assertNotRegex(lane, r"chunk_id_meta_valid\s*=\s*'1'\s+and\s+fifo_empty\s*=\s*'0'")
+
+    def test_lane_stream_cnn_in_valid_asserted_throughout_cc_stream(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        # cnn_in_valid must stay '1' throughout CC_STREAM (matching v3.0 / commit 158751a).
+        # Gating it from fifo_data_valid shifts stream timing by CDC latency, causing
+        # lane result collisions in AI_TRIGGER_CORE → one result swallowed → 999 not 1000.
+        self.assertNotIn("cnn_in_valid <= fifo_data_valid", lane)
+
+    def test_lane_fifo_use_adv_features_enables_data_valid(self) -> None:
+        lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
+        # USE_ADV_FEATURES bit 12 enables the data_valid output port on xpm_fifo_async.
+        # Without it the port is stuck at '0', so the stream FSM never starts.
+        self.assertRegex(lane, r'USE_ADV_FEATURES\s*=>\s*"1[0-9A-Fa-f]{3}"')
+
+    def test_adc_input_cdc_qualifies_core_data_with_xpm_data_valid(self) -> None:
+        adc_input = read("HDL/rtl/ADC_INPUT_CDC_FIFO.vhd")
+
+        self.assertIn("signal fifo_data_valid", adc_input)
+        self.assertIn("signal fifo_wr_rst_busy", adc_input)
+        self.assertIn("signal fifo_rd_rst_busy", adc_input)
+        self.assertRegex(adc_input, r"wr_rst_busy\s+=>\s+fifo_wr_rst_busy")
+        self.assertRegex(adc_input, r"rd_rst_busy\s+=>\s+fifo_rd_rst_busy")
+        self.assertRegex(adc_input, r"wr_ready_s\s*<=\s*\(not\s+fifo_full\)\s+and\s+\(not\s+fifo_wr_rst_busy\)")
+        self.assertRegex(adc_input, r"rd_valid_s\s*<=\s*fifo_data_valid\s+and\s+\(not\s+fifo_rd_rst_busy\)")
+        self.assertRegex(adc_input, r"fifo_rd_en\s*<=\s*RD_READY\s+and\s+rd_valid_s")
+        self.assertRegex(adc_input, r'USE_ADV_FEATURES\s*=>\s*"1[0-9A-Fa-f]{3}"')
+        self.assertRegex(adc_input, r"data_valid\s+=>\s+fifo_data_valid")
+        self.assertRegex(adc_input, r"RD_VALID\s+<=\s+rd_valid_s")
+        self.assertRegex(adc_input, r"WR_READY\s+<=\s+wr_ready_s")
+        self.assertNotRegex(adc_input, r"RD_VALID\s+<=\s+not\s+fifo_empty")
 
     def test_sim_wrapper_owns_source_clock_cdc_not_synth_top(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")

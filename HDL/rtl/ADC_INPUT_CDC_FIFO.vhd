@@ -26,13 +26,20 @@ end entity ADC_INPUT_CDC_FIFO;
 architecture rtl of ADC_INPUT_CDC_FIFO is
     signal fifo_full  : std_logic;
     signal fifo_empty : std_logic;
+    signal fifo_data_valid : std_logic;
+    signal fifo_wr_rst_busy : std_logic;
+    signal fifo_rd_rst_busy : std_logic;
     signal fifo_dout  : raw_adc_batch_t;
     signal fifo_wr_en : std_logic;
     signal fifo_rd_en : std_logic;
+    signal wr_ready_s : std_logic;
+    signal rd_valid_s : std_logic;
     signal overflow_count_r : unsigned(31 downto 0) := (others => '0');
 begin
-    fifo_wr_en <= WR_VALID and not fifo_full;
-    fifo_rd_en <= RD_READY and not fifo_empty;
+    wr_ready_s <= (not fifo_full) and (not fifo_wr_rst_busy) and (not WR_RST);
+    rd_valid_s <= fifo_data_valid and (not fifo_rd_rst_busy) and (not RD_RST);
+    fifo_wr_en <= WR_VALID and wr_ready_s;
+    fifo_rd_en <= RD_READY and rd_valid_s;
 
     process(WR_CLK)
     begin
@@ -60,7 +67,7 @@ begin
             READ_DATA_WIDTH     => RAW_ADC_BATCH_WIDTH,
             READ_MODE           => "fwft",
             RELATED_CLOCKS      => 0,
-            USE_ADV_FEATURES    => "0000",
+            USE_ADV_FEATURES    => "1000",
             WAKEUP_TIME         => 0,
             WRITE_DATA_WIDTH    => RAW_ADC_BATCH_WIDTH,
             WR_DATA_COUNT_WIDTH => ADC_INPUT_FIFO_ADDR_WIDTH + 1
@@ -73,16 +80,16 @@ begin
             din           => WR_DATA,
             full          => fifo_full,
             overflow      => open,
-            wr_rst_busy   => open,
+            wr_rst_busy   => fifo_wr_rst_busy,
             rd_clk        => RD_CLK,
             rd_en         => fifo_rd_en,
             dout          => fifo_dout,
             empty         => fifo_empty,
             underflow     => open,
-            rd_rst_busy   => open,
+            rd_rst_busy   => fifo_rd_rst_busy,
             prog_full     => open,
             prog_empty    => open,
-            data_valid    => open,
+            data_valid    => fifo_data_valid,
             wr_data_count => open,
             rd_data_count => open,
             injectsbiterr => '0',
@@ -91,8 +98,8 @@ begin
             dbiterr       => open
         );
 
-    WR_READY       <= not fifo_full;
-    RD_VALID       <= not fifo_empty;
+    WR_READY       <= wr_ready_s;
+    RD_VALID       <= rd_valid_s;
     RD_DATA        <= fifo_dout;
     OVERFLOW_COUNT <= overflow_count_r;
 end architecture rtl;
