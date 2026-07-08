@@ -167,6 +167,39 @@ The top-level port and SystemVerilog testbench use a channel-major convention:
 ADC_DATA[(ch * 4 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
 ```
 
+The DAQ bring-up input is expected to come from the ADC12QJ1600 in signed
+12-bit two's-complement format.  With the ADC default full-scale setting of
+`V_FS = 0.8 Vpp` differential, the digital code maps to differential input
+voltage as:
+
+```text
+Vdiff = signed_code * V_FS / 2^12
+      = signed_code * 0.8 V / 4096
+      = signed_code * 0.1953125 mV
+```
+
+Equivalently:
+
+```text
+signed_code = round(Vdiff / 0.1953125 mV)
+```
+
+The normal signed 12-bit range is `-2048..2047`, corresponding to about
+`-400.0 mV..+399.8 mV` differential at `V_FS = 0.8 Vpp`.  Example codes:
+
+| Differential input | Signed 12-bit code |
+| ---: | ---: |
+| 0 mV | 0 |
+| +50 mV | about +256 |
+| -50 mV | about -256 |
+| +100 mV | about +512 |
+| -100 mV | about -512 |
+
+For DAQ bring-up, a zero-input test uses valid ADC beats with all signed codes
+set to `0`.  A simple bipolar pulse test can use about `+50 mV / -50 mV`
+differential samples, which maps to approximately `+256 / -256` ADC codes at
+the default full-scale setting.
+
 The CNN test vectors store one timestep as four packed 12-bit values.  The
 Vivado testbench mirrors these four channels into input channels 4-7 so the
 event payload is eight channels while CNN trigger decisions remain based on
