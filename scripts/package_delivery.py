@@ -18,6 +18,9 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 CORE_RTL_REL = Path("hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog")
 PACKAGE_PREFIX = "ai-trigger-daq"
+DELIVERY_ASSETS = [
+    ROOT / "docs" / "score_vs_offset.png",
+]
 
 
 @dataclass(frozen=True)
@@ -284,6 +287,26 @@ def write_manifest(package_dir: Path, files: list[Path]) -> None:
     (package_dir / "MANIFEST.txt").write_text("\n".join(lines), encoding="utf-8")
 
 
+def write_package_readme(package_dir: Path) -> list[Path]:
+    readme_text = (ROOT / "docs" / "Deliverables.md").read_text(encoding="utf-8")
+    copied: list[Path] = []
+
+    for source in DELIVERY_ASSETS:
+        if not source.exists():
+            raise FileNotFoundError(f"Missing delivery asset: {source}")
+        asset_rel = Path("assets") / source.name
+        asset_dest = package_dir / asset_rel
+        asset_dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, asset_dest)
+        copied.append(asset_rel)
+
+        source_text = str(source)
+        readme_text = readme_text.replace(source_text, asset_rel.as_posix())
+
+    (package_dir / "README.md").write_text(readme_text, encoding="utf-8")
+    return [Path("README.md"), *copied]
+
+
 def create_zip(package_dir: Path) -> Path:
     zip_path = package_dir.parent / f"{package_dir.name}.zip"
     if zip_path.exists():
@@ -307,9 +330,7 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
     wrap_sources = wrapper_sources(bender_sources)
     ai_sources = ai_trigger_sources(bender_sources)
 
-    shutil.copy2(ROOT / "docs" / "Deliverables.md", package_dir / "README.md")
-
-    copied_files: list[Path] = [Path("README.md")]
+    copied_files: list[Path] = write_package_readme(package_dir)
     rtl_paths: list[Path] = []
 
     for source in core_sources:

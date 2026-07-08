@@ -6,6 +6,8 @@ package:
 documentation:
   readme_source: docs/Deliverables.md
   package_readme: README.md
+  assets:
+    - docs/score_vs_offset.png -> assets/score_vs_offset.png
 
 rtl:
   source_order_policy: >

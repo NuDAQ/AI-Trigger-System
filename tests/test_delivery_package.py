@@ -56,9 +56,11 @@ class DeliveryPackageTest(unittest.TestCase):
             package_zip = out_dir / "ai-trigger-daq-test-delivery.zip"
             add_files = (package / "scripts" / "add_files.tcl").read_text(encoding="utf-8")
             manifest = (package / "MANIFEST.txt").read_text(encoding="utf-8")
+            readme = (package / "README.md").read_text(encoding="utf-8")
 
             self.assertTrue(package_zip.exists())
             self.assertTrue((package / "README.md").exists())
+            self.assertTrue((package / "assets" / "score_vs_offset.png").exists())
             self.assertTrue((package / "VERSION.txt").exists())
             self.assertTrue((package / "constraints" / "ai_trigger_ooc.xdc").exists())
             self.assertTrue((package / "rtl" / "cnn-core" / "cnn_core.v").exists())
@@ -67,6 +69,9 @@ class DeliveryPackageTest(unittest.TestCase):
 
             self.assertNotIn(str(ROOT), add_files)
             self.assertNotIn(str(ROOT), manifest)
+            self.assertNotIn(str(ROOT), readme)
+            self.assertIn("![score_vs_offset](assets/score_vs_offset.png)", readme)
+            self.assertIn("assets/score_vs_offset.png", manifest)
             self.assertIn("rtl/cnn-core/cnn_core.v", manifest)
             self.assertIn("rtl/cnn-core-wrapper/hw/rtl/cnn_core_wrapper_top.v", manifest)
             self.assertIn("rtl/ai-trigger/AI_TRIGGER_PKG.vhd", manifest)
