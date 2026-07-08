@@ -161,10 +161,9 @@ These are the scores for some typical inputs. By adjusting the threshold, you ca
 | Guarantee all possible scores trigger | 32'hFFE00000     |      -2097152 |         -1024.0 | Lowest representable signed `ap_fixed<22,11> `threshold.     |
 | Score for all-zero input              | 32'hFFFFEE53     |         -4525 |       -2.209473 | All-zero input measured score is raw -4524, float -2.208984. |
 
-For testing purpose, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
+For testing purpose, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
 ```
 0000000000000100  x5   # ch0 = +0x100 = +256; ch1..ch3 = 0
-0000000000000000  x5   # ch0..ch3 = 0
 0000000000000f00  x5   # ch0 = 0xf00 = signed -256; ch1..ch3 = 0
 0000000000000000       # remaining samples are zero; full input ch1..ch7 are held at 0
 ```
@@ -175,7 +174,7 @@ Simply put, the input is:
 
 1. Connect the waveform generator only to `ch0`. 
 2. Set the input of other 7 channels to 0
-3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 12.0%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
+3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 12.0%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
 
 *Note: Since we set the CNN threshold to 4, only pulses that start between approximately 56th and 84th ns within a 256ns-chunk will be triggered. You'll notice that the recorded waveforms are mostly pulses that start during this time period:*
 

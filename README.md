@@ -530,19 +530,18 @@ The generated bring-up cases are:
 | Case | Input |
 | --- | --- |
 | `zero` | Valid continuous ADC input, all eight channels at signed code `0`. |
-| `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 15-sample pulse is swept across one 256-sample chunk. |
+| `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 10-sample pulse is swept across one 256-sample chunk. |
 
-The default bipolar pulse is `+50 mV` for 5 ns, `0 mV` for 5 ns, then
-`-50 mV` for 5 ns.  At 1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
+The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
+1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
 
 ```text
 +256 ADC code for 5 samples
-   0 ADC code for 5 samples
 -256 ADC code for 5 samples
 ```
 
-The pulse start offset is swept from sample `0` through sample `241`, so every
-15-sample pulse remains inside one 256-sample CNN chunk.  The bring-up runner
+The pulse start offset is swept from sample `0` through sample `246`, so every
+10-sample pulse remains inside one 256-sample CNN chunk.  The bring-up runner
 passes `MIRROR_RAW_CHANNELS=0` to the testbench so raw event channels `ch1..ch7`
 remain zero unless explicitly driven.
 
