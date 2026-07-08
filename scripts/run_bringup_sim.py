@@ -176,6 +176,8 @@ def run_vivado_case(args: argparse.Namespace, repo_root: Path, case: StimulusCas
         str(args.score_threshold),
         "--cnn-thresh-raw",
         str(args.cnn_thresh_raw),
+        "--mirror-raw-channels",
+        "0",
     ]
     if args.vivado:
         cmd.extend(["--vivado", args.vivado])

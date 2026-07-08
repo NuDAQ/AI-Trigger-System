@@ -38,6 +38,9 @@
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
 //   +SCORE_THRESHOLD=<f>    classification threshold (default 0.0)
 //   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default 0)
+//   +MIRROR_RAW_CHANNELS=<0|1>
+//                           mirror ch0..ch3 into raw event channels ch4..ch7
+//                           (default 1 for legacy validation vectors)
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -134,6 +137,7 @@ module tb_AI_TRIGGER_TOP;
     integer cnn_thresh_raw;
     integer has_score_threshold_arg;
     integer has_cnn_thresh_raw_arg;
+    integer mirror_raw_channels;
 
     // Per-sample hex storage (256 words)
     reg [63:0] sample_hex [0:N_CHUNK_W-1];
@@ -196,6 +200,8 @@ module tb_AI_TRIGGER_TOP;
             cnn_thresh_raw = 0;  // 0.0 in ap_fixed<22,11>
         if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
+        if (!$value$plusargs("MIRROR_RAW_CHANNELS=%d", mirror_raw_channels))
+            mirror_raw_channels = 1;
 
         cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 384'h0;
@@ -239,6 +245,7 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
                  $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
+        $display("[%0t] MIRROR_RAW_CHANNELS: %0d", $time, mirror_raw_channels);
         $display("---------------------------------------------------------------------");
         $display("Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)");
         $display("---------------------------------------------------------------------");
@@ -307,9 +314,13 @@ module tb_AI_TRIGGER_TOP;
                     batch_flat = 384'h0;
                     for (s = 0; s < N_BATCH_S; s = s + 1) begin
                         for (ch = 0; ch < N_ADC_CH; ch = ch + 1) begin
-                            batch_flat[(ch * N_BATCH_S + s) * 12 +: 12]
-                                = get_ch_sample(sample_hex[b * N_BATCH_S + s],
-                                                ch % N_TRIGGER_CH);
+                            if (ch < N_TRIGGER_CH || mirror_raw_channels != 0) begin
+                                batch_flat[(ch * N_BATCH_S + s) * 12 +: 12]
+                                    = get_ch_sample(sample_hex[b * N_BATCH_S + s],
+                                                    ch % N_TRIGGER_CH);
+                            end else begin
+                                batch_flat[(ch * N_BATCH_S + s) * 12 +: 12] = 12'h000;
+                            end
                         end
                     end
                     adc_data4_flat = batch_flat;

@@ -73,6 +73,18 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual([row["stim_kind"] for row in manifest_rows], ["zero", "zero", "zero"])
         self.assertEqual([row["pulse_offset_sample"] for row in manifest_rows], ["-1", "-1", "-1"])
 
+    def test_bringup_runner_disables_raw_channel_mirroring(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(encoding="utf-8")
+        run_sim_tcl = (ROOT / "run_sim.tcl").read_text(encoding="utf-8")
+        run_vivado_sim = (ROOT / "scripts" / "run_vivado_sim.py").read_text(encoding="utf-8")
+        bringup_runner = SCRIPT.read_text(encoding="utf-8")
+
+        self.assertIn("MIRROR_RAW_CHANNELS", testbench)
+        self.assertIn("RUN_SIM_MIRROR_RAW_CHANNELS", run_sim_tcl)
+        self.assertIn("--mirror-raw-channels", run_vivado_sim)
+        self.assertIn('"--mirror-raw-channels"', bringup_runner)
+        self.assertIn('"0"', bringup_runner)
+
 
 if __name__ == "__main__":
     unittest.main()
