@@ -84,7 +84,8 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertLess(core_idx, wrapper_idx)
             self.assertLess(wrapper_idx, pkg_idx)
             self.assertLess(pkg_idx, top_idx)
-            self.assertIn("set_property top AI_TRIGGER_TOP", add_files)
+            self.assertNotIn("set_property top", add_files)
+            self.assertIn("Keep the integrator's existing project top unchanged", add_files)
             self.assertIn("set_property verilog_define", add_files)
 
 

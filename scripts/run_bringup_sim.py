@@ -20,7 +20,7 @@ N_CHUNK_WORDS = 256
 DEFAULT_ADC_VFS_MV = 800.0
 DEFAULT_PULSE_MV = 50.0
 PULSE_SEGMENT_SAMPLES = 5
-PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 3
+PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 2
 
 
 @dataclass(frozen=True)
@@ -60,7 +60,7 @@ def bipolar_chunk(offset: int, pos_code: int, neg_code: int) -> list[int]:
     chunk = zero_chunk()
     for idx in range(offset, offset + PULSE_SEGMENT_SAMPLES):
         chunk[idx] = pos_code
-    for idx in range(offset + PULSE_SEGMENT_SAMPLES * 2, offset + PULSE_TOTAL_SAMPLES):
+    for idx in range(offset + PULSE_SEGMENT_SAMPLES, offset + PULSE_TOTAL_SAMPLES):
         chunk[idx] = neg_code
     return chunk
 

@@ -1,3 +1,3 @@
 stim_kind,count,score_min,score_max,score_mean
 zero,256,-2.208984,-2.208984,-2.208984
-bipolar_sweep,242,-2.738770,12.705078,-0.565311
+bipolar_sweep,247,-2.558105,12.397461,-0.700122

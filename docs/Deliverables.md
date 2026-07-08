@@ -106,12 +106,12 @@ For testing purposes, you can ignore timestamp in this version.
 | `RST` | in | Active-high reset for the trigger system. |
 | `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. `CNN_THRESH[31:22]` is ignored. Also `[MSB:LSB]`. |
 
-In current version, for testing purpose, please configure `CNN_THRESH=4.0`. Specifically, give a constant input:
+In current version, for testing purpose, please configure `CNN_THRESH=2.0`. Specifically, give a constant input:
 
 ```
 use ieee.numeric_std.all;
 
-CNN_THRESH <= std_logic_vector(to_signed(8192, 32));  -- 32'h00002000
+CNN_THRESH <= std_logic_vector(to_signed(4096, 32));  -- 32'h00001000
 ```
 
 See below for more details. 
@@ -140,7 +140,7 @@ For the current one-chunk event window, each event emits only the triggered chun
 | `EVENT_LAST` | out | Last beat of the current event. |
 | `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. Wraps around every about 4.3 seconds. |
 
-The delivered interface does not expose CNN score, chunk id, overflow counters, or trigger debug pulses.
+The delivered interface does not expose CNN score, chunk ID, overflow counters, or trigger debug pulses. 
 
 DAQ-side sampling contract:
 
@@ -154,17 +154,16 @@ if EVENT_VALID && EVENT_READY:
 
 ## How to test?
 
-These are the scores for some typical inputs. By adjusting the threshold, you can allow certain waveforms to trigger. A trigger rate that is too high may cause overflow, so we use bipolar square pulse for testing.
+These are the scores for some typical inputs. By adjusting the threshold, you can allow certain waveforms to trigger. A trigger rate that is too high may cause overflow, so we use bipolar square pulses for testing.
 
 | Purpose                               | CNN_THRESH[31:0] | Raw threshold | Float threshold | Notes                                                        |
 | ------------------------------------- | ---------------- | ------------: | --------------: | ------------------------------------------------------------ |
 | Guarantee all possible scores trigger | 32'hFFE00000     |      -2097152 |         -1024.0 | Lowest representable signed `ap_fixed<22,11> `threshold.     |
 | Score for all-zero input              | 32'hFFFFEE53     |         -4525 |       -2.209473 | All-zero input measured score is raw -4524, float -2.208984. |
 
-For testing purpose, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
+For testing purposes, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
 ```
 0000000000000100  x5   # ch0 = +0x100 = +256; ch1..ch3 = 0
-0000000000000000  x5   # ch0..ch3 = 0
 0000000000000f00  x5   # ch0 = 0xf00 = signed -256; ch1..ch3 = 0
 0000000000000000       # remaining samples are zero; full input ch1..ch7 are held at 0
 ```
@@ -174,10 +173,10 @@ However, I converted the values to mV based on the [ADC chip's datasheet](https:
 Simply put, the input is: 
 
 1. Connect the waveform generator only to `ch0`. 
-2. Set the input of other 7 channels to 0
-3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns 0 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 12.0%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
+2. Set the input of the other 7 channels to 0
+3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 14.2%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
 
-*Note: Since we set the CNN threshold to 4, only pulses that start between approximately 56th and 84th ns within a 256ns-chunk will be triggered. You'll notice that the recorded waveforms are mostly pulses that start during this time period:*
+*Note: Due to the limitations of the model we are currently using, when we set the CNN threshold to 2, only bipolar pulses with start times roughly between 54 ns and 88 ns within a 256 ns time window will be triggered. Therefore, it is expected that most of the recorded waveforms will be pulses whose start times fall within this time window:*
 
 ![score_vs_offset](/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/docs/score_vs_offset.png)
 
