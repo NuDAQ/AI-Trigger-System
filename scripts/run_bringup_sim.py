@@ -65,6 +65,15 @@ def bipolar_chunk(offset: int, pos_code: int, neg_code: int) -> list[int]:
     return chunk
 
 
+def polar_chunk(offset: int, pos_code: int) -> list[int]:
+    if offset < 0 or offset + PULSE_SEGMENT_SAMPLES > N_CHUNK_WORDS:
+        raise ValueError(f"polar offset {offset} does not fit in one chunk")
+    chunk = zero_chunk()
+    for idx in range(offset, offset + PULSE_SEGMENT_SAMPLES):
+        chunk[idx] = pos_code
+    return chunk
+
+
 def chunk_to_testhex_lines(chunk_ch0: list[int], pulse_channel: int) -> list[str]:
     if pulse_channel < 0 or pulse_channel > 3:
         raise ValueError("pulse_channel must be in trigger channel range 0..3")
@@ -119,6 +128,31 @@ def build_bipolar_sweep_case(
         for offset in range(max_offset + 1)
     ]
     return StimulusCase("bipolar_sweep", samples, rows)
+
+
+def build_polar_sweep_case(
+    pulse_mv: float,
+    adc_vfs_mv: float,
+    pulse_channel: int,
+) -> StimulusCase:
+    pos_code = voltage_to_adc_code(pulse_mv, adc_vfs_mv)
+    max_offset = N_CHUNK_WORDS - PULSE_SEGMENT_SAMPLES
+    samples = [polar_chunk(offset, pos_code) for offset in range(max_offset + 1)]
+    rows = [
+        {
+            "sample_id": str(offset),
+            "stim_kind": "polar_sweep",
+            "pulse_offset_sample": str(offset),
+            "pulse_start_ns": str(offset),
+            "pulse_width_samples": str(PULSE_SEGMENT_SAMPLES),
+            "pulse_peak_mv": f"{pulse_mv:.3f}",
+            "adc_code_pos": str(pos_code),
+            "adc_code_neg": "0",
+            "pulse_channel": str(pulse_channel),
+        }
+        for offset in range(max_offset + 1)
+    ]
+    return StimulusCase("polar_sweep", samples, rows)
 
 
 def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
@@ -192,6 +226,8 @@ def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
         cases.append(build_zero_case(args.num_zero_samples, args.pulse_channel))
     if args.stimulus in ("bipolar-sweep", "all"):
         cases.append(build_bipolar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
+    if args.stimulus in ("polar-sweep", "all"):
+        cases.append(build_polar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
     return cases
 
 
@@ -225,11 +261,11 @@ def run_vivado_case(args: argparse.Namespace, repo_root: Path, case: StimulusCas
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate zero-input and ch0 bipolar-pulse bring-up simulation stimuli."
+        description="Generate zero-input, bipolar-pulse, and polar-pulse bring-up simulation stimuli."
     )
     parser.add_argument(
         "--stimulus",
-        choices=("zero", "bipolar-sweep", "all"),
+        choices=("zero", "bipolar-sweep", "polar-sweep", "all"),
         default="all",
         help="Stimulus set to generate or run. Default: all.",
     )

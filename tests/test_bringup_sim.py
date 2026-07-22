@@ -58,6 +58,31 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(sample0[5:10], ["0000000000000f00"] * 5)
         self.assertEqual(sample0[10:], ["0000000000000000"] * (256 - 10))
 
+    def test_polar_sweep_generates_ch0_only_positive_50mv_pulse_manifest(self) -> None:
+        out_dir = self.run_generate("--stimulus", "polar-sweep")
+
+        testhex_dir = out_dir / "polar_sweep" / "testhex_stream"
+        labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
+        with (out_dir / "polar_sweep" / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+            manifest_rows = list(csv.DictReader(csv_file))
+        sample0 = (testhex_dir / "test_input_sample0.hex").read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(len(labels), 252)
+        self.assertTrue(all(label == "0" for label in labels))
+        self.assertEqual(len(manifest_rows), 252)
+        self.assertEqual(manifest_rows[0]["stim_kind"], "polar_sweep")
+        self.assertEqual(manifest_rows[0]["pulse_offset_sample"], "0")
+        self.assertEqual(manifest_rows[-1]["pulse_offset_sample"], "251")
+        self.assertEqual(manifest_rows[0]["pulse_width_samples"], "5")
+        self.assertEqual(manifest_rows[0]["pulse_peak_mv"], "50.000")
+        self.assertEqual(manifest_rows[0]["adc_code_pos"], "256")
+        self.assertEqual(manifest_rows[0]["adc_code_neg"], "0")
+        self.assertEqual(manifest_rows[0]["pulse_channel"], "0")
+
+        self.assertEqual(len(sample0), 256)
+        self.assertEqual(sample0[0:5], ["0000000000000100"] * 5)
+        self.assertEqual(sample0[5:], ["0000000000000000"] * (256 - 5))
+
     def test_zero_stimulus_generates_all_zero_chunks(self) -> None:
         out_dir = self.run_generate("--stimulus", "zero", "--num-zero-samples", "3")
 
@@ -89,8 +114,10 @@ class BringupSimulationTest(unittest.TestCase):
         out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-results-"))
         zero_dir = out_dir / "zero"
         bipolar_dir = out_dir / "bipolar_sweep"
+        polar_dir = out_dir / "polar_sweep"
         zero_dir.mkdir(parents=True)
         bipolar_dir.mkdir(parents=True)
+        polar_dir.mkdir(parents=True)
 
         self.write_manifest(zero_dir / "manifest.csv", [
             {"sample_id": "0", "stim_kind": "zero", "pulse_offset_sample": "-1", "pulse_start_ns": "-1", "pulse_width_samples": "0", "pulse_peak_mv": "0.000", "adc_code_pos": "0", "adc_code_neg": "0", "pulse_channel": "0"},
@@ -100,8 +127,13 @@ class BringupSimulationTest(unittest.TestCase):
             {"sample_id": "0", "stim_kind": "bipolar_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "10", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "-256", "pulse_channel": "0"},
             {"sample_id": "1", "stim_kind": "bipolar_sweep", "pulse_offset_sample": "1", "pulse_start_ns": "1", "pulse_width_samples": "10", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "-256", "pulse_channel": "0"},
         ])
+        self.write_manifest(polar_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "polar_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "5", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "0", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "polar_sweep", "pulse_offset_sample": "1", "pulse_start_ns": "1", "pulse_width_samples": "5", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "0", "pulse_channel": "0"},
+        ])
         self.write_scores(zero_dir / "scores.csv", [("0", "-1.000000"), ("1", "-1.250000")])
         self.write_scores(bipolar_dir / "scores.csv", [("0", "0.500000"), ("1", "0.750000")])
+        self.write_scores(polar_dir / "scores.csv", [("0", "1.500000"), ("1", "1.750000")])
 
         subprocess.run(
             [
@@ -131,12 +163,20 @@ class BringupSimulationTest(unittest.TestCase):
             zero_rows = list(csv.DictReader(csv_file))
         with (bipolar_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
             bipolar_rows = list(csv.DictReader(csv_file))
+        with (polar_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            polar_rows = list(csv.DictReader(csv_file))
+        with (out_dir / "bringup_score_summary.csv").open(newline="", encoding="utf-8") as csv_file:
+            summary_rows = list(csv.DictReader(csv_file))
 
         self.assertEqual(zero_rows[0]["stim_kind"], "zero")
         self.assertEqual(zero_rows[0]["float_out"], "-1.000000")
         self.assertEqual(bipolar_rows[1]["pulse_offset_sample"], "1")
         self.assertEqual(bipolar_rows[1]["float_out"], "0.750000")
+        self.assertEqual(polar_rows[1]["pulse_offset_sample"], "1")
+        self.assertEqual(polar_rows[1]["float_out"], "1.750000")
+        self.assertEqual([row["stim_kind"] for row in summary_rows], ["zero", "bipolar_sweep", "polar_sweep"])
         self.assertTrue((out_dir / "score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "polar_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "score_histogram.png").exists())
         self.assertTrue((out_dir / "bringup_score_summary.csv").exists())
 

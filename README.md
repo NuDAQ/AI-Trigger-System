@@ -531,6 +531,7 @@ The generated bring-up cases are:
 | --- | --- |
 | `zero` | Valid continuous ADC input, all eight channels at signed code `0`. |
 | `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 10-sample pulse is swept across one 256-sample chunk. |
+| `polar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A positive 5-sample pulse is swept across one 256-sample chunk. |
 
 The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
 1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
@@ -544,6 +545,15 @@ The pulse start offset is swept from sample `0` through sample `246`, so every
 10-sample pulse remains inside one 256-sample CNN chunk.  The bring-up runner
 passes `MIRROR_RAW_CHANNELS=0` to the testbench so raw event channels `ch1..ch7`
 remain zero unless explicitly driven.
+
+The default polar pulse is `+50 mV` for 5 ns followed by zero input. Its start
+offset is swept from sample `0` through sample `251`. Run only this case with:
+
+```bash
+python3 scripts/run_bringup_sim.py \
+  --stimulus polar-sweep \
+  --out-dir build/bringup_sim
+```
 
 To generate stimulus files without launching Vivado:
 
@@ -582,6 +592,7 @@ The plot script writes:
 
 ```text
 build/bringup_sim/score_vs_offset.png
+build/bringup_sim/polar_score_vs_offset.png
 build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```
