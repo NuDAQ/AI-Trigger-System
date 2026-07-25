@@ -21,6 +21,8 @@ DEFAULT_ADC_VFS_MV = 800.0
 DEFAULT_PULSE_MV = 50.0
 PULSE_SEGMENT_SAMPLES = 5
 PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 2
+LONG_MONOPOLAR_PULSE_MV = 100.0
+LONG_MONOPOLAR_PULSE_SAMPLES = 100
 
 
 @dataclass(frozen=True)
@@ -70,6 +72,17 @@ def polar_chunk(offset: int, pos_code: int) -> list[int]:
         raise ValueError(f"polar offset {offset} does not fit in one chunk")
     chunk = zero_chunk()
     for idx in range(offset, offset + PULSE_SEGMENT_SAMPLES):
+        chunk[idx] = pos_code
+    return chunk
+
+
+def clipped_monopolar_chunk(offset: int, width: int, pos_code: int) -> list[int]:
+    if offset < -width or offset >= N_CHUNK_WORDS:
+        raise ValueError(f"clipped monopolar offset {offset} is outside the sweep range")
+    chunk = zero_chunk()
+    visible_start = max(0, offset)
+    visible_end = min(N_CHUNK_WORDS, offset + width)
+    for idx in range(visible_start, visible_end):
         chunk[idx] = pos_code
     return chunk
 
@@ -155,6 +168,43 @@ def build_polar_sweep_case(
     return StimulusCase("polar_sweep", samples, rows)
 
 
+def build_monopolar_100mv_100ns_sweep_case(
+    adc_vfs_mv: float,
+    pulse_channel: int,
+) -> StimulusCase:
+    pos_code = voltage_to_adc_code(LONG_MONOPOLAR_PULSE_MV, adc_vfs_mv)
+    offsets = range(-LONG_MONOPOLAR_PULSE_SAMPLES, N_CHUNK_WORDS)
+    samples = [
+        clipped_monopolar_chunk(offset, LONG_MONOPOLAR_PULSE_SAMPLES, pos_code)
+        for offset in offsets
+    ]
+    rows = []
+    for sample_id, offset in enumerate(offsets):
+        visible_start = max(0, offset)
+        visible_end = min(N_CHUNK_WORDS, offset + LONG_MONOPOLAR_PULSE_SAMPLES)
+        visible_width = max(0, visible_end - visible_start)
+        if offset < 0:
+            truncation = "front"
+        elif offset + LONG_MONOPOLAR_PULSE_SAMPLES > N_CHUNK_WORDS:
+            truncation = "back"
+        else:
+            truncation = "none"
+        rows.append({
+            "sample_id": str(sample_id),
+            "stim_kind": "monopolar_100mv_100ns_sweep",
+            "pulse_offset_sample": str(offset),
+            "pulse_start_ns": str(offset),
+            "pulse_width_samples": str(LONG_MONOPOLAR_PULSE_SAMPLES),
+            "visible_pulse_width_samples": str(visible_width),
+            "pulse_truncation": truncation,
+            "pulse_peak_mv": f"{LONG_MONOPOLAR_PULSE_MV:.3f}",
+            "adc_code_pos": str(pos_code),
+            "adc_code_neg": "0",
+            "pulse_channel": str(pulse_channel),
+        })
+    return StimulusCase("monopolar_100mv_100ns_sweep", samples, rows)
+
+
 def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
     case_dir = out_dir / case.name
     testhex_dir = case_dir / "testhex_stream"
@@ -228,6 +278,8 @@ def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
         cases.append(build_bipolar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
     if args.stimulus in ("polar-sweep", "all"):
         cases.append(build_polar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
+    if args.stimulus in ("monopolar-100mv-100ns-sweep", "all"):
+        cases.append(build_monopolar_100mv_100ns_sweep_case(args.adc_vfs_mv, args.pulse_channel))
     return cases
 
 
@@ -261,11 +313,17 @@ def run_vivado_case(args: argparse.Namespace, repo_root: Path, case: StimulusCas
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate zero-input, bipolar-pulse, and polar-pulse bring-up simulation stimuli."
+        description="Generate zero-input and pulse-sweep bring-up simulation stimuli."
     )
     parser.add_argument(
         "--stimulus",
-        choices=("zero", "bipolar-sweep", "polar-sweep", "all"),
+        choices=(
+            "zero",
+            "bipolar-sweep",
+            "polar-sweep",
+            "monopolar-100mv-100ns-sweep",
+            "all",
+        ),
         default="all",
         help="Stimulus set to generate or run. Default: all.",
     )

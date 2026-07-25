@@ -511,27 +511,31 @@ confirm there are no missing, duplicate, or extra event chunks.
 
 ## DAQ Bring-Up Score Simulation
 
-For delivery bring-up, use the dedicated script to generate two simple
-stimulus sets and run them through the same Vivado/xsim testbench:
+For delivery bring-up, run the zero reference and all three pulse sweeps through
+the same Vivado/xsim testbench with one command:
 
 ```bash
-python3 scripts/run_bringup_sim.py \
-  --stimulus all \
-  --out-dir build/bringup_sim
+scripts/run_bringup_pulse_sweeps.sh
 ```
 
-The script creates local `testhex_stream` directories, then launches
+The launcher uses `build/bringup_sim` by default. Override it with
+`BRINGUP_OUT_DIR=/path/to/output`; set `PYTHON_BIN` if `python3` is not the
+desired interpreter. It creates local `testhex_stream` directories, then launches
 `scripts/run_vivado_sim.py` for each case.  It keeps the existing Bender/Vivado
 source refresh path through `run_sim.tcl`, but supplies generated stimulus
 instead of the wrapper validation dataset.
 
-The generated bring-up cases are:
+The case names and save locations are:
 
-| Case | Input |
-| --- | --- |
-| `zero` | Valid continuous ADC input, all eight channels at signed code `0`. |
-| `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 10-sample pulse is swept across one 256-sample chunk. |
-| `polar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A positive 5-sample pulse is swept across one 256-sample chunk. |
+| CLI name | Output directory | Input and offsets | Samples |
+| --- | --- | --- | ---: |
+| `zero` | `build/bringup_sim/zero/` | All eight channels at signed code `0` | 256 |
+| `bipolar-sweep` | `build/bringup_sim/bipolar_sweep/` | `ch0`: `+50 mV` for 5 ns, then `-50 mV` for 5 ns; offsets `0..246` | 247 |
+| `polar-sweep` | `build/bringup_sim/polar_sweep/` | `ch0`: `+50 mV` for 5 ns, then zero; offsets `0..251` | 252 |
+| `monopolar-100mv-100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_sweep/` | `ch0`: nominal `+100 mV` for 100 ns; clipped offsets `-100..255` | 356 |
+
+`zero` is the baseline, not one of the three pulse simulations. In every pulse
+case, `ch1..ch7` remain at `0`.
 
 The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
 1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
@@ -555,21 +559,31 @@ python3 scripts/run_bringup_sim.py \
   --out-dir build/bringup_sim
 ```
 
+The long monopolar case uses ADC code `+512` for a nominal 100-sample pulse.
+Only the overlap with the current 256-sample chunk is written. Negative offsets
+therefore clip the pulse front, offsets `0..156` contain the full pulse, and
+offsets `157..255` clip the pulse back. Its manifest records both the nominal
+width and `visible_pulse_width_samples`, plus `pulse_truncation` as `front`,
+`none`, or `back`.
+
 To generate stimulus files without launching Vivado:
 
 ```bash
-python3 scripts/run_bringup_sim.py \
-  --generate-only \
-  --stimulus all \
-  --out-dir build/bringup_sim
+BRINGUP_GENERATE_ONLY=1 scripts/run_bringup_pulse_sweeps.sh
 ```
 
-After Vivado completes, the runner writes annotated score CSVs:
+Each case directory contains:
 
 ```text
-build/bringup_sim/zero/scores_annotated.csv
-build/bringup_sim/bipolar_sweep/scores_annotated.csv
+testhex_stream/
+manifest.csv
+scores.csv
+events.csv
+scores_annotated.csv
 ```
+
+`build/bringup_sim/` is generated output and is ignored for newly created files
+by `.gitignore`.
 
 If Vivado was run manually and only raw `scores.csv` files are present, rebuild
 the annotated CSVs with:
@@ -581,7 +595,7 @@ python3 scripts/run_bringup_sim.py \
   --out-dir build/bringup_sim
 ```
 
-Plot the zero baseline and bipolar score distribution with:
+Plot the zero baseline and all available pulse score distributions with:
 
 ```bash
 python3 scripts/plot_bringup_scores.py \
@@ -593,6 +607,7 @@ The plot script writes:
 ```text
 build/bringup_sim/score_vs_offset.png
 build/bringup_sim/polar_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_100ns_score_vs_offset.png
 build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```

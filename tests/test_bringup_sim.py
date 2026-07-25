@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import os
 import subprocess
 import sys
 import tempfile
@@ -83,6 +84,59 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(sample0[0:5], ["0000000000000100"] * 5)
         self.assertEqual(sample0[5:], ["0000000000000000"] * (256 - 5))
 
+    def test_monopolar_100mv_100ns_sweep_clips_at_both_chunk_edges(self) -> None:
+        out_dir = self.run_generate("--stimulus", "monopolar-100mv-100ns-sweep")
+
+        case_dir = out_dir / "monopolar_100mv_100ns_sweep"
+        testhex_dir = case_dir / "testhex_stream"
+        labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
+        with (case_dir / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+            manifest_rows = list(csv.DictReader(csv_file))
+
+        self.assertEqual(len(labels), 356)
+        self.assertTrue(all(label == "0" for label in labels))
+        self.assertEqual(len(manifest_rows), 356)
+        self.assertEqual(manifest_rows[0]["sample_id"], "0")
+        self.assertEqual(manifest_rows[0]["pulse_offset_sample"], "-100")
+        self.assertEqual(manifest_rows[0]["visible_pulse_width_samples"], "0")
+        self.assertEqual(manifest_rows[0]["pulse_truncation"], "front")
+        self.assertEqual(manifest_rows[1]["pulse_offset_sample"], "-99")
+        self.assertEqual(manifest_rows[1]["visible_pulse_width_samples"], "1")
+        self.assertEqual(manifest_rows[99]["pulse_offset_sample"], "-1")
+        self.assertEqual(manifest_rows[99]["visible_pulse_width_samples"], "99")
+        self.assertEqual(manifest_rows[100]["pulse_offset_sample"], "0")
+        self.assertEqual(manifest_rows[100]["visible_pulse_width_samples"], "100")
+        self.assertEqual(manifest_rows[100]["pulse_truncation"], "none")
+        self.assertEqual(manifest_rows[256]["pulse_offset_sample"], "156")
+        self.assertEqual(manifest_rows[256]["visible_pulse_width_samples"], "100")
+        self.assertEqual(manifest_rows[257]["pulse_offset_sample"], "157")
+        self.assertEqual(manifest_rows[257]["visible_pulse_width_samples"], "99")
+        self.assertEqual(manifest_rows[257]["pulse_truncation"], "back")
+        self.assertEqual(manifest_rows[-1]["sample_id"], "355")
+        self.assertEqual(manifest_rows[-1]["pulse_offset_sample"], "255")
+        self.assertEqual(manifest_rows[-1]["visible_pulse_width_samples"], "1")
+        self.assertEqual(manifest_rows[100]["pulse_width_samples"], "100")
+        self.assertEqual(manifest_rows[100]["pulse_peak_mv"], "100.000")
+        self.assertEqual(manifest_rows[100]["adc_code_pos"], "512")
+        self.assertEqual(manifest_rows[100]["adc_code_neg"], "0")
+        self.assertEqual(manifest_rows[100]["pulse_channel"], "0")
+
+        zero_sample = (testhex_dir / "test_input_sample0.hex").read_text(encoding="utf-8").splitlines()
+        front_sample = (testhex_dir / "test_input_sample50.hex").read_text(encoding="utf-8").splitlines()
+        full_sample = (testhex_dir / "test_input_sample100.hex").read_text(encoding="utf-8").splitlines()
+        back_sample = (testhex_dir / "test_input_sample300.hex").read_text(encoding="utf-8").splitlines()
+        final_sample = (testhex_dir / "test_input_sample355.hex").read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(set(zero_sample), {"0000000000000000"})
+        self.assertEqual(front_sample[:50], ["0000000000000200"] * 50)
+        self.assertEqual(front_sample[50:], ["0000000000000000"] * 206)
+        self.assertEqual(full_sample[:100], ["0000000000000200"] * 100)
+        self.assertEqual(full_sample[100:], ["0000000000000000"] * 156)
+        self.assertEqual(back_sample[:200], ["0000000000000000"] * 200)
+        self.assertEqual(back_sample[200:], ["0000000000000200"] * 56)
+        self.assertEqual(final_sample[:255], ["0000000000000000"] * 255)
+        self.assertEqual(final_sample[255], "0000000000000200")
+
     def test_zero_stimulus_generates_all_zero_chunks(self) -> None:
         out_dir = self.run_generate("--stimulus", "zero", "--num-zero-samples", "3")
 
@@ -110,14 +164,42 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertIn('"--mirror-raw-channels"', bringup_runner)
         self.assertIn('"0"', bringup_runner)
 
+    def test_launcher_generate_only_builds_all_named_bringup_cases(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-launcher-"))
+        env = dict(os.environ)
+        env["BRINGUP_OUT_DIR"] = str(out_dir)
+        env["BRINGUP_GENERATE_ONLY"] = "1"
+        env["PYTHON_BIN"] = sys.executable
+
+        result = subprocess.run(
+            [str(ROOT / "scripts" / "run_bringup_pulse_sweeps.sh")],
+            cwd=ROOT,
+            env=env,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            ["bipolar_sweep", "monopolar_100mv_100ns_sweep", "polar_sweep", "zero"],
+        )
+        self.assertEqual(
+            len((out_dir / "monopolar_100mv_100ns_sweep" / "testhex_stream" / "labels.hex").read_text(encoding="utf-8").splitlines()),
+            356,
+        )
+        self.assertIn("generate-only: skipping score plotting", result.stdout)
+
     def test_annotate_and_plot_scores_from_vivado_csv(self) -> None:
         out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-results-"))
         zero_dir = out_dir / "zero"
         bipolar_dir = out_dir / "bipolar_sweep"
         polar_dir = out_dir / "polar_sweep"
+        long_monopolar_dir = out_dir / "monopolar_100mv_100ns_sweep"
         zero_dir.mkdir(parents=True)
         bipolar_dir.mkdir(parents=True)
         polar_dir.mkdir(parents=True)
+        long_monopolar_dir.mkdir(parents=True)
 
         self.write_manifest(zero_dir / "manifest.csv", [
             {"sample_id": "0", "stim_kind": "zero", "pulse_offset_sample": "-1", "pulse_start_ns": "-1", "pulse_width_samples": "0", "pulse_peak_mv": "0.000", "adc_code_pos": "0", "adc_code_neg": "0", "pulse_channel": "0"},
@@ -131,9 +213,15 @@ class BringupSimulationTest(unittest.TestCase):
             {"sample_id": "0", "stim_kind": "polar_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "5", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "0", "pulse_channel": "0"},
             {"sample_id": "1", "stim_kind": "polar_sweep", "pulse_offset_sample": "1", "pulse_start_ns": "1", "pulse_width_samples": "5", "pulse_peak_mv": "50.000", "adc_code_pos": "256", "adc_code_neg": "0", "pulse_channel": "0"},
         ])
+        self.write_manifest(long_monopolar_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "monopolar_100mv_100ns_sweep", "pulse_offset_sample": "-100", "pulse_start_ns": "-100", "pulse_width_samples": "100", "visible_pulse_width_samples": "0", "pulse_truncation": "front", "pulse_peak_mv": "100.000", "adc_code_pos": "512", "adc_code_neg": "0", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "monopolar_100mv_100ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "100", "visible_pulse_width_samples": "100", "pulse_truncation": "none", "pulse_peak_mv": "100.000", "adc_code_pos": "512", "adc_code_neg": "0", "pulse_channel": "0"},
+            {"sample_id": "2", "stim_kind": "monopolar_100mv_100ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "100", "visible_pulse_width_samples": "1", "pulse_truncation": "back", "pulse_peak_mv": "100.000", "adc_code_pos": "512", "adc_code_neg": "0", "pulse_channel": "0"},
+        ])
         self.write_scores(zero_dir / "scores.csv", [("0", "-1.000000"), ("1", "-1.250000")])
         self.write_scores(bipolar_dir / "scores.csv", [("0", "0.500000"), ("1", "0.750000")])
         self.write_scores(polar_dir / "scores.csv", [("0", "1.500000"), ("1", "1.750000")])
+        self.write_scores(long_monopolar_dir / "scores.csv", [("0", "-1.000000"), ("1", "2.500000"), ("2", "0.250000")])
 
         subprocess.run(
             [
@@ -165,6 +253,8 @@ class BringupSimulationTest(unittest.TestCase):
             bipolar_rows = list(csv.DictReader(csv_file))
         with (polar_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
             polar_rows = list(csv.DictReader(csv_file))
+        with (long_monopolar_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            long_monopolar_rows = list(csv.DictReader(csv_file))
         with (out_dir / "bringup_score_summary.csv").open(newline="", encoding="utf-8") as csv_file:
             summary_rows = list(csv.DictReader(csv_file))
 
@@ -174,9 +264,16 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(bipolar_rows[1]["float_out"], "0.750000")
         self.assertEqual(polar_rows[1]["pulse_offset_sample"], "1")
         self.assertEqual(polar_rows[1]["float_out"], "1.750000")
-        self.assertEqual([row["stim_kind"] for row in summary_rows], ["zero", "bipolar_sweep", "polar_sweep"])
+        self.assertEqual(long_monopolar_rows[0]["pulse_offset_sample"], "-100")
+        self.assertEqual(long_monopolar_rows[2]["visible_pulse_width_samples"], "1")
+        self.assertEqual(long_monopolar_rows[1]["float_out"], "2.500000")
+        self.assertEqual(
+            [row["stim_kind"] for row in summary_rows],
+            ["zero", "bipolar_sweep", "polar_sweep", "monopolar_100mv_100ns_sweep"],
+        )
         self.assertTrue((out_dir / "score_vs_offset.png").exists())
         self.assertTrue((out_dir / "polar_score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "monopolar_100mv_100ns_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "score_histogram.png").exists())
         self.assertTrue((out_dir / "bringup_score_summary.csv").exists())
 
