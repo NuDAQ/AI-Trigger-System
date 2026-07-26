@@ -61,7 +61,7 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="FeatureSet" Val="FeatureSet_Classic"/>
-    <Option Name="WTXSimLaunchSim" Val="71"/>
+    <Option Name="WTXSimLaunchSim" Val="72"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -413,7 +413,7 @@
         <Option Name="PamPseudoTop" Val="pseudo_tb"/>
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="xsim.simulate.runtime" Val="all"/>
-        <Option Name="xsim.simulate.xsim.more_options" Val=" -testplusarg TESTHEX_DIR=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr10ns_sweep/testhex_stream -testplusarg OUT_CSV=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr10ns_sweep/scores.csv -testplusarg EVENT_CSV=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr10ns_sweep/events.csv -testplusarg NUM_SAMPLES=356 -testplusarg SCORE_THRESHOLD=0.0 -testplusarg CNN_THRESH_RAW=0 -testplusarg MIRROR_RAW_CHANNELS=0"/>
+        <Option Name="xsim.simulate.xsim.more_options" Val=" -testplusarg TESTHEX_DIR=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/testhex_stream -testplusarg OUT_CSV=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/scores.csv -testplusarg EVENT_CSV=/home/work1/Works/AI-Trigger-System/build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/events.csv -testplusarg NUM_SAMPLES=356 -testplusarg SCORE_THRESHOLD=0.0 -testplusarg CNN_THRESH_RAW=0 -testplusarg MIRROR_RAW_CHANNELS=0"/>
         <Verilog_Define Name="TARGET_FPGA"/>
         <Verilog_Define Name="TARGET_SIMULATION"/>
         <Verilog_Define Name="TARGET_VIVADO"/>
