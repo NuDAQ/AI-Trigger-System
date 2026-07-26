@@ -24,8 +24,29 @@ PULSE_SEGMENT_SAMPLES = 5
 PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 2
 LONG_MONOPOLAR_PULSE_MV = 100.0
 LONG_MONOPOLAR_PULSE_SAMPLES = 100
-ERF_EDGE_RISE_FALL_SAMPLES = 100
-ERF_EDGE_SIGMA_SAMPLES = ERF_EDGE_RISE_FALL_SAMPLES / 2.563
+ERF_MONOPOLAR_CASE_SPECS = (
+    (
+        "monopolar-100mv-100ns-erf-tr100ns-sweep",
+        "monopolar_100mv_100ns_erf_tr100ns_sweep",
+        100.0,
+        100,
+        100,
+    ),
+    (
+        "monopolar-50mv-50ns-erf-tr50ns-sweep",
+        "monopolar_50mv_50ns_erf_tr50ns_sweep",
+        50.0,
+        50,
+        50,
+    ),
+    (
+        "monopolar-10mv-10ns-erf-tr10ns-sweep",
+        "monopolar_10mv_10ns_erf_tr10ns_sweep",
+        10.0,
+        10,
+        10,
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -227,21 +248,25 @@ def build_monopolar_100mv_100ns_sweep_case(
     return StimulusCase("monopolar_100mv_100ns_sweep", samples, rows)
 
 
-def build_monopolar_100mv_100ns_erf_tr100ns_sweep_case(
+def build_erf_monopolar_sweep_case(
+    case_name: str,
+    amplitude_mv: float,
+    width_samples: int,
+    rise_fall_samples: int,
     adc_vfs_mv: float,
     pulse_channel: int,
 ) -> StimulusCase:
-    pulse_peak_mv = LONG_MONOPOLAR_PULSE_MV * math.erf(
-        LONG_MONOPOLAR_PULSE_SAMPLES
-        / (2.0 * math.sqrt(2.0) * ERF_EDGE_SIGMA_SAMPLES)
+    sigma_samples = rise_fall_samples / 2.563
+    pulse_peak_mv = amplitude_mv * math.erf(
+        width_samples / (2.0 * math.sqrt(2.0) * sigma_samples)
     )
-    offsets = range(-LONG_MONOPOLAR_PULSE_SAMPLES, N_CHUNK_WORDS)
+    offsets = range(-width_samples, N_CHUNK_WORDS)
     samples = [
         erf_monopolar_chunk(
             offset,
-            LONG_MONOPOLAR_PULSE_SAMPLES,
-            LONG_MONOPOLAR_PULSE_MV,
-            ERF_EDGE_SIGMA_SAMPLES,
+            width_samples,
+            amplitude_mv,
+            sigma_samples,
             adc_vfs_mv,
         )
         for offset in offsets
@@ -249,34 +274,34 @@ def build_monopolar_100mv_100ns_erf_tr100ns_sweep_case(
     rows = []
     for sample_id, (offset, chunk) in enumerate(zip(offsets, samples)):
         nominal_start = max(0, offset)
-        nominal_end = min(N_CHUNK_WORDS, offset + LONG_MONOPOLAR_PULSE_SAMPLES)
+        nominal_end = min(N_CHUNK_WORDS, offset + width_samples)
         nominal_visible_width = max(0, nominal_end - nominal_start)
         if offset < 0:
             truncation = "front"
-        elif offset + LONG_MONOPOLAR_PULSE_SAMPLES > N_CHUNK_WORDS:
+        elif offset + width_samples > N_CHUNK_WORDS:
             truncation = "back"
         else:
             truncation = "none"
         rows.append({
             "sample_id": str(sample_id),
-            "stim_kind": "monopolar_100mv_100ns_erf_tr100ns_sweep",
+            "stim_kind": case_name,
             "pulse_offset_sample": str(offset),
             "pulse_start_ns": str(offset),
-            "pulse_width_samples": str(LONG_MONOPOLAR_PULSE_SAMPLES),
+            "pulse_width_samples": str(width_samples),
             "pulse_width_definition": "50pct_crossings",
             "nominal_visible_width_samples": str(nominal_visible_width),
             "quantized_nonzero_samples": str(sum(code != 0 for code in chunk)),
             "pulse_truncation": truncation,
-            "rise_time_10_90_samples": str(ERF_EDGE_RISE_FALL_SAMPLES),
-            "fall_time_90_10_samples": str(ERF_EDGE_RISE_FALL_SAMPLES),
-            "gaussian_sigma_samples": f"{ERF_EDGE_SIGMA_SAMPLES:.6f}",
+            "rise_time_10_90_samples": str(rise_fall_samples),
+            "fall_time_90_10_samples": str(rise_fall_samples),
+            "gaussian_sigma_samples": f"{sigma_samples:.6f}",
             "edge_model": "erf_gaussian_lowpass",
-            "pulse_amplitude_parameter_mv": f"{LONG_MONOPOLAR_PULSE_MV:.3f}",
+            "pulse_amplitude_parameter_mv": f"{amplitude_mv:.3f}",
             "pulse_peak_mv": f"{pulse_peak_mv:.3f}",
             "adc_code_peak": str(voltage_to_adc_code(pulse_peak_mv, adc_vfs_mv)),
             "pulse_channel": str(pulse_channel),
         })
-    return StimulusCase("monopolar_100mv_100ns_erf_tr100ns_sweep", samples, rows)
+    return StimulusCase(case_name, samples, rows)
 
 
 def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
@@ -354,13 +379,20 @@ def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
         cases.append(build_polar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
     if args.stimulus in ("monopolar-100mv-100ns-sweep", "all"):
         cases.append(build_monopolar_100mv_100ns_sweep_case(args.adc_vfs_mv, args.pulse_channel))
-    if args.stimulus in ("monopolar-100mv-100ns-erf-tr100ns-sweep", "all"):
-        cases.append(
-            build_monopolar_100mv_100ns_erf_tr100ns_sweep_case(
-                args.adc_vfs_mv,
-                args.pulse_channel,
+    for cli_name, case_name, amplitude_mv, width_samples, rise_fall_samples in (
+        ERF_MONOPOLAR_CASE_SPECS
+    ):
+        if args.stimulus in (cli_name, "all"):
+            cases.append(
+                build_erf_monopolar_sweep_case(
+                    case_name,
+                    amplitude_mv,
+                    width_samples,
+                    rise_fall_samples,
+                    args.adc_vfs_mv,
+                    args.pulse_channel,
+                )
             )
-        )
     return cases
 
 
@@ -403,7 +435,7 @@ def parse_args() -> argparse.Namespace:
             "bipolar-sweep",
             "polar-sweep",
             "monopolar-100mv-100ns-sweep",
-            "monopolar-100mv-100ns-erf-tr100ns-sweep",
+            *(spec[0] for spec in ERF_MONOPOLAR_CASE_SPECS),
             "all",
         ),
         default="all",
