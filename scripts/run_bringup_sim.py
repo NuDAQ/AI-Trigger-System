@@ -24,7 +24,7 @@ PULSE_SEGMENT_SAMPLES = 5
 PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 2
 LONG_MONOPOLAR_PULSE_MV = 100.0
 LONG_MONOPOLAR_PULSE_SAMPLES = 100
-ERF_EDGE_RISE_FALL_SAMPLES = 10
+ERF_EDGE_RISE_FALL_SAMPLES = 100
 ERF_EDGE_SIGMA_SAMPLES = ERF_EDGE_RISE_FALL_SAMPLES / 2.563
 
 
@@ -227,10 +227,14 @@ def build_monopolar_100mv_100ns_sweep_case(
     return StimulusCase("monopolar_100mv_100ns_sweep", samples, rows)
 
 
-def build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
+def build_monopolar_100mv_100ns_erf_tr100ns_sweep_case(
     adc_vfs_mv: float,
     pulse_channel: int,
 ) -> StimulusCase:
+    pulse_peak_mv = LONG_MONOPOLAR_PULSE_MV * math.erf(
+        LONG_MONOPOLAR_PULSE_SAMPLES
+        / (2.0 * math.sqrt(2.0) * ERF_EDGE_SIGMA_SAMPLES)
+    )
     offsets = range(-LONG_MONOPOLAR_PULSE_SAMPLES, N_CHUNK_WORDS)
     samples = [
         erf_monopolar_chunk(
@@ -255,7 +259,7 @@ def build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
             truncation = "none"
         rows.append({
             "sample_id": str(sample_id),
-            "stim_kind": "monopolar_100mv_100ns_erf_tr10ns_sweep",
+            "stim_kind": "monopolar_100mv_100ns_erf_tr100ns_sweep",
             "pulse_offset_sample": str(offset),
             "pulse_start_ns": str(offset),
             "pulse_width_samples": str(LONG_MONOPOLAR_PULSE_SAMPLES),
@@ -267,11 +271,12 @@ def build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
             "fall_time_90_10_samples": str(ERF_EDGE_RISE_FALL_SAMPLES),
             "gaussian_sigma_samples": f"{ERF_EDGE_SIGMA_SAMPLES:.6f}",
             "edge_model": "erf_gaussian_lowpass",
-            "pulse_peak_mv": f"{LONG_MONOPOLAR_PULSE_MV:.3f}",
-            "adc_code_peak": str(voltage_to_adc_code(LONG_MONOPOLAR_PULSE_MV, adc_vfs_mv)),
+            "pulse_amplitude_parameter_mv": f"{LONG_MONOPOLAR_PULSE_MV:.3f}",
+            "pulse_peak_mv": f"{pulse_peak_mv:.3f}",
+            "adc_code_peak": str(voltage_to_adc_code(pulse_peak_mv, adc_vfs_mv)),
             "pulse_channel": str(pulse_channel),
         })
-    return StimulusCase("monopolar_100mv_100ns_erf_tr10ns_sweep", samples, rows)
+    return StimulusCase("monopolar_100mv_100ns_erf_tr100ns_sweep", samples, rows)
 
 
 def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
@@ -349,9 +354,9 @@ def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
         cases.append(build_polar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
     if args.stimulus in ("monopolar-100mv-100ns-sweep", "all"):
         cases.append(build_monopolar_100mv_100ns_sweep_case(args.adc_vfs_mv, args.pulse_channel))
-    if args.stimulus in ("monopolar-100mv-100ns-erf-tr10ns-sweep", "all"):
+    if args.stimulus in ("monopolar-100mv-100ns-erf-tr100ns-sweep", "all"):
         cases.append(
-            build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
+            build_monopolar_100mv_100ns_erf_tr100ns_sweep_case(
                 args.adc_vfs_mv,
                 args.pulse_channel,
             )
@@ -398,7 +403,7 @@ def parse_args() -> argparse.Namespace:
             "bipolar-sweep",
             "polar-sweep",
             "monopolar-100mv-100ns-sweep",
-            "monopolar-100mv-100ns-erf-tr10ns-sweep",
+            "monopolar-100mv-100ns-erf-tr100ns-sweep",
             "all",
         ),
         default="all",

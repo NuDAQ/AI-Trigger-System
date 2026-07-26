@@ -36,7 +36,7 @@ def write_summary(
         ("bipolar_sweep", bipolar_rows),
         ("polar_sweep", polar_rows),
         ("monopolar_100mv_100ns_sweep", long_monopolar_rows),
-        ("monopolar_100mv_100ns_erf_tr10ns_sweep", erf_monopolar_rows),
+        ("monopolar_100mv_100ns_erf_tr100ns_sweep", erf_monopolar_rows),
     ):
         values = score_values(rows)
         if values:
@@ -172,7 +172,7 @@ def build_plots(
             erf_monopolar_scores,
             marker=".",
             linewidth=1.0,
-            label="ch0 +100 mV x 100 ns monopolar, erf edges tr=tf=10 ns",
+            label="ch0 A=100 mV, width=100 ns, erf edges tr=tf=100 ns (peak about 80 mV)",
         )
         if zero_scores:
             zero_mean = mean(zero_scores)
@@ -194,7 +194,7 @@ def build_plots(
         plt.legend()
         plt.tight_layout()
         plt.savefig(
-            out_dir / "monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png",
+            out_dir / "monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png",
             dpi=160,
         )
         plt.close()
@@ -225,7 +225,7 @@ def build_plots(
                 erf_monopolar_scores,
                 bins=min(40, max(1, len(erf_monopolar_scores))),
                 alpha=0.65,
-                label="100 mV x 100 ns erf-edge tr=tf=10 ns sweep",
+                label="A=100 mV, width=100 ns, erf-edge tr=tf=100 ns sweep",
             )
         plt.xlabel("CNN score")
         plt.ylabel("Count")
@@ -258,7 +258,7 @@ def main() -> int:
         out_dir / "monopolar_100mv_100ns_sweep" / "scores_annotated.csv"
     )
     erf_monopolar_rows = read_rows(
-        out_dir / "monopolar_100mv_100ns_erf_tr10ns_sweep" / "scores_annotated.csv"
+        out_dir / "monopolar_100mv_100ns_erf_tr100ns_sweep" / "scores_annotated.csv"
     )
 
     summary = write_summary(
@@ -281,7 +281,7 @@ def main() -> int:
     print(f"INFO: wrote {out_dir / 'score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'polar_score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_score_vs_offset.png'}")
-    print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png'}")
+    print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'score_histogram.png'}")
     return 0
 

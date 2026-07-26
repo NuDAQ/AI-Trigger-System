@@ -137,10 +137,10 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(final_sample[:255], ["0000000000000000"] * 255)
         self.assertEqual(final_sample[255], "0000000000000200")
 
-    def test_monopolar_100mv_100ns_erf_tr10ns_sweep_has_rounded_clipped_edges(self) -> None:
-        out_dir = self.run_generate("--stimulus", "monopolar-100mv-100ns-erf-tr10ns-sweep")
+    def test_monopolar_100mv_100ns_erf_tr100ns_sweep_has_overlapping_edges(self) -> None:
+        out_dir = self.run_generate("--stimulus", "monopolar-100mv-100ns-erf-tr100ns-sweep")
 
-        case_dir = out_dir / "monopolar_100mv_100ns_erf_tr10ns_sweep"
+        case_dir = out_dir / "monopolar_100mv_100ns_erf_tr100ns_sweep"
         testhex_dir = case_dir / "testhex_stream"
         labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
         with (case_dir / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
@@ -151,50 +151,51 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(manifest_rows[0]["sample_id"], "0")
         self.assertEqual(manifest_rows[0]["pulse_offset_sample"], "-100")
         self.assertEqual(manifest_rows[0]["nominal_visible_width_samples"], "0")
-        self.assertEqual(manifest_rows[0]["quantized_nonzero_samples"], "13")
+        self.assertEqual(manifest_rows[0]["quantized_nonzero_samples"], "121")
         self.assertEqual(manifest_rows[0]["pulse_truncation"], "front")
         self.assertEqual(manifest_rows[100]["pulse_offset_sample"], "0")
         self.assertEqual(manifest_rows[100]["nominal_visible_width_samples"], "100")
-        self.assertEqual(manifest_rows[100]["quantized_nonzero_samples"], "113")
+        self.assertEqual(manifest_rows[100]["quantized_nonzero_samples"], "221")
         self.assertEqual(manifest_rows[100]["pulse_truncation"], "none")
         self.assertEqual(manifest_rows[256]["pulse_offset_sample"], "156")
         self.assertEqual(manifest_rows[256]["nominal_visible_width_samples"], "100")
-        self.assertEqual(manifest_rows[256]["quantized_nonzero_samples"], "112")
+        self.assertEqual(manifest_rows[256]["quantized_nonzero_samples"], "220")
         self.assertEqual(manifest_rows[-1]["sample_id"], "355")
         self.assertEqual(manifest_rows[-1]["pulse_offset_sample"], "255")
         self.assertEqual(manifest_rows[-1]["nominal_visible_width_samples"], "1")
-        self.assertEqual(manifest_rows[-1]["quantized_nonzero_samples"], "13")
+        self.assertEqual(manifest_rows[-1]["quantized_nonzero_samples"], "121")
         self.assertEqual(manifest_rows[-1]["pulse_truncation"], "back")
         self.assertEqual(manifest_rows[100]["pulse_width_samples"], "100")
         self.assertEqual(manifest_rows[100]["pulse_width_definition"], "50pct_crossings")
-        self.assertEqual(manifest_rows[100]["rise_time_10_90_samples"], "10")
-        self.assertEqual(manifest_rows[100]["fall_time_90_10_samples"], "10")
-        self.assertEqual(manifest_rows[100]["gaussian_sigma_samples"], "3.901678")
+        self.assertEqual(manifest_rows[100]["rise_time_10_90_samples"], "100")
+        self.assertEqual(manifest_rows[100]["fall_time_90_10_samples"], "100")
+        self.assertEqual(manifest_rows[100]["gaussian_sigma_samples"], "39.016777")
         self.assertEqual(manifest_rows[100]["edge_model"], "erf_gaussian_lowpass")
-        self.assertEqual(manifest_rows[100]["pulse_peak_mv"], "100.000")
-        self.assertEqual(manifest_rows[100]["adc_code_peak"], "512")
+        self.assertEqual(manifest_rows[100]["pulse_amplitude_parameter_mv"], "100.000")
+        self.assertEqual(manifest_rows[100]["pulse_peak_mv"], "79.998")
+        self.assertEqual(manifest_rows[100]["adc_code_peak"], "410")
 
         front_sample = (testhex_dir / "test_input_sample0.hex").read_text(encoding="utf-8").splitlines()
         centered_sample = (testhex_dir / "test_input_sample100.hex").read_text(encoding="utf-8").splitlines()
         back_sample = (testhex_dir / "test_input_sample355.hex").read_text(encoding="utf-8").splitlines()
 
-        self.assertEqual(front_sample[0], "0000000000000100")
-        self.assertEqual(front_sample[5], "0000000000000033")
-        self.assertEqual(front_sample[10], "0000000000000003")
-        self.assertEqual(front_sample[15], "0000000000000000")
-        self.assertEqual(centered_sample[0], "0000000000000100")
-        self.assertEqual(centered_sample[5], "00000000000001cd")
-        self.assertEqual(centered_sample[10], "00000000000001fd")
-        self.assertEqual(centered_sample[50], "0000000000000200")
-        self.assertEqual(centered_sample[90], "00000000000001fd")
-        self.assertEqual(centered_sample[95], "00000000000001cd")
-        self.assertEqual(centered_sample[100], "0000000000000100")
-        self.assertEqual(centered_sample[105], "0000000000000033")
-        self.assertEqual(centered_sample[110], "0000000000000003")
-        self.assertEqual(back_sample[245], "0000000000000003")
-        self.assertEqual(back_sample[250], "0000000000000033")
-        self.assertEqual(back_sample[254], "00000000000000cc")
-        self.assertEqual(back_sample[255], "0000000000000100")
+        self.assertEqual(front_sample[0], "00000000000000fd")
+        self.assertEqual(front_sample[5], "00000000000000e4")
+        self.assertEqual(front_sample[10], "00000000000000cb")
+        self.assertEqual(centered_sample[0], "00000000000000fd")
+        self.assertEqual(centered_sample[10], "000000000000012e")
+        self.assertEqual(centered_sample[25], "000000000000016c")
+        self.assertEqual(centered_sample[50], "000000000000019a")
+        self.assertEqual(centered_sample[75], "000000000000016c")
+        self.assertEqual(centered_sample[90], "000000000000012e")
+        self.assertEqual(centered_sample[100], "00000000000000fd")
+        self.assertEqual(centered_sample[150], "0000000000000033")
+        self.assertEqual(centered_sample[200], "0000000000000003")
+        self.assertEqual(centered_sample[250], "0000000000000000")
+        self.assertEqual(back_sample[245], "00000000000000cb")
+        self.assertEqual(back_sample[250], "00000000000000e4")
+        self.assertEqual(back_sample[254], "00000000000000f8")
+        self.assertEqual(back_sample[255], "00000000000000fd")
 
     def test_zero_stimulus_generates_all_zero_chunks(self) -> None:
         out_dir = self.run_generate("--stimulus", "zero", "--num-zero-samples", "3")
@@ -243,7 +244,7 @@ class BringupSimulationTest(unittest.TestCase):
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
             [
                 "bipolar_sweep",
-                "monopolar_100mv_100ns_erf_tr10ns_sweep",
+                "monopolar_100mv_100ns_erf_tr100ns_sweep",
                 "monopolar_100mv_100ns_sweep",
                 "polar_sweep",
                 "zero",
@@ -253,7 +254,7 @@ class BringupSimulationTest(unittest.TestCase):
             len((out_dir / "monopolar_100mv_100ns_sweep" / "testhex_stream" / "labels.hex").read_text(encoding="utf-8").splitlines()),
             356,
         )
-        self.assertIn("monopolar_100mv_100ns_erf_tr10ns_sweep", result.stdout)
+        self.assertIn("monopolar_100mv_100ns_erf_tr100ns_sweep", result.stdout)
         self.assertIn("generate-only: skipping score plotting", result.stdout)
 
     def test_annotate_and_plot_scores_from_vivado_csv(self) -> None:
@@ -262,7 +263,7 @@ class BringupSimulationTest(unittest.TestCase):
         bipolar_dir = out_dir / "bipolar_sweep"
         polar_dir = out_dir / "polar_sweep"
         long_monopolar_dir = out_dir / "monopolar_100mv_100ns_sweep"
-        erf_monopolar_dir = out_dir / "monopolar_100mv_100ns_erf_tr10ns_sweep"
+        erf_monopolar_dir = out_dir / "monopolar_100mv_100ns_erf_tr100ns_sweep"
         zero_dir.mkdir(parents=True)
         bipolar_dir.mkdir(parents=True)
         polar_dir.mkdir(parents=True)
@@ -287,9 +288,9 @@ class BringupSimulationTest(unittest.TestCase):
             {"sample_id": "2", "stim_kind": "monopolar_100mv_100ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "100", "visible_pulse_width_samples": "1", "pulse_truncation": "back", "pulse_peak_mv": "100.000", "adc_code_pos": "512", "adc_code_neg": "0", "pulse_channel": "0"},
         ])
         self.write_manifest(erf_monopolar_dir / "manifest.csv", [
-            {"sample_id": "0", "stim_kind": "monopolar_100mv_100ns_erf_tr10ns_sweep", "pulse_offset_sample": "-100", "pulse_start_ns": "-100", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "0", "quantized_nonzero_samples": "13", "pulse_truncation": "front", "rise_time_10_90_samples": "10", "fall_time_90_10_samples": "10", "gaussian_sigma_samples": "3.901678", "edge_model": "erf_gaussian_lowpass", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
-            {"sample_id": "1", "stim_kind": "monopolar_100mv_100ns_erf_tr10ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "100", "quantized_nonzero_samples": "113", "pulse_truncation": "none", "rise_time_10_90_samples": "10", "fall_time_90_10_samples": "10", "gaussian_sigma_samples": "3.901678", "edge_model": "erf_gaussian_lowpass", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
-            {"sample_id": "2", "stim_kind": "monopolar_100mv_100ns_erf_tr10ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "1", "quantized_nonzero_samples": "13", "pulse_truncation": "back", "rise_time_10_90_samples": "10", "fall_time_90_10_samples": "10", "gaussian_sigma_samples": "3.901678", "edge_model": "erf_gaussian_lowpass", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
+            {"sample_id": "0", "stim_kind": "monopolar_100mv_100ns_erf_tr100ns_sweep", "pulse_offset_sample": "-100", "pulse_start_ns": "-100", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "0", "quantized_nonzero_samples": "121", "pulse_truncation": "front", "rise_time_10_90_samples": "100", "fall_time_90_10_samples": "100", "gaussian_sigma_samples": "39.016777", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "79.998", "adc_code_peak": "410", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "monopolar_100mv_100ns_erf_tr100ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "100", "quantized_nonzero_samples": "221", "pulse_truncation": "none", "rise_time_10_90_samples": "100", "fall_time_90_10_samples": "100", "gaussian_sigma_samples": "39.016777", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "79.998", "adc_code_peak": "410", "pulse_channel": "0"},
+            {"sample_id": "2", "stim_kind": "monopolar_100mv_100ns_erf_tr100ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "100", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "1", "quantized_nonzero_samples": "121", "pulse_truncation": "back", "rise_time_10_90_samples": "100", "fall_time_90_10_samples": "100", "gaussian_sigma_samples": "39.016777", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "79.998", "adc_code_peak": "410", "pulse_channel": "0"},
         ])
         self.write_scores(zero_dir / "scores.csv", [("0", "-1.000000"), ("1", "-1.250000")])
         self.write_scores(bipolar_dir / "scores.csv", [("0", "0.500000"), ("1", "0.750000")])
@@ -343,7 +344,7 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(long_monopolar_rows[0]["pulse_offset_sample"], "-100")
         self.assertEqual(long_monopolar_rows[2]["visible_pulse_width_samples"], "1")
         self.assertEqual(long_monopolar_rows[1]["float_out"], "2.500000")
-        self.assertEqual(erf_monopolar_rows[0]["quantized_nonzero_samples"], "13")
+        self.assertEqual(erf_monopolar_rows[0]["quantized_nonzero_samples"], "121")
         self.assertEqual(erf_monopolar_rows[1]["float_out"], "2.250000")
         self.assertEqual(
             [row["stim_kind"] for row in summary_rows],
@@ -352,13 +353,13 @@ class BringupSimulationTest(unittest.TestCase):
                 "bipolar_sweep",
                 "polar_sweep",
                 "monopolar_100mv_100ns_sweep",
-                "monopolar_100mv_100ns_erf_tr10ns_sweep",
+                "monopolar_100mv_100ns_erf_tr100ns_sweep",
             ],
         )
         self.assertTrue((out_dir / "score_vs_offset.png").exists())
         self.assertTrue((out_dir / "polar_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "monopolar_100mv_100ns_score_vs_offset.png").exists())
-        self.assertTrue((out_dir / "monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "score_histogram.png").exists())
         self.assertTrue((out_dir / "bringup_score_summary.csv").exists())
 
