@@ -15,7 +15,8 @@ if [[ "${generate_only}" != "0" && "${generate_only}" != "1" ]]; then
 fi
 
 echo "INFO: output root: ${out_dir}"
-echo "INFO: pulse cases: bipolar_sweep, polar_sweep, monopolar_100mv_100ns_sweep"
+echo "INFO: pulse cases: bipolar_sweep, polar_sweep, monopolar_100mv_100ns_sweep,"
+echo "INFO:              monopolar_100mv_100ns_erf_tr10ns_sweep"
 
 runner_args=(
     --stimulus all

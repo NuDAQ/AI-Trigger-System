@@ -511,7 +511,7 @@ confirm there are no missing, duplicate, or extra event chunks.
 
 ## DAQ Bring-Up Score Simulation
 
-For delivery bring-up, run the zero reference and all three pulse sweeps through
+For delivery bring-up, run the zero reference and all four pulse sweeps through
 the same Vivado/xsim testbench with one command:
 
 ```bash
@@ -533,8 +533,9 @@ The case names and save locations are:
 | `bipolar-sweep` | `build/bringup_sim/bipolar_sweep/` | `ch0`: `+50 mV` for 5 ns, then `-50 mV` for 5 ns; offsets `0..246` | 247 |
 | `polar-sweep` | `build/bringup_sim/polar_sweep/` | `ch0`: `+50 mV` for 5 ns, then zero; offsets `0..251` | 252 |
 | `monopolar-100mv-100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_sweep/` | `ch0`: nominal `+100 mV` for 100 ns; clipped offsets `-100..255` | 356 |
+| `monopolar-100mv-100ns-erf-tr10ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_erf_tr10ns_sweep/` | Same nominal pulse and offsets, with error-function edges and `tr=tf=10 ns` | 356 |
 
-`zero` is the baseline, not one of the three pulse simulations. In every pulse
+`zero` is the baseline, not one of the four pulse simulations. In every pulse
 case, `ch1..ch7` remain at `0`.
 
 The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
@@ -565,6 +566,25 @@ therefore clip the pulse front, offsets `0..156` contain the full pulse, and
 offsets `157..255` clip the pulse back. Its manifest records both the nominal
 width and `visible_pulse_width_samples`, plus `pulse_truncation` as `front`,
 `none`, or `back`.
+
+The band-limited monopolar case preserves the `100 mV` amplitude, the 100 ns
+distance between the rising and falling 50% crossings, and the same
+`-100..255` offset sweep. It replaces the vertical edges with:
+
+```text
+V(t) = A/2 * [erf((t-t0)/(sqrt(2)*sigma))
+            - erf((t-t1)/(sqrt(2)*sigma))]
+A = 100 mV
+t1 - t0 = 100 ns
+tr = tf = 10 ns
+sigma = 10 / 2.563 = 3.901678 ns
+```
+
+At 1 GSa/s, each 1 ns voltage sample is quantized to the existing 12-bit ADC
+format. `pulse_offset_sample` is the rising-edge 50% crossing. The manifest also
+records `nominal_visible_width_samples`, `quantized_nonzero_samples`, the edge
+model, rise/fall time, and sigma. Only the current 256-sample chunk is saved, so
+the smooth waveform tails are clipped rather than carried into adjacent chunks.
 
 To generate stimulus files without launching Vivado:
 
@@ -608,6 +628,7 @@ The plot script writes:
 build/bringup_sim/score_vs_offset.png
 build/bringup_sim/polar_score_vs_offset.png
 build/bringup_sim/monopolar_100mv_100ns_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png
 build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -23,6 +24,8 @@ PULSE_SEGMENT_SAMPLES = 5
 PULSE_TOTAL_SAMPLES = PULSE_SEGMENT_SAMPLES * 2
 LONG_MONOPOLAR_PULSE_MV = 100.0
 LONG_MONOPOLAR_PULSE_SAMPLES = 100
+ERF_EDGE_RISE_FALL_SAMPLES = 10
+ERF_EDGE_SIGMA_SAMPLES = ERF_EDGE_RISE_FALL_SAMPLES / 2.563
 
 
 @dataclass(frozen=True)
@@ -84,6 +87,25 @@ def clipped_monopolar_chunk(offset: int, width: int, pos_code: int) -> list[int]
     visible_end = min(N_CHUNK_WORDS, offset + width)
     for idx in range(visible_start, visible_end):
         chunk[idx] = pos_code
+    return chunk
+
+
+def erf_monopolar_chunk(
+    offset: int,
+    width: int,
+    amplitude_mv: float,
+    sigma_samples: float,
+    adc_vfs_mv: float,
+) -> list[int]:
+    if offset < -width or offset >= N_CHUNK_WORDS:
+        raise ValueError(f"erf monopolar offset {offset} is outside the sweep range")
+    chunk = zero_chunk()
+    denominator = math.sqrt(2.0) * sigma_samples
+    for sample_idx in range(N_CHUNK_WORDS):
+        rise = math.erf((sample_idx - offset) / denominator)
+        fall = math.erf((sample_idx - (offset + width)) / denominator)
+        voltage_mv = amplitude_mv * 0.5 * (rise - fall)
+        chunk[sample_idx] = voltage_to_adc_code(voltage_mv, adc_vfs_mv)
     return chunk
 
 
@@ -205,6 +227,53 @@ def build_monopolar_100mv_100ns_sweep_case(
     return StimulusCase("monopolar_100mv_100ns_sweep", samples, rows)
 
 
+def build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
+    adc_vfs_mv: float,
+    pulse_channel: int,
+) -> StimulusCase:
+    offsets = range(-LONG_MONOPOLAR_PULSE_SAMPLES, N_CHUNK_WORDS)
+    samples = [
+        erf_monopolar_chunk(
+            offset,
+            LONG_MONOPOLAR_PULSE_SAMPLES,
+            LONG_MONOPOLAR_PULSE_MV,
+            ERF_EDGE_SIGMA_SAMPLES,
+            adc_vfs_mv,
+        )
+        for offset in offsets
+    ]
+    rows = []
+    for sample_id, (offset, chunk) in enumerate(zip(offsets, samples)):
+        nominal_start = max(0, offset)
+        nominal_end = min(N_CHUNK_WORDS, offset + LONG_MONOPOLAR_PULSE_SAMPLES)
+        nominal_visible_width = max(0, nominal_end - nominal_start)
+        if offset < 0:
+            truncation = "front"
+        elif offset + LONG_MONOPOLAR_PULSE_SAMPLES > N_CHUNK_WORDS:
+            truncation = "back"
+        else:
+            truncation = "none"
+        rows.append({
+            "sample_id": str(sample_id),
+            "stim_kind": "monopolar_100mv_100ns_erf_tr10ns_sweep",
+            "pulse_offset_sample": str(offset),
+            "pulse_start_ns": str(offset),
+            "pulse_width_samples": str(LONG_MONOPOLAR_PULSE_SAMPLES),
+            "pulse_width_definition": "50pct_crossings",
+            "nominal_visible_width_samples": str(nominal_visible_width),
+            "quantized_nonzero_samples": str(sum(code != 0 for code in chunk)),
+            "pulse_truncation": truncation,
+            "rise_time_10_90_samples": str(ERF_EDGE_RISE_FALL_SAMPLES),
+            "fall_time_90_10_samples": str(ERF_EDGE_RISE_FALL_SAMPLES),
+            "gaussian_sigma_samples": f"{ERF_EDGE_SIGMA_SAMPLES:.6f}",
+            "edge_model": "erf_gaussian_lowpass",
+            "pulse_peak_mv": f"{LONG_MONOPOLAR_PULSE_MV:.3f}",
+            "adc_code_peak": str(voltage_to_adc_code(LONG_MONOPOLAR_PULSE_MV, adc_vfs_mv)),
+            "pulse_channel": str(pulse_channel),
+        })
+    return StimulusCase("monopolar_100mv_100ns_erf_tr10ns_sweep", samples, rows)
+
+
 def write_case(case: StimulusCase, out_dir: Path, pulse_channel: int) -> Path:
     case_dir = out_dir / case.name
     testhex_dir = case_dir / "testhex_stream"
@@ -280,6 +349,13 @@ def selected_cases(args: argparse.Namespace) -> list[StimulusCase]:
         cases.append(build_polar_sweep_case(args.pulse_mv, args.adc_vfs_mv, args.pulse_channel))
     if args.stimulus in ("monopolar-100mv-100ns-sweep", "all"):
         cases.append(build_monopolar_100mv_100ns_sweep_case(args.adc_vfs_mv, args.pulse_channel))
+    if args.stimulus in ("monopolar-100mv-100ns-erf-tr10ns-sweep", "all"):
+        cases.append(
+            build_monopolar_100mv_100ns_erf_tr10ns_sweep_case(
+                args.adc_vfs_mv,
+                args.pulse_channel,
+            )
+        )
     return cases
 
 
@@ -322,6 +398,7 @@ def parse_args() -> argparse.Namespace:
             "bipolar-sweep",
             "polar-sweep",
             "monopolar-100mv-100ns-sweep",
+            "monopolar-100mv-100ns-erf-tr10ns-sweep",
             "all",
         ),
         default="all",

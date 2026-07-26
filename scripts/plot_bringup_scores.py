@@ -27,6 +27,7 @@ def write_summary(
     bipolar_rows: list[dict[str, str]],
     polar_rows: list[dict[str, str]],
     long_monopolar_rows: list[dict[str, str]],
+    erf_monopolar_rows: list[dict[str, str]],
 ) -> Path:
     out_path = out_dir / "bringup_score_summary.csv"
     summaries = []
@@ -35,6 +36,7 @@ def write_summary(
         ("bipolar_sweep", bipolar_rows),
         ("polar_sweep", polar_rows),
         ("monopolar_100mv_100ns_sweep", long_monopolar_rows),
+        ("monopolar_100mv_100ns_erf_tr10ns_sweep", erf_monopolar_rows),
     ):
         values = score_values(rows)
         if values:
@@ -62,6 +64,7 @@ def build_plots(
     bipolar_rows: list[dict[str, str]],
     polar_rows: list[dict[str, str]],
     long_monopolar_rows: list[dict[str, str]],
+    erf_monopolar_rows: list[dict[str, str]],
 ) -> None:
     mpl_config = out_dir / ".mplconfig"
     mpl_config.mkdir(parents=True, exist_ok=True)
@@ -79,6 +82,7 @@ def build_plots(
     bipolar_scores = score_values(bipolar_rows)
     polar_scores = score_values(polar_rows)
     long_monopolar_scores = score_values(long_monopolar_rows)
+    erf_monopolar_scores = score_values(erf_monopolar_rows)
 
     if bipolar_rows:
         offsets = [int(row["pulse_offset_sample"]) for row in bipolar_rows]
@@ -160,7 +164,48 @@ def build_plots(
         plt.savefig(out_dir / "monopolar_100mv_100ns_score_vs_offset.png", dpi=160)
         plt.close()
 
-    if zero_scores or bipolar_scores or polar_scores or long_monopolar_scores:
+    if erf_monopolar_rows:
+        offsets = [int(row["pulse_offset_sample"]) for row in erf_monopolar_rows]
+        plt.figure(figsize=(10, 4.8))
+        plt.plot(
+            offsets,
+            erf_monopolar_scores,
+            marker=".",
+            linewidth=1.0,
+            label="ch0 +100 mV x 100 ns monopolar, erf edges tr=tf=10 ns",
+        )
+        if zero_scores:
+            zero_mean = mean(zero_scores)
+            plt.axhline(zero_mean, color="tab:orange", linestyle="--", label="zero mean")
+            plt.fill_between(
+                [min(offsets), max(offsets)],
+                [min(zero_scores), min(zero_scores)],
+                [max(zero_scores), max(zero_scores)],
+                color="tab:orange",
+                alpha=0.15,
+                label="zero min/max",
+            )
+        plt.axvline(0, color="tab:green", linestyle=":", label="rise 50% enters chunk")
+        plt.axvline(156, color="tab:red", linestyle=":", label="fall 50% reaches boundary")
+        plt.xlabel("Rising-edge 50% crossing offset in 256-sample chunk")
+        plt.ylabel("CNN score")
+        plt.title("DAQ bring-up band-limited monopolar pulse score vs offset")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(
+            out_dir / "monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png",
+            dpi=160,
+        )
+        plt.close()
+
+    if (
+        zero_scores
+        or bipolar_scores
+        or polar_scores
+        or long_monopolar_scores
+        or erf_monopolar_scores
+    ):
         plt.figure(figsize=(8, 4.8))
         if zero_scores:
             plt.hist(zero_scores, bins=min(30, max(1, len(zero_scores))), alpha=0.65, label="zero")
@@ -174,6 +219,13 @@ def build_plots(
                 bins=min(40, max(1, len(long_monopolar_scores))),
                 alpha=0.65,
                 label="100 mV x 100 ns monopolar sweep",
+            )
+        if erf_monopolar_scores:
+            plt.hist(
+                erf_monopolar_scores,
+                bins=min(40, max(1, len(erf_monopolar_scores))),
+                alpha=0.65,
+                label="100 mV x 100 ns erf-edge tr=tf=10 ns sweep",
             )
         plt.xlabel("CNN score")
         plt.ylabel("Count")
@@ -205,13 +257,31 @@ def main() -> int:
     long_monopolar_rows = read_rows(
         out_dir / "monopolar_100mv_100ns_sweep" / "scores_annotated.csv"
     )
+    erf_monopolar_rows = read_rows(
+        out_dir / "monopolar_100mv_100ns_erf_tr10ns_sweep" / "scores_annotated.csv"
+    )
 
-    summary = write_summary(out_dir, zero_rows, bipolar_rows, polar_rows, long_monopolar_rows)
-    build_plots(out_dir, zero_rows, bipolar_rows, polar_rows, long_monopolar_rows)
+    summary = write_summary(
+        out_dir,
+        zero_rows,
+        bipolar_rows,
+        polar_rows,
+        long_monopolar_rows,
+        erf_monopolar_rows,
+    )
+    build_plots(
+        out_dir,
+        zero_rows,
+        bipolar_rows,
+        polar_rows,
+        long_monopolar_rows,
+        erf_monopolar_rows,
+    )
     print(f"INFO: wrote {summary}")
     print(f"INFO: wrote {out_dir / 'score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'polar_score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_score_vs_offset.png'}")
+    print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_erf_tr10ns_score_vs_offset.png'}")
     print(f"INFO: wrote {out_dir / 'score_histogram.png'}")
     return 0
 
