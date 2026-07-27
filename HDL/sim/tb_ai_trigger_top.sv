@@ -215,9 +215,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open CSV: %s", out_csv_path); $finish;
         end
         $fwrite(csv_file,
-            {"sample_id,hex_out,float_out,label,prediction,correct,",
-             "latency_cycles_cnn,latency_us,input_first_fire_time_ns,",
-             "input_last_fire_time_ns,cnn_result_time_ns\n"});
+            "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us,input_first_fire_time_ns,input_last_fire_time_ns,cnn_result_time_ns\n");
         $fflush(csv_file);
 
         event_csv_file = $fopen(event_csv_path, "w");
@@ -225,9 +223,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
         end
         $fwrite(event_csv_file,
-            {"event_index,event_chunk_id,event_timestamp,event_score_hex,",
-             "event_batch_index,event_last,event_data_hex,event_output_time_ns,",
-             "event_valid,event_ready,event_fire\n"});
+            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex,event_output_time_ns,event_valid,event_ready,event_fire\n");
         $fflush(event_csv_file);
 
         // Load labels

@@ -334,6 +334,8 @@ class NsfJul27SimulationTest(unittest.TestCase):
         self.assertIn("event_valid,event_ready,event_fire", testbench)
         self.assertIn(".EVENT_READY    (event_ready)", testbench)
         self.assertIn("if (event_valid && event_ready)", testbench)
+        self.assertNotIn('{"sample_id,hex_out', testbench)
+        self.assertNotIn('{"event_index,event_chunk_id', testbench)
 
     def test_analyze_cli_fails_when_a_signal_event_is_missing_but_keeps_report(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-nsf-missing-event-"))
