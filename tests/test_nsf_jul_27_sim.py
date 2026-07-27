@@ -322,6 +322,66 @@ class NsfJul27SimulationTest(unittest.TestCase):
         self.assertEqual(first_row_by_chunk[6]["event_timestamp"], "6")
         self.assertEqual(first_row_by_chunk[6]["continuous_readout_ok"], "1")
 
+    def test_analyze_cli_rejects_event_stream_with_interbeat_bubbles(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-nsf-slow-event-"))
+        x_path = work_dir / "x.npy"
+        y_path = work_dir / "y.npy"
+        out_dir = work_dir / "out"
+        report_path = out_dir / "NSF_Jul_27_trigger_trace.csv"
+        scores_path = out_dir / "scores.csv"
+        events_path = out_dir / "events.csv"
+        log_path = out_dir / "simulate.log"
+
+        waveforms = np.zeros((2, 4, 256, 1), dtype=np.float32)
+        waveforms[0, :, 0, 0] = [-0.5, 1.0, 5.0, -2.0]
+        np.save(x_path, waveforms)
+        np.save(y_path, np.array([1, 0], dtype=np.float32))
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--x-data",
+                str(x_path),
+                "--labels",
+                str(y_path),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        self.write_score_csv(scores_path)
+        self.write_event_csv(events_path)
+        self.write_clean_log(log_path)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+                "--scores-csv",
+                str(scores_path),
+                "--events-csv",
+                str(events_path),
+                "--log",
+                str(log_path),
+                "--report-csv",
+                str(report_path),
+            ],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        with report_path.open(newline="", encoding="utf-8") as csv_file:
+            first_row = next(csv.DictReader(csv_file))
+        self.assertEqual(first_row["event_line_rate_ok"], "0")
+        self.assertEqual(first_row["signal_readout_ok"], "0")
+
     def test_testbench_csv_contract_records_transaction_times_and_handshakes(self) -> None:
         testbench = (
             ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv"
