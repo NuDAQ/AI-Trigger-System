@@ -20,6 +20,7 @@ MODEL_INPUT_SCALE = 64.0
 N_ADC_CHANNELS = 8
 SAMPLES_PER_BEAT = 4
 BEATS_PER_CHUNK = SAMPLES_PER_CHUNK // SAMPLES_PER_BEAT
+ADC_BEAT_PERIOD_NS = 4
 
 
 def load_inputs(x_path: Path, labels_path: Path) -> tuple[np.ndarray, np.ndarray]:
@@ -277,6 +278,7 @@ def build_report(
         "waveform_match",
         "event_beat_count",
         "event_complete",
+        "event_line_rate_ok",
         "signal_readout_ok",
         "noise_ignored_ok",
         "continuous_readout_ok",
@@ -333,6 +335,14 @@ def build_report(
             for index in sorted(chunk_events)
             if chunk_events[index].get("event_output_time_ns", "") != ""
         ]
+        event_line_rate_ok = int(
+            event_present
+            and len(event_times) == BEATS_PER_CHUNK
+            and all(
+                right - left == ADC_BEAT_PERIOD_NS
+                for left, right in zip(event_times, event_times[1:])
+            )
+        )
         event_complete = int(
             event_beat_count == BEATS_PER_CHUNK
             and set(chunk_events) == set(range(BEATS_PER_CHUNK))
@@ -374,6 +384,7 @@ def build_report(
             and trigger_decision == 1
             and event_present
             and event_complete == 1
+            and event_line_rate_ok == 1
             and timestamp_ok
             and chunk_waveforms_match
             and health_ok
@@ -432,6 +443,7 @@ def build_report(
                 ),
                 "event_beat_count": event_beat_count,
                 "event_complete": event_complete,
+                "event_line_rate_ok": event_line_rate_ok,
                 "signal_readout_ok": signal_readout_ok,
                 "noise_ignored_ok": noise_ignored_ok,
                 "continuous_readout_ok": "",
@@ -483,7 +495,13 @@ def build_report(
             for row in right_rows
             if row["event_output_time_ns"] != ""
         ]
-        if left_times and right_times and max(left_times) < min(right_times):
+        if (
+            int(left_rows[0]["event_line_rate_ok"]) == 1
+            and int(right_rows[0]["event_line_rate_ok"]) == 1
+            and left_times
+            and right_times
+            and max(left_times) + ADC_BEAT_PERIOD_NS == min(right_times)
+        ):
             continuous_chunk_ids.update((left_id, right_id))
 
     for row in report_rows:

@@ -35,7 +35,7 @@ class NsfJul27SimulationTest(unittest.TestCase):
         )
 
     @staticmethod
-    def write_event_csv(path: Path) -> None:
+    def write_event_csv(path: Path, beat_period_ns: int = 4) -> None:
         first_batch = (
             "000000000000000000000000000000000000000000000000"
             "000000000f80000000000140000000000040000000000fe0"
@@ -50,7 +50,7 @@ class NsfJul27SimulationTest(unittest.TestCase):
             event_data = first_batch if batch_index == 0 else zero_batch
             lines.append(
                 f"0,0,0,0x00001800,{batch_index},{int(batch_index == 63)},"
-                f"0x{event_data},{2000 + batch_index * 12},1,1,1"
+                f"0x{event_data},{2000 + batch_index * beat_period_ns},1,1,1"
             )
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -208,6 +208,7 @@ class NsfJul27SimulationTest(unittest.TestCase):
         self.assertEqual(first_signal["event_fire"], "1")
         self.assertEqual(first_signal["waveform_match"], "1")
         self.assertEqual(first_signal["event_complete"], "1")
+        self.assertEqual(first_signal["event_line_rate_ok"], "1")
         self.assertEqual(first_signal["signal_readout_ok"], "1")
         self.assertEqual(last_signal["event_last"], "1")
 
@@ -272,13 +273,14 @@ class NsfJul27SimulationTest(unittest.TestCase):
             "event_batch_index,event_last,event_data_hex,event_output_time_ns,"
             "event_valid,event_ready,event_fire"
         ]
+        event_starts_ns = {0: 2000, 5: 3000, 6: 3256}
         for event_index, chunk_id in enumerate((0, 5, 6)):
-            event_start_ns = 2000 + event_index * 1000
+            event_start_ns = event_starts_ns[chunk_id]
             for batch_index in range(64):
                 event_lines.append(
                     f"{event_index},{chunk_id},{chunk_id},0x00000800,"
                     f"{batch_index},{int(batch_index == 63)},0x{'0' * 96},"
-                    f"{event_start_ns + batch_index * 12},1,1,1"
+                    f"{event_start_ns + batch_index * 4},1,1,1"
                 )
         events_path.write_text("\n".join(event_lines) + "\n", encoding="utf-8")
         self.write_clean_log(log_path)
@@ -316,10 +318,12 @@ class NsfJul27SimulationTest(unittest.TestCase):
         self.assertEqual(first_row_by_chunk[5]["source_chunk_id"], "495")
         self.assertEqual(first_row_by_chunk[5]["event_index"], "1")
         self.assertEqual(first_row_by_chunk[5]["event_timestamp"], "5")
+        self.assertEqual(first_row_by_chunk[5]["event_line_rate_ok"], "1")
         self.assertEqual(first_row_by_chunk[5]["continuous_readout_ok"], "1")
         self.assertEqual(first_row_by_chunk[6]["source_chunk_id"], "496")
         self.assertEqual(first_row_by_chunk[6]["event_index"], "2")
         self.assertEqual(first_row_by_chunk[6]["event_timestamp"], "6")
+        self.assertEqual(first_row_by_chunk[6]["event_line_rate_ok"], "1")
         self.assertEqual(first_row_by_chunk[6]["continuous_readout_ok"], "1")
 
     def test_analyze_cli_rejects_event_stream_with_interbeat_bubbles(self) -> None:
@@ -352,7 +356,7 @@ class NsfJul27SimulationTest(unittest.TestCase):
             check=True,
         )
         self.write_score_csv(scores_path)
-        self.write_event_csv(events_path)
+        self.write_event_csv(events_path, beat_period_ns=12)
         self.write_clean_log(log_path)
 
         result = subprocess.run(
