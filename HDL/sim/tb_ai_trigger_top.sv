@@ -349,11 +349,34 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     task automatic event_monitor_thread;
         integer batch_in_event;
+        time    previous_event_time_ns;
+        time    expected_beat_period_ns;
+        reg [15:0] previous_event_chunk_id;
+        reg     have_previous_event_beat;
         begin
             batch_in_event = 0;
+            previous_event_time_ns = 0;
+            previous_event_chunk_id = 0;
+            expected_beat_period_ns = time'($rtoi(CLK_ADC_PERIOD));
+            have_previous_event_beat = 0;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid && event_ready) begin
+                    if (have_previous_event_beat &&
+                        (batch_in_event != 0 ||
+                         event_chunk_id == previous_event_chunk_id + 16'd1) &&
+                        $time - previous_event_time_ns != expected_beat_period_ns) begin
+                        $display(
+                            "[ERROR] Event output bubble: previous chunk=%0d current chunk=%0d batch=%0d delta=%0d ns expected=%0d ns",
+                            previous_event_chunk_id,
+                            event_chunk_id,
+                            batch_in_event,
+                            $time - previous_event_time_ns,
+                            expected_beat_period_ns
+                        );
+                        $finish;
+                    end
+
                     $fwrite(event_csv_file,
                             "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h,%0d,%0d,%0d,%0d\n",
                             event_count,
@@ -369,6 +392,9 @@ module tb_AI_TRIGGER_TOP;
                             event_valid && event_ready);
                     $fflush(event_csv_file);
 
+                    previous_event_time_ns = $time;
+                    previous_event_chunk_id = event_chunk_id;
+                    have_previous_event_beat = 1;
                     event_batch_count = event_batch_count + 1;
                     if (event_last) begin
                         event_count = event_count + 1;
