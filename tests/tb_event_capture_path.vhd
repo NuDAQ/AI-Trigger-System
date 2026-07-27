@@ -97,6 +97,7 @@ begin
         variable chunk_expected : integer;
         variable batch_expected : integer;
         variable wait_cycles : integer := 0;
+        variable output_stream_started : boolean := false;
     begin
         cnn_thresh <= std_logic_vector(to_signed(1024, 32));
         for ch in 0 to N_CH - 1 loop
@@ -135,6 +136,7 @@ begin
         while seen < N_TEST_TRIGGERS * EVENT_CHUNKS * N_BATCHES loop
             wait for 1 ns;
             if event_valid = '1' then
+                output_stream_started := true;
                 wait_cycles := 0;
                 chunk_expected := to_integer(event_chunk_id);
                 batch_expected := seen mod N_BATCHES;
@@ -163,6 +165,9 @@ begin
                 end if;
                 seen := seen + 1;
             else
+                assert not output_stream_started
+                    report "ready event output inserted a bubble after the first accepted beat"
+                    severity failure;
                 wait_cycles := wait_cycles + 1;
                 assert wait_cycles < 1200
                     report "timed out waiting for burst event capture"
