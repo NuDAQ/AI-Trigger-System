@@ -509,6 +509,49 @@ At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
 expected to produce exactly one 64-beat event. The post-migration run should
 confirm there are no missing, duplicate, or extra event chunks.
 
+### NSF Jul 27 Continuous-Readout Evidence
+
+Run the seven-chunk NSF slice through the same Vivado/XSim testbench with:
+
+```bash
+python3 scripts/run_nsf_jul_27_sim.py
+```
+
+The runner reads:
+
+```text
+data/X_test_data_NSF_Jul_27.npy
+data/y_test_labels_NSF_Jul_27.npy
+```
+
+It generates the XSim stimulus, runs chunks 490 through 496 as local chunks 0
+through 6, and writes the final beat-level report to:
+
+```text
+build/nsf_jul_27_sim/NSF_Jul_27_trigger_trace.csv
+```
+
+The default run uses `CNN_THRESH_RAW=0`, `SCORE_THRESHOLD=0.0`, and leaves raw
+channels 4 through 7 at zero because the source slice contains four channels.
+The command exits successfully only when every label-1 chunk has one complete,
+waveform-matched 64-beat event, every label-0 chunk has no event, adjacent
+label-1 chunks are read out in order with consecutive timestamps, and all
+overflow/drop/ring-miss counters are zero. The CSV is still written when a
+proof check fails so the failed beat or chunk can be inspected.
+
+To prepare the stimulus without Vivado:
+
+```bash
+python3 scripts/run_nsf_jul_27_sim.py --prepare-only
+```
+
+After a server run, the report can be rebuilt from existing `scores.csv`,
+`events.csv`, and `simulate.log` with:
+
+```bash
+python3 scripts/run_nsf_jul_27_sim.py --analyze-only
+```
+
 ## DAQ Bring-Up Score Simulation
 
 For delivery bring-up, run the zero reference and all four pulse sweeps through
