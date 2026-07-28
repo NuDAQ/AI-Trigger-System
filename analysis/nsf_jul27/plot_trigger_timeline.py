@@ -541,8 +541,8 @@ def draw_report(
     canvas = ROOT.TCanvas(
         "c_nsf_jul27_trigger_timeline",
         "NSF Jul 27 AI trigger timeline",
-        1800,
-        1250,
+        3600,
+        2500,
     )
     canvas.SetFillColor(ROOT.kWhite)
     keepalive.append(canvas)
@@ -578,7 +578,7 @@ def draw_report(
         input_x,
         page1_input_y,
         colors["input"],
-        line_width=2,
+        line_width=1,
     )
     input_graph.Draw("L SAME")
     input_frame.Draw("AXIS SAME")
@@ -692,7 +692,7 @@ def draw_report(
             graph_x,
             graph_y,
             colors["output"],
-            line_width=2,
+            line_width=1,
         )
         graph.Draw("L SAME")
         output_graphs.append(graph)
@@ -717,8 +717,8 @@ def draw_report(
     channels_canvas = ROOT.TCanvas(
         "c_nsf_jul27_four_channel_input",
         "NSF Jul 27 four-channel input waveforms",
-        1800,
-        1250,
+        3600,
+        2500,
     )
     channels_canvas.SetFillColor(ROOT.kWhite)
     keepalive.append(channels_canvas)
@@ -768,7 +768,7 @@ def draw_report(
             input_x,
             input_y_by_channel[channel],
             colors["input"],
-            line_width=2,
+            line_width=1,
         )
         graph.Draw("L SAME")
         frame.Draw("AXIS SAME")
