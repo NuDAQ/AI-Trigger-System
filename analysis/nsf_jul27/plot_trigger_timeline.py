@@ -31,9 +31,10 @@ EXPECTED_LABELS = [1, 0, 0, 0, 0, 1, 1]
 BEATS_PER_CHUNK = 64
 SAMPLES_PER_BEAT = 4
 INPUT_SAMPLE_PERIOD_NS = 1.0
-EVENT_SAMPLE_DISPLAY_PERIOD_NS = 4.0
-EVENT_BEAT_PERIOD_NS = 16.0
+EVENT_SAMPLE_PERIOD_NS = INPUT_SAMPLE_PERIOD_NS
+EVENT_BEAT_PERIOD_NS = SAMPLES_PER_BEAT * EVENT_SAMPLE_PERIOD_NS
 MODEL_INPUT_SCALE = 64.0
+PAGE1_FIRST_CHUNK_CHANNEL = 1
 
 
 def load_background_noise_rms(
@@ -339,7 +340,7 @@ def style_frame(
     *,
     y_title: str,
     show_x_labels: bool,
-    y_title_offset: float = 0.72,
+    y_title_offset: float = 0.30,
 ) -> None:
     frame.SetTitle("")
     frame.GetYaxis().SetTitle(y_title)
@@ -347,7 +348,7 @@ def style_frame(
     frame.GetYaxis().SetTitleOffset(y_title_offset)
     frame.GetYaxis().SetLabelSize(0.060)
     frame.GetYaxis().SetNdivisions(505)
-    frame.GetXaxis().SetTitle("Time (ns) (ns)" if show_x_labels else "")
+    frame.GetXaxis().SetTitle("Time (ns)" if show_x_labels else "")
     frame.GetXaxis().SetTitleSize(0.075)
     frame.GetXaxis().SetTitleOffset(0.95)
     frame.GetXaxis().SetLabelSize(0.065 if show_x_labels else 0.0)
@@ -355,9 +356,9 @@ def style_frame(
 
 
 def make_pad(name: str, y_low: float, y_high: float, *, bottom_margin: float) -> ROOT.TPad:
-    pad = ROOT.TPad(name, name, 0.075, y_low, 0.985, y_high)
-    pad.SetLeftMargin(0.15)
-    pad.SetRightMargin(0.02)
+    pad = ROOT.TPad(name, name, 0.035, y_low, 0.990, y_high)
+    pad.SetLeftMargin(0.12)
+    pad.SetRightMargin(0.015)
     pad.SetTopMargin(0.055)
     pad.SetBottomMargin(bottom_margin)
     pad.SetTicks(1, 1)
@@ -371,6 +372,8 @@ def add_chunk_backgrounds(
     y_min: float,
     y_max: float,
     colors: dict[str, int],
+    *,
+    show_labels: bool = True,
 ) -> None:
     latex = ROOT.TLatex()
     latex.SetTextFont(42)
@@ -396,8 +399,30 @@ def add_chunk_backgrounds(
         box.Draw("SAME")
         keepalive.append(box)
 
-        text = f"{chunk + 1}  signal" if label else f"{chunk + 1}  noise"
-        latex.DrawLatex((x_start + x_end) / 2.0, y_max * 0.83, text)
+        if show_labels:
+            text = f"{chunk + 1}  signal" if label else f"{chunk + 1}  noise"
+            latex.DrawLatex((x_start + x_end) / 2.0, y_max * 0.83, text)
+
+    boundary_tick_height = (y_max - y_min) * 0.08
+    for chunk in range(1, 7):
+        boundary_x = number(
+            trace_by_chunk[chunk][0],
+            "input_time_ns",
+        )
+        for tick_y_start, tick_y_end in (
+            (y_min, y_min + boundary_tick_height),
+            (y_max - boundary_tick_height, y_max),
+        ):
+            boundary_tick = ROOT.TLine(
+                boundary_x,
+                tick_y_start,
+                boundary_x,
+                tick_y_end,
+            )
+            boundary_tick.SetLineColor(colors["grid"])
+            boundary_tick.SetLineWidth(2)
+            boundary_tick.Draw("SAME")
+            keepalive.append(boundary_tick)
 
 
 def draw_report(
@@ -407,42 +432,62 @@ def draw_report(
     noise_rms_model: float,
     output_dir: Path,
     basename: str,
-) -> tuple[Path, Path, Path]:
+) -> tuple[Path, Path, Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     colors = configure_style()
     keepalive: list[object] = []
 
     input_x: list[float] = []
-    input_raw_y: list[float] = []
-    input_fire_x: list[float] = []
+    input_raw_by_channel: dict[int, list[float]] = {
+        channel: [] for channel in range(4)
+    }
     for chunk in range(7):
         for row in trace_by_chunk[chunk]:
             beat_time = number(row, "input_time_ns")
-            input_fire_x.append(beat_time)
             for sample in range(SAMPLES_PER_BEAT):
                 input_x.append(beat_time + sample * INPUT_SAMPLE_PERIOD_NS)
-                input_raw_y.append(
-                    float(integer(row, f"input_ch0_s{sample}"))
-                )
+                for channel in range(4):
+                    input_raw_by_channel[channel].append(
+                        float(integer(row, f"input_ch{channel}_s{sample}"))
+                    )
 
     noise_rms_adc = noise_rms_model * MODEL_INPUT_SCALE
-    input_y = [value / noise_rms_adc for value in input_raw_y]
+    input_y_by_channel = {
+        channel: [
+            value / noise_rms_adc
+            for value in input_raw_by_channel[channel]
+        ]
+        for channel in range(4)
+    }
+    first_chunk_sample_count = BEATS_PER_CHUNK * SAMPLES_PER_BEAT
+    page1_input_y = list(input_y_by_channel[0])
+    page1_input_y[:first_chunk_sample_count] = input_y_by_channel[
+        PAGE1_FIRST_CHUNK_CHANNEL
+    ][:first_chunk_sample_count]
 
     output_graph_data: dict[int, tuple[list[float], list[float]]] = {}
-    event_fire_x: list[float] = []
     for chunk, event_rows in event_by_chunk.items():
         x_values: list[float] = []
         y_values: list[float] = []
+        display_channel = (
+            PAGE1_FIRST_CHUNK_CHANNEL
+            if chunk == 0
+            else 0
+        )
         trace_rows = trace_by_chunk[chunk]
         for trace_row, event_row in zip(trace_rows, event_rows):
             beat_time = number(event_row, "event_output_time_ns")
-            event_fire_x.append(beat_time)
             for sample in range(SAMPLES_PER_BEAT):
                 x_values.append(
-                    beat_time + sample * EVENT_SAMPLE_DISPLAY_PERIOD_NS
+                    beat_time + sample * EVENT_SAMPLE_PERIOD_NS
                 )
                 y_values.append(
-                    float(integer(trace_row, f"event_ch0_s{sample}"))
+                    float(
+                        integer(
+                            trace_row,
+                            f"event_ch{display_channel}_s{sample}",
+                        )
+                    )
                     / noise_rms_adc
                 )
         output_graph_data[chunk] = (x_values, y_values)
@@ -459,15 +504,38 @@ def draw_report(
     trigger_chunks = [chunk for chunk in range(7) if score_y[chunk] > 0.5]
     noise_chunks = [chunk for chunk in range(7) if score_y[chunk] <= 0.5]
 
-    output_end = max(
-        values[0][-1]
-        for values in output_graph_data.values()
+    input_x_min = input_x[0]
+    input_x_max = input_x[-1] + INPUT_SAMPLE_PERIOD_NS
+    output_x_min = min(
+        number(rows[0], "event_output_time_ns")
+        for rows in event_by_chunk.values()
     )
-    x_min = 180.0
-    x_max = max(4700.0, output_end + 60.0)
+    output_x_max = max(
+        number(rows[-1], "event_output_time_ns") + EVENT_BEAT_PERIOD_NS
+        for rows in event_by_chunk.values()
+    )
+    output_time_span = output_x_max - output_x_min
+    first_event_rows = event_by_chunk[sorted(event_by_chunk)[0]]
+    first_event_duration = (
+        number(first_event_rows[-1], "event_output_time_ns")
+        + EVENT_BEAT_PERIOD_NS
+        - number(first_event_rows[0], "event_output_time_ns")
+    )
+    score_x_min = score_x[0] - first_event_duration / 2.0
+    score_x_max = score_x_min + output_time_span
+
     amplitude_limit = max(
         5.0,
-        max(abs(value) for value in input_y) * 1.15,
+        max(abs(value) for value in page1_input_y) * 1.15,
+    )
+    four_channel_amplitude_limit = max(
+        5.0,
+        max(
+            abs(value)
+            for channel_values in input_y_by_channel.values()
+            for value in channel_values
+        )
+        * 1.15,
     )
 
     canvas = ROOT.TCanvas(
@@ -479,24 +547,23 @@ def draw_report(
     canvas.SetFillColor(ROOT.kWhite)
     keepalive.append(canvas)
 
-    input_pad = make_pad("input_pad", 0.705, 0.925, bottom_margin=0.02)
-    score_pad = make_pad("score_pad", 0.495, 0.695, bottom_margin=0.02)
-    output_pad = make_pad("output_pad", 0.265, 0.485, bottom_margin=0.02)
-    lane_pad = make_pad("lane_pad", 0.065, 0.255, bottom_margin=0.25)
-    keepalive.extend([input_pad, score_pad, output_pad, lane_pad])
+    input_pad = make_pad("input_pad", 0.685, 0.950, bottom_margin=0.18)
+    score_pad = make_pad("score_pad", 0.365, 0.630, bottom_margin=0.18)
+    output_pad = make_pad("output_pad", 0.045, 0.310, bottom_margin=0.18)
+    keepalive.extend([input_pad, score_pad, output_pad])
 
-    # Ch0 input waveform.
+    # input waveform.
     input_pad.cd()
     input_frame = input_pad.DrawFrame(
-        x_min,
+        input_x_min,
         -amplitude_limit,
-        x_max,
+        input_x_max,
         amplitude_limit,
     )
     style_frame(
         input_frame,
-        y_title="Ch0 input\n(amplitude / noise RMS)",
-        show_x_labels=False,
+        y_title="Input / noise RMS",
+        show_x_labels=True,
     )
     input_frame.GetYaxis().CenterTitle()
     add_chunk_backgrounds(
@@ -509,7 +576,7 @@ def draw_report(
     input_graph = make_graph(
         "g_ch0_input",
         input_x,
-        input_y,
+        page1_input_y,
         colors["input"],
         line_width=2,
     )
@@ -517,31 +584,19 @@ def draw_report(
     input_frame.Draw("AXIS SAME")
     keepalive.extend([input_frame, input_graph])
 
-    input_note = ROOT.TLatex()
-    input_note.SetTextFont(42)
-    input_note.SetTextSize(0.050)
-    input_note.SetTextColor(colors["input"])
-    input_note.DrawLatex(
-        3150.0,
-        amplitude_limit * 0.54,
-        "All 448 input beats accepted",
-    )
-    input_note.DrawLatex(
-        3150.0,
-        amplitude_limit * 0.26,
-        "Only Ch0 shown; noise RMS = "
-        f"{noise_rms_model:.4f} ({noise_rms_adc:.2f} ADC codes)",
-    )
-    keepalive.append(input_note)
-
     # CNN score and decision.
     score_pad.cd()
     score_min = -0.08
     score_max = 1.08
-    score_frame = score_pad.DrawFrame(x_min, score_min, x_max, score_max)
-    style_frame(score_frame, y_title="Sigmoid score", show_x_labels=False)
+    score_frame = score_pad.DrawFrame(
+        score_x_min,
+        score_min,
+        score_x_max,
+        score_max,
+    )
+    style_frame(score_frame, y_title="Sigmoid score", show_x_labels=True)
     score_frame.GetYaxis().CenterTitle()
-    threshold = ROOT.TLine(x_min, 0.5, x_max, 0.5)
+    threshold = ROOT.TLine(score_x_min, 0.5, score_x_max, 0.5)
     threshold.SetLineColor(colors["threshold"])
     threshold.SetLineStyle(2)
     threshold.SetLineWidth(2)
@@ -578,12 +633,15 @@ def draw_report(
         score_text.DrawLatex(
             score_x[chunk],
             score_y[chunk] + vertical_offset,
-            f"{chunk + 1}  {score_y[chunk]:.3f}",
+            f"{score_y[chunk]:.3f}",
         )
 
-    score_legend = ROOT.TLegend(0.68, 0.19, 0.96, 0.85)
-    score_legend.SetBorderSize(0)
-    score_legend.SetFillStyle(0)
+    score_legend = ROOT.TLegend(0.80, 0.20, 0.98, 0.49)
+    score_legend.SetBorderSize(1)
+    score_legend.SetLineColor(ROOT.kBlack)
+    score_legend.SetLineWidth(1)
+    score_legend.SetFillStyle(1001)
+    score_legend.SetFillColor(ROOT.kWhite)
     score_legend.SetTextFont(42)
     score_legend.SetTextSize(0.055)
     score_legend.AddEntry(trigger_graph, "Valid trigger (score > 0.5)", "p")
@@ -604,25 +662,20 @@ def draw_report(
     # Ch0 event output waveform.
     output_pad.cd()
     output_frame = output_pad.DrawFrame(
-        x_min,
+        output_x_min,
         -amplitude_limit,
-        x_max,
+        output_x_max,
         amplitude_limit,
     )
     style_frame(
         output_frame,
-        y_title="Ch0 output\n(amplitude / noise RMS)",
-        show_x_labels=False,
+        y_title="Output / noise RMS",
+        show_x_labels=True,
     )
     output_frame.GetYaxis().CenterTitle()
 
     output_boxes: list[ROOT.TBox] = []
     output_graphs: list[ROOT.TGraph] = []
-    output_text = ROOT.TLatex()
-    output_text.SetTextFont(42)
-    output_text.SetTextAlign(22)
-    output_text.SetTextSize(0.050)
-    output_text.SetTextColor(colors["text"])
     for chunk in sorted(event_by_chunk):
         event_rows = event_by_chunk[chunk]
         event_start = number(event_rows[0], "event_output_time_ns")
@@ -644,138 +697,111 @@ def draw_report(
         graph.Draw("L SAME")
         output_graphs.append(graph)
 
-        event_number = sorted(event_by_chunk).index(chunk) + 1
-        timestamp = integer(event_rows[0], "event_timestamp")
-        output_text.DrawLatex(
-            (event_start + event_end) / 2.0,
-            amplitude_limit * 0.83,
-            f"Event {event_number}  |  timestamp {timestamp}  |  64/64 beats",
-        )
-
     output_frame.Draw("AXIS SAME")
-    output_note = ROOT.TLatex()
+    output_note = ROOT.TPaveText(0.31, 0.23, 0.60, 0.34, "NDC")
+    output_note.SetBorderSize(0)
+    output_note.SetFillColorAlpha(ROOT.kWhite, 0.82)
     output_note.SetTextFont(42)
-    output_note.SetTextSize(0.047)
+    output_note.SetTextAlign(22)
+    output_note.SetTextSize(0.043)
     output_note.SetTextColor(colors["output"])
-    output_note.DrawLatex(
-        340.0,
-        -amplitude_limit * 0.78,
-        "Ch0 integrity check: 0 mismatched samples",
-    )
+    output_note.Draw()
     keepalive.extend(
-        [output_frame, output_text, output_note, *output_boxes, *output_graphs]
-    )
-
-    # Transaction timeline.
-    lane_pad.cd()
-    lane_frame = ROOT.TH2F(
-        "h_transaction_lanes",
-        "",
-        10,
-        x_min,
-        x_max,
-        3,
-        0.0,
-        3.0,
-    )
-    lane_frame.SetStats(0)
-    lane_frame.GetYaxis().SetBinLabel(1, "Output accepted")
-    lane_frame.GetYaxis().SetBinLabel(2, "CNN trigger")
-    lane_frame.GetYaxis().SetBinLabel(3, "Input accepted")
-    lane_frame.GetYaxis().SetLabelSize(0.095)
-    lane_frame.GetYaxis().SetTickLength(0)
-    lane_frame.GetXaxis().SetTitle("Time (ns)")
-    lane_frame.GetXaxis().SetTitleSize(0.095)
-    lane_frame.GetXaxis().SetTitleOffset(1.05)
-    lane_frame.GetXaxis().SetLabelSize(0.080)
-    lane_frame.GetXaxis().SetNdivisions(510)
-    lane_frame.Draw()
-
-    lane_boxes: list[ROOT.TBox] = []
-    for chunk in sorted(event_by_chunk):
-        event_rows = event_by_chunk[chunk]
-        event_start = number(event_rows[0], "event_output_time_ns")
-        event_end = number(event_rows[-1], "event_output_time_ns") + EVENT_BEAT_PERIOD_NS
-        box = ROOT.TBox(event_start, 0.05, event_end, 0.95)
-        box.SetFillColorAlpha(colors["event_fill"], 0.65)
-        box.SetLineColor(0)
-        box.Draw("SAME")
-        lane_boxes.append(box)
-
-    input_fire_graph = make_graph(
-        "g_input_fire",
-        input_fire_x,
-        [2.5] * len(input_fire_x),
-        colors["input"],
-        marker_style=20,
-        marker_size=0.35,
-    )
-    trigger_fire_graph = make_graph(
-        "g_cnn_trigger",
-        [score_x[chunk] for chunk in trigger_chunks],
-        [1.5] * len(trigger_chunks),
-        colors["trigger"],
-        marker_style=22,
-        marker_size=1.6,
-    )
-    event_fire_graph = make_graph(
-        "g_event_fire",
-        event_fire_x,
-        [0.5] * len(event_fire_x),
-        colors["output"],
-        marker_style=20,
-        marker_size=0.45,
-    )
-    input_fire_graph.Draw("P SAME")
-    trigger_fire_graph.Draw("P SAME")
-    event_fire_graph.Draw("P SAME")
-
-    lane_text = ROOT.TLatex()
-    lane_text.SetTextFont(42)
-    lane_text.SetTextSize(0.071)
-    lane_text.SetTextColor(colors["noise"])
-    lane_text.DrawLatex(
-        505.0,
-        1.18,
-        "Inputs 2-5 ignored: no trigger and no event output",
-    )
-    lane_text.SetTextColor(colors["trigger"])
-    lane_text.DrawLatex(
-        2870.0,
-        1.18,
-        "Inputs 6 and 7 trigger back-to-back",
-    )
-    lane_text.SetTextColor(colors["output"])
-    lane_text.DrawLatex(
-        3070.0,
-        0.17,
-        "Event 2 -> Event 3: continuous handover (20 ns), no missing beat",
-    )
-    keepalive.extend(
-        [
-            lane_frame,
-            input_fire_graph,
-            trigger_fire_graph,
-            event_fire_graph,
-            lane_text,
-            *lane_boxes,
-        ]
+        [output_frame, output_note, *output_boxes, *output_graphs]
     )
 
     canvas.cd()
     canvas.Update()
 
+    # Page 2: original four-channel input waveforms only.
+    channels_canvas = ROOT.TCanvas(
+        "c_nsf_jul27_four_channel_input",
+        "NSF Jul 27 four-channel input waveforms",
+        1800,
+        1250,
+    )
+    channels_canvas.SetFillColor(ROOT.kWhite)
+    keepalive.append(channels_canvas)
+
+    channel_pad_ranges = [
+        (0.745, 0.955),
+        (0.515, 0.725),
+        (0.285, 0.495),
+        (0.045, 0.265),
+    ]
+    channel_graphs: list[ROOT.TGraph] = []
+    channel_frames: list[ROOT.TH1] = []
+    channel_pads: list[ROOT.TPad] = []
+    for channel, (y_low, y_high) in enumerate(channel_pad_ranges):
+        channels_canvas.cd()
+        show_x_labels = channel == 3
+        pad = make_pad(
+            f"input_ch{channel}_pad",
+            y_low,
+            y_high,
+            bottom_margin=0.18 if show_x_labels else 0.02,
+        )
+        channel_pads.append(pad)
+        pad.cd()
+        frame = pad.DrawFrame(
+            input_x_min,
+            -four_channel_amplitude_limit,
+            input_x_max,
+            four_channel_amplitude_limit,
+        )
+        style_frame(
+            frame,
+            y_title=f"Ch{channel} input / noise RMS",
+            show_x_labels=show_x_labels,
+        )
+        frame.GetYaxis().CenterTitle()
+        add_chunk_backgrounds(
+            keepalive,
+            trace_by_chunk,
+            -four_channel_amplitude_limit,
+            four_channel_amplitude_limit,
+            colors,
+            show_labels=channel == 0,
+        )
+        graph = make_graph(
+            f"g_ch{channel}_input_page2",
+            input_x,
+            input_y_by_channel[channel],
+            colors["input"],
+            line_width=2,
+        )
+        graph.Draw("L SAME")
+        frame.Draw("AXIS SAME")
+        channel_frames.append(frame)
+        channel_graphs.append(graph)
+
+    keepalive.extend(
+        [
+            *channel_pads,
+            *channel_frames,
+            *channel_graphs,
+        ]
+    )
+    channels_canvas.cd()
+    channels_canvas.Update()
+
     png_path = output_dir / f"{basename}.png"
+    channels_png_path = output_dir / f"{basename}_4channel.png"
     pdf_path = output_dir / f"{basename}.pdf"
     root_path = output_dir / f"{basename}.root"
     canvas.SaveAs(str(png_path))
-    canvas.SaveAs(str(pdf_path))
+    channels_canvas.SaveAs(str(channels_png_path))
+    canvas.Print(f"{pdf_path}[")
+    canvas.Print(str(pdf_path))
+    channels_canvas.Print(str(pdf_path))
+    channels_canvas.Print(f"{pdf_path}]")
 
     root_file = ROOT.TFile(str(root_path), "RECREATE")
     canvas.Write()
+    channels_canvas.Write()
     root_file.Close()
 
-    return png_path, pdf_path, root_path
+    return png_path, channels_png_path, pdf_path, root_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -854,7 +880,7 @@ def main() -> None:
     if args.validate_only:
         return
 
-    png_path, pdf_path, root_path = draw_report(
+    png_path, channels_png_path, pdf_path, root_path = draw_report(
         trace_by_chunk,
         score_by_chunk,
         event_by_chunk,
@@ -863,6 +889,7 @@ def main() -> None:
         args.basename,
     )
     print(f"Wrote {png_path}")
+    print(f"Wrote {channels_png_path}")
     print(f"Wrote {pdf_path}")
     print(f"Wrote {root_path}")
 
