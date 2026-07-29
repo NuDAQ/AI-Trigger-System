@@ -46,6 +46,22 @@ ERF_MONOPOLAR_PLOT_SPECS = (
         8,
         "monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png",
     ),
+    ErfMonopolarPlotSpec(
+        "monopolar_50mv_20ns_erf_tr5ns_sweep",
+        50,
+        20,
+        5,
+        50,
+        "monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png",
+    ),
+    ErfMonopolarPlotSpec(
+        "monopolar_100mv_20ns_erf_tr5ns_sweep",
+        100,
+        20,
+        5,
+        100,
+        "monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png",
+    ),
 )
 
 

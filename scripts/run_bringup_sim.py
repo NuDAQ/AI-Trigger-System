@@ -46,6 +46,20 @@ ERF_MONOPOLAR_CASE_SPECS = (
         10,
         10,
     ),
+    (
+        "monopolar-50mv-20ns-erf-tr5ns-sweep",
+        "monopolar_50mv_20ns_erf_tr5ns_sweep",
+        50.0,
+        20,
+        5,
+    ),
+    (
+        "monopolar-100mv-20ns-erf-tr5ns-sweep",
+        "monopolar_100mv_20ns_erf_tr5ns_sweep",
+        100.0,
+        20,
+        5,
+    ),
 )
 
 

@@ -262,6 +262,68 @@ class BringupSimulationTest(unittest.TestCase):
                 )
                 self.assertEqual(centered_sample[width // 2], expected["center_hex"])
 
+    def test_20ns_erf_monopolar_sweeps_use_5ns_edges(self) -> None:
+        cases = (
+            {
+                "cli_name": "monopolar-50mv-20ns-erf-tr5ns-sweep",
+                "case_name": "monopolar_50mv_20ns_erf_tr5ns_sweep",
+                "amplitude_mv": "50.000",
+                "peak_mv": "50.000",
+                "peak_code": "256",
+                "edge_hex": "0000000000000080",
+                "center_hex": "0000000000000100",
+                "center_nonzero": "26",
+            },
+            {
+                "cli_name": "monopolar-100mv-20ns-erf-tr5ns-sweep",
+                "case_name": "monopolar_100mv_20ns_erf_tr5ns_sweep",
+                "amplitude_mv": "100.000",
+                "peak_mv": "100.000",
+                "peak_code": "512",
+                "edge_hex": "0000000000000100",
+                "center_hex": "0000000000000200",
+                "center_nonzero": "27",
+            },
+        )
+
+        for expected in cases:
+            with self.subTest(stimulus=expected["cli_name"]):
+                out_dir = self.run_generate("--stimulus", expected["cli_name"])
+                case_dir = out_dir / expected["case_name"]
+                testhex_dir = case_dir / "testhex_stream"
+                labels = (testhex_dir / "labels.hex").read_text(encoding="utf-8").splitlines()
+                with (case_dir / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+                    manifest_rows = list(csv.DictReader(csv_file))
+
+                centered_row = manifest_rows[20]
+                centered_sample = (
+                    testhex_dir / "test_input_sample20.hex"
+                ).read_text(encoding="utf-8").splitlines()
+
+                self.assertEqual(len(labels), 276)
+                self.assertEqual(len(manifest_rows), 276)
+                self.assertEqual(manifest_rows[0]["pulse_offset_sample"], "-20")
+                self.assertEqual(manifest_rows[-1]["pulse_offset_sample"], "255")
+                self.assertEqual(centered_row["stim_kind"], expected["case_name"])
+                self.assertEqual(centered_row["pulse_offset_sample"], "0")
+                self.assertEqual(centered_row["pulse_width_samples"], "20")
+                self.assertEqual(centered_row["rise_time_10_90_samples"], "5")
+                self.assertEqual(centered_row["fall_time_90_10_samples"], "5")
+                self.assertEqual(centered_row["gaussian_sigma_samples"], "1.950839")
+                self.assertEqual(
+                    centered_row["pulse_amplitude_parameter_mv"],
+                    expected["amplitude_mv"],
+                )
+                self.assertEqual(centered_row["pulse_peak_mv"], expected["peak_mv"])
+                self.assertEqual(centered_row["adc_code_peak"], expected["peak_code"])
+                self.assertEqual(
+                    centered_row["quantized_nonzero_samples"],
+                    expected["center_nonzero"],
+                )
+                self.assertEqual(centered_sample[0], expected["edge_hex"])
+                self.assertEqual(centered_sample[10], expected["center_hex"])
+                self.assertEqual(centered_sample[20], expected["edge_hex"])
+
     def test_zero_stimulus_generates_all_zero_chunks(self) -> None:
         out_dir = self.run_generate("--stimulus", "zero", "--num-zero-samples", "3")
 
@@ -311,7 +373,9 @@ class BringupSimulationTest(unittest.TestCase):
                 "bipolar_sweep",
                 "monopolar_100mv_100ns_erf_tr100ns_sweep",
                 "monopolar_100mv_100ns_sweep",
+                "monopolar_100mv_20ns_erf_tr5ns_sweep",
                 "monopolar_10mv_10ns_erf_tr10ns_sweep",
+                "monopolar_50mv_20ns_erf_tr5ns_sweep",
                 "monopolar_50mv_50ns_erf_tr50ns_sweep",
                 "polar_sweep",
                 "zero",
@@ -323,6 +387,8 @@ class BringupSimulationTest(unittest.TestCase):
         )
         self.assertIn("monopolar_50mv_50ns_erf_tr50ns_sweep", result.stdout)
         self.assertIn("monopolar_10mv_10ns_erf_tr10ns_sweep", result.stdout)
+        self.assertIn("monopolar_50mv_20ns_erf_tr5ns_sweep", result.stdout)
+        self.assertIn("monopolar_100mv_20ns_erf_tr5ns_sweep", result.stdout)
         self.assertIn("monopolar_100mv_100ns_erf_tr100ns_sweep", result.stdout)
         self.assertIn("generate-only: skipping score plotting", result.stdout)
 
@@ -335,6 +401,8 @@ class BringupSimulationTest(unittest.TestCase):
         erf_monopolar_dir = out_dir / "monopolar_100mv_100ns_erf_tr100ns_sweep"
         erf_50mv_dir = out_dir / "monopolar_50mv_50ns_erf_tr50ns_sweep"
         erf_10mv_dir = out_dir / "monopolar_10mv_10ns_erf_tr10ns_sweep"
+        erf_50mv_20ns_dir = out_dir / "monopolar_50mv_20ns_erf_tr5ns_sweep"
+        erf_100mv_20ns_dir = out_dir / "monopolar_100mv_20ns_erf_tr5ns_sweep"
         zero_dir.mkdir(parents=True)
         bipolar_dir.mkdir(parents=True)
         polar_dir.mkdir(parents=True)
@@ -342,6 +410,8 @@ class BringupSimulationTest(unittest.TestCase):
         erf_monopolar_dir.mkdir(parents=True)
         erf_50mv_dir.mkdir(parents=True)
         erf_10mv_dir.mkdir(parents=True)
+        erf_50mv_20ns_dir.mkdir(parents=True)
+        erf_100mv_20ns_dir.mkdir(parents=True)
 
         self.write_manifest(zero_dir / "manifest.csv", [
             {"sample_id": "0", "stim_kind": "zero", "pulse_offset_sample": "-1", "pulse_start_ns": "-1", "pulse_width_samples": "0", "pulse_peak_mv": "0.000", "adc_code_pos": "0", "adc_code_neg": "0", "pulse_channel": "0"},
@@ -375,6 +445,16 @@ class BringupSimulationTest(unittest.TestCase):
             {"sample_id": "1", "stim_kind": "monopolar_10mv_10ns_erf_tr10ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "10", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "10", "quantized_nonzero_samples": "20", "pulse_truncation": "none", "rise_time_10_90_samples": "10", "fall_time_90_10_samples": "10", "gaussian_sigma_samples": "3.901678", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "10.000", "pulse_peak_mv": "8.000", "adc_code_peak": "41", "pulse_channel": "0"},
             {"sample_id": "2", "stim_kind": "monopolar_10mv_10ns_erf_tr10ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "10", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "1", "quantized_nonzero_samples": "10", "pulse_truncation": "back", "rise_time_10_90_samples": "10", "fall_time_90_10_samples": "10", "gaussian_sigma_samples": "3.901678", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "10.000", "pulse_peak_mv": "8.000", "adc_code_peak": "41", "pulse_channel": "0"},
         ])
+        self.write_manifest(erf_50mv_20ns_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "monopolar_50mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "-20", "pulse_start_ns": "-20", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "0", "quantized_nonzero_samples": "6", "pulse_truncation": "front", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "50.000", "pulse_peak_mv": "50.000", "adc_code_peak": "256", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "monopolar_50mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "20", "quantized_nonzero_samples": "26", "pulse_truncation": "none", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "50.000", "pulse_peak_mv": "50.000", "adc_code_peak": "256", "pulse_channel": "0"},
+            {"sample_id": "2", "stim_kind": "monopolar_50mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "1", "quantized_nonzero_samples": "6", "pulse_truncation": "back", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "50.000", "pulse_peak_mv": "50.000", "adc_code_peak": "256", "pulse_channel": "0"},
+        ])
+        self.write_manifest(erf_100mv_20ns_dir / "manifest.csv", [
+            {"sample_id": "0", "stim_kind": "monopolar_100mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "-20", "pulse_start_ns": "-20", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "0", "quantized_nonzero_samples": "7", "pulse_truncation": "front", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
+            {"sample_id": "1", "stim_kind": "monopolar_100mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "0", "pulse_start_ns": "0", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "20", "quantized_nonzero_samples": "27", "pulse_truncation": "none", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
+            {"sample_id": "2", "stim_kind": "monopolar_100mv_20ns_erf_tr5ns_sweep", "pulse_offset_sample": "255", "pulse_start_ns": "255", "pulse_width_samples": "20", "pulse_width_definition": "50pct_crossings", "nominal_visible_width_samples": "1", "quantized_nonzero_samples": "7", "pulse_truncation": "back", "rise_time_10_90_samples": "5", "fall_time_90_10_samples": "5", "gaussian_sigma_samples": "1.950839", "edge_model": "erf_gaussian_lowpass", "pulse_amplitude_parameter_mv": "100.000", "pulse_peak_mv": "100.000", "adc_code_peak": "512", "pulse_channel": "0"},
+        ])
         self.write_scores(zero_dir / "scores.csv", [("0", "-1.000000"), ("1", "-1.250000")])
         self.write_scores(bipolar_dir / "scores.csv", [("0", "0.500000"), ("1", "0.750000")])
         self.write_scores(polar_dir / "scores.csv", [("0", "1.500000"), ("1", "1.750000")])
@@ -382,6 +462,8 @@ class BringupSimulationTest(unittest.TestCase):
         self.write_scores(erf_monopolar_dir / "scores.csv", [("0", "-0.750000"), ("1", "2.250000"), ("2", "0.500000")])
         self.write_scores(erf_50mv_dir / "scores.csv", [("0", "-0.500000"), ("1", "1.500000"), ("2", "0.250000")])
         self.write_scores(erf_10mv_dir / "scores.csv", [("0", "-0.250000"), ("1", "0.750000"), ("2", "0.125000")])
+        self.write_scores(erf_50mv_20ns_dir / "scores.csv", [("0", "-0.125000"), ("1", "1.250000"), ("2", "0.375000")])
+        self.write_scores(erf_100mv_20ns_dir / "scores.csv", [("0", "-0.375000"), ("1", "2.750000"), ("2", "0.625000")])
 
         subprocess.run(
             [
@@ -421,6 +503,10 @@ class BringupSimulationTest(unittest.TestCase):
             erf_50mv_rows = list(csv.DictReader(csv_file))
         with (erf_10mv_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
             erf_10mv_rows = list(csv.DictReader(csv_file))
+        with (erf_50mv_20ns_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            erf_50mv_20ns_rows = list(csv.DictReader(csv_file))
+        with (erf_100mv_20ns_dir / "scores_annotated.csv").open(newline="", encoding="utf-8") as csv_file:
+            erf_100mv_20ns_rows = list(csv.DictReader(csv_file))
         with (out_dir / "bringup_score_summary.csv").open(newline="", encoding="utf-8") as csv_file:
             summary_rows = list(csv.DictReader(csv_file))
 
@@ -437,6 +523,8 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertEqual(erf_monopolar_rows[1]["float_out"], "2.250000")
         self.assertEqual(erf_50mv_rows[1]["float_out"], "1.500000")
         self.assertEqual(erf_10mv_rows[1]["float_out"], "0.750000")
+        self.assertEqual(erf_50mv_20ns_rows[1]["float_out"], "1.250000")
+        self.assertEqual(erf_100mv_20ns_rows[1]["float_out"], "2.750000")
         self.assertEqual(
             [row["stim_kind"] for row in summary_rows],
             [
@@ -447,6 +535,8 @@ class BringupSimulationTest(unittest.TestCase):
                 "monopolar_100mv_100ns_erf_tr100ns_sweep",
                 "monopolar_50mv_50ns_erf_tr50ns_sweep",
                 "monopolar_10mv_10ns_erf_tr10ns_sweep",
+                "monopolar_50mv_20ns_erf_tr5ns_sweep",
+                "monopolar_100mv_20ns_erf_tr5ns_sweep",
             ],
         )
         self.assertTrue((out_dir / "score_vs_offset.png").exists())
@@ -455,6 +545,8 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertTrue((out_dir / "monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png").exists())
+        self.assertTrue((out_dir / "monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png").exists())
         self.assertTrue((out_dir / "score_histogram.png").exists())
         self.assertTrue((out_dir / "bringup_score_summary.csv").exists())
 

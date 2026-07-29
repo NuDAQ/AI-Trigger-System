@@ -579,8 +579,10 @@ The case names and save locations are:
 | `monopolar-100mv-100ns-erf-tr100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/` | `A=100 mV`, 100 ns between 50% crossings, error-function edges with `tr=tf=100 ns`; offsets `-100..255` | 356 |
 | `monopolar-50mv-50ns-erf-tr50ns-sweep` | `build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_sweep/` | `A=50 mV`, 50 ns between 50% crossings, error-function edges with `tr=tf=50 ns`; offsets `-50..255` | 306 |
 | `monopolar-10mv-10ns-erf-tr10ns-sweep` | `build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_sweep/` | `A=10 mV`, 10 ns between 50% crossings, error-function edges with `tr=tf=10 ns`; offsets `-10..255` | 266 |
+| `monopolar-50mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_sweep/` | `A=50 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
+| `monopolar-100mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_sweep/` | `A=100 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
 
-`zero` is the baseline, not one of the six pulse simulations. In every pulse
+`zero` is the baseline, not one of the eight pulse simulations. In every pulse
 case, `ch1..ch7` remain at `0`.
 
 The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
@@ -612,7 +614,7 @@ offsets `157..255` clip the pulse back. Its manifest records both the nominal
 width and `visible_pulse_width_samples`, plus `pulse_truncation` as `front`,
 `none`, or `back`.
 
-The three band-limited monopolar cases use the same error-function model:
+The five band-limited monopolar cases use the same error-function model:
 
 ```text
 V(t) = A/2 * [erf((t-t0)/(sqrt(2)*sigma))
@@ -620,15 +622,18 @@ V(t) = A/2 * [erf((t-t0)/(sqrt(2)*sigma))
 sigma = tr / 2.563
 ```
 
-For each case, the pulse width equals `tr=tf`. The rising and falling edges
-therefore overlap and the waveform reaches only about `0.8 A`; the generator
-model deliberately does not renormalize the peak:
+For the first three cases below, the pulse width equals `tr=tf`, so the edges
+overlap and the waveform reaches only about `0.8 A`. For the two 20 ns cases,
+`tr=tf=5 ns`, so the waveform essentially reaches `A`. The generator model does
+not renormalize any peak:
 
 | `A` | Width | `tr=tf` | `sigma` | Continuous peak | Peak ADC code | Offsets |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 100 mV | 100 ns | 100 ns | 39.016777 ns | 79.998 mV | 410 | `-100..255` |
 | 50 mV | 50 ns | 50 ns | 19.508389 ns | 39.999 mV | 205 | `-50..255` |
 | 10 mV | 10 ns | 10 ns | 3.901678 ns | 8.000 mV | 41 | `-10..255` |
+| 50 mV | 20 ns | 5 ns | 1.950839 ns | 50.000 mV | 256 | `-20..255` |
+| 100 mV | 20 ns | 5 ns | 1.950839 ns | 100.000 mV | 512 | `-20..255` |
 
 At 1 GSa/s, each 1 ns voltage sample is quantized to the existing 12-bit ADC
 format. `pulse_offset_sample` is the rising-edge 50% crossing. The manifest also
@@ -683,6 +688,8 @@ build/bringup_sim/monopolar_100mv_100ns_score_vs_offset.png
 build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png
 build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png
 build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png
+build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png
 build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```
