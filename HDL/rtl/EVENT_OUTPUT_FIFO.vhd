@@ -50,6 +50,7 @@ architecture rtl of EVENT_OUTPUT_FIFO is
     signal rd_valid_r : std_logic := '0';
     signal rd_word_r  : std_logic_vector(EVENT_OUTPUT_WORD_WIDTH - 1 downto 0) := (others => '0');
     signal rd_can_load : std_logic;
+    signal stream_active_r : std_logic := '0';
 begin
     fifo_din(DATA_MSB downto DATA_LSB) <= WR_DATA;
     fifo_din(LAST_BIT) <= WR_LAST;
@@ -59,7 +60,7 @@ begin
 
     fifo_wr_en <= WR_VALID and not fifo_full;
     rd_can_load <= (not rd_valid_r) or RD_READY;
-    fifo_rd_en <= rd_can_load and not fifo_empty;
+    fifo_rd_en <= stream_active_r and rd_can_load and not fifo_empty;
 
     u_FIFO : xpm_fifo_sync
         generic map (
@@ -111,12 +112,29 @@ begin
                 rd_valid_r <= '0';
                 rd_word_r  <= (others => '0');
             elsif rd_can_load = '1' then
-                if fifo_empty = '0' then
+                if stream_active_r = '1' and fifo_empty = '0' then
                     rd_word_r  <= fifo_dout;
                     rd_valid_r <= '1';
                 else
                     rd_valid_r <= '0';
                 end if;
+            end if;
+        end if;
+    end process;
+
+    process(CLK)
+    begin
+        if rising_edge(CLK) then
+            if RST = '1' then
+                stream_active_r <= '0';
+            elsif stream_active_r = '0' then
+                if fifo_wr_en = '1' and WR_LAST = '1' then
+                    stream_active_r <= '1';
+                end if;
+            elsif rd_valid_r = '1' and RD_READY = '1' and
+                  rd_word_r(LAST_BIT) = '1' and fifo_empty = '1' and
+                  fifo_wr_en = '0' then
+                stream_active_r <= '0';
             end if;
         end if;
     end process;
