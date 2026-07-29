@@ -351,6 +351,57 @@ class BringupSimulationTest(unittest.TestCase):
         self.assertIn('"--mirror-raw-channels"', bringup_runner)
         self.assertIn('"0"', bringup_runner)
 
+    def test_annotate_rejects_incomplete_score_csv(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-incomplete-"))
+        case_dir = out_dir / "zero"
+        case_dir.mkdir(parents=True)
+        self.write_manifest(
+            case_dir / "manifest.csv",
+            [
+                {
+                    "sample_id": str(sample_id),
+                    "stim_kind": "zero",
+                    "pulse_offset_sample": "-1",
+                }
+                for sample_id in range(3)
+            ],
+        )
+        self.write_scores(
+            case_dir / "scores.csv",
+            [("0", "-1.000000"), ("1", "-1.250000")],
+        )
+        (case_dir / "scores_annotated.csv").write_text("stale\n", encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--annotate-only",
+                "--stimulus",
+                "zero",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("incomplete score CSV", result.stderr)
+        self.assertFalse((case_dir / "scores_annotated.csv").exists())
+
+    def test_event_bubble_terminates_xsim_with_failure(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertRegex(
+            testbench,
+            r'\$fatal\(\s*1,\s*"Event output bubble:',
+        )
+
     def test_launcher_generate_only_builds_all_named_bringup_cases(self) -> None:
         out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-bringup-launcher-"))
         env = dict(os.environ)

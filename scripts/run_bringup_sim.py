@@ -349,6 +349,7 @@ def annotate_scores(case_dir: Path) -> Path:
     manifest_path = case_dir / "manifest.csv"
     scores_path = case_dir / "scores.csv"
     out_path = case_dir / "scores_annotated.csv"
+    out_path.unlink(missing_ok=True)
 
     if not manifest_path.exists():
         raise SystemExit(f"manifest not found: {manifest_path}")
@@ -360,12 +361,34 @@ def annotate_scores(case_dir: Path) -> Path:
     with scores_path.open(newline="", encoding="utf-8") as csv_file:
         score_rows = list(csv.DictReader(csv_file))
 
+    manifest_ids = [row["sample_id"] for row in manifest_rows]
+    score_ids = [row["sample_id"] for row in score_rows]
+    if len(set(manifest_ids)) != len(manifest_ids):
+        raise SystemExit(f"duplicate sample_id in {manifest_path}")
+    if len(set(score_ids)) != len(score_ids):
+        raise SystemExit(f"duplicate sample_id in {scores_path}")
+
     manifest_by_id = {row["sample_id"]: row for row in manifest_rows}
+    score_id_set = set(score_ids)
+    missing_ids = [sample_id for sample_id in manifest_ids if sample_id not in score_id_set]
+    unexpected_ids = [sample_id for sample_id in score_ids if sample_id not in manifest_by_id]
+    if missing_ids or unexpected_ids:
+        details = [
+            f"expected {len(manifest_ids)} sample IDs, got {len(score_ids)}",
+        ]
+        if missing_ids:
+            preview = ", ".join(missing_ids[:8])
+            suffix = ", ..." if len(missing_ids) > 8 else ""
+            details.append(f"missing: {preview}{suffix}")
+        if unexpected_ids:
+            preview = ", ".join(unexpected_ids[:8])
+            suffix = ", ..." if len(unexpected_ids) > 8 else ""
+            details.append(f"unexpected: {preview}{suffix}")
+        raise SystemExit(f"incomplete score CSV {scores_path}: {'; '.join(details)}")
+
     annotated = []
     for score_row in score_rows:
         sample_id = score_row["sample_id"]
-        if sample_id not in manifest_by_id:
-            raise SystemExit(f"score row sample_id={sample_id} missing from {manifest_path}")
         combined = dict(manifest_by_id[sample_id])
         for key, value in score_row.items():
             if key != "sample_id":

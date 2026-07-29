@@ -320,12 +320,50 @@ begin
                         active_batch_idx <= 0;
                         pending_valid <= '0';
                     elsif trigger_fire then
-                        active_valid <= '1';
-                        active_chunk_id <= TRIGGER_CHUNK_ID;
-                        active_score <= TRIGGER_SCORE;
-                        active_timestamp <= TRIGGER_TIMESTAMP;
-                        active_chunk_offset <= 0;
-                        active_batch_idx <= 0;
+                        if trigger_too_old(
+                            have_commit,
+                            latest_commit_id,
+                            TRIGGER_CHUNK_ID
+                        ) then
+                            miss_increments := miss_increments + 1;
+                        elsif capture_ready(
+                            have_commit,
+                            latest_commit_id,
+                            TRIGGER_CHUNK_ID,
+                            CHUNK_COMMIT,
+                            COMMIT_CHUNK_ID
+                        ) and reserved_slots < RESPONSE_QUEUE_DEPTH then
+                            -- Launch an already-readable idle trigger directly.
+                            -- Deferring this first request through active_valid
+                            -- inserts a one-cycle hole when a consecutive trigger
+                            -- arrives just after the previous final request.
+                            rb_rd_en_r <= '1';
+                            rb_rd_chunk_id_r <= TRIGGER_CHUNK_ID;
+                            rb_rd_batch_idx_r <= 0;
+                            request_valid_pipe(0) <= '1';
+                            if EVENT_CHUNKS = 1 and N_BATCHES = 1 then
+                                request_last_pipe(0) <= '1';
+                                active_valid <= '0';
+                            else
+                                request_last_pipe(0) <= '0';
+                                active_valid <= '1';
+                                active_chunk_id <= TRIGGER_CHUNK_ID;
+                                active_score <= TRIGGER_SCORE;
+                                active_timestamp <= TRIGGER_TIMESTAMP;
+                                active_chunk_offset <= 0;
+                                active_batch_idx <= 1;
+                            end if;
+                            request_chunk_id_pipe(0) <= TRIGGER_CHUNK_ID;
+                            request_timestamp_pipe(0) <= TRIGGER_TIMESTAMP;
+                            request_score_pipe(0) <= TRIGGER_SCORE;
+                        else
+                            active_valid <= '1';
+                            active_chunk_id <= TRIGGER_CHUNK_ID;
+                            active_score <= TRIGGER_SCORE;
+                            active_timestamp <= TRIGGER_TIMESTAMP;
+                            active_chunk_offset <= 0;
+                            active_batch_idx <= 0;
+                        end if;
                     end if;
                 else
                     if trigger_fire then

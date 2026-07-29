@@ -366,15 +366,15 @@ module tb_AI_TRIGGER_TOP;
                         (batch_in_event != 0 ||
                          event_chunk_id == previous_event_chunk_id + 16'd1) &&
                         $time - previous_event_time_ns != expected_beat_period_ns) begin
-                        $display(
-                            "[ERROR] Event output bubble: previous chunk=%0d current chunk=%0d batch=%0d delta=%0d ns expected=%0d ns",
+                        $fatal(
+                            1,
+                            "Event output bubble: previous chunk=%0d current chunk=%0d batch=%0d delta=%0d ns expected=%0d ns",
                             previous_event_chunk_id,
                             event_chunk_id,
                             batch_in_event,
                             $time - previous_event_time_ns,
                             expected_beat_period_ns
                         );
-                        $finish;
                     end
 
                     $fwrite(event_csv_file,
