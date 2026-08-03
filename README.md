@@ -509,28 +509,81 @@ At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
 expected to produce exactly one 64-beat event. The post-migration run should
 confirm there are no missing, duplicate, or extra event chunks.
 
-## DAQ Bring-Up Score Simulation
+### NSF Jul 27 Continuous-Readout Evidence
 
-For delivery bring-up, use the dedicated script to generate two simple
-stimulus sets and run them through the same Vivado/xsim testbench:
+Run the seven-chunk NSF slice through the same Vivado/XSim testbench with:
 
 ```bash
-python3 scripts/run_bringup_sim.py \
-  --stimulus all \
-  --out-dir build/bringup_sim
+python3 scripts/run_nsf_jul_27_sim.py
 ```
 
-The script creates local `testhex_stream` directories, then launches
+The runner reads:
+
+```text
+data/X_test_data_NSF_Jul_27.npy
+data/y_test_labels_NSF_Jul_27.npy
+```
+
+It generates the XSim stimulus, runs chunks 490 through 496 as local chunks 0
+through 6, and writes the final beat-level report to:
+
+```text
+build/nsf_jul_27_sim/NSF_Jul_27_trigger_trace.csv
+```
+
+The default run uses `CNN_THRESH_RAW=0`, `SCORE_THRESHOLD=0.0`, and leaves raw
+channels 4 through 7 at zero because the source slice contains four channels.
+The command exits successfully only when every label-1 chunk has one complete,
+waveform-matched 64-beat event, every label-0 chunk has no event, adjacent
+label-1 chunks are read out in order with consecutive timestamps, and all
+overflow/drop/ring-miss counters are zero. The CSV is still written when a
+proof check fails so the failed beat or chunk can be inspected.
+
+To prepare the stimulus without Vivado:
+
+```bash
+python3 scripts/run_nsf_jul_27_sim.py --prepare-only
+```
+
+After a server run, the report can be rebuilt from existing `scores.csv`,
+`events.csv`, and `simulate.log` with:
+
+```bash
+python3 scripts/run_nsf_jul_27_sim.py --analyze-only
+```
+
+## DAQ Bring-Up Score Simulation
+
+For delivery bring-up, run the zero reference and all four pulse sweeps through
+the same Vivado/xsim testbench with one command:
+
+```bash
+scripts/run_bringup_pulse_sweeps.sh
+```
+
+The launcher uses `build/bringup_sim` by default. Override it with
+`BRINGUP_OUT_DIR=/path/to/output`; set `PYTHON_BIN` if `python3` is not the
+desired interpreter. It creates local `testhex_stream` directories, then launches
 `scripts/run_vivado_sim.py` for each case.  It keeps the existing Bender/Vivado
 source refresh path through `run_sim.tcl`, but supplies generated stimulus
 instead of the wrapper validation dataset.
 
-The generated bring-up cases are:
+The case names and save locations are:
 
-| Case | Input |
-| --- | --- |
-| `zero` | Valid continuous ADC input, all eight channels at signed code `0`. |
-| `bipolar_sweep` | Only `ch0` is driven; `ch1..ch7` stay at `0`. A 10-sample pulse is swept across one 256-sample chunk. |
+| CLI name | Output directory | Input and offsets | Samples |
+| --- | --- | --- | ---: |
+| `zero` | `build/bringup_sim/zero/` | All eight channels at signed code `0` | 256 |
+| `bipolar-sweep` | `build/bringup_sim/bipolar_sweep/` | `ch0`: `+50 mV` for 5 ns, then `-50 mV` for 5 ns; offsets `0..246` | 247 |
+| `polar-sweep` | `build/bringup_sim/polar_sweep/` | `ch0`: `+50 mV` for 5 ns, then zero; offsets `0..251` | 252 |
+| `monopolar-100mv-100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_sweep/` | `ch0`: nominal `+100 mV` for 100 ns; clipped offsets `-100..255` | 356 |
+| `monopolar-100mv-100ns-erf-tr100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/` | `A=100 mV`, 100 ns between 50% crossings, error-function edges with `tr=tf=100 ns`; offsets `-100..255` | 356 |
+| `monopolar-50mv-50ns-erf-tr50ns-sweep` | `build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_sweep/` | `A=50 mV`, 50 ns between 50% crossings, error-function edges with `tr=tf=50 ns`; offsets `-50..255` | 306 |
+| `monopolar-10mv-10ns-erf-tr10ns-sweep` | `build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_sweep/` | `A=10 mV`, 10 ns between 50% crossings, error-function edges with `tr=tf=10 ns`; offsets `-10..255` | 266 |
+| `monopolar-50mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_sweep/` | `A=50 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
+| `monopolar-100mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_sweep/` | `A=100 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
+
+`zero` is the baseline, not one of the eight pulse simulations. In every pulse
+case, `ch1..ch7` remain at `0`.
 
 The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
 1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
@@ -545,21 +598,69 @@ The pulse start offset is swept from sample `0` through sample `246`, so every
 passes `MIRROR_RAW_CHANNELS=0` to the testbench so raw event channels `ch1..ch7`
 remain zero unless explicitly driven.
 
-To generate stimulus files without launching Vivado:
+The default polar pulse is `+50 mV` for 5 ns followed by zero input. Its start
+offset is swept from sample `0` through sample `251`. Run only this case with:
 
 ```bash
 python3 scripts/run_bringup_sim.py \
-  --generate-only \
-  --stimulus all \
+  --stimulus polar-sweep \
   --out-dir build/bringup_sim
 ```
 
-After Vivado completes, the runner writes annotated score CSVs:
+The long monopolar case uses ADC code `+512` for a nominal 100-sample pulse.
+Only the overlap with the current 256-sample chunk is written. Negative offsets
+therefore clip the pulse front, offsets `0..156` contain the full pulse, and
+offsets `157..255` clip the pulse back. Its manifest records both the nominal
+width and `visible_pulse_width_samples`, plus `pulse_truncation` as `front`,
+`none`, or `back`.
+
+The five band-limited monopolar cases use the same error-function model:
 
 ```text
-build/bringup_sim/zero/scores_annotated.csv
-build/bringup_sim/bipolar_sweep/scores_annotated.csv
+V(t) = A/2 * [erf((t-t0)/(sqrt(2)*sigma))
+            - erf((t-t1)/(sqrt(2)*sigma))]
+sigma = tr / 2.563
 ```
+
+For the first three cases below, the pulse width equals `tr=tf`, so the edges
+overlap and the waveform reaches only about `0.8 A`. For the two 20 ns cases,
+`tr=tf=5 ns`, so the waveform essentially reaches `A`. The generator model does
+not renormalize any peak:
+
+| `A` | Width | `tr=tf` | `sigma` | Continuous peak | Peak ADC code | Offsets |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 100 mV | 100 ns | 100 ns | 39.016777 ns | 79.998 mV | 410 | `-100..255` |
+| 50 mV | 50 ns | 50 ns | 19.508389 ns | 39.999 mV | 205 | `-50..255` |
+| 10 mV | 10 ns | 10 ns | 3.901678 ns | 8.000 mV | 41 | `-10..255` |
+| 50 mV | 20 ns | 5 ns | 1.950839 ns | 50.000 mV | 256 | `-20..255` |
+| 100 mV | 20 ns | 5 ns | 1.950839 ns | 100.000 mV | 512 | `-20..255` |
+
+At 1 GSa/s, each 1 ns voltage sample is quantized to the existing 12-bit ADC
+format. `pulse_offset_sample` is the rising-edge 50% crossing. The manifest also
+records `nominal_visible_width_samples`, `quantized_nonzero_samples`,
+`pulse_amplitude_parameter_mv`, the actual `pulse_peak_mv` and `adc_code_peak`,
+the edge model, rise/fall time, and sigma. Only the current 256-sample chunk is
+saved, so the smooth waveform tails are clipped rather than carried into
+adjacent chunks.
+
+To generate stimulus files without launching Vivado:
+
+```bash
+BRINGUP_GENERATE_ONLY=1 scripts/run_bringup_pulse_sweeps.sh
+```
+
+Each case directory contains:
+
+```text
+testhex_stream/
+manifest.csv
+scores.csv
+events.csv
+scores_annotated.csv
+```
+
+`build/bringup_sim/` is generated output and is ignored for newly created files
+by `.gitignore`.
 
 If Vivado was run manually and only raw `scores.csv` files are present, rebuild
 the annotated CSVs with:
@@ -571,7 +672,7 @@ python3 scripts/run_bringup_sim.py \
   --out-dir build/bringup_sim
 ```
 
-Plot the zero baseline and bipolar score distribution with:
+Plot the zero baseline and all available pulse score distributions with:
 
 ```bash
 python3 scripts/plot_bringup_scores.py \
@@ -582,6 +683,13 @@ The plot script writes:
 
 ```text
 build/bringup_sim/score_vs_offset.png
+build/bringup_sim/polar_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_100ns_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png
+build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png
+build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png
+build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png
+build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png
 build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```

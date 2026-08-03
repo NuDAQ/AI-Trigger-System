@@ -1,0 +1,135 @@
+Time resolution is 1 ps
+[0] Asserting reset...
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_28  Scope: tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_EVENT_PATH/u_output_fifo/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_1807  Scope: tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+[206000] Starting AI_TRIGGER_TOP test
+[206000] TESTHEX_DIR: /home/work1/Works/AI-Trigger-System/build/nsf_jul_27_sim/testhex_stream
+[206000] Samples: 7  Threshold raw: 0 (0.0000)
+[206000] MIRROR_RAW_CHANNELS: 0
+---------------------------------------------------------------------
+Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
+---------------------------------------------------------------------
+Note: DIST chunk_start seq=0 lane=0 busy='0'
+Time: 266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 302500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=1 lane=1 busy='0'
+Time: 522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 557500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=2 lane=2 busy='0'
+Time: 778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=1 fifo_full='0'
+Time: 778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 812500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1007500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=3 lane=3 busy='0'
+Time: 1034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=1 fifo_full='0'
+Time: 1034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1072500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=6876 started=1
+Time: 1232500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     0 | 0x00001adc    |      3.357422 |     1 |    1 |      1.010
+Note: LANE1 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1262500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1274 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=4 lane=4 busy='0'
+Time: 1290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=1 fifo_full='0'
+Time: 1290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1327500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-4359 started=1
+Time: 1487500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     1 | 0x003feef9    |     -2.128418 |     0 |    0 |      1.010
+Note: LANE2 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1517500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1526 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=5 lane=0 busy='0'
+Time: 1546 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 1546 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1582500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-7873 started=1
+Time: 1742500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     2 | 0x003fe13f    |     -3.844238 |     0 |    0 |      1.005
+Note: LANE3 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1777500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1786 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=6 lane=1 busy='0'
+Time: 1802 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 1802 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1837500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-4496 started=1
+Time: 2002500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     3 | 0x003fee70    |     -2.195312 |     0 |    0 |      1.010
+Note: LANE4 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 2032500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 2042 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-6915 started=1
+Time: 2257500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     4 | 0x003fe4fd    |     -3.376465 |     0 |    0 |      1.010
+Note: LANE0 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 2292500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 2302 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=3316 started=2
+Time: 2517500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     5 | 0x00000cf4    |      1.619141 |     1 |    1 |      1.015
+Note: LANE1 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 2547500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 2558 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=7308 started=2
+Time: 2772500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     6 | 0x00001c8c    |      3.568359 |     1 |    1 |      1.015
+
+=============================================================
+                    SIMULATION SUMMARY
+=============================================================
+Top module:       AI_TRIGGER_TOP
+CNN cores:        5 (parallel, round-robin)
+ADC_SRC_CLK:      250.0 MHz (4.000 ns period)
+CLK_ADC:          250.0 MHz (4.000 ns period)
+CLK_CNN:          200.0 MHz (5.000 ns period)
+CNN_THRESH:       0 raw (0.0000 float)
+Score threshold:  0.0000 float
+-------------------------------------------------------------
+Samples sent:     7
+Results received: 7
+Output drain:     8192 quiet CLK_CNN cycles
+Chunk overflows:  0 (should be 0 in normal operation)
+ADC input overflows: 0
+Events saved:     3
+Event batches:    192
+Dropped triggers: 0
+Ring misses:      0
+Correct:          7 / 7 (100.00%)
+-------------------------------------------------------------
+Avg latency:      202.1 CLK_CNN cycles  (1.011 us)
+Total sim time:   43.920 us
+Throughput:       159380.69 samples/sec
+=============================================================
+Results saved to: /home/work1/Works/AI-Trigger-System/build/nsf_jul_27_sim/scores.csv
+Events saved to:  /home/work1/Works/AI-Trigger-System/build/nsf_jul_27_sim/events.csv
+Simulation complete.
+$finish called at time : 44126 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 272

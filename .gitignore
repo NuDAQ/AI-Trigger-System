@@ -92,7 +92,8 @@ build/vivado_sim/*
 !build/vivado_sim_analysis*/
 !build/vivado_sim_analysis*/**
 
-# Generated zero-input and bipolar-pulse bring-up simulation artifacts.
+# Generated DAQ bring-up stimuli, Vivado results, CSVs, and plots for the
+# zero baseline plus all pulse sweeps. Source launchers/tests remain tracked.
 build/bringup_sim/
 
 # Ignore bender dependency cache (large git objects)

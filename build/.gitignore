@@ -6,3 +6,6 @@
 !bringup_sim/zero/*.csv
 !bringup_sim/bipolar_sweep/
 !bringup_sim/bipolar_sweep/*.csv
+!bringup_sim/polar_sweep/
+!bringup_sim/polar_sweep/*.csv
+!nsf_*_*_sim/

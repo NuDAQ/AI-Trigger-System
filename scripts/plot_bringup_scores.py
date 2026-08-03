@@ -6,8 +6,63 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean
+
+
+@dataclass(frozen=True)
+class ErfMonopolarPlotSpec:
+    case_name: str
+    amplitude_mv: int
+    width_ns: int
+    rise_fall_ns: int
+    peak_mv: int
+    plot_filename: str
+
+
+ERF_MONOPOLAR_PLOT_SPECS = (
+    ErfMonopolarPlotSpec(
+        "monopolar_100mv_100ns_erf_tr100ns_sweep",
+        100,
+        100,
+        100,
+        80,
+        "monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png",
+    ),
+    ErfMonopolarPlotSpec(
+        "monopolar_50mv_50ns_erf_tr50ns_sweep",
+        50,
+        50,
+        50,
+        40,
+        "monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png",
+    ),
+    ErfMonopolarPlotSpec(
+        "monopolar_10mv_10ns_erf_tr10ns_sweep",
+        10,
+        10,
+        10,
+        8,
+        "monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png",
+    ),
+    ErfMonopolarPlotSpec(
+        "monopolar_50mv_20ns_erf_tr5ns_sweep",
+        50,
+        20,
+        5,
+        50,
+        "monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png",
+    ),
+    ErfMonopolarPlotSpec(
+        "monopolar_100mv_20ns_erf_tr5ns_sweep",
+        100,
+        20,
+        5,
+        100,
+        "monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png",
+    ),
+)
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -21,10 +76,24 @@ def score_values(rows: list[dict[str, str]]) -> list[float]:
     return [float(row["float_out"]) for row in rows]
 
 
-def write_summary(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: list[dict[str, str]]) -> Path:
+def write_summary(
+    out_dir: Path,
+    zero_rows: list[dict[str, str]],
+    bipolar_rows: list[dict[str, str]],
+    polar_rows: list[dict[str, str]],
+    long_monopolar_rows: list[dict[str, str]],
+    erf_case_rows: list[tuple[ErfMonopolarPlotSpec, list[dict[str, str]]]],
+) -> Path:
     out_path = out_dir / "bringup_score_summary.csv"
     summaries = []
-    for name, rows in (("zero", zero_rows), ("bipolar_sweep", bipolar_rows)):
+    case_rows = [
+        ("zero", zero_rows),
+        ("bipolar_sweep", bipolar_rows),
+        ("polar_sweep", polar_rows),
+        ("monopolar_100mv_100ns_sweep", long_monopolar_rows),
+    ]
+    case_rows.extend((spec.case_name, rows) for spec, rows in erf_case_rows)
+    for name, rows in case_rows:
         values = score_values(rows)
         if values:
             summaries.append({
@@ -45,7 +114,14 @@ def write_summary(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: 
     return out_path
 
 
-def build_plots(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: list[dict[str, str]]) -> None:
+def build_plots(
+    out_dir: Path,
+    zero_rows: list[dict[str, str]],
+    bipolar_rows: list[dict[str, str]],
+    polar_rows: list[dict[str, str]],
+    long_monopolar_rows: list[dict[str, str]],
+    erf_case_rows: list[tuple[ErfMonopolarPlotSpec, list[dict[str, str]]]],
+) -> None:
     mpl_config = out_dir / ".mplconfig"
     mpl_config.mkdir(parents=True, exist_ok=True)
     xdg_cache = out_dir / ".cache"
@@ -60,6 +136,12 @@ def build_plots(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: li
 
     zero_scores = score_values(zero_rows)
     bipolar_scores = score_values(bipolar_rows)
+    polar_scores = score_values(polar_rows)
+    long_monopolar_scores = score_values(long_monopolar_rows)
+    erf_score_sets = [
+        (spec, rows, score_values(rows))
+        for spec, rows in erf_case_rows
+    ]
 
     if bipolar_rows:
         offsets = [int(row["pulse_offset_sample"]) for row in bipolar_rows]
@@ -85,12 +167,141 @@ def build_plots(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: li
         plt.savefig(out_dir / "score_vs_offset.png", dpi=160)
         plt.close()
 
-    if zero_scores or bipolar_scores:
+    if polar_rows:
+        offsets = [int(row["pulse_offset_sample"]) for row in polar_rows]
+        plt.figure(figsize=(10, 4.8))
+        plt.plot(offsets, polar_scores, marker=".", linewidth=1.0, label="ch0 polar pulse")
+        if zero_scores:
+            zero_mean = mean(zero_scores)
+            plt.axhline(zero_mean, color="tab:orange", linestyle="--", label="zero mean")
+            plt.fill_between(
+                [min(offsets), max(offsets)],
+                [min(zero_scores), min(zero_scores)],
+                [max(zero_scores), max(zero_scores)],
+                color="tab:orange",
+                alpha=0.15,
+                label="zero min/max",
+            )
+        plt.xlabel("Pulse start offset in 256-sample chunk")
+        plt.ylabel("CNN score")
+        plt.title("DAQ bring-up polar pulse score vs offset")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_dir / "polar_score_vs_offset.png", dpi=160)
+        plt.close()
+
+    if long_monopolar_rows:
+        offsets = [int(row["pulse_offset_sample"]) for row in long_monopolar_rows]
+        plt.figure(figsize=(10, 4.8))
+        plt.plot(
+            offsets,
+            long_monopolar_scores,
+            marker=".",
+            linewidth=1.0,
+            label="ch0 +100 mV x 100 ns monopolar pulse",
+        )
+        if zero_scores:
+            zero_mean = mean(zero_scores)
+            plt.axhline(zero_mean, color="tab:orange", linestyle="--", label="zero mean")
+            plt.fill_between(
+                [min(offsets), max(offsets)],
+                [min(zero_scores), min(zero_scores)],
+                [max(zero_scores), max(zero_scores)],
+                color="tab:orange",
+                alpha=0.15,
+                label="zero min/max",
+            )
+        plt.axvline(0, color="tab:green", linestyle=":", label="front clipping ends")
+        plt.axvline(156, color="tab:red", linestyle=":", label="back clipping starts")
+        plt.xlabel("Nominal pulse start offset in 256-sample chunk")
+        plt.ylabel("CNN score")
+        plt.title("DAQ bring-up +100 mV x 100 ns monopolar pulse score vs offset")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_dir / "monopolar_100mv_100ns_score_vs_offset.png", dpi=160)
+        plt.close()
+
+    for spec, rows, scores in erf_score_sets:
+        if not rows:
+            continue
+        offsets = [int(row["pulse_offset_sample"]) for row in rows]
+        plt.figure(figsize=(10, 4.8))
+        plt.plot(
+            offsets,
+            scores,
+            marker=".",
+            linewidth=1.0,
+            label=(
+                f"ch0 A={spec.amplitude_mv} mV, width={spec.width_ns} ns, "
+                f"erf edges tr=tf={spec.rise_fall_ns} ns "
+                f"(peak about {spec.peak_mv} mV)"
+            ),
+        )
+        if zero_scores:
+            zero_mean = mean(zero_scores)
+            plt.axhline(zero_mean, color="tab:orange", linestyle="--", label="zero mean")
+            plt.fill_between(
+                [min(offsets), max(offsets)],
+                [min(zero_scores), min(zero_scores)],
+                [max(zero_scores), max(zero_scores)],
+                color="tab:orange",
+                alpha=0.15,
+                label="zero min/max",
+            )
+        plt.axvline(0, color="tab:green", linestyle=":", label="rise 50% enters chunk")
+        plt.axvline(
+            256 - spec.width_ns,
+            color="tab:red",
+            linestyle=":",
+            label="fall 50% reaches boundary",
+        )
+        plt.xlabel("Rising-edge 50% crossing offset in 256-sample chunk")
+        plt.ylabel("CNN score")
+        plt.title(
+            f"DAQ bring-up A={spec.amplitude_mv} mV x {spec.width_ns} ns "
+            "band-limited monopolar score vs offset"
+        )
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_dir / spec.plot_filename, dpi=160)
+        plt.close()
+
+    if (
+        zero_scores
+        or bipolar_scores
+        or polar_scores
+        or long_monopolar_scores
+        or any(scores for _, _, scores in erf_score_sets)
+    ):
         plt.figure(figsize=(8, 4.8))
         if zero_scores:
             plt.hist(zero_scores, bins=min(30, max(1, len(zero_scores))), alpha=0.65, label="zero")
         if bipolar_scores:
             plt.hist(bipolar_scores, bins=min(40, max(1, len(bipolar_scores))), alpha=0.65, label="bipolar sweep")
+        if polar_scores:
+            plt.hist(polar_scores, bins=min(40, max(1, len(polar_scores))), alpha=0.65, label="polar sweep")
+        if long_monopolar_scores:
+            plt.hist(
+                long_monopolar_scores,
+                bins=min(40, max(1, len(long_monopolar_scores))),
+                alpha=0.65,
+                label="100 mV x 100 ns monopolar sweep",
+            )
+        for spec, _, scores in erf_score_sets:
+            if not scores:
+                continue
+            plt.hist(
+                scores,
+                bins=min(40, max(1, len(scores))),
+                alpha=0.65,
+                label=(
+                    f"A={spec.amplitude_mv} mV, width={spec.width_ns} ns, "
+                    f"erf-edge tr=tf={spec.rise_fall_ns} ns sweep"
+                ),
+            )
         plt.xlabel("CNN score")
         plt.ylabel("Count")
         plt.title("DAQ bring-up score distribution")
@@ -102,12 +313,12 @@ def build_plots(out_dir: Path, zero_rows: list[dict[str, str]], bipolar_rows: li
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Plot zero and bipolar bring-up score distributions.")
+    parser = argparse.ArgumentParser(description="Plot zero and pulse-sweep bring-up score distributions.")
     parser.add_argument(
         "--out-dir",
         type=Path,
         default=Path("build/bringup_sim"),
-        help="Directory containing zero/ and bipolar_sweep/ annotated score CSVs.",
+        help="Directory containing generated bring-up case directories and annotated score CSVs.",
     )
     return parser.parse_args()
 
@@ -117,11 +328,41 @@ def main() -> int:
     out_dir = args.out_dir.expanduser()
     zero_rows = read_rows(out_dir / "zero" / "scores_annotated.csv")
     bipolar_rows = read_rows(out_dir / "bipolar_sweep" / "scores_annotated.csv")
+    polar_rows = read_rows(out_dir / "polar_sweep" / "scores_annotated.csv")
+    long_monopolar_rows = read_rows(
+        out_dir / "monopolar_100mv_100ns_sweep" / "scores_annotated.csv"
+    )
+    erf_case_rows = [
+        (
+            spec,
+            read_rows(out_dir / spec.case_name / "scores_annotated.csv"),
+        )
+        for spec in ERF_MONOPOLAR_PLOT_SPECS
+    ]
 
-    summary = write_summary(out_dir, zero_rows, bipolar_rows)
-    build_plots(out_dir, zero_rows, bipolar_rows)
+    summary = write_summary(
+        out_dir,
+        zero_rows,
+        bipolar_rows,
+        polar_rows,
+        long_monopolar_rows,
+        erf_case_rows,
+    )
+    build_plots(
+        out_dir,
+        zero_rows,
+        bipolar_rows,
+        polar_rows,
+        long_monopolar_rows,
+        erf_case_rows,
+    )
     print(f"INFO: wrote {summary}")
     print(f"INFO: wrote {out_dir / 'score_vs_offset.png'}")
+    print(f"INFO: wrote {out_dir / 'polar_score_vs_offset.png'}")
+    print(f"INFO: wrote {out_dir / 'monopolar_100mv_100ns_score_vs_offset.png'}")
+    for spec, rows in erf_case_rows:
+        if rows:
+            print(f"INFO: wrote {out_dir / spec.plot_filename}")
     print(f"INFO: wrote {out_dir / 'score_histogram.png'}")
     return 0
 

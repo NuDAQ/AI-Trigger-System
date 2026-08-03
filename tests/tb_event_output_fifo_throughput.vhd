@@ -76,12 +76,11 @@ begin
         wr_valid <= '0';
         wr_last  <= '0';
 
-        rd_ready <= '1';
         while rd_valid /= '1' loop
-            wait until rising_edge(clk);
-        end loop;
-        while seen < 8 loop
             wait until falling_edge(clk);
+        end loop;
+        rd_ready <= '1';
+        while seen < 8 loop
             assert rd_valid = '1'
                 report "event output FIFO inserted a bubble while downstream was ready"
                 severity failure;
@@ -112,6 +111,9 @@ begin
             seen := seen + 1;
             cycles_with_data := cycles_with_data + 1;
             wait until rising_edge(clk);
+            if seen < 8 then
+                wait until falling_edge(clk);
+            end if;
         end loop;
 
         assert cycles_with_data = 8

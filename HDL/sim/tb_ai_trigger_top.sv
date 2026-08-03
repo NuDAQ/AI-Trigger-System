@@ -66,7 +66,7 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     // Signals
     // -------------------------------------------------------------------------
-    reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str;
+    reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str, event_ready;
     reg  [383:0] adc_data4_flat;  // 8 ch * 4 samples * 12-bit = 384 bits
     reg  [31:0]  cnn_thresh;
 
@@ -103,7 +103,7 @@ module tb_AI_TRIGGER_TOP;
         .CNN_OUT_CHUNK_ID (cnn_out_chunk_id),
         .CNN_OUT_VALID  (cnn_out_valid),
         .EVENT_VALID    (event_valid),
-        .EVENT_READY    (1'b1),
+        .EVENT_READY    (event_ready),
         .EVENT_DATA     (event_data),
         .EVENT_LAST     (event_last),
         .EVENT_CHUNK_ID (event_chunk_id),
@@ -156,6 +156,7 @@ module tb_AI_TRIGGER_TOP;
     // Latency lookup indexed by DUT chunk/sample id.  Pressure tests may drop
     // chunks, so received_count is not a reliable proxy for the sample id.
     reg [63:0] start_time_by_sample [0:NUM_SAMPLES_MAX-1];
+    reg [63:0] last_input_time_by_sample [0:NUM_SAMPLES_MAX-1];
     real total_latency_acc = 0;
 
     reg [63:0] sim_start_time, sim_end_time;
@@ -206,6 +207,7 @@ module tb_AI_TRIGGER_TOP;
         cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 384'h0;
         data_str       = 0;
+        event_ready    = 1;
 
         // CSV output
         csv_file = $fopen(out_csv_path, "w");
@@ -213,7 +215,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open CSV: %s", out_csv_path); $finish;
         end
         $fwrite(csv_file,
-            "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n");
+            "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us,input_first_fire_time_ns,input_last_fire_time_ns,cnn_result_time_ns\n");
         $fflush(csv_file);
 
         event_csv_file = $fopen(event_csv_path, "w");
@@ -221,7 +223,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
         end
         $fwrite(event_csv_file,
-            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex\n");
+            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex,event_output_time_ns,event_valid,event_ready,event_fire\n");
         $fflush(event_csv_file);
 
         // Load labels
@@ -305,9 +307,6 @@ module tb_AI_TRIGGER_TOP;
                     $finish;
                 end
 
-                // Record send time for latency measurement by sample/chunk id.
-                start_time_by_sample[s_id] = $time;
-
                 // Drive 64 consecutive beats, one per source clock cycle.
                 // Data changes on the rising edge (setup before posedge then hold).
                 for (b = 0; b < N_BATCHES; b = b + 1) begin
@@ -328,6 +327,10 @@ module tb_AI_TRIGGER_TOP;
                     do begin
                         @(posedge clk_adc_src);
                     end while (!adc_src_ready);
+                    if (b == 0)
+                        start_time_by_sample[s_id] = $time;
+                    if (b == N_BATCHES - 1)
+                        last_input_time_by_sample[s_id] = $time;
                 end
 
                 sent_count = sent_count + 1;
@@ -346,21 +349,52 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     task automatic event_monitor_thread;
         integer batch_in_event;
+        time    previous_event_time_ns;
+        time    expected_beat_period_ns;
+        reg [15:0] previous_event_chunk_id;
+        reg     have_previous_event_beat;
         begin
             batch_in_event = 0;
+            previous_event_time_ns = 0;
+            previous_event_chunk_id = 0;
+            expected_beat_period_ns = time'($rtoi(CLK_ADC_PERIOD));
+            have_previous_event_beat = 0;
             forever begin
                 @(posedge clk_adc);
-                if (event_valid) begin
-                    $fwrite(event_csv_file, "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h\n",
+                if (event_valid && event_ready) begin
+                    if (have_previous_event_beat &&
+                        (batch_in_event != 0 ||
+                         event_chunk_id == previous_event_chunk_id + 16'd1) &&
+                        $time - previous_event_time_ns != expected_beat_period_ns) begin
+                        $fatal(
+                            1,
+                            "Event output bubble: previous chunk=%0d current chunk=%0d batch=%0d delta=%0d ns expected=%0d ns",
+                            previous_event_chunk_id,
+                            event_chunk_id,
+                            batch_in_event,
+                            $time - previous_event_time_ns,
+                            expected_beat_period_ns
+                        );
+                    end
+
+                    $fwrite(event_csv_file,
+                            "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h,%0d,%0d,%0d,%0d\n",
                             event_count,
                             event_chunk_id,
                             event_timestamp,
                             event_score,
                             batch_in_event,
                             event_last,
-                            event_data);
+                            event_data,
+                            $time,
+                            event_valid,
+                            event_ready,
+                            event_valid && event_ready);
                     $fflush(event_csv_file);
 
+                    previous_event_time_ns = $time;
+                    previous_event_chunk_id = event_chunk_id;
+                    have_previous_event_beat = 1;
                     event_batch_count = event_batch_count + 1;
                     if (event_last) begin
                         event_count = event_count + 1;
@@ -386,7 +420,7 @@ module tb_AI_TRIGGER_TOP;
             quiet_cycles = 0;
             while (quiet_cycles < 96) begin
                 @(posedge clk_adc);
-                if (event_valid) begin
+                if (event_valid && event_ready) begin
                     quiet_cycles = 0;
                 end else begin
                     quiet_cycles = quiet_cycles + 1;
@@ -443,11 +477,15 @@ module tb_AI_TRIGGER_TOP;
                              label_val, prediction,
                              latency_cycles * CLK_CNN_PERIOD / 1000.0);
 
-                    $fwrite(csv_file, "%0d,0x%08h,%.6f,%0d,%0d,%0d,%0d,%.3f\n",
+                    $fwrite(csv_file,
+                            "%0d,0x%08h,%.6f,%0d,%0d,%0d,%0d,%.3f,%0d,%0d,%0d\n",
                             sample_id_int, cnn_out_data, out_float,
                             label_val, prediction, is_correct,
                             latency_cycles,
-                            latency_cycles * CLK_CNN_PERIOD / 1000.0);
+                            latency_cycles * CLK_CNN_PERIOD / 1000.0,
+                            start_time_by_sample[sample_id_int],
+                            last_input_time_by_sample[sample_id_int],
+                            t_end);
                     $fflush(csv_file);
 
                     received_count = received_count + 1;
