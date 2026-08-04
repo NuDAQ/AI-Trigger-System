@@ -1,0 +1,272 @@
+<mxfile host="Electron" agent="ChatGPT">
+  <diagram id="trigger-architecture" name="Architecture">
+    <mxGraphModel dx="3280" dy="936" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3000" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-1" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1f5f91;strokeWidth=4;shadow=0;connectable=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;" value="" vertex="1">
+          <mxGeometry height="700" width="2650" x="175" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-2" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=34;fontStyle=1;fontColor=#214f78;strokeColor=none;fillColor=none;" value="&lt;b&gt;Trigger and Event Readout Architecture&lt;/b&gt;" vertex="1">
+          <mxGeometry height="52" width="1500" x="205" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-7" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Runtime Configuration&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;TRIGGER_MODE / thresholds / FORCE_TRIGGER (pulse)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="110" width="260" x="210" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-8" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;ADC Ch0–7&lt;/b&gt;" vertex="1">
+          <mxGeometry height="110" width="260" x="210" y="1123" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-9" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#fff0ea;strokeColor=#ff6b4a;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Mode Controller&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;Delay switch until safe&lt;/font&gt;" vertex="1">
+          <mxGeometry height="125" width="270" x="605" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-10" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;4-to-16 Adapter&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;single Hi–Lo trigger&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="270" x="1020" y="1025" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-11" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Shared Waveform Ring&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;continuous capture, Ch0–7&lt;/font&gt;" vertex="1">
+          <mxGeometry height="105" width="310" x="1235" y="1155" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-12" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#f6f8f9;strokeColor=#aeb8bf;strokeWidth=2;dashed=1;dashPattern=6 4;fontSize=18;fontColor=#53616a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Housekeeping&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Capture-All / External&lt;/font&gt;" vertex="1">
+          <mxGeometry height="78" width="270" x="605" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-13" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ffffff;fillOpacity=78;strokeColor=#9bb4c8;strokeWidth=1.5;fontSize=14;fontColor=#33434d;align=left;verticalAlign=middle;spacing=10;" value="&lt;b&gt;TRIGGER_MODE routing&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:13px&quot;&gt;0000 Capture-All &amp;nbsp;•&amp;nbsp; 0001 External &amp;nbsp;•&amp;nbsp; 0010 CNN direct &amp;nbsp;•&amp;nbsp; 0011 Hi-Lo direct &amp;nbsp;•&amp;nbsp; 0100 Hi-Lo + CNN (128+128 window)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="375" x="240" y="1405" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-14" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#fff7d6;strokeColor=#e9b842;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Unified Event Request&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;merge all accepted trigger sources&lt;/font&gt;" vertex="1">
+          <mxGeometry height="110" width="310" x="1235" y="1308" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-15" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Shared Ring Read Scheduler&lt;/b&gt;" vertex="1">
+          <mxGeometry height="110" width="300" x="1637" y="1017.5" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-16" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Shared CNN Input&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;Ch0–3 dispatch&lt;/font&gt;" vertex="1">
+          <mxGeometry height="110" width="250" x="2125" y="1017.5" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-17" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Event Output FIFO&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;complete 64-beat event&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="300" x="1865" y="1410" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-18" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6f9f;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;DAQ Event Stream&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;Ch0–7 payload&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="250" x="2525" y="1410" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-19" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;fillOpacity=45;strokeColor=#7f939f;strokeWidth=2;dashed=1;dashPattern=6 4;connectable=0;" value="" vertex="1">
+          <mxGeometry height="360" width="310" x="2485" y="978" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-20" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#43545e;strokeColor=none;fillColor=none;" value="&lt;b&gt;Existing 5 CNN Lanes&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="270" x="2505" y="993" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-21" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#174e73;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#22313a;align=center;verticalAlign=middle;" value="&lt;b&gt;Lane&lt;br&gt;0&lt;/b&gt;" vertex="1">
+          <mxGeometry height="68" width="48" x="2505" y="1113" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-22" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#174e73;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#22313a;align=center;verticalAlign=middle;" value="&lt;b&gt;Lane&lt;br&gt;1&lt;/b&gt;" vertex="1">
+          <mxGeometry height="68" width="48" x="2563" y="1113" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-23" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#174e73;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#22313a;align=center;verticalAlign=middle;" value="&lt;b&gt;Lane&lt;br&gt;2&lt;/b&gt;" vertex="1">
+          <mxGeometry height="68" width="48" x="2621" y="1113" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-24" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#174e73;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#22313a;align=center;verticalAlign=middle;" value="&lt;b&gt;Lane&lt;br&gt;3&lt;/b&gt;" vertex="1">
+          <mxGeometry height="68" width="48" x="2679" y="1113" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-25" parent="1" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#174e73;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#22313a;align=center;verticalAlign=middle;" value="&lt;b&gt;Lane&lt;br&gt;4&lt;/b&gt;" vertex="1">
+          <mxGeometry height="68" width="48" x="2737" y="1113" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-26" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#fff0ea;strokeColor=#ff6b4a;strokeWidth=2.2;fontSize=19;fontColor=#22313a;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Non-blocking Arbitration&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;round-robin, trigger/discard&lt;/font&gt;" vertex="1">
+          <mxGeometry height="75" width="250" x="2515" y="1233" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-27" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-9" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-28" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="qonesDFdTyk_-k9Dv4WW-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="535" y="1178" />
+              <mxPoint x="535" y="1073" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-29" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="qonesDFdTyk_-k9Dv4WW-11" value="&lt;b&gt;continuous samples&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="1206" />
+              <mxPoint x="680" y="1206" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-30" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-10" value="&lt;b&gt;0011 / 0100&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1225" y="1073" />
+              <mxPoint x="1225" y="1073" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-31" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#8a969d;dashed=1;dashPattern=6 4;fontSize=16;fontStyle=1;fontColor=#546168;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="qonesDFdTyk_-k9Dv4WW-12" value="&lt;b&gt;0000 / 0001&lt;/b&gt;">
+          <mxGeometry relative="1" x="-0.28" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="740" y="1200" />
+              <mxPoint x="740" y="1200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-32" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-16" value="&lt;b&gt;0010 direct CNN path&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="970" />
+              <mxPoint x="2250" y="970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-33" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-15" value="&lt;b&gt;0100: 128 + 128 sample window&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1595" y="1072" />
+              <mxPoint x="1595" y="1072" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-34" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-14" value="&lt;b&gt;0011: direct accept&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1160" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-35" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#8a969d;dashed=1;dashPattern=6 4;fontSize=16;fontStyle=1;fontColor=#546168;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="1390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-36" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-15" value="&lt;b&gt;buffered waveform&lt;/b&gt;">
+          <mxGeometry relative="1" x="-0.1999" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1785" y="1208" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-37" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-15" value="&lt;b&gt;event request&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1390" y="1280" />
+              <mxPoint x="1885" y="1280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-38" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-16" value="&lt;b&gt;Ch0–3&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-39" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-17" value="&lt;b&gt;Ch0–7, full 64 beats&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2015" y="1110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-40" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#4f8d79;fontSize=16;fontStyle=1;fontColor=#3e6f60;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-41" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-21" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2529" y="1080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-42" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2529" y="1208" />
+              <mxPoint x="2640" y="1208" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-43" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-22" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2587" y="1080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-44" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2587" y="1208" />
+              <mxPoint x="2640" y="1208" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-45" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-23" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2645" y="1080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-46" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2645" y="1220" />
+              <mxPoint x="2645" y="1220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-47" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-24" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2703" y="1080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-48" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2703" y="1208" />
+              <mxPoint x="2650" y="1208" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-49" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-25" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2761" y="1080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-50" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1.8;strokeColor=#5f6b73;" target="qonesDFdTyk_-k9Dv4WW-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2761" y="1208" />
+              <mxPoint x="2650" y="1208" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-51" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#c95d42;fontSize=16;fontStyle=1;fontColor=#9d452f;labelBackgroundColor=#ffffff;" target="qonesDFdTyk_-k9Dv4WW-14" value="&lt;b&gt;AI accept&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2645" y="1370" />
+              <mxPoint x="1455" y="1370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-55" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="qonesDFdTyk_-k9Dv4WW-8" value="8 channel &lt;br&gt;ADC Stream">
+          <mxGeometry relative="1" x="-0.2309" y="-2" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="50" y="1178" />
+            </Array>
+            <mxPoint x="50" y="1178" as="sourcePoint" />
+            <mxPoint x="150" y="1080" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qonesDFdTyk_-k9Dv4WW-57" edge="1" parent="1" source="qonesDFdTyk_-k9Dv4WW-18" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2878ad;fontSize=16;fontStyle=1;fontColor=#215a7b;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" value="8 channel &lt;br&gt;event stream">
+          <mxGeometry relative="1" x="0.1724" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+            <mxPoint x="2640" y="1454.71" as="sourcePoint" />
+            <mxPoint x="2970" y="1455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
