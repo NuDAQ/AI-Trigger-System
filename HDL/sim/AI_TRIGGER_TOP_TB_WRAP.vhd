@@ -26,6 +26,7 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         RST             : in  std_logic;
         DATA_STR        : in  std_logic;
         ADC_SRC_READY   : out std_logic;
+        ADC_CORE_VALID  : out std_logic;
         ADC_DATA4_FLAT  : in  std_logic_vector(RAW_ADC_BATCH_WIDTH - 1 downto 0);
         TRIGGER_MODE    : in  std_logic_vector(3 downto 0);
         FORCE_TRIGGER   : in  std_logic;
@@ -154,6 +155,7 @@ begin
         );
 
     CNN_OUT_CHUNK_ID <= std_logic_vector(cnn_out_chunk_id_i);
+    ADC_CORE_VALID <= data_str_core;
     EVENT_CHUNK_ID <= std_logic_vector(event_chunk_id_i);
     EVENT_TIMESTAMP <= std_logic_vector(event_timestamp_i);
     EVENT_TRIGGER_OFFSET <= std_logic_vector(event_trigger_offset_i);

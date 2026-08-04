@@ -97,6 +97,16 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
             self.assertRegex(wrap, rf"{name}\s*:\s+in")
             self.assertIn(f".{name}", sv_tb)
 
+    def test_force_schedule_is_aligned_to_core_valid_not_source_fifo_input(self) -> None:
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
+        sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
+
+        self.assertRegex(wrap, r"ADC_CORE_VALID\s*:\s+out\s+std_logic")
+        self.assertIn("ADC_CORE_VALID <= data_str_core", wrap)
+        self.assertIn("force_trigger_driver_thread()", sv_tb)
+        self.assertIn("if (adc_core_valid)", sv_tb)
+        self.assertNotIn("(s_id % force_trigger_interval)", sv_tb)
+
     def test_top_level_adc_input_is_clk_adc_domain_flat_stream(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")

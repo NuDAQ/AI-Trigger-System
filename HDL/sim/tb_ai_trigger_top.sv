@@ -86,6 +86,7 @@ module tb_AI_TRIGGER_TOP;
     reg  [3:0]   bin_thr;
 
     wire         adc_src_ready;
+    wire         adc_core_valid;
     wire         cnn_trig;
     wire [31:0]  cnn_out_data;
     wire [15:0]  cnn_out_chunk_id;
@@ -117,6 +118,7 @@ module tb_AI_TRIGGER_TOP;
         .RST            (rst),
         .DATA_STR       (data_str),
         .ADC_SRC_READY  (adc_src_ready),
+        .ADC_CORE_VALID (adc_core_valid),
         .ADC_DATA4_FLAT (adc_data4_flat),
         .TRIGGER_MODE   (trigger_mode),
         .FORCE_TRIGGER  (force_trigger),
@@ -338,6 +340,7 @@ module tb_AI_TRIGGER_TOP;
         // Fork: send data on ADC clock, receive on CNN clock
         fork
             input_driver_thread();
+            force_trigger_driver_thread();
             event_monitor_thread();
         join_none
 
@@ -422,9 +425,6 @@ module tb_AI_TRIGGER_TOP;
                         end
                     end
                     adc_data4_flat = batch_flat;
-                    force_trigger = force_trigger_interval > 0 &&
-                        (s_id % force_trigger_interval) == 0 &&
-                        b == force_trigger_beat;
                     data_str = 1;
                     do begin
                         @(posedge clk_adc_src);
@@ -439,9 +439,33 @@ module tb_AI_TRIGGER_TOP;
             end
             // After all requested samples, stop the finite test stream.
             adc_data4_flat = 384'h0;
-            force_trigger = 0;
             data_str = 0;
             input_done = 1;
+        end
+    endtask
+
+    // FORCE_TRIGGER is synchronous to the delivered CLK_ADC boundary, while
+    // testhex enters through the simulation-only source CDC FIFO. Count the
+    // accepted core-side beats so the requested offset is not shifted by FIFO
+    // latency. The default sweep uses beat 31, after the counter is established.
+    task automatic force_trigger_driver_thread;
+        integer core_beat_count;
+        integer core_sample_id;
+        integer core_beat_offset;
+        begin
+            core_beat_count = 0;
+            force_trigger = 0;
+            forever begin
+                @(negedge clk_adc);
+                if (adc_core_valid)
+                    core_beat_count = core_beat_count + 1;
+                core_sample_id = core_beat_count / N_BATCHES;
+                core_beat_offset = core_beat_count % N_BATCHES;
+                force_trigger = force_trigger_interval > 0 &&
+                    core_beat_count < num_samples * N_BATCHES &&
+                    (core_sample_id % force_trigger_interval) == 0 &&
+                    core_beat_offset == force_trigger_beat;
+            end
         end
     endtask
 
