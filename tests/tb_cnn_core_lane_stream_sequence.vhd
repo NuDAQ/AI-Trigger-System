@@ -103,13 +103,19 @@ begin
             BATCH_DATA      => batch_data,
             CHUNK_ID        => chunk_id,
             CHUNK_TIMESTAMP => chunk_timestamp,
+            WORK_START_OFFSET => (others => '0'),
+            WORK_TRIGGER_OFFSET => (others => '0'),
             CNN_THRESH      => cnn_thresh,
             CHUNK_BUSY      => chunk_busy,
+            WORK_PENDING    => open,
             LANE_SCORE      => lane_score,
             LANE_CHUNK_ID   => lane_chunk_id,
             LANE_TIMESTAMP  => lane_timestamp,
+            LANE_START_OFFSET => open,
+            LANE_TRIGGER_OFFSET => open,
             LANE_THRESH     => lane_thresh,
-            LANE_VALID      => lane_valid
+            LANE_VALID      => lane_valid,
+            LANE_READY      => '1'
         );
 
     process

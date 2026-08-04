@@ -37,6 +37,7 @@ entity ADC_CHUNK_DISTRIBUTOR is
 
         DATA_STR       : in  std_logic;   -- beat-valid, normally continuous
         ADC_DATA4      : in  adc_data4_t;
+        ENABLE         : in  std_logic;
 
         LANE_BUSY      : in  lane_busy_t; -- FIFO full per lane (CLK_ADC domain)
 
@@ -59,30 +60,11 @@ architecture rtl of ADC_CHUNK_DISTRIBUTOR is
     signal overflow_comb : std_logic := '0';
     signal we_comb       : std_logic_vector(N_LANES-1 downto 0) := (others => '0');
 
-    signal packed : std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
-
     -- synthesis translate_off
     constant DEBUG_EVENTS : integer := 160;
     signal dbg_events : integer := 0;
     signal dbg_chunk_seq : integer := 0;
     -- synthesis translate_on
-
-    function adc_to_axis16(s : std_logic_vector(11 downto 0)) return std_logic_vector is
-        variable raw      : signed(11 downto 0);
-        variable scaled   : signed(11 downto 0);
-        variable fixed9   : signed(8 downto 0);
-    begin
-        raw := signed(s);
-        scaled := shift_right(raw, 1);
-        if scaled > to_signed(255, scaled'length) then
-            fixed9 := to_signed(255, fixed9'length);
-        elsif scaled < to_signed(-256, scaled'length) then
-            fixed9 := to_signed(-256, fixed9'length);
-        else
-            fixed9 := resize(scaled, fixed9'length);
-        end if;
-        return std_logic_vector(resize(fixed9, 16));
-    end function;
 
 begin
 
@@ -92,37 +74,23 @@ begin
     -- written in chronological order because the asymmetric FIFO read side
     -- returns the low segment before the high segment.
     -- -------------------------------------------------------------------------
-    gen_pack : for p in 0 to N_BATCH_S/2-1 generate
-        constant SEG_BASE : integer := p * 128;
-        constant ROW0     : integer := 2 * p;
-        constant ROW1     : integer := 2 * p + 1;
-    begin
-        packed(SEG_BASE+15 downto SEG_BASE+0)   <= adc_to_axis16(ADC_DATA4(0)(ROW0));
-        packed(SEG_BASE+31 downto SEG_BASE+16)  <= adc_to_axis16(ADC_DATA4(1)(ROW0));
-        packed(SEG_BASE+47 downto SEG_BASE+32)  <= adc_to_axis16(ADC_DATA4(2)(ROW0));
-        packed(SEG_BASE+63 downto SEG_BASE+48)  <= adc_to_axis16(ADC_DATA4(3)(ROW0));
+    BATCH_DATA <= pack_cnn_batch(ADC_DATA4);
 
-        packed(SEG_BASE+79 downto SEG_BASE+64)  <= adc_to_axis16(ADC_DATA4(0)(ROW1));
-        packed(SEG_BASE+95 downto SEG_BASE+80)  <= adc_to_axis16(ADC_DATA4(1)(ROW1));
-        packed(SEG_BASE+111 downto SEG_BASE+96) <= adc_to_axis16(ADC_DATA4(2)(ROW1));
-        packed(SEG_BASE+127 downto SEG_BASE+112) <= adc_to_axis16(ADC_DATA4(3)(ROW1));
-    end generate;
-
-    BATCH_DATA <= packed;
-
-    process(DATA_STR, batch_cnt, LANE_BUSY, lane_sel, drop_chunk)
+    process(DATA_STR, ENABLE, batch_cnt, LANE_BUSY, lane_sel, drop_chunk)
         variable selected_lane_accept : boolean;
     begin
         we_comb <= (others => '0');
         overflow_comb <= '0';
         selected_lane_accept :=
-            (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
-            (batch_cnt /= 0 and drop_chunk = '0');
+            ENABLE = '1' and (
+                (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+                (batch_cnt /= 0 and drop_chunk = '0')
+            );
 
         if DATA_STR = '1' then
             if selected_lane_accept then
                 we_comb(lane_sel) <= '1';
-            else
+            elsif ENABLE = '1' then
                 overflow_comb <= '1';
             end if;
         end if;
@@ -145,7 +113,11 @@ begin
                     -- Decide once at the first batch of a chunk.  This avoids
                     -- partially writing a chunk if a lane becomes unavailable.
                     if batch_cnt = 0 then
-                        drop_chunk <= LANE_BUSY(lane_sel);
+                        if ENABLE = '1' then
+                            drop_chunk <= LANE_BUSY(lane_sel);
+                        else
+                            drop_chunk <= '1';
+                        end if;
                         -- synthesis translate_off
                         if dbg_events < DEBUG_EVENTS then
                             report "DIST chunk_start seq=" &
@@ -157,7 +129,8 @@ begin
                         -- synthesis translate_on
                     end if;
 
-                    if not ((batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
+                    if ENABLE = '1' and not (
+                            (batch_cnt = 0 and LANE_BUSY(lane_sel) = '0') or
                             (batch_cnt /= 0 and drop_chunk = '0')) then
                         -- synthesis translate_off
                         if dbg_events < DEBUG_EVENTS then
