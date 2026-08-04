@@ -106,6 +106,13 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertIn("force_trigger_driver_thread()", sv_tb)
         self.assertIn("if (adc_core_valid)", sv_tb)
         self.assertNotIn("(s_id % force_trigger_interval)", sv_tb)
+        driver = sv_tb.split("task automatic force_trigger_driver_thread;", 1)[1].split(
+            "endtask", 1
+        )[0]
+        self.assertLess(
+            driver.index("core_beat_offset = core_beat_count % N_BATCHES"),
+            driver.index("core_beat_count = core_beat_count + 1"),
+        )
 
     def test_top_level_adc_input_is_clk_adc_domain_flat_stream(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")

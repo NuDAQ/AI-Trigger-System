@@ -457,14 +457,16 @@ module tb_AI_TRIGGER_TOP;
             force_trigger = 0;
             forever begin
                 @(negedge clk_adc);
-                if (adc_core_valid)
+                force_trigger = 0;
+                if (adc_core_valid) begin
+                    core_sample_id = core_beat_count / N_BATCHES;
+                    core_beat_offset = core_beat_count % N_BATCHES;
+                    force_trigger = force_trigger_interval > 0 &&
+                        core_beat_count < num_samples * N_BATCHES &&
+                        (core_sample_id % force_trigger_interval) == 0 &&
+                        core_beat_offset == force_trigger_beat;
                     core_beat_count = core_beat_count + 1;
-                core_sample_id = core_beat_count / N_BATCHES;
-                core_beat_offset = core_beat_count % N_BATCHES;
-                force_trigger = force_trigger_interval > 0 &&
-                    core_beat_count < num_samples * N_BATCHES &&
-                    (core_sample_id % force_trigger_interval) == 0 &&
-                    core_beat_offset == force_trigger_beat;
+                end
             end
         end
     endtask
