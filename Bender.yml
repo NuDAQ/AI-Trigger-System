@@ -18,6 +18,7 @@ dependencies:
 sources:
   - HDL/rtl/AI_TRIGGER_PKG.vhd
   - HDL/rtl/RESET_SYNC.vhd
+  - HDL/rtl/TRIGGER_MODE_CTRL.vhd
   - HDL/rtl/TRIGGER_DECISION.vhd
   - HDL/rtl/ADC_INPUT_CDC_FIFO.vhd
   - HDL/rtl/CHUNK_ID_CDC_FIFO.vhd
