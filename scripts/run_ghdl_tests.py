@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 XPM_STUB = ROOT / "tests" / "support" / "xpm_vcomponents_stub.vhd"
+SIM_WRAPPER = ROOT / "HDL" / "sim" / "AI_TRIGGER_TOP_TB_WRAP.vhd"
 
 
 def parse_args() -> argparse.Namespace:
@@ -112,6 +113,7 @@ def run_test(
                 str(XPM_STUB),
             ],
             [ghdl, "-a", *common, *(str(path) for path in sources)],
+            [ghdl, "-a", *common, str(SIM_WRAPPER)],
             [ghdl, "-a", *common, str(test_path)],
             [ghdl, "-e", *common, test_path.stem],
             [
@@ -127,7 +129,7 @@ def run_test(
 
         transcript: list[str] = []
         for command in commands:
-            result = run_command(command, cwd=ROOT)
+            result = run_command(command, cwd=workdir)
             if result.stdout:
                 transcript.append(result.stdout)
             if result.stderr:

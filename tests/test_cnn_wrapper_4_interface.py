@@ -70,6 +70,23 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+dropped_trigger_count")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+ring_miss_count")
 
+    def test_system_testbench_observes_multimode_status_and_trigger_offset(self) -> None:
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
+        sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
+
+        for name in (
+            "EVENT_TRIGGER_OFFSET",
+            "ACTIVE_TRIGGER_MODE",
+            "MODE_SWITCH_PENDING",
+            "INVALID_TRIGGER_MODE",
+            "HILO_CONFIG_ERROR",
+            "EVENT_LOSS",
+        ):
+            self.assertIn(name, wrap)
+            self.assertIn(name, sv_tb)
+        self.assertIn("event_trigger_offset", sv_tb)
+        self.assertIn("active_trigger_mode != 4'b0010", sv_tb)
+
     def test_top_level_adc_input_is_clk_adc_domain_flat_stream(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")

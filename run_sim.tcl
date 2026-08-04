@@ -28,6 +28,15 @@ proc sim_has_arg {args name} {
     expr {[lsearch -exact $args $name] >= 0}
 }
 
+proc assert_file_contains {path pattern} {
+    set fp [open $path r]
+    set text [read $fp]
+    close $fp
+    if {[string first $pattern $text] < 0} {
+        error "Expected $path to contain '$pattern'. Check the current Bender graph."
+    }
+}
+
 set repo_root [file normalize [pwd]]
 set project_path [sim_arg_value $argv "-project" [file join $repo_root AI_Trigger_System AI_Trigger_System.xpr]]
 set testhex_arg [sim_arg_value $argv "-testhex_dir" ""]
@@ -55,7 +64,9 @@ if {![file exists $project_path]} {
 
 # Ensure Bender checkouts exist on a fresh server checkout.
 set wrapper_candidates [glob -nocomplain [file join $repo_root .bender git checkouts cnn-core-wrapper-*]]
-if {![file exists [file join $repo_root .bender]] || [llength $wrapper_candidates] == 0} {
+set hilo_candidates [glob -nocomplain [file join $repo_root .bender git checkouts hilo-trigger-*]]
+if {![file exists [file join $repo_root .bender]] ||
+    [llength $wrapper_candidates] == 0 || [llength $hilo_candidates] == 0} {
     puts "INFO: Bender checkouts not found; running bender update..."
     if {[catch {exec bender update} err]} {
         error "bender update failed: $err"
@@ -113,6 +124,7 @@ set stale_patterns [list \
     "$repo_root/HDL/rtl/*" \
     "$repo_root/HDL/sim/*" \
     "$repo_root/.bender/git/checkouts/cnn-core-wrapper-*/*" \
+    "$repo_root/.bender/git/checkouts/hilo-trigger-*/*" \
     "/home/work1/Works/CNN-Core-Generator/*" \
 ]
 foreach fs_name {sources_1 sim_1} {
@@ -141,6 +153,8 @@ if {[catch {exec bender script vivado-sim -t simulation > $bender_sim_script} er
 if {![file exists $bender_sim_script] || [file size $bender_sim_script] == 0} {
     error "Bender generated an empty Vivado simulation script."
 }
+assert_file_contains $bender_sim_script {HILO_TRIGGER_CTRL.vhd}
+assert_file_contains $bender_sim_script {Pre_trigger.vhd}
 puts "INFO: sourcing Bender simulation source list: $bender_sim_script"
 source $bender_sim_script
 

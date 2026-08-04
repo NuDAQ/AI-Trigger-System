@@ -86,6 +86,8 @@ if {![file exists $bender_script] || [file size $bender_script] == 0} {
     error "bender generated an empty Vivado script. Run 'bender update' and check dependency paths before launching Vivado."
 }
 assert_file_contains $bender_script {AI_TRIGGER_CORE.vhd}
+assert_file_contains $bender_script {HILO_TRIGGER_CTRL.vhd}
+assert_file_contains $bender_script {Pre_trigger.vhd}
 
 create_project -in_memory -part $::RUN_BUILD_PART
 set_property target_language VHDL [current_project]

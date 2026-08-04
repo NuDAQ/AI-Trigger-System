@@ -5,7 +5,8 @@
 -- Public interface:
 --   * CLK_ADC domain ADC stream: DATA_STR + flat 384-bit ADC_DATA
 --   * CLK_CNN domain CNN inference clock
---   * CLK_ADC domain event stream: waveform batch, LAST, and timestamp
+--   * CLK_ADC domain runtime trigger configuration and operational status
+--   * CLK_ADC domain event stream: waveform batch, LAST, timestamp, and anchor
 --
 -- CNN_THRESH is kept as a 32-bit DAQ-friendly word.  The core uses only
 -- bits [21:0] as signed ap_fixed<22,11> raw threshold.

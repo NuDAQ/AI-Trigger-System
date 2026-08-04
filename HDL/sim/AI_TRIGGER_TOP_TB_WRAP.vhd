@@ -38,7 +38,13 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         EVENT_LAST      : out std_logic;
         EVENT_CHUNK_ID  : out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
         EVENT_TIMESTAMP : out std_logic_vector(TIMESTAMP_WIDTH - 1 downto 0);
+        EVENT_TRIGGER_OFFSET : out std_logic_vector(BEAT_OFFSET_WIDTH - 1 downto 0);
         EVENT_SCORE     : out std_logic_vector(31 downto 0);
+        ACTIVE_TRIGGER_MODE  : out std_logic_vector(3 downto 0);
+        MODE_SWITCH_PENDING  : out std_logic;
+        INVALID_TRIGGER_MODE : out std_logic;
+        HILO_CONFIG_ERROR    : out std_logic;
+        EVENT_LOSS           : out std_logic;
         ADC_INPUT_OVERFLOW_COUNT : out std_logic_vector(31 downto 0);
         DROPPED_TRIGGER_COUNT : out std_logic_vector(31 downto 0);
         RING_MISS_COUNT       : out std_logic_vector(31 downto 0);
@@ -53,6 +59,7 @@ architecture rtl of AI_TRIGGER_TOP_TB_WRAP is
     signal cnn_out_chunk_id_i : chunk_id_t;
     signal event_chunk_id_i : chunk_id_t;
     signal event_timestamp_i : timestamp_t;
+    signal event_trigger_offset_i : beat_offset_t;
     signal adc_input_overflow_count_i : unsigned(31 downto 0);
     signal dropped_trigger_count_i : unsigned(31 downto 0);
     signal ring_miss_count_i : unsigned(31 downto 0);
@@ -127,14 +134,14 @@ begin
             EVENT_LAST     => EVENT_LAST,
             EVENT_CHUNK_ID => event_chunk_id_i,
             EVENT_TIMESTAMP => event_timestamp_i,
-            EVENT_TRIGGER_OFFSET => open,
+            EVENT_TRIGGER_OFFSET => event_trigger_offset_i,
             EVENT_SCORE    => EVENT_SCORE,
-            ACTIVE_TRIGGER_MODE => open,
-            MODE_SWITCH_PENDING => open,
-            INVALID_TRIGGER_MODE => open,
+            ACTIVE_TRIGGER_MODE => ACTIVE_TRIGGER_MODE,
+            MODE_SWITCH_PENDING => MODE_SWITCH_PENDING,
+            INVALID_TRIGGER_MODE => INVALID_TRIGGER_MODE,
             HILO_BLANKING => open,
-            HILO_CONFIG_ERROR => open,
-            EVENT_LOSS => open,
+            HILO_CONFIG_ERROR => HILO_CONFIG_ERROR,
+            EVENT_LOSS => EVENT_LOSS,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count_i,
             RING_MISS_COUNT       => ring_miss_count_i,
             CHUNK_OVERFLOW => CHUNK_OVERFLOW
@@ -143,6 +150,7 @@ begin
     CNN_OUT_CHUNK_ID <= std_logic_vector(cnn_out_chunk_id_i);
     EVENT_CHUNK_ID <= std_logic_vector(event_chunk_id_i);
     EVENT_TIMESTAMP <= std_logic_vector(event_timestamp_i);
+    EVENT_TRIGGER_OFFSET <= std_logic_vector(event_trigger_offset_i);
     ADC_INPUT_OVERFLOW_COUNT <= std_logic_vector(adc_input_overflow_count_i);
     DROPPED_TRIGGER_COUNT <= std_logic_vector(dropped_trigger_count_i);
     RING_MISS_COUNT <= std_logic_vector(ring_miss_count_i);

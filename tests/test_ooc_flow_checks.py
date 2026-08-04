@@ -54,12 +54,22 @@ class OocFlowChecks(unittest.TestCase):
 
         self.assertIn("file delete -force $rpt_dir $dcp_dir $gen_dir", tcl)
         self.assertIn("assert_file_contains $bender_script {AI_TRIGGER_CORE.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_script {HILO_TRIGGER_CTRL.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_script {Pre_trigger.vhd}", tcl)
         self.assertIn("assert_daq_top_boundary", tcl)
         self.assertRegex(tcl, r"get_ports\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_clocks\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_cells\s+-quiet\s+-hierarchical\s+\*u_ADC_INPUT\*")
         self.assertNotIn("fifo_async_1024_to_64", tcl)
         self.assertNotIn("synth_ip", tcl)
+
+    def test_vivado_sim_refreshes_both_bender_dependencies(self) -> None:
+        tcl = read("run_sim.tcl")
+
+        self.assertIn("cnn-core-wrapper-*", tcl)
+        self.assertIn("hilo-trigger-*", tcl)
+        self.assertIn("assert_file_contains $bender_sim_script {HILO_TRIGGER_CTRL.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_sim_script {Pre_trigger.vhd}", tcl)
 
     def test_ooc_flow_does_not_add_simulation_wrapper(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")

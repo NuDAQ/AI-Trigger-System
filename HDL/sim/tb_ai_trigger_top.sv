@@ -80,7 +80,13 @@ module tb_AI_TRIGGER_TOP;
     wire         event_last;
     wire [15:0]  event_chunk_id;
     wire [23:0]  event_timestamp;
+    wire [5:0]   event_trigger_offset;
     wire [31:0]  event_score;
+    wire [3:0]   active_trigger_mode;
+    wire         mode_switch_pending;
+    wire         invalid_trigger_mode;
+    wire         hilo_config_error;
+    wire         event_loss;
     wire [31:0]  adc_input_overflow_count;
     wire [31:0]  dropped_trigger_count;
     wire [31:0]  ring_miss_count;
@@ -108,7 +114,13 @@ module tb_AI_TRIGGER_TOP;
         .EVENT_LAST     (event_last),
         .EVENT_CHUNK_ID (event_chunk_id),
         .EVENT_TIMESTAMP (event_timestamp),
+        .EVENT_TRIGGER_OFFSET (event_trigger_offset),
         .EVENT_SCORE    (event_score),
+        .ACTIVE_TRIGGER_MODE (active_trigger_mode),
+        .MODE_SWITCH_PENDING (mode_switch_pending),
+        .INVALID_TRIGGER_MODE (invalid_trigger_mode),
+        .HILO_CONFIG_ERROR (hilo_config_error),
+        .EVENT_LOSS     (event_loss),
         .ADC_INPUT_OVERFLOW_COUNT (adc_input_overflow_count),
         .DROPPED_TRIGGER_COUNT (dropped_trigger_count),
         .RING_MISS_COUNT       (ring_miss_count),
@@ -135,8 +147,8 @@ module tb_AI_TRIGGER_TOP;
     integer num_samples;
     real    score_threshold;
     integer cnn_thresh_raw;
-    integer has_score_threshold_arg;
-    integer has_cnn_thresh_raw_arg;
+    bit     has_score_threshold_arg;
+    bit     has_cnn_thresh_raw_arg;
     integer mirror_raw_channels;
 
     // Per-sample hex storage (256 words)
@@ -150,8 +162,8 @@ module tb_AI_TRIGGER_TOP;
     integer overflow_count = 0;
     integer event_count    = 0;
     integer event_batch_count = 0;
-    integer input_done = 0;
-    integer sim_done = 0;
+    bit input_done = 0;
+    bit sim_done = 0;
 
     // Latency lookup indexed by DUT chunk/sample id.  Pressure tests may drop
     // chunks, so received_count is not a reliable proxy for the sample id.
@@ -223,7 +235,7 @@ module tb_AI_TRIGGER_TOP;
             $display("[ERROR] Cannot open event CSV: %s", event_csv_path); $finish;
         end
         $fwrite(event_csv_file,
-            "event_index,event_chunk_id,event_timestamp,event_score_hex,event_batch_index,event_last,event_data_hex,event_output_time_ns,event_valid,event_ready,event_fire\n");
+            "event_index,event_chunk_id,event_timestamp,event_trigger_offset,event_score_hex,event_batch_index,event_last,event_data_hex,event_output_time_ns,event_valid,event_ready,event_fire\n");
         $fflush(event_csv_file);
 
         // Load labels
@@ -242,6 +254,12 @@ module tb_AI_TRIGGER_TOP;
         // sample 0.  Otherwise the first chunk can be dropped and the monitor
         // will wait forever for the missing final result.
         repeat(32) @(posedge clk_adc);
+
+        // The mode controller intentionally starts fail-closed and applies the
+        // first request only at a complete chunk boundary.  Prime that boundary
+        // with one ignored zero chunk so validation sample 0 remains chunk 0 in
+        // the CSV artifacts.
+        prime_trigger_mode();
 
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
@@ -271,6 +289,23 @@ module tb_AI_TRIGGER_TOP;
         $fclose(event_csv_file);
         $finish;
     end
+
+    task automatic prime_trigger_mode;
+        integer b;
+        begin
+            adc_data4_flat = 384'h0;
+            data_str = 1;
+            for (b = 0; b < N_BATCHES; b = b + 1) begin
+                do begin
+                    @(posedge clk_adc_src);
+                end while (!adc_src_ready);
+            end
+            data_str = 0;
+            while (active_trigger_mode != 4'b0010 || mode_switch_pending)
+                @(posedge clk_adc);
+            repeat(2) @(posedge clk_adc);
+        end
+    endtask
 
     // =========================================================================
     // Input driver (ADC source domain)
@@ -362,6 +397,9 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid && event_ready) begin
+                    if (event_trigger_offset != 6'd0)
+                        $fatal(1, "continuous AI event trigger offset must be zero, got %0d",
+                               event_trigger_offset);
                     if (have_previous_event_beat &&
                         (batch_in_event != 0 ||
                          event_chunk_id == previous_event_chunk_id + 16'd1) &&
@@ -378,10 +416,11 @@ module tb_AI_TRIGGER_TOP;
                     end
 
                     $fwrite(event_csv_file,
-                            "%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h,%0d,%0d,%0d,%0d\n",
+                            "%0d,%0d,%0d,%0d,0x%08h,%0d,%0d,0x%096h,%0d,%0d,%0d,%0d\n",
                             event_count,
-                            event_chunk_id,
-                            event_timestamp,
+                            event_chunk_id - 16'd1,
+                            event_timestamp - 24'd1,
+                            event_trigger_offset,
                             event_score,
                             batch_in_event,
                             event_last,
@@ -446,7 +485,7 @@ module tb_AI_TRIGGER_TOP;
                 if (cnn_out_valid) begin
                     t_end = $time;
                     output_quiet_cycles = 0;
-                    sample_id_int = $unsigned({16'h0000, cnn_out_chunk_id});
+                    sample_id_int = $unsigned({16'h0000, cnn_out_chunk_id}) - 1;
 
                     if (sample_id_int < 0 || sample_id_int >= num_samples) begin
                         $display("[ERROR] CNN_OUT_CHUNK_ID=%0d outside sample range 0..%0d",
@@ -461,7 +500,7 @@ module tb_AI_TRIGGER_TOP;
                         t_start = t_end;
                     end
 
-                    latency_cycles = (t_end - t_start) / CLK_CNN_PERIOD;
+                    latency_cycles = $rtoi((t_end - t_start) / CLK_CNN_PERIOD);
 
                     // Decode score: ap_fixed<22,11>, byte-aligned in [21:0].
                     out_float  = $itor($signed(cnn_out_data[21:0])) / 2048.0;
@@ -469,7 +508,7 @@ module tb_AI_TRIGGER_TOP;
                     label_val  = labels[sample_id_int];
                     is_correct = (prediction == label_val) ? 1 : 0;
 
-                    if (is_correct) correct_count = correct_count + 1;
+                    if (is_correct != 0) correct_count = correct_count + 1;
                     total_latency_acc = total_latency_acc + latency_cycles;
 
                     $display("%6d | 0x%08h    | %13.6f | %5d | %4d | %10.3f",
@@ -535,6 +574,15 @@ module tb_AI_TRIGGER_TOP;
             $display("Event batches:    %0d", event_batch_count);
             $display("Dropped triggers: %0d", dropped_trigger_count);
             $display("Ring misses:      %0d", ring_miss_count);
+            $display("Active mode:      0x%0h", active_trigger_mode);
+            $display("Mode pending:     %0d", mode_switch_pending);
+            $display("Invalid mode:     %0d", invalid_trigger_mode);
+            $display("Hi-Lo cfg error:  %0d", hilo_config_error);
+            $display("Event loss:       %0d", event_loss);
+
+            if (active_trigger_mode != 4'b0010 || mode_switch_pending ||
+                invalid_trigger_mode || hilo_config_error || event_loss)
+                $fatal(1, "multimode status mismatch in continuous AI validation");
 
             if (received_count > 0) begin
                 accuracy      = 100.0 * correct_count / received_count;

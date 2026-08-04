@@ -4,23 +4,20 @@
 
 ## Overview
 
-This repository contains an FPGA AI trigger path for continuous radio detector
-ADC data. The external interface is standardized on `CLK_ADC`, the 250 MHz
-clock arriving from the frontend ADC side. Both input and event output are
-synchronous to this clock. Each accepted beat carries eight channels with four
-12-bit samples per channel, so the external data interface sustains
-1 Gsps/channel without a source-side gearbox at the trigger-system boundary.
-Internally, the stream is grouped into 256-sample CNN trigger chunks and the
-leading four channels are distributed across five parallel CNN inference lanes.
-The number of lanes is parameterized.
+This repository contains a runtime-selectable FPGA trigger system for continuous
+radio-detector ADC data. The DAQ-facing input and event output are both in the
+250 MHz `CLK_ADC` domain. Each accepted beat carries four 12-bit samples from
+all eight channels, sustaining 1 Gsps/channel.
 
-The CNN IP is provided by the `cnn-core` and `cnn-core-wrapper` Bender
-dependencies.
+Channels 0-3 feed the selected trigger algorithm; every accepted event records
+channels 0-7. One four-bit `TRIGGER_MODE` selects Capture-All, External, AI,
+Hi-Lo, or Hi-Lo-gated AI without changing the bitstream. The five CNN lanes,
+64-chunk waveform ring, event recorder, and output FIFO are shared across
+modes. CNN and Hi-Lo RTL are resolved through Bender.
 
 ## Design Figures
 
-The current implementation follows the continuous lane-parallel trigger
-architecture shown below.
+The continuous-AI subpath uses the lane-parallel architecture shown below.
 
 ![Continuous lane-parallel AI trigger system](pic/figure_C_continuous_lane_parallel_ai_trigger.png)
 
@@ -30,7 +27,8 @@ The CNN core itself comes from the post-baseline streaming optimization flow:
 
 ## Dependency Management
 
-This repository uses Bender to manage the external CNN RTL dependencies.
+This repository uses Bender to manage `cnn-core-wrapper`, its generated CNN
+core, and Hi-Lo Trigger v2.2.4.
 
 Install and update dependencies:
 
@@ -64,55 +62,48 @@ metadata. `dist/` is generated output and is not committed.
 
 ## Current Architecture
 
-Top-level hierarchy:
-
 ```text
-AI_TRIGGER_TOP              HDL/rtl/AI_TRIGGER_TOP.vhd
-  AI_TRIGGER_CORE           HDL/rtl/AI_TRIGGER_CORE.vhd
-  AI_TRIGGER_PKG            HDL/rtl/AI_TRIGGER_PKG.vhd
-  ADC_CHUNK_DISTRIBUTOR     HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
-  CNN_CORE_LANE x 5         HDL/rtl/CNN_CORE_LANE.vhd
-    xpm_fifo_async          256-bit write / 128-bit read lane FIFO
-    WRAPPER_TOP             cnn-core-wrapper dependency
-      cnn_core              cnn-core dependency
-  EVENT_CAPTURE_PATH        HDL/rtl/EVENT_CAPTURE_PATH.vhd
-    WAVEFORM_RING_BUFFER    HDL/rtl/WAVEFORM_RING_BUFFER.vhd
-    TRIGGER_DECISION        HDL/rtl/TRIGGER_DECISION.vhd
-    TRIGGER_CDC_FIFO        HDL/rtl/TRIGGER_CDC_FIFO.vhd
-    EVENT_CAPTURE_CTRL      HDL/rtl/EVENT_CAPTURE_CTRL.vhd
-    EVENT_OUTPUT_FIFO       HDL/rtl/EVENT_OUTPUT_FIFO.vhd
+AI_TRIGGER_TOP
+  AI_TRIGGER_CORE
+    ADC_CHUNK_DISTRIBUTOR            continuous AI input
+    CNN_CORE_LANE x 5                shared by AI and Hi-Lo-gated AI
+    CNN_RESULT_ARBITER
+    MULTIMODE_EVENT_PATH
+      TRIGGER_MODE_CTRL              safe runtime switching, latest request wins
+      HOUSEKEEPING_TRIGGER_CTRL      Capture-All and External modes
+      HILO_INPUT_ADAPTER
+      HILO_TRIGGER_CTRL              PRE_TRIGGER v2.2.4 wrapper
+      GATED_CNN_READER               selected ring window to a free CNN lane
+      WAVEFORM_RING_BUFFER           one shared 64-chunk, eight-channel ring
+      RING_READ_ARBITER              event reads have priority over gated reads
+      EVENT_RECORDER
+      EVENT_OUTPUT_FIFO
 ```
 
-Functional data flow:
+The raw eight-channel stream always advances the shared ring and timestamp.
+Only the selected mode admits trigger work:
 
-```text
-DAQ ADC batches @ CLK_ADC
-  -> DATA_STR + ADC_DATA[383:0]
-     -> AI_TRIGGER_TOP flat-bus unpack
-        -> AI_TRIGGER_CORE
-           -> ADC_CHUNK_DISTRIBUTOR
-              -> 256-timestep chunks, round-robin assigned to five CNN_CORE_LANE blocks
-                 -> async FIFO + chunk-id CDC per lane
-                    -> WRAPPER_TOP/cnn_core @ CLK_CNN
-                       -> score + chunk id
-                          -> threshold compare and event capture
+| `TRIGGER_MODE` | Mode | Event rule |
+| --- | --- | --- |
+| `0000` | Capture-All | Every complete 256-sample chunk is an event. |
+| `0001` | External | A rearmed `FORCE_TRIGGER` rising edge selects one centered event. |
+| `0010` | AI | Continuous CNN processing; a score above `CNN_THRESH` selects its chunk. |
+| `0011` | Hi-Lo | A Hi-Lo L0 decision selects one centered event. |
+| `0100` | Hi-Lo + AI | Hi-Lo selects a 256-sample ring window; the shared CNN decides whether it becomes an event. |
 
-The raw eight-channel ADC stream is also written into WAVEFORM_RING_BUFFER.
-When a CNN score from channels 0-3 crosses CNN_THRESH, TRIGGER_DECISION sends
-the trigger through TRIGGER_CDC_FIFO back to the ADC domain. TRIGGER_CDC_FIFO
-keeps a 32-entry trigger descriptor queue in the CNN clock domain and uses an
-XPM handshake CDC for the descriptor crossing. EVENT_CAPTURE_CTRL then reads
-the corresponding triggered-chunk waveform window from the ring buffer and
-writes all eight raw channels into EVENT_OUTPUT_FIFO. The DAQ-facing EVENT_*
-ready/valid interface drains that FIFO.
-```
+Values `0101` through `1111` apply only at a safe boundary and then fail
+closed. A mode change stops admitting work at a chunk boundary, drains CNN/CDC,
+recorder, and output-FIFO state, then applies the latest requested value at the
+next safe chunk boundary. Intermediate requests are not queued.
 
-The current trigger source is only the CNN trigger wrapper path. The event
-waveform window is one chunk: the same 256-sample chunk whose CNN score crossed
-`CNN_THRESH`, with no pre-trigger or post-trigger chunks. Each event therefore
-emits 64 ADC-domain beats, with `EVENT_LAST` asserted on the final beat. A
-24-bit chunk-index timestamp is carried with the triggered chunk to
-`EVENT_TIMESTAMP` and remains unchanged on all 64 output beats.
+After reset, `ACTIVE_TRIGGER_MODE=1111` and no trigger engine receives work.
+The first requested mode applies after the first complete ADC chunk; that
+arming chunk advances the ring/timebase but is not itself offered to a trigger
+engine.
+
+Every event is one 256-sample window: 64 `CLK_ADC` beats containing channels
+0-7. `EVENT_TIMESTAMP` identifies the chunk containing the trigger anchor and
+`EVENT_TRIGGER_OFFSET` identifies its beat within that chunk.
 
 ### Clock Domains
 
@@ -151,6 +142,17 @@ readout presents it unchanged on every beat of the corresponding event.
 
 At the nominal 1 GSa/s source rate, the 24-bit timestamp wraps after about
 4.29 s. Relative time comparisons should be performed modulo 24 bits.
+
+`EVENT_TRIGGER_OFFSET[5:0]` is the accepted ADC beat index `0..63` inside that
+timestamped chunk. The trigger-anchor beat is therefore:
+
+```text
+EVENT_TIMESTAMP * 64 + EVENT_TRIGGER_OFFSET
+```
+
+Capture-All and continuous AI use offset zero. External mode records the
+accepted `FORCE_TRIGGER` beat. Hi-Lo and Hi-Lo-gated AI retain the qualified
+Hi-Lo aggregate anchor.
 
 ### ADC Input Format
 
@@ -240,17 +242,17 @@ the `ap_fixed<9,4>` raw range are unchanged; values above the range clamp to
 `AI_TRIGGER_TOP` accepts `DATA_STR` and a flat 384-bit `ADC_DATA` bus directly
 in the `CLK_ADC` domain. `DATA_STR` is a beat-valid signal: each accepted beat
 contains four timesteps for all eight raw ADC channels, and continuous input can
-hold `DATA_STR` high every `CLK_ADC` cycle. `ADC_CHUNK_DISTRIBUTOR` runs in this
-same domain. A CNN chunk is 256 timesteps, so one chunk is complete after
-64 accepted `DATA_STR` beats.
+hold `DATA_STR` high every `CLK_ADC` cycle. The waveform ring, Hi-Lo adapter,
+mode controller, and event output all run in this domain. A trigger chunk is
+256 timesteps, so one chunk is complete after 64 accepted `DATA_STR` beats.
 
 The input side has no `ADC_READY` backpressure signal. When `DATA_STR` is high,
 the trigger system must synchronously accept the 384-bit ADC beat. If
 `DATA_STR` is low, that cycle is not an accepted beat and does not advance the
-chunk beat counter, chunk timestamp, waveform ring write pointer, or lane FIFO
-write.
+chunk beat counter, chunk timestamp, waveform ring write pointer, or active
+trigger-engine input.
 
-For every chunk:
+In continuous AI mode, for every chunk:
 
 1. The distributor selects a lane in round-robin order.
 2. If the selected lane is available, all 64 ADC beats are written into that
@@ -282,14 +284,11 @@ accepted by the CNN input stream. It does not wait for the CNN score output.
 This allows the input side of a lane to accept a later chunk while the previous
 chunk is still propagating through the CNN pipeline.
 
-The event readout path includes a synchronous `EVENT_OUTPUT_FIFO` in the
-`CLK_ADC` domain. Its first-version depth target is 128 event beats, enough to
-buffer two complete 64-beat triggered chunks during short downstream stalls.
-`EVENT_CAPTURE_CTRL` writes raw waveform batches plus internal chunk id,
-timestamp, and score into this FIFO. The delivered top exports only
-`EVENT_VALID`, `EVENT_READY`, `EVENT_DATA`, `EVENT_LAST`, and
-`EVENT_TIMESTAMP`; chunk id, score, overflow/status, and trigger debug pulses
-remain internal/debug-only.
+The shared event readout includes a synchronous 128-beat `EVENT_OUTPUT_FIFO`,
+enough to hold two complete events during a short downstream stall. The
+recorder starts only when one full event of FIFO credit is available, so an
+accepted event has no payload bubbles. Event reads have priority over the
+Hi-Lo-gated CNN reader.
 
 ## Timing and Throughput
 
@@ -399,13 +398,12 @@ functional validation point: `SCORE_THRESHOLD=0.0` and `CNN_THRESH_RAW=0`.
 The older wrapper-reference fallback threshold is still available by passing
 `SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288` explicitly.
 
-`CNN_THRESH` is a single global threshold for the whole CNN trigger. It is not
-per-channel, per-lane, or per-class. Although the threshold is consumed in the
-`CLK_CNN` domain, the external configuration source may be driven from
-`CLK_ADC` or from another DAQ/control clock, so the design must cross it through
-an explicit configuration CDC path before CNN-domain comparison. The CNN-domain
-control path latches a threshold snapshot when starting a 256-sample chunk, and
-that snapshot is used for the full chunk decision.
+`CNN_THRESH` is one global threshold, not a per-channel or per-lane setting.
+The DAQ-facing input is synchronous to `CLK_ADC`. Each CNN work item snapshots
+the threshold together with its start address, timestamp, and trigger offset;
+that atomic metadata crosses to `CLK_CNN` and remains attached to the result.
+An upstream control clock must provide an atomic register-transfer handshake
+before the `AI_TRIGGER_TOP` boundary.
 
 ## Output Interfaces
 
@@ -418,24 +416,27 @@ EVENT_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
   = raw 12-bit signed ADC sample for channel ch, sample index sample
 ```
 
-For the current one-chunk event window, each event emits 64 `EVENT_VALID` beats.
-`EVENT_TIMESTAMP` remains constant across those 64 beats, and `EVENT_LAST` is
-asserted on the final beat. The delivered top does not expose CNN score, chunk
-id, overflow counters, or trigger debug pulses.
+Each event emits 64 `EVENT_VALID` beats. `EVENT_TIMESTAMP` and
+`EVENT_TRIGGER_OFFSET` remain constant across the event, and `EVENT_LAST` is
+asserted on the final beat. Operational status is exposed as
+`ACTIVE_TRIGGER_MODE`, `MODE_SWITCH_PENDING`, `INVALID_TRIGGER_MODE`,
+`HILO_BLANKING`, `HILO_CONFIG_ERROR`, and sticky `EVENT_LOSS`.
 
 ## Main RTL Files
 
 | File | Description |
 | --- | --- |
 | `HDL/rtl/AI_TRIGGER_PKG.vhd` | Shared constants and array types. `N_LANES` is currently 5. |
-| `HDL/rtl/AI_TRIGGER_TOP.vhd` | DAQ-facing OOC top with flat ADC/event buses and timestamp-only event metadata. |
-| `HDL/rtl/AI_TRIGGER_CORE.vhd` | Internal trigger core, result aggregation, and threshold comparison. |
+| `HDL/rtl/AI_TRIGGER_TOP.vhd` | DAQ-facing OOC top with runtime configuration, flat ADC/event buses, and status. |
+| `HDL/rtl/AI_TRIGGER_CORE.vhd` | Shared five-lane CNN cluster and multimode integration. |
 | `HDL/rtl/ADC_INPUT_CDC_FIFO.vhd` | Simulation/helper CDC FIFO for source-clock test streams; not instantiated by the delivered OOC top. |
 | `HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd` | ADC-domain chunk formation and round-robin lane assignment. |
 | `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane async FIFO, CDC counters, AXI-stream input FSM, and CNN wrapper instance. |
-| `HDL/rtl/EVENT_CAPTURE_PATH.vhd` | Trigger decision, trigger CDC, waveform ring buffer, and event readout path. |
-| `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | ADC-domain circular storage for recent raw waveform chunks. |
-| `HDL/rtl/EVENT_CAPTURE_CTRL.vhd` | ADC-domain event window readout controller. |
+| `HDL/rtl/MULTIMODE_EVENT_PATH.vhd` | Mode control, housekeeping/Hi-Lo engines, shared ring, recorder, and event FIFO. |
+| `HDL/rtl/HILO_TRIGGER_CTRL.vhd` | Safe integration wrapper for the Bender-managed Hi-Lo `PRE_TRIGGER`. |
+| `HDL/rtl/GATED_CNN_READER.vhd` | Replays a Hi-Lo-selected ring window into one shared CNN lane. |
+| `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | ADC-domain 64-chunk circular storage for all eight raw channels. |
+| `HDL/rtl/EVENT_RECORDER.vhd` | Normalized Event Request preflight and one-window ring readout. |
 | `HDL/rtl/EVENT_OUTPUT_FIFO.vhd` | Synchronous output FIFO that decouples event capture from short downstream stalls. |
 | `HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd` | Mixed-language simulation wrapper that models source-clock test input and instantiates `AI_TRIGGER_CORE`. |
 | `HDL/sim/tb_ai_trigger_top.sv` | SystemVerilog simulation testbench. |
@@ -444,7 +445,22 @@ id, overflow counters, or trigger debug pulses.
 
 ## Simulation
 
-The recommended terminal flow for the current functional validation point is:
+Run the complete local RTL regression first. It uses Bender for production
+source order, compiles simulation-only XPM models, and gives every testbench an
+isolated temporary GHDL work library:
+
+```bash
+python3 scripts/run_ghdl_tests.py
+```
+
+Run one scenario with, for example,
+
+```bash
+python3 scripts/run_ghdl_tests.py tb_multimode_hilo_ai
+```
+
+The server-side Vivado/XSim flow exercises continuous AI mode with the real CNN
+RTL and the shared multimode event path:
 
 ```bash
 python3 scripts/run_vivado_sim.py \
@@ -452,7 +468,10 @@ python3 scripts/run_vivado_sim.py \
 ```
 
 The script opens `AI_Trigger_System/AI_Trigger_System.xpr`, sources
-`run_sim.tcl`, and runs the behavioral xsim testbench in Vivado batch mode.
+`run_sim.tcl`, refreshes both CNN and Hi-Lo sources from Bender, and runs the
+behavioral xsim testbench in Vivado batch mode. The testbench sends one ignored
+zero chunk to apply the initial fail-closed mode at a safe boundary, then maps
+the validation dataset back to sample IDs and timestamps starting at zero.
 
 To reproduce the wrapper-reference fallback threshold instead:
 
@@ -487,8 +506,9 @@ Triggered waveform events are written to:
 AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv
 ```
 
-The event CSV includes `event_timestamp`, a 24-bit chunk timestamp that is
-constant across all 64 beats of a triggered-chunk event.
+The event CSV includes `event_timestamp` and `event_trigger_offset`; both are
+constant across all 64 beats of an event. Continuous AI events must report
+offset zero.
 
 After a full-system run, validate the score CSV, event CSV, and simulation log
 with:
