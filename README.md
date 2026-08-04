@@ -2,891 +2,313 @@
 
 [![License: Apache-2.0 WITH SHL-2.1](https://img.shields.io/badge/license-Apache--2.0%20WITH%20SHL--2.1-green)](LICENSE)
 
-## Overview
+Runtime-selectable FPGA trigger and event readout for continuous radio-detector
+ADC data. The DAQ input and event output run at 250 MHz with four samples per
+cycle, giving 1 Gsps per channel.
 
-This repository contains a runtime-selectable FPGA trigger system for continuous
-radio-detector ADC data. The DAQ-facing input and event output are both in the
-250 MHz `CLK_ADC` domain. Each accepted beat carries four 12-bit samples from
-all eight channels, sustaining 1 Gsps/channel.
+Channels 0-3 feed the trigger algorithms. Every accepted event records channels
+0-7. One bitstream supports housekeeping, AI, Hi-Lo, and Hi-Lo-gated AI modes.
 
-Channels 0-3 feed the selected trigger algorithm; every accepted event records
-channels 0-7. One four-bit `TRIGGER_MODE` selects Capture-All, External, AI,
-Hi-Lo, or Hi-Lo-gated AI without changing the bitstream. The five CNN lanes,
-64-chunk waveform ring, event recorder, and output FIFO are shared across
-modes. CNN and Hi-Lo RTL are resolved through Bender.
+## Architecture
 
-## Design Figures
+![Trigger and event readout architecture](pic/trigger_system_architecture.png)
 
-The continuous-AI subpath uses the lane-parallel architecture shown below.
+Editable source: [`pic/trigger_system_architecture.drawio`](pic/trigger_system_architecture.drawio)
+and [`trigger_system_architecture.drawio.pdf`](pic/trigger_system_architecture.drawio.pdf).
 
-![Continuous lane-parallel AI trigger system](pic/figure_C_continuous_lane_parallel_ai_trigger.png)
+The raw eight-channel stream always advances one shared 64-chunk waveform ring.
+Only the active trigger path creates work. The event recorder, output FIFO, ring,
+five CNN lanes, and Hi-Lo engine are shared across modes.
 
-The CNN core itself comes from the post-baseline streaming optimization flow:
+```text
+AI_TRIGGER_TOP
+  AI_TRIGGER_CORE
+    ADC_CHUNK_DISTRIBUTOR          continuous AI input
+    CNN_CORE_LANE x 5              shared CNN inference lanes
+    CNN_RESULT_ARBITER
+    MULTIMODE_EVENT_PATH
+      TRIGGER_MODE_CTRL            safe runtime switching
+      HOUSEKEEPING_TRIGGER_CTRL    Capture-All and External
+      HILO_INPUT_ADAPTER
+      HILO_TRIGGER_CTRL            Bender-managed PRE_TRIGGER wrapper
+      GATED_CNN_READER             centered ring window to a free CNN lane
+      WAVEFORM_RING_BUFFER         64 chunks, eight raw channels
+      RING_READ_ARBITER
+      EVENT_RECORDER
+      EVENT_OUTPUT_FIFO
+```
 
-![Post-baseline streaming optimization](pic/figure_D_post_baseline_streaming_optimization.png)
+### Trigger modes
 
-## Dependency Management
+| `TRIGGER_MODE` | Mode | Event rule |
+| --- | --- | --- |
+| `0000` | Capture-All | Every complete 256-sample chunk becomes an event. |
+| `0001` | External | A rearmed `FORCE_TRIGGER` rising edge selects one centered event. |
+| `0010` | AI | Every chunk is evaluated by the CNN; `score > CNN_THRESH` triggers. |
+| `0011` | Hi-Lo | A Hi-Lo decision selects one centered event. |
+| `0100` | Hi-Lo + AI | Hi-Lo selects a centered ring window; the shared CNN makes the final decision. |
 
-This repository uses Bender to manage `cnn-core-wrapper`, its generated CNN
-core, and Hi-Lo Trigger v2.2.4.
+Values `0101` through `1111` fail closed. After reset the active mode is
+`1111`; the first valid request applies after the first complete ADC chunk.
 
-Install and update dependencies:
+A runtime change stops new work at a chunk boundary and waits for the current
+CNN, CDC, recorder, and output state to drain. The latest requested mode wins;
+intermediate requests are not queued.
+
+### Clocks and event timing
+
+| Clock | Rate | Use |
+| --- | ---: | --- |
+| `CLK_ADC` | 250 MHz | ADC ingest, ring, Hi-Lo, event recorder, output |
+| `CLK_CNN` | 200 MHz | CNN input streams and inference |
+
+`RST` asserts high. It is synchronized locally on release in both clock
+domains.
+
+`EVENT_TIMESTAMP[23:0]` counts accepted 256-sample chunks. One tick is 64 ADC
+beats. `EVENT_TRIGGER_OFFSET[5:0]` identifies the anchor beat inside the chunk.
+The absolute anchor beat is:
+
+```text
+EVENT_TIMESTAMP * 64 + EVENT_TRIGGER_OFFSET
+```
+
+Capture-All and continuous AI use offset zero. External and Hi-Lo modes retain
+their accepted trigger anchor.
+
+## Interfaces
+
+Bit ranges below use `[MSB:LSB]` notation.
+
+### ADC input
+
+`ADC_DATA[383:0]` carries eight channels, four signed 12-bit samples per channel:
+
+```text
+ADC_DATA[(ch * 4 + sample) * 12 +: 12] = ADC_DATA4(ch)(sample)
+```
+
+`DATA_STR` is the beat-valid signal. There is no ADC backpressure port; every
+beat with `DATA_STR=1` is accepted.
+
+The CNN uses channels 0-3. The RTL converts each raw sample to the wrapper's
+signed `ap_fixed<9,4>` input by shifting right one bit, saturating to
+`[-256, 255]`, and sign-extending into a 16-bit AXI-stream lane. The event path
+keeps the original 12-bit samples.
+
+### Configuration
+
+| Input | Meaning |
+| --- | --- |
+| `TRIGGER_MODE[3:0]` | Requested runtime mode |
+| `FORCE_TRIGGER` | External housekeeping trigger pulse |
+| `CNN_THRESH[31:0]` | CNN threshold container; comparator uses signed bits `[21:0]` |
+| `HL_THRESH[11:0]` | Non-negative Hi-Lo threshold in raw ADC codes |
+| `HILO_WINDOW[4:0]` | Hi-Lo high/low coincidence window |
+| `COINC_WINDOW[5:0]` | Cross-channel coincidence window |
+| `BIN_THR[3:0]` | Required channel multiplicity, valid range 1-4 |
+
+CNN scores use signed `ap_fixed<22,11>`:
+
+```text
+score_float = signed(score[21:0]) / 2048
+CNN_THRESH_raw = threshold_float * 2048
+```
+
+Configuration is sampled with the work item so one inference uses one stable
+threshold. Hi-Lo configuration is latched at safe Hi-Lo mode entry.
+
+### Event output
+
+The event output is a `CLK_ADC` ready/valid stream. Each event is exactly 64
+beats and contains 256 samples from channels 0-7.
+
+```text
+EVENT_DATA[(ch * 4 + sample) * 12 +: 12] = raw 12-bit sample
+```
+
+`EVENT_TIMESTAMP` and `EVENT_TRIGGER_OFFSET` remain stable for all 64 beats.
+`EVENT_LAST` is high on the final beat. The output FIFO holds two complete
+events and only starts a new event when one full-event credit is available.
+
+Status outputs report the active mode, pending mode switch, invalid mode,
+Hi-Lo rate blanking, invalid Hi-Lo configuration, and sticky event loss.
+
+## Source layout
+
+| Path | Contents |
+| --- | --- |
+| `HDL/rtl/` | OOC top, multimode control, ring/event path, CDC, CNN lanes |
+| `HDL/sim/` | Mixed-language full-system simulation wrapper and testbench |
+| `HDL/constraints/` | OOC timing and CDC constraints |
+| `scripts/` | Vivado launchers, analyzers, report and waveform tools |
+| `tests/` | GHDL and Python regression tests |
+| `docs/` | DAQ delivery interface and implementation notes |
+| `build/multimode_trigger_validation/` | Tracked multimode validation report and raw artifacts |
+| `build/vivado_ooc_ai_trigger/` | Tracked OOC checkpoints and Vivado reports |
+
+Main integration files:
+
+| File | Role |
+| --- | --- |
+| `HDL/rtl/AI_TRIGGER_TOP.vhd` | DAQ-facing OOC boundary |
+| `HDL/rtl/AI_TRIGGER_CORE.vhd` | CNN cluster and multimode integration |
+| `HDL/rtl/MULTIMODE_EVENT_PATH.vhd` | Shared mode, ring, trigger, and event path |
+| `HDL/rtl/TRIGGER_MODE_CTRL.vhd` | Safe runtime mode switching |
+| `HDL/rtl/HILO_TRIGGER_CTRL.vhd` | Hi-Lo wrapper, rate protection, request generation |
+| `HDL/rtl/GATED_CNN_READER.vhd` | Hi-Lo-centered waveform replay into CNN |
+| `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | Shared eight-channel history |
+| `HDL/rtl/EVENT_RECORDER.vhd` | Complete-event ring readout |
+| `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane CDC and CNN stream control |
+
+## Dependencies
+
+Bender manages `cnn-core-wrapper`, its CNN RTL, and Hi-Lo Trigger v2.2.4.
 
 ```bash
 cargo install bender
 bender update
 ```
 
-Regenerate Vivado source scripts when dependencies change:
+Vivado launchers regenerate their source list from the Bender graph. Do not add
+a parallel manual source list.
+
+## Validation
+
+The complete report, raw CSVs, XSim logs, centered waveform arrays, and machine
+summaries are in
+[`build/multimode_trigger_validation/REPORT.md`](build/multimode_trigger_validation/REPORT.md).
+
+### Five-mode simulation
+
+All modes used the same 1000-chunk dataset with 180 signal labels. CNN threshold
+was zero. The baseline Hi-Lo configuration used raw threshold 192,
+`HILO_WINDOW=5`, `COINC_WINDOW=32`, and `BIN_THR=2`.
+
+| Mode | Events | CNN evaluations | TP / FP | Accuracy | Recall | Result |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `0000` | 1000 | 0 | - | - | - | Exact Capture-All contract |
+| `0001` | 250 | 0 | - | - | - | Exact interval-4 external contract |
+| `0010` | 162 | 1000 | 162 / 0 | 98.2% | 90.0% | No overflow, drop, or event loss |
+| `0011` | 24 | 0 | 19 / 5 | 83.4% | 10.6% | Rate blanking and event loss observed |
+| `0100` | 0 | 24 | 0 / 0 | 82.0% | 0% | All gated CNN scores were below zero |
+
+Recall is `TP / (TP + FN)`. The 82% result in mode `0100` is only the
+all-background baseline from 820 negative labels.
+
+The mode-`0010` score stream was also compared with the Bender-locked standalone
+CNN wrapper. All 1000 rows matched exactly in sample ID, raw score bits, decoded
+score, and prediction. The 18 false negatives are not a multimode alignment
+error.
+
+### Hi-Lo thresholds and gated CNN windows
+
+The reference analysis uses background `RMS = std(X_test[label=0]) = 1.020686`.
+One RMS is 65.3239 raw ADC codes, so raw 192 is 2.939 RMS. The requested 3.4 and
+4 RMS points use raw 222 and 261.
+
+| Hi-Lo threshold | Mode `0011` events | Mode `0100` CNN runs | Mode `0100` events | Blanking |
+| --- | ---: | ---: | ---: | ---: |
+| 2.939 RMS / raw 192 | 24 | 24 | 0 | Yes |
+| 3.398 RMS / raw 222 | 11 | 11 | 0 | Yes |
+| 3.995 RMS / raw 261 | 19 | 19 | 0 | No |
+
+The non-monotonic final event count is caused by rate blanking and busy-path
+loss. The independent Hi-Lo candidate count remains monotonic: 133, 51, and 20.
+
+The following plot shows the 24 raw-192 windows sent to the gated CNN. Samples
+are converted exactly like the RTL and normalized by background RMS. The gray
+band is the 16-sample Hi-Lo decision group; the dashed line is the centered
+boundary.
+
+![Hi-Lo-centered CNN inputs](build/multimode_trigger_validation/threshold_192/plot/hilo_gated_centered_waveforms.png)
+
+Plots for 3.4 and 4 RMS are included in the full report.
+
+### OOC implementation
+
+The final OOC run closes timing at `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz`.
+
+| Metric | Result |
+| --- | ---: |
+| WNS / TNS | 0.322 ns / 0 ns |
+| WHS / THS | 0.024 ns / 0 ns |
+| CLB LUTs | 32,061 |
+| CLB registers | 20,311 |
+| BRAM tiles | 26 |
+| URAM | 6 |
+| DSP | 20 |
+| Vectorless power | 1.264 W |
+
+The tracked
+[`build/vivado_ooc_ai_trigger/reports/`](build/vivado_ooc_ai_trigger/reports/)
+directory contains the timing, utilization, CDC, methodology, and power output
+from this implementation run.
+
+## Build and test
+
+Run local regressions:
 
 ```bash
-bender script vivado -t vivado > add_files.tcl
-bender script vivado-sim -t sim > add_sim_files.tcl
-```
-
-If the generated Tcl files contain a hardcoded `ROOT`, update it for the local
-checkout or regenerate the scripts on the target machine.
-
-## DAQ Delivery Package
-
-For first DAQ integration testing, generate a small release package instead of
-sharing the full development repository:
-
-```bash
-python3 scripts/package_delivery.py --version v3.2.0-daq-test
-```
-
-The generated `dist/ai-trigger-daq-*.zip` contains the delivery README, all
-required RTL, the OOC constraint file, a Vivado `add_files.tcl`, and version
-metadata. `dist/` is generated output and is not committed.
-
-## Current Architecture
-
-```text
-AI_TRIGGER_TOP
-  AI_TRIGGER_CORE
-    ADC_CHUNK_DISTRIBUTOR            continuous AI input
-    CNN_CORE_LANE x 5                shared by AI and Hi-Lo-gated AI
-    CNN_RESULT_ARBITER
-    MULTIMODE_EVENT_PATH
-      TRIGGER_MODE_CTRL              safe runtime switching, latest request wins
-      HOUSEKEEPING_TRIGGER_CTRL      Capture-All and External modes
-      HILO_INPUT_ADAPTER
-      HILO_TRIGGER_CTRL              PRE_TRIGGER v2.2.4 wrapper
-      GATED_CNN_READER               selected ring window to a free CNN lane
-      WAVEFORM_RING_BUFFER           one shared 64-chunk, eight-channel ring
-      RING_READ_ARBITER              event reads have priority over gated reads
-      EVENT_RECORDER
-      EVENT_OUTPUT_FIFO
-```
-
-The raw eight-channel stream always advances the shared ring and timestamp.
-Only the selected mode admits trigger work:
-
-| `TRIGGER_MODE` | Mode | Event rule |
-| --- | --- | --- |
-| `0000` | Capture-All | Every complete 256-sample chunk is an event. |
-| `0001` | External | A rearmed `FORCE_TRIGGER` rising edge selects one centered event. |
-| `0010` | AI | Continuous CNN processing; a score above `CNN_THRESH` selects its chunk. |
-| `0011` | Hi-Lo | A Hi-Lo L0 decision selects one centered event. |
-| `0100` | Hi-Lo + AI | Hi-Lo selects a 256-sample ring window; the shared CNN decides whether it becomes an event. |
-
-Values `0101` through `1111` apply only at a safe boundary and then fail
-closed. A mode change stops admitting work at a chunk boundary, drains CNN/CDC,
-recorder, and output-FIFO state, then applies the latest requested value at the
-next safe chunk boundary. Intermediate requests are not queued.
-
-After reset, `ACTIVE_TRIGGER_MODE=1111` and no trigger engine receives work.
-The first requested mode applies after the first complete ADC chunk; that
-arming chunk advances the ring/timebase but is not itself offered to a trigger
-engine.
-
-Every event is one 256-sample window: 64 `CLK_ADC` beats containing channels
-0-7. `EVENT_TIMESTAMP` identifies the chunk containing the trigger anchor and
-`EVENT_TRIGGER_OFFSET` identifies its beat within that chunk.
-
-### Clock Domains
-
-| Clock | Nominal rate | Function |
-| --- | ---: | --- |
-| `CLK_ADC` | 250 MHz target | Frontend ADC clock used for both ADC ingest and event output. |
-| `CLK_CNN` | 200 MHz | Streams data into the CNN wrappers, runs inference, and aggregates trigger results. |
-
-The reset input `RST` is active high and may be driven by an upper-level DAQ or
-global-control reset source. It is treated as an asynchronous assertion at the
-AI trigger boundary, then released through local reset synchronizers in the
-`CLK_ADC` and `CLK_CNN` domains before fanning out to domain logic. The
-delivered OOC top has no extra source-clock or downstream-clock domain. The
-input and event-output interfaces are synchronous to the same `CLK_ADC`; only
-the internal `CLK_ADC` <-> `CLK_CNN` crossings should remain in the trigger
-block. Reset must clear state machines, FIFO/ring pointers, metadata-valid
-flags, and output-valid flags so reset release cannot create a false chunk or
-false event.
-
-### Event Timestamp
-
-`EVENT_TIMESTAMP` is a 24-bit chunk-index timestamp in the trigger ingest
-`CLK_ADC` domain. It increments once per accepted 256-sample chunk:
-
-```text
-1 timestamp tick = 64 accepted ADC beats = 256 samples/channel
-```
-
-The timestamp labels the 256-sample chunk, not the later event output time.
-`CHUNK_ID` and `CHUNK_TIMESTAMP` advance at the same chunk cadence in the
-current version, but their meanings stay separate: `CHUNK_ID` is the internal
-ring-buffer and metadata matching tag, while `EVENT_TIMESTAMP` is the externally
-visible chunk-index timestamp. When a chunk triggers, the trigger descriptor
-carries the timestamp through the CNN-to-ADC trigger CDC FIFO, and the event
-readout presents it unchanged on every beat of the corresponding event.
-
-At the nominal 1 GSa/s source rate, the 24-bit timestamp wraps after about
-4.29 s. Relative time comparisons should be performed modulo 24 bits.
-
-`EVENT_TRIGGER_OFFSET[5:0]` is the accepted ADC beat index `0..63` inside that
-timestamped chunk. The trigger-anchor beat is therefore:
-
-```text
-EVENT_TIMESTAMP * 64 + EVENT_TRIGGER_OFFSET
-```
-
-Capture-All and continuous AI use offset zero. External mode records the
-accepted `FORCE_TRIGGER` beat. Hi-Lo and Hi-Lo-gated AI retain the qualified
-Hi-Lo aggregate anchor.
-
-### ADC Input Format
-
-The DAQ-facing top exposes the eight-channel ADC input as a flat 384-bit
-vector in the `CLK_ADC` domain:
-
-```text
-8 channels x 4 samples per ADC cycle x 12 bits = 384 bits
-```
-
-The top-level port and SystemVerilog testbench use a channel-major convention:
-
-```text
-ADC_DATA[(ch * 4 + sample) * 12 +: 12] <-> ADC_DATA4(ch)(sample)
-```
-
-The DAQ bring-up input is expected to come from the ADC12QJ1600 in signed
-12-bit two's-complement format.  With the ADC default full-scale setting of
-`V_FS = 0.8 Vpp` differential, the digital code maps to differential input
-voltage as:
-
-```text
-Vdiff = signed_code * V_FS / 2^12
-      = signed_code * 0.8 V / 4096
-      = signed_code * 0.1953125 mV
-```
-
-Equivalently:
-
-```text
-signed_code = round(Vdiff / 0.1953125 mV)
-```
-
-The normal signed 12-bit range is `-2048..2047`, corresponding to about
-`-400.0 mV..+399.8 mV` differential at `V_FS = 0.8 Vpp`.  Example codes:
-
-| Differential input | Signed 12-bit code |
-| ---: | ---: |
-| 0 mV | 0 |
-| +50 mV | about +256 |
-| -50 mV | about -256 |
-| +100 mV | about +512 |
-| -100 mV | about -512 |
-
-For DAQ bring-up, a zero-input test uses valid ADC beats with all signed codes
-set to `0`.  A simple bipolar pulse test can use about `+50 mV / -50 mV`
-differential samples, which maps to approximately `+256 / -256` ADC codes at
-the default full-scale setting.
-
-The CNN test vectors store one timestep as four packed 12-bit values.  The
-Vivado testbench mirrors these four channels into input channels 4-7 so the
-event payload is eight channels while CNN trigger decisions remain based on
-channels 0-3:
-
-```text
-raw[11: 0] = ch0
-raw[23:12] = ch1
-raw[35:24] = ch2
-raw[47:36] = ch3
-raw[63:48] = unused
-```
-
-DAQ-side logic provides 12-bit signed two's-complement samples for all eight
-channels in this packing. There is no external 16-bit sample container and no
-low-bit zero padding at the trigger-system boundary. The distributor performs
-the CNN-side fixed-point
-conversion internally only for channels 0-3.  It converts each
-`ap_fixed<12,6>`-style raw sample to the raw representation used by the CNN
-input `ap_fixed<9,4>` lane: arithmetic right shift by one bit, saturate to the
-9-bit raw range, then sign-extend into the 16-bit AXI-stream lane container
-expected by the wrapper.  The 9-bit raw range is `-256..255`, which corresponds
-to approximately `-8.0..7.96875` for `ap_fixed<9,4>`:
-
-```text
-axis_word[15: 0] = sign_extend(saturate(ch0[11:0] >>> 1, -256, 255))
-axis_word[31:16] = sign_extend(saturate(ch1[11:0] >>> 1, -256, 255))
-axis_word[47:32] = sign_extend(saturate(ch2[11:0] >>> 1, -256, 255))
-axis_word[63:48] = sign_extend(saturate(ch3[11:0] >>> 1, -256, 255))
-```
-
-The saturation prevents fixed-point overflow wraparound.  Values already inside
-the `ap_fixed<9,4>` raw range are unchanged; values above the range clamp to
-`255`, and values below the range clamp to `-256`.
-
-## Data Flow
-
-`AI_TRIGGER_TOP` accepts `DATA_STR` and a flat 384-bit `ADC_DATA` bus directly
-in the `CLK_ADC` domain. `DATA_STR` is a beat-valid signal: each accepted beat
-contains four timesteps for all eight raw ADC channels, and continuous input can
-hold `DATA_STR` high every `CLK_ADC` cycle. The waveform ring, Hi-Lo adapter,
-mode controller, and event output all run in this domain. A trigger chunk is
-256 timesteps, so one chunk is complete after 64 accepted `DATA_STR` beats.
-
-The input side has no `ADC_READY` backpressure signal. When `DATA_STR` is high,
-the trigger system must synchronously accept the 384-bit ADC beat. If
-`DATA_STR` is low, that cycle is not an accepted beat and does not advance the
-chunk beat counter, chunk timestamp, waveform ring write pointer, or active
-trigger-engine input.
-
-In continuous AI mode, for every chunk:
-
-1. The distributor selects a lane in round-robin order.
-2. If the selected lane is available, all 64 ADC beats are written into that
-   lane's async FIFO as CNN input words.
-3. The normal design assumption is that round-robin lane assignment and CNN
-   throughput keep the selected lane available. Internal overflow/status signals
-   may be retained for simulation and debug, but they are not first-version
-   delivered external ports.
-4. The CNN side reads the FIFO as 128-bit words and emits 128 consecutive
-   128-bit AXI-stream words to `WRAPPER_TOP`.
-
-The first 250 MHz / 4-sample interface migration keeps the existing five CNN
-lanes. These lanes are duplicate CNN processing resources for throughput, not
-separate configuration domains. Round-robin assignment to fixed-latency,
-matching CNN lanes is expected to preserve result order; `CHUNK_ID` remains in
-the internal metadata path to check and match lane results, but the first
-version does not add a complex reorder buffer.
-
-The lane input FIFO crosses from `CLK_ADC` to `CLK_CNN`. Its write-side packing
-must preserve chronological order while converting the four-sample external
-beat stream into the 128 consecutive 128-bit AXI-stream words consumed by
-`WRAPPER_TOP`. The ADC-domain aggregation should operate as a pipeline: it
-should form CNN input write units as accepted beats arrive instead of waiting to
-buffer a full 256-sample chunk before feeding the lane FIFO. Timestamp/chunk-id
-alignment across this aggregation boundary is a required verification point.
-
-`CNN_CORE_LANE` releases `CHUNK_BUSY` after the 128 input beats have been
-accepted by the CNN input stream. It does not wait for the CNN score output.
-This allows the input side of a lane to accept a later chunk while the previous
-chunk is still propagating through the CNN pipeline.
-
-The shared event readout includes a synchronous 128-beat `EVENT_OUTPUT_FIFO`,
-enough to hold two complete events during a short downstream stall. The
-recorder starts only when one full event of FIFO credit is available, so an
-accepted event has no payload bubbles. Event reads have priority over the
-Hi-Lo-gated CNN reader.
-
-## Timing and Throughput
-
-At 1 Gsps, one 256-sample chunk arrives every:
-
-```text
-256 samples / 1 GHz = 256 ns
-```
-
-With five lanes, each lane receives a new chunk every:
-
-```text
-5 x 256 ns = 1280 ns
-```
-
-The CNN wrapper 4.x single-core transaction interval is about 177-178 CNN clock
-cycles in the wrapper/core reports. The minimum CNN clock to sustain the ADC
-stream is therefore approximately:
-
-```text
-f_CNN >= CNN_interval_cycles / (N_LANES x 256 ns)
-```
-
-Using 178 cycles and 5 lanes:
-
-```text
-f_CNN >= 178 / 1280 ns = 139.1 MHz
-```
-
-Using the measured per-core latency of about 183 CNN cycles as a conservative
-interval estimate:
-
-```text
-f_CNN >= 183 / 1280 ns = 143.0 MHz
-```
-
-The current 200 MHz CNN clock target leaves margin while matching the poster
-architecture with five replicated cores.
-
-The full-system behavioral check must be rerun after the 250 MHz, four-sample
-per beat interface migration. The required validation point is `CLK_CNN =
-200 MHz` with `CNN_THRESH_RAW = 0`, zero chunk overflows, zero dropped triggers,
-zero ring misses, and one complete 64-beat event for every chunk whose
-`score > CNN_THRESH`.
-
-Measured latency should be reported end-to-end from the start of the ADC chunk
-to `CNN_OUT_VALID`. It includes ADC batching, FIFO/CDC, CNN input streaming, CNN
-pipeline latency, and output aggregation. It is not the steady-state output
-interval. In steady state, accepted chunks are launched at the ADC chunk rate
-across the five lanes. Keras comparison is used as a sanity check for score
-alignment; exact score equality is not expected because the RTL is fixed-point
-HLS output.
-
-## Output Score and Trigger Threshold
-
-`WRAPPER_TOP` returns the CNN score in a 32-bit output word for AXI-stream
-byte alignment.  The numerical score is only the low 22 bits:
-
-```text
-CNN_OUT_DATA[31:22] = padding / not used by the comparator
-CNN_OUT_DATA[21:0]  = signed ap_fixed<22,11> raw score
-```
-
-`ap_fixed<22,11>` has 22 total bits, 11 integer bits including the sign bit,
-and 11 fractional bits.  The score is decoded using the same convention as the
-wrapper reference testbench:
-
-```text
-score_float = signed(CNN_OUT_DATA[21:0]) / 2048.0
-```
-
-`AI_TRIGGER_CORE` compares the low 22 bits of each lane score against the low
-22 bits of `CNN_THRESH` as signed `ap_fixed<22,11>` values:
-
-```text
-CNN_TRIG = 1 when signed(score[21:0]) > signed(CNN_THRESH[21:0])
-```
-
-From the host/software point of view, the hardware register or port to drive is
-`CNN_THRESH[31:0]`, but the comparator only uses `CNN_THRESH[21:0]`.  Configure
-it as a signed 22-bit raw fixed-point value:
-
-```text
-CNN_THRESH_raw = threshold_float * 2048
-threshold_float = CNN_THRESH_raw / 2048
-```
-
-The representable threshold range is:
-
-```text
-CNN_THRESH_raw: [-2097152, 2097151]
-threshold_float: [-1024.0, 1023.99951171875]
-```
-
-Common raw threshold values:
-
-| Float threshold | Raw `CNN_THRESH` |
-| ---: | ---: |
-| -6.0 | -12288 |
-| -0.5 | -1024 |
-| 0.0 | 0 |
-| 0.5 | 1024 |
-| 1.0 | 2048 |
-
-The default testbench and launcher configuration uses the current full-system
-functional validation point: `SCORE_THRESHOLD=0.0` and `CNN_THRESH_RAW=0`.
-The older wrapper-reference fallback threshold is still available by passing
-`SCORE_THRESHOLD=-6.0` and `CNN_THRESH_RAW=-12288` explicitly.
-
-`CNN_THRESH` is one global threshold, not a per-channel or per-lane setting.
-The DAQ-facing input is synchronous to `CLK_ADC`. Each CNN work item snapshots
-the threshold together with its start address, timestamp, and trigger offset;
-that atomic metadata crosses to `CLK_CNN` and remains attached to the result.
-An upstream control clock must provide an atomic register-transfer handshake
-before the `AI_TRIGGER_TOP` boundary.
-
-## Output Interfaces
-
-The event stream is a `CLK_ADC` ready/valid interface.  `EVENT_DATA` carries
-eight-channel raw ADC waveform batches, not the CNN fixed-point converted
-values.  Its bit packing matches the ADC batch packing:
-
-```text
-EVENT_DATA[(ch * 4 + sample) * 12 + 11 : (ch * 4 + sample) * 12]
-  = raw 12-bit signed ADC sample for channel ch, sample index sample
-```
-
-Each event emits 64 `EVENT_VALID` beats. `EVENT_TIMESTAMP` and
-`EVENT_TRIGGER_OFFSET` remain constant across the event, and `EVENT_LAST` is
-asserted on the final beat. Operational status is exposed as
-`ACTIVE_TRIGGER_MODE`, `MODE_SWITCH_PENDING`, `INVALID_TRIGGER_MODE`,
-`HILO_BLANKING`, `HILO_CONFIG_ERROR`, and sticky `EVENT_LOSS`.
-
-## Main RTL Files
-
-| File | Description |
-| --- | --- |
-| `HDL/rtl/AI_TRIGGER_PKG.vhd` | Shared constants and array types. `N_LANES` is currently 5. |
-| `HDL/rtl/AI_TRIGGER_TOP.vhd` | DAQ-facing OOC top with runtime configuration, flat ADC/event buses, and status. |
-| `HDL/rtl/AI_TRIGGER_CORE.vhd` | Shared five-lane CNN cluster and multimode integration. |
-| `HDL/rtl/ADC_INPUT_CDC_FIFO.vhd` | Simulation/helper CDC FIFO for source-clock test streams; not instantiated by the delivered OOC top. |
-| `HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd` | ADC-domain chunk formation and round-robin lane assignment. |
-| `HDL/rtl/CNN_CORE_LANE.vhd` | Per-lane async FIFO, CDC counters, AXI-stream input FSM, and CNN wrapper instance. |
-| `HDL/rtl/MULTIMODE_EVENT_PATH.vhd` | Mode control, housekeeping/Hi-Lo engines, shared ring, recorder, and event FIFO. |
-| `HDL/rtl/HILO_TRIGGER_CTRL.vhd` | Safe integration wrapper for the Bender-managed Hi-Lo `PRE_TRIGGER`. |
-| `HDL/rtl/GATED_CNN_READER.vhd` | Replays a Hi-Lo-selected ring window into one shared CNN lane. |
-| `HDL/rtl/WAVEFORM_RING_BUFFER.vhd` | ADC-domain 64-chunk circular storage for all eight raw channels. |
-| `HDL/rtl/EVENT_RECORDER.vhd` | Normalized Event Request preflight and one-window ring readout. |
-| `HDL/rtl/EVENT_OUTPUT_FIFO.vhd` | Synchronous output FIFO that decouples event capture from short downstream stalls. |
-| `HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd` | Mixed-language simulation wrapper that models source-clock test input and instantiates `AI_TRIGGER_CORE`. |
-| `HDL/sim/tb_ai_trigger_top.sv` | SystemVerilog simulation testbench. |
-| `scripts/run_vivado_sim.py` | Batch-mode Vivado simulation launcher. |
-| `run_sim.tcl` | Vivado simulation setup used by both GUI and batch flows. |
-
-## Simulation
-
-Run the complete local RTL regression first. It uses Bender for production
-source order, compiles simulation-only XPM models, and gives every testbench an
-isolated temporary GHDL work library:
-
-```bash
+python3 -m unittest discover -s tests
 python3 scripts/run_ghdl_tests.py
 ```
 
-Run one scenario with, for example,
+Run one full-system Vivado/XSim scenario:
 
 ```bash
-python3 scripts/run_ghdl_tests.py tb_multimode_hilo_ai
+python3 scripts/run_vivado_sim.py --num-samples 1000
 ```
 
-The server-side Vivado/XSim flow exercises continuous AI mode with the real CNN
-RTL and the shared multimode event path:
+Run all five modes with the same input:
 
 ```bash
-python3 scripts/run_vivado_sim.py \
-  --num-samples 1000
+python3 scripts/run_trigger_mode_sweep.py \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
+  --output-dir build/multimode_trigger_validation/mode_sweep \
+  --hl-thresh 192 \
+  --hilo-window 5 \
+  --coinc-window 32 \
+  --bin-thr 2
 ```
 
-The script opens `AI_Trigger_System/AI_Trigger_System.xpr`, sources
-`run_sim.tcl`, refreshes both CNN and Hi-Lo sources from Bender, and runs the
-behavioral xsim testbench in Vivado batch mode. The testbench sends one ignored
-zero chunk to apply the initial fail-closed mode at a safe boundary, then maps
-the validation dataset back to sample IDs and timestamps starting at zero.
-
-To reproduce the wrapper-reference fallback threshold instead:
-
-```bash
-python3 scripts/run_vivado_sim.py \
-  --num-samples 1000 \
-  --score-threshold -6.0 \
-  --cnn-thresh-raw -12288
-```
-
-Vivado GUI flow:
-
-```tcl
-open_project AI_Trigger_System/AI_Trigger_System.xpr
-source run_sim.tcl
-```
-
-The testbench reads `testhex_stream/test_input_sample*.hex` and
-`testhex_stream/labels.hex`. `run_sim.tcl` creates a symlink to the
-`cnn-core-wrapper` checkout's `testhex_stream` directory when the Bender
-dependency is present.
-
-Simulation output is written to:
-
-```text
-AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv
-```
-
-Triggered waveform events are written to:
-
-```text
-AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv
-```
-
-The event CSV includes `event_timestamp` and `event_trigger_offset`; both are
-constant across all 64 beats of an event. Continuous AI events must report
-offset zero.
-
-After a full-system run, validate the score CSV, event CSV, and simulation log
-with:
-
-```bash
-python3 scripts/analyze_vivado_sim_results.py \
-  AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_results.csv \
-  --log AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/simulate.log \
-  --event-csv AI_Trigger_System/AI_Trigger_System.sim/sim_1/behav/xsim/ai_trigger_events.csv \
-  --expected-samples 1000 \
-  --expected-cores 5 \
-  --expected-cnn-mhz 200 \
-  --expected-thresh-raw 0 \
-  --max-overflows 0
-```
-
-At the current threshold-0 validation point, every `score > CNN_THRESH` chunk is
-expected to produce exactly one 64-beat event. The post-migration run should
-confirm there are no missing, duplicate, or extra event chunks.
-
-### NSF Jul 27 Continuous-Readout Evidence
-
-Run the seven-chunk NSF slice through the same Vivado/XSim testbench with:
-
-```bash
-python3 scripts/run_nsf_jul_27_sim.py
-```
-
-The runner reads:
-
-```text
-data/X_test_data_NSF_Jul_27.npy
-data/y_test_labels_NSF_Jul_27.npy
-```
-
-It generates the XSim stimulus, runs chunks 490 through 496 as local chunks 0
-through 6, and writes the final beat-level report to:
-
-```text
-build/nsf_jul_27_sim/NSF_Jul_27_trigger_trace.csv
-```
-
-The default run uses `CNN_THRESH_RAW=0`, `SCORE_THRESHOLD=0.0`, and leaves raw
-channels 4 through 7 at zero because the source slice contains four channels.
-The command exits successfully only when every label-1 chunk has one complete,
-waveform-matched 64-beat event, every label-0 chunk has no event, adjacent
-label-1 chunks are read out in order with consecutive timestamps, and all
-overflow/drop/ring-miss counters are zero. The CSV is still written when a
-proof check fails so the failed beat or chunk can be inspected.
-
-To prepare the stimulus without Vivado:
-
-```bash
-python3 scripts/run_nsf_jul_27_sim.py --prepare-only
-```
-
-After a server run, the report can be rebuilt from existing `scores.csv`,
-`events.csv`, and `simulate.log` with:
-
-```bash
-python3 scripts/run_nsf_jul_27_sim.py --analyze-only
-```
-
-## DAQ Bring-Up Score Simulation
-
-For delivery bring-up, run the zero reference and all four pulse sweeps through
-the same Vivado/xsim testbench with one command:
-
-```bash
-scripts/run_bringup_pulse_sweeps.sh
-```
-
-The launcher uses `build/bringup_sim` by default. Override it with
-`BRINGUP_OUT_DIR=/path/to/output`; set `PYTHON_BIN` if `python3` is not the
-desired interpreter. It creates local `testhex_stream` directories, then launches
-`scripts/run_vivado_sim.py` for each case.  It keeps the existing Bender/Vivado
-source refresh path through `run_sim.tcl`, but supplies generated stimulus
-instead of the wrapper validation dataset.
-
-The case names and save locations are:
-
-| CLI name | Output directory | Input and offsets | Samples |
-| --- | --- | --- | ---: |
-| `zero` | `build/bringup_sim/zero/` | All eight channels at signed code `0` | 256 |
-| `bipolar-sweep` | `build/bringup_sim/bipolar_sweep/` | `ch0`: `+50 mV` for 5 ns, then `-50 mV` for 5 ns; offsets `0..246` | 247 |
-| `polar-sweep` | `build/bringup_sim/polar_sweep/` | `ch0`: `+50 mV` for 5 ns, then zero; offsets `0..251` | 252 |
-| `monopolar-100mv-100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_sweep/` | `ch0`: nominal `+100 mV` for 100 ns; clipped offsets `-100..255` | 356 |
-| `monopolar-100mv-100ns-erf-tr100ns-sweep` | `build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_sweep/` | `A=100 mV`, 100 ns between 50% crossings, error-function edges with `tr=tf=100 ns`; offsets `-100..255` | 356 |
-| `monopolar-50mv-50ns-erf-tr50ns-sweep` | `build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_sweep/` | `A=50 mV`, 50 ns between 50% crossings, error-function edges with `tr=tf=50 ns`; offsets `-50..255` | 306 |
-| `monopolar-10mv-10ns-erf-tr10ns-sweep` | `build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_sweep/` | `A=10 mV`, 10 ns between 50% crossings, error-function edges with `tr=tf=10 ns`; offsets `-10..255` | 266 |
-| `monopolar-50mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_sweep/` | `A=50 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
-| `monopolar-100mv-20ns-erf-tr5ns-sweep` | `build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_sweep/` | `A=100 mV`, 20 ns between 50% crossings, error-function edges with `tr=tf=5 ns`; offsets `-20..255` | 276 |
-
-`zero` is the baseline, not one of the eight pulse simulations. In every pulse
-case, `ch1..ch7` remain at `0`.
-
-The default bipolar pulse is `+50 mV` for 5 ns, then `-50 mV` for 5 ns. At
-1 GSa/s and `V_FS = 0.8 Vpp`, this corresponds to:
-
-```text
-+256 ADC code for 5 samples
--256 ADC code for 5 samples
-```
-
-The pulse start offset is swept from sample `0` through sample `246`, so every
-10-sample pulse remains inside one 256-sample CNN chunk.  The bring-up runner
-passes `MIRROR_RAW_CHANNELS=0` to the testbench so raw event channels `ch1..ch7`
-remain zero unless explicitly driven.
-
-The default polar pulse is `+50 mV` for 5 ns followed by zero input. Its start
-offset is swept from sample `0` through sample `251`. Run only this case with:
-
-```bash
-python3 scripts/run_bringup_sim.py \
-  --stimulus polar-sweep \
-  --out-dir build/bringup_sim
-```
-
-The long monopolar case uses ADC code `+512` for a nominal 100-sample pulse.
-Only the overlap with the current 256-sample chunk is written. Negative offsets
-therefore clip the pulse front, offsets `0..156` contain the full pulse, and
-offsets `157..255` clip the pulse back. Its manifest records both the nominal
-width and `visible_pulse_width_samples`, plus `pulse_truncation` as `front`,
-`none`, or `back`.
-
-The five band-limited monopolar cases use the same error-function model:
-
-```text
-V(t) = A/2 * [erf((t-t0)/(sqrt(2)*sigma))
-            - erf((t-t1)/(sqrt(2)*sigma))]
-sigma = tr / 2.563
-```
-
-For the first three cases below, the pulse width equals `tr=tf`, so the edges
-overlap and the waveform reaches only about `0.8 A`. For the two 20 ns cases,
-`tr=tf=5 ns`, so the waveform essentially reaches `A`. The generator model does
-not renormalize any peak:
-
-| `A` | Width | `tr=tf` | `sigma` | Continuous peak | Peak ADC code | Offsets |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 100 mV | 100 ns | 100 ns | 39.016777 ns | 79.998 mV | 410 | `-100..255` |
-| 50 mV | 50 ns | 50 ns | 19.508389 ns | 39.999 mV | 205 | `-50..255` |
-| 10 mV | 10 ns | 10 ns | 3.901678 ns | 8.000 mV | 41 | `-10..255` |
-| 50 mV | 20 ns | 5 ns | 1.950839 ns | 50.000 mV | 256 | `-20..255` |
-| 100 mV | 20 ns | 5 ns | 1.950839 ns | 100.000 mV | 512 | `-20..255` |
-
-At 1 GSa/s, each 1 ns voltage sample is quantized to the existing 12-bit ADC
-format. `pulse_offset_sample` is the rising-edge 50% crossing. The manifest also
-records `nominal_visible_width_samples`, `quantized_nonzero_samples`,
-`pulse_amplitude_parameter_mv`, the actual `pulse_peak_mv` and `adc_code_peak`,
-the edge model, rise/fall time, and sigma. Only the current 256-sample chunk is
-saved, so the smooth waveform tails are clipped rather than carried into
-adjacent chunks.
-
-To generate stimulus files without launching Vivado:
-
-```bash
-BRINGUP_GENERATE_ONLY=1 scripts/run_bringup_pulse_sweeps.sh
-```
-
-Each case directory contains:
-
-```text
-testhex_stream/
-manifest.csv
-scores.csv
-events.csv
-scores_annotated.csv
-```
-
-`build/bringup_sim/` is generated output and is ignored for newly created files
-by `.gitignore`.
-
-If Vivado was run manually and only raw `scores.csv` files are present, rebuild
-the annotated CSVs with:
-
-```bash
-python3 scripts/run_bringup_sim.py \
-  --annotate-only \
-  --stimulus all \
-  --out-dir build/bringup_sim
-```
-
-Plot the zero baseline and all available pulse score distributions with:
-
-```bash
-python3 scripts/plot_bringup_scores.py \
-  --out-dir build/bringup_sim
-```
-
-The plot script writes:
-
-```text
-build/bringup_sim/score_vs_offset.png
-build/bringup_sim/polar_score_vs_offset.png
-build/bringup_sim/monopolar_100mv_100ns_score_vs_offset.png
-build/bringup_sim/monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png
-build/bringup_sim/monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png
-build/bringup_sim/monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png
-build/bringup_sim/monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png
-build/bringup_sim/monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png
-build/bringup_sim/score_histogram.png
-build/bringup_sim/bringup_score_summary.csv
-```
-
-## Continuous Validation Plots
-
-Full-dataset score validation plots are generated with PyROOT:
-
-```bash
-python3 analysis/Continuous/plot_continuous_validation.py
-```
-
-The script reads the Vivado simulation score CSV and the Keras comparison CSV,
-then writes:
-
-```text
-analysis/Continuous/continuous_validation.root
-analysis/Continuous/continuous_validation_report.pdf
-```
-
-The report includes score agreement, score residuals, absolute score error,
-threshold-0 confusion matrices, latency, and score distributions by label.
-
-## Synthesis and Implementation Notes
-
-The current design is intended to be analyzed with Vivado synthesis and
-implementation using the committed project:
-
-```text
-AI_Trigger_System/AI_Trigger_System.xpr
-```
-
-Primary checks for the next analysis step:
-
-1. Confirm `CLK_CNN` timing closure at 200 MHz.
-2. Confirm `CLK_ADC` timing closure at 250 MHz.
-3. Review resource use for five CNN wrappers plus the event/lane FIFOs.
-4. Check XPM/FIFO Generator resource mapping and reset behavior.
-5. Review inter-clock timing constraints between `CLK_ADC` and `CLK_CNN`.
-
-The recommended OOC build command is:
+Run OOC synthesis and implementation:
 
 ```bash
 python3 scripts/run_vivado_build.py --impl
 ```
 
-This flow uses Bender to collect RTL sources, removes dependency board-level
-constraints, applies `HDL/constraints/ai_trigger_ooc.xdc`, and runs the block
-out-of-context. This is intentional: `AI_TRIGGER_TOP` is a DAQ subsystem block,
-not the package-level FPGA top. Running normal top-level implementation on this
-entity would map the wide ADC/event interfaces to package IO and produce
-misleading resource, timing, and IO utilization results.
+The OOC flow uses Bender for source order, applies
+`HDL/constraints/ai_trigger_ooc.xdc`, and does not map the wide DAQ ports to
+package pins.
 
-OOC build reports are written under:
+Run the focused NSF continuous-readout check:
 
-```text
-build/vivado_ooc_ai_trigger/reports/
+```bash
+python3 scripts/run_nsf_jul_27_sim.py
 ```
 
-Post-implementation SAIF and timing reports are written under:
+Generate or analyze DAQ bring-up pulse sweeps:
 
-```text
-build/vivado_post_impl_saif/reports/
+```bash
+scripts/run_bringup_pulse_sweeps.sh
+python3 scripts/plot_bringup_scores.py --out-dir build/bringup_sim
 ```
 
-The current checked-in OOC reports were refreshed on the server for the
-250 MHz `CLK_ADC` interface. The routed result summary is:
-
-| Metric | Current report |
-| --- | ---: |
-| Timing | WNS 1.085 ns, TNS 0, WHS 0.009 ns |
-| `CLK_ADC` | 250 MHz target |
-| `CLK_CNN` | 200 MHz target |
-| CDC | Known OOC/input-port reset item plus recognized XPM/handshake crossings |
-| CLB LUT | 28,864 |
-| CLB registers | 18,847 |
-| BRAM tiles | 26 |
-| URAM | 6 |
-| DSP | 20 |
-| IOB | 0 |
-| Vectorless power | 1.301 W total, Medium confidence |
-| Dynamic power | 0.844 W |
-| Static power | 0.458 W |
-
-The hierarchical utilization report should show all five lanes present. Each
-lane contains one CNN wrapper and one async FIFO, so the CNN datapath was not
-optimized away in implementation.
-
-The current vectorless hierarchy report shows dynamic power dominated by the five
-CNN lanes. Each lane is about 0.151-0.155 W, including about 0.137-0.141 W in
-the wrapper and about 0.010-0.012 W in the FIFO. The distributor is about
-0.005 W.
-
-The OOC build flow preserves the CNN wrapper/core hierarchy but intentionally
-does not apply `DONT_TOUCH` to the per-lane FIFO Generator instances. Leaving
-the lane FIFOs optimizable restored the 200 MHz `CLK_CNN` margin by allowing
-Vivado to improve BRAM-heavy FIFO placement/routing.
-
-The refreshed routed timing report confirms the two-clock OOC boundary:
-`CLK_ADC` at 250 MHz and `CLK_CNN` at 200 MHz. The OOC constraints intentionally
-use zero-delay IO boundary assumptions. Vivado reports 828 `XDCH-2` methodology
-warnings because the OOC input/output delays use the same 0 ns min/max value on
-wide ADC/event ports. This is expected for the current block-level report, but
-the board-level integration must replace or justify these boundary assumptions
-with system timing constraints.
-
-The main throughput target is one 256-sample chunk every 256 ns at the ADC
-input. At five lanes, the CNN domain should have enough margin if the single
-core transaction interval remains near 177-178 cycles and the implemented
-`CLK_CNN` frequency is at or above 200 MHz.
-
-More detailed report interpretation and the current sign-off checklist are in
-`docs/implementation.md`.
-
-## Post-Implementation SAIF Power Flow
-
-For power analysis, use a routed netlist simulation to collect switching
-activity and feed the resulting SAIF back into `report_power`:
+Post-route SAIF power analysis remains available through:
 
 ```bash
 python3 scripts/run_post_impl_saif.py --samples 64
 ```
 
-The run uses the flat-port simulation wrapper as the OOC top, runs the existing
-testbench, starts SAIF recording after a 2 us warm-up window, writes
-`build/vivado_post_impl_saif/activity/ai_trigger_post_impl.saif`, and reports
-power to:
+## Delivery
 
-```text
-build/vivado_post_impl_saif/reports/post_route_power_saif.rpt
-```
-
-The default gate simulation is functional, without SDF annotation, because the
-SAIF goal is representative switching activity rather than exhaustive timing
-simulation. For a short timing smoke test, reduce the sample count and enable
-SDF:
+DAQ-facing port definitions and basic test guidance are in
+[`docs/Deliverables.md`](docs/Deliverables.md). Generate a compact delivery
+archive with:
 
 ```bash
-python3 scripts/run_post_impl_saif.py --samples 16 --sdf max
+python3 scripts/package_delivery.py --version v3.3.0
 ```
 
-Longer SAIF stimulus windows can be used when runtime is acceptable and a more
-representative average activity profile is needed.
-For faster debug runs, use `--saif-scope lane0`, `--saif-scope lanes2`, or
-`--saif-scope lanes4`. The script prints object counts and elapsed time for
-each SAIF logging chunk so long setup phases can be distinguished from a hang.
-It also fails the run if fewer than 1000 simulation objects are logged, which
-helps catch bad hierarchy patterns before producing a misleading power report.
-The logged object count is determined by the xsim `get_objects` scope patterns,
-not by timing constraints. The scope list is specified in
-`scripts/vivado_post_impl_saif.tcl` so the intended SAIF coverage is explicit.
-If scoped logging matches too few objects, the default flow falls back to a raw
-full-DUT recursive `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` pass and prints a
-clear message before doing so. Use `--no-saif-fallback-all` to disable that
-fallback during debugging.
-
-The latest checked high-confidence SAIF report was a historical short smoke run
-generated by this full-DUT fallback before the 250 MHz interface migration. The
-scoped hierarchy patterns matched only the top-level DUT signals in xsim; the
-fallback logged 136,469 objects and the power report matched 93% of design
-nets. The report estimates 0.684 W total on-chip power, with 0.231 W dynamic
-and 0.453 W static power. On the reference Ubuntu run, the full-DUT object
-enumeration took about 68 minutes; the actual gate simulation completed in
-about one minute. The detailed xsim trace is kept in
-`build/vivado_post_impl_saif/xsim/xsim.log`.
-
-High power confidence means Vivado received good switching activity coverage
-for this workload window. It does not, by itself, prove that datapath logic was
-preserved. Logic preservation is checked separately through hierarchical
-utilization, timing, and simulation: the current reports still show all five
-lanes, all five CNN wrappers, lane FIFOs, and 20 DSP blocks present.
-
-The default SAIF wrapper now uses the same threshold-0 operating point as the
-behavioral functional validation.  Pass explicit threshold arguments only when
-you intentionally want a different activity profile:
-
-```bash
-python3 scripts/run_post_impl_saif.py \
-  --samples 64
-```
+`dist/` is generated output and is not committed.
