@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import signal
 import shutil
 import subprocess
@@ -39,6 +40,20 @@ def find_vivado(explicit: str | None) -> str:
     raise SystemExit(
         "ERROR: vivado not found. Add Vivado to PATH or pass --vivado /path/to/vivado."
     )
+
+
+def validate_simulation_log(log_path: Path) -> None:
+    if not log_path.is_file():
+        raise RuntimeError(f"XSim log was not produced: {log_path}")
+
+    log_text = log_path.read_text(encoding="utf-8", errors="replace")
+    failure = re.search(r"(?mi)^(Fatal:|\[ERROR\])[^\n]*", log_text)
+    if failure is not None:
+        raise RuntimeError(f"XSim reported {failure.group(0)}")
+    if "Simulation complete." not in log_text:
+        raise RuntimeError(
+            f"XSim log does not contain the completion marker: {log_path}"
+        )
 
 
 def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
@@ -153,6 +168,14 @@ def main() -> int:
         raise SystemExit(f"ERROR: Vivado project not found: {project}")
 
     vivado = find_vivado(args.vivado)
+    simulation_log = (
+        project.parent
+        / f"{project.stem}.sim"
+        / "sim_1"
+        / "behav"
+        / "xsim"
+        / "simulate.log"
+    )
     work_dir = repo_root / ".sim_batch"
     work_dir.mkdir(exist_ok=True)
     tcl_path = work_dir / "run_vivado_sim_batch.tcl"
@@ -181,6 +204,13 @@ def main() -> int:
             tcl_path.unlink()
         except OSError:
             pass
+
+    if return_code == 0:
+        try:
+            validate_simulation_log(simulation_log)
+        except RuntimeError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return_code = 1
 
     return return_code
 
