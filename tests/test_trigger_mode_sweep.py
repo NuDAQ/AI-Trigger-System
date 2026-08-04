@@ -129,6 +129,24 @@ class TriggerModeSweepAnalysisTest(unittest.TestCase):
         self.assertTrue(result["contract"]["accepted_score_count_matches_events"])
         self.assertEqual(result["classification"]["tp"], 1)
 
+    def test_log_status_distinguishes_rate_blanking_from_event_loss(self) -> None:
+        log = self.root / "simulate.log"
+        log.write_text(
+            "Dropped triggers: 59\n"
+            "Hi-Lo blanking:   1\n"
+            "Event loss:       1\n",
+            encoding="utf-8",
+        )
+
+        self.assertEqual(
+            ANALYZER.parse_log_status(log),
+            {
+                "dropped_triggers": 59,
+                "hilo_blanking": 1,
+                "event_loss": 1,
+            },
+        )
+
 
 class TriggerModeSweepRunnerTest(unittest.TestCase):
     def test_all_modes_share_identical_stimulus_and_configuration(self) -> None:

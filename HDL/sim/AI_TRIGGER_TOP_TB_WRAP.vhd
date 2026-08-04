@@ -50,6 +50,7 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         ACTIVE_TRIGGER_MODE  : out std_logic_vector(3 downto 0);
         MODE_SWITCH_PENDING  : out std_logic;
         INVALID_TRIGGER_MODE : out std_logic;
+        HILO_BLANKING        : out std_logic;
         HILO_CONFIG_ERROR    : out std_logic;
         EVENT_LOSS           : out std_logic;
         ADC_INPUT_OVERFLOW_COUNT : out std_logic_vector(31 downto 0);
@@ -146,7 +147,7 @@ begin
             ACTIVE_TRIGGER_MODE => ACTIVE_TRIGGER_MODE,
             MODE_SWITCH_PENDING => MODE_SWITCH_PENDING,
             INVALID_TRIGGER_MODE => INVALID_TRIGGER_MODE,
-            HILO_BLANKING => open,
+            HILO_BLANKING => HILO_BLANKING,
             HILO_CONFIG_ERROR => HILO_CONFIG_ERROR,
             EVENT_LOSS => EVENT_LOSS,
             DROPPED_TRIGGER_COUNT => dropped_trigger_count_i,

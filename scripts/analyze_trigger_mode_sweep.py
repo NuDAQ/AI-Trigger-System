@@ -198,6 +198,7 @@ def parse_log_status(path: Path) -> dict[str, int]:
     fields = {
         "dropped_triggers": r"Dropped triggers:\s+(\d+)",
         "ring_misses": r"Ring misses:\s+(\d+)",
+        "hilo_blanking": r"Hi-Lo blanking:\s+(\d+)",
         "event_loss": r"Event loss:\s+(\d+)",
         "adc_input_overflows": r"ADC input overflows:\s+(\d+)",
     }

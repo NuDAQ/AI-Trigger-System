@@ -101,6 +101,7 @@ module tb_AI_TRIGGER_TOP;
     wire [3:0]   active_trigger_mode;
     wire         mode_switch_pending;
     wire         invalid_trigger_mode;
+    wire         hilo_blanking;
     wire         hilo_config_error;
     wire         event_loss;
     wire [31:0]  adc_input_overflow_count;
@@ -142,6 +143,7 @@ module tb_AI_TRIGGER_TOP;
         .ACTIVE_TRIGGER_MODE (active_trigger_mode),
         .MODE_SWITCH_PENDING (mode_switch_pending),
         .INVALID_TRIGGER_MODE (invalid_trigger_mode),
+        .HILO_BLANKING  (hilo_blanking),
         .HILO_CONFIG_ERROR (hilo_config_error),
         .EVENT_LOSS     (event_loss),
         .ADC_INPUT_OVERFLOW_COUNT (adc_input_overflow_count),
@@ -696,6 +698,7 @@ module tb_AI_TRIGGER_TOP;
             $display("Active mode:      0x%0h", active_trigger_mode);
             $display("Mode pending:     %0d", mode_switch_pending);
             $display("Invalid mode:     %0d", invalid_trigger_mode);
+            $display("Hi-Lo blanking:   %0d", hilo_blanking);
             $display("Hi-Lo cfg error:  %0d", hilo_config_error);
             $display("Event loss:       %0d", event_loss);
 
