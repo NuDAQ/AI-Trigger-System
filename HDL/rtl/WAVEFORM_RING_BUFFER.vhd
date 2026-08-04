@@ -70,7 +70,7 @@ architecture rtl of WAVEFORM_RING_BUFFER is
 
     function ring_slot(id : chunk_id_t) return integer is
     begin
-        return to_integer(unsigned(to_01(std_logic_vector(id), '0'))) mod
+        return to_integer(to_01(id, '0')) mod
                WAVEFORM_RING_DEPTH;
     end function;
 begin
