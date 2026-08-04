@@ -29,6 +29,8 @@ set rpt_dir   [file join $out_dir reports]
 set dcp_dir   [file join $out_dir checkpoints]
 set gen_dir   [file join $out_dir generated]
 
+source [file join $repo_root scripts vivado_timing_gate.tcl]
+
 file delete -force $rpt_dir $dcp_dir $gen_dir
 file mkdir $out_dir
 file mkdir $rpt_dir
@@ -61,6 +63,12 @@ proc write_cdc_reports {summary_path details_path} {
     if {[catch {report_cdc -details -file $details_path} err]} {
         puts "WARNING: detailed CDC report failed: $err"
     }
+}
+
+proc write_text_file {path text} {
+    set fp [open $path w]
+    puts -nonewline $fp $text
+    close $fp
 }
 
 set_param general.maxThreads $::RUN_BUILD_THREADS
@@ -167,13 +175,17 @@ if {$::RUN_BUILD_IMPL} {
     report_utilization -file [file join $rpt_dir post_route_utilization.rpt]
     report_utilization -hierarchical -hierarchical_depth 6 -file [file join $rpt_dir post_route_utilization_hier.rpt]
     catch {report_methodology -file [file join $rpt_dir post_route_methodology.rpt]}
-    report_timing_summary -file [file join $rpt_dir post_route_timing_summary.rpt]
+    set post_route_timing_summary [report_timing_summary -return_string]
+    write_text_file \
+        [file join $rpt_dir post_route_timing_summary.rpt] \
+        $post_route_timing_summary
     report_clock_interaction -file [file join $rpt_dir post_route_clock_interaction.rpt]
     write_cdc_reports \
         [file join $rpt_dir post_route_cdc.rpt] \
         [file join $rpt_dir post_route_cdc_details.rpt]
     report_route_status -file [file join $rpt_dir post_route_status.rpt]
     report_power -file [file join $rpt_dir post_route_power.rpt]
+    ai_trigger_require_timing $post_route_timing_summary
 }
 
 puts "INFO: build complete"

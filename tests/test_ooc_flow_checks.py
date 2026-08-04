@@ -49,6 +49,13 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_ooc_flow_fails_closed_on_post_route_timing(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+
+        self.assertIn("source [file join $repo_root scripts vivado_timing_gate.tcl]", tcl)
+        self.assertIn("report_timing_summary -return_string", tcl)
+        self.assertIn("ai_trigger_require_timing $post_route_timing_summary", tcl)
+
     def test_ooc_flow_rejects_stale_or_wrong_top_builds(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
 
