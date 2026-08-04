@@ -105,11 +105,12 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
 
     def test_score_decode_uses_ap_fixed_22_11(self) -> None:
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
+        arbiter = read("HDL/rtl/CNN_RESULT_ARBITER.vhd")
         sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
 
         self.assertIn("ap_fixed<22,11>", core)
-        self.assertRegex(core, r"lane_score\(i\)\(21 downto 0\)")
-        self.assertRegex(core, r"lane_thresh\(i\)\(21 downto 0\)")
+        self.assertRegex(arbiter, r"signed\(LANE_SCORE\(selected_v\)\(21 downto 0\)\)")
+        self.assertRegex(arbiter, r"signed\(LANE_THRESH\(selected_v\)\(21 downto 0\)\)")
         self.assertIn("/ 2048.0", sv_tb)
         self.assertIn("cnn_thresh_raw = 0", sv_tb)
 

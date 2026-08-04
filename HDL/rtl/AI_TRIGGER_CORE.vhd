@@ -3,6 +3,8 @@
 -- Shared runtime-selectable trigger core.  The waveform ring and all mode
 -- control live in CLK_ADC.  Five CNN lanes are shared by continuous AI and
 -- Hi-Lo-gated AI work; no trigger mode duplicates a CNN or waveform store.
+-- CNN scores and thresholds use the wrapper's signed ap_fixed<22,11> payload
+-- in bits 21 downto 0; CNN_RESULT_ARBITER performs the comparison.
 -- =============================================================================
 
 library ieee;
