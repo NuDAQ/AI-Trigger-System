@@ -24,6 +24,22 @@ class OocFlowChecks(unittest.TestCase):
         self.assertFalse(any(re.search(r"\bRST\b", line) for line in input_delay_lines))
         self.assertRegex(xdc, r"set_false_path\s+-from\s+\[get_ports\s+RST\]")
 
+    def test_hilo_mode_start_does_not_combinationally_drive_async_reset(self) -> None:
+        ctrl = read("HDL/rtl/HILO_TRIGGER_CTRL.vhd")
+
+        self.assertNotRegex(
+            ctrl,
+            r"pre_trigger_reset\s*<=\s*RST\s+or\s+MODE_START",
+        )
+        self.assertRegex(
+            ctrl,
+            r"(?s)process\s*\(CLK\).*?pre_trigger_reset_r\s*<=\s*RST\s+or\s+MODE_START",
+        )
+        self.assertRegex(
+            ctrl,
+            r"RESET\s*=>\s*pre_trigger_reset_r",
+        )
+
     def test_ooc_input_hold_checks_are_cut_at_block_boundary(self) -> None:
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
 

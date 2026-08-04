@@ -54,7 +54,7 @@ architecture rtl of HILO_TRIGGER_CTRL is
     signal latched_bin_thr_r      : std_logic_vector(3 downto 0) := x"1";
     signal config_valid_r         : std_logic := '0';
 
-    signal pre_trigger_reset    : std_logic;
+    signal pre_trigger_reset_r  : std_logic := '1';
     signal pre_trigger_data_str : std_logic;
     signal pre_trigger_result   : std_logic;
     signal pre_trigger_bin_thr  : std_logic_vector(3 downto 0);
@@ -90,7 +90,16 @@ architecture rtl of HILO_TRIGGER_CTRL is
                unsigned(bin_value) >= 1 and unsigned(bin_value) <= 4;
     end function;
 begin
-    pre_trigger_reset <= RST or MODE_START;
+    -- PRE_TRIGGER uses RESET as an asynchronous clear internally.  Register
+    -- the mode-entry pulse so a combinational RST/MODE_START LUT cannot glitch
+    -- those reset pins.
+    process (CLK)
+    begin
+        if rising_edge(CLK) then
+            pre_trigger_reset_r <= RST or MODE_START;
+        end if;
+    end process;
+
     -- PRE_TRIGGER v2.2.4 treats BIN_THR=0 as an unconditional trigger.  Keep
     -- its physical input fail-closed even while the externally supplied
     -- configuration is invalid; config_valid_r still reports and rejects it.
@@ -99,12 +108,12 @@ begin
         else x"1";
     pre_trigger_data_str <= HL_DATA_STR when
         is_hilo_mode(ACTIVE_MODE) and config_valid_r = '1' and
-        MODE_START = '0' else '0';
+        MODE_START = '0' and pre_trigger_reset_r = '0' else '0';
 
     u_PRE_TRIGGER : entity work.PRE_TRIGGER
         port map (
             CLK          => CLK,
-            RESET        => pre_trigger_reset,
+            RESET        => pre_trigger_reset_r,
             DATA_STR     => pre_trigger_data_str,
             ADC_DATA4    => HL_ADC_DATA4,
             THRESH       => latched_thresh_r,

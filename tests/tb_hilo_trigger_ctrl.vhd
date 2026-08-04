@@ -199,6 +199,10 @@ begin
         mode_start <= '1';
         wait until rising_edge(clk);
         mode_start <= '0';
+        -- MODE_START is registered before it reaches PRE_TRIGGER's asynchronous
+        -- clear pins; allow that reset pulse to deassert before counting raw
+        -- decisions in the next rate window.
+        wait until rising_edge(clk);
         gated_work_ready <= '1';
         hl_data_str <= '1';
         for i in 0 to 14 loop
