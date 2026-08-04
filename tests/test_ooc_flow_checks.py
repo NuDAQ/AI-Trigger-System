@@ -243,6 +243,16 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
+    def test_cnn_idle_status_cdc_registers_source_inputs(self) -> None:
+        event_path = read("HDL/rtl/MULTIMODE_EVENT_PATH.vhd")
+
+        for instance in ("u_CNN_BUSY_SYNC", "u_CNN_WORK_SYNC"):
+            self.assertRegex(
+                event_path,
+                rf"(?s){instance}\s*:\s*xpm_cdc_array_single.*?"
+                r"SRC_INPUT_REG\s*=>\s*1.*?port map",
+            )
+
     def test_cnn_threshold_uses_config_cdc_and_lane_snapshot(self) -> None:
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")

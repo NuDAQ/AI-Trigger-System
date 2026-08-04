@@ -325,12 +325,12 @@ begin
 
     u_CNN_BUSY_SYNC : xpm_cdc_array_single
         generic map (DEST_SYNC_FF => 2, INIT_SYNC_FF => 0, SIM_ASSERT_CHK => 0,
-                     SRC_INPUT_REG => 0, WIDTH => 1)
+                     SRC_INPUT_REG => 1, WIDTH => 1)
         port map (src_clk => CLK_CNN, src_in => cnn_cdc_wr_busy_src,
                   dest_clk => CLK_ADC, dest_out => cnn_cdc_wr_busy_adc);
     u_CNN_WORK_SYNC : xpm_cdc_array_single
         generic map (DEST_SYNC_FF => 2, INIT_SYNC_FF => 0, SIM_ASSERT_CHK => 0,
-                     SRC_INPUT_REG => 0, WIDTH => 1)
+                     SRC_INPUT_REG => 1, WIDTH => 1)
         port map (src_clk => CLK_CNN, src_in => cnn_work_pending_src,
                   dest_clk => CLK_ADC, dest_out => cnn_work_pending_adc);
 
