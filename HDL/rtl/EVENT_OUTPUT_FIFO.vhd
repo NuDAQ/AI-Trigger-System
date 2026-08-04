@@ -49,6 +49,8 @@ architecture rtl of EVENT_OUTPUT_FIFO is
         TRIGGER_OFFSET_LSB + BEAT_OFFSET_WIDTH - 1;
     constant SCORE_LSB     : integer := TRIGGER_OFFSET_MSB + 1;
     constant SCORE_MSB     : integer := SCORE_LSB + 32 - 1;
+    constant MAX_COMPLETE_EVENTS : integer :=
+        EVENT_OUTPUT_FIFO_DEPTH / N_BATCHES;
 
     signal fifo_din   : std_logic_vector(EVENT_OUTPUT_WORD_WIDTH - 1 downto 0);
     signal fifo_dout  : std_logic_vector(EVENT_OUTPUT_WORD_WIDTH - 1 downto 0);
@@ -60,6 +62,10 @@ architecture rtl of EVENT_OUTPUT_FIFO is
     signal rd_word_r  : std_logic_vector(EVENT_OUTPUT_WORD_WIDTH - 1 downto 0) := (others => '0');
     signal rd_can_load : std_logic;
     signal stream_active_r : std_logic := '0';
+    signal complete_event_count_r : integer range 0 to MAX_COMPLETE_EVENTS := 0;
+    signal event_commit : std_logic;
+    signal event_retire : std_logic;
+    signal hold_at_event_boundary : std_logic;
     signal fifo_wr_data_count : std_logic_vector(EVENT_OUTPUT_FIFO_ADDR_WIDTH downto 0);
 begin
     fifo_din(DATA_MSB downto DATA_LSB) <= WR_DATA;
@@ -72,7 +78,12 @@ begin
 
     fifo_wr_en <= WR_VALID and not fifo_full;
     rd_can_load <= (not rd_valid_r) or RD_READY;
-    fifo_rd_en <= stream_active_r and rd_can_load and not xpm_empty;
+    event_commit <= fifo_wr_en and WR_LAST;
+    event_retire <= rd_valid_r and RD_READY and rd_word_r(LAST_BIT);
+    hold_at_event_boundary <= '1' when event_retire = '1' and
+        complete_event_count_r = 1 and event_commit = '0' else '0';
+    fifo_rd_en <= stream_active_r and rd_can_load and not xpm_empty and
+                  not hold_at_event_boundary;
 
     u_FIFO : xpm_fifo_sync
         generic map (
@@ -124,7 +135,7 @@ begin
                 rd_valid_r <= '0';
                 rd_word_r  <= (others => '0');
             elsif rd_can_load = '1' then
-                if stream_active_r = '1' and xpm_empty = '0' then
+                if fifo_rd_en = '1' then
                     rd_word_r  <= fifo_dout;
                     rd_valid_r <= '1';
                 else
@@ -140,13 +151,36 @@ begin
             if RST = '1' then
                 stream_active_r <= '0';
             elsif stream_active_r = '0' then
-                if fifo_wr_en = '1' and WR_LAST = '1' then
+                if complete_event_count_r > 0 or event_commit = '1' then
                     stream_active_r <= '1';
                 end if;
-            elsif rd_valid_r = '1' and RD_READY = '1' and
-                  rd_word_r(LAST_BIT) = '1' and xpm_empty = '1' and
-                  fifo_wr_en = '0' then
-                stream_active_r <= '0';
+            elsif event_retire = '1' then
+                if complete_event_count_r = 1 and event_commit = '0' then
+                    stream_active_r <= '0';
+                end if;
+            end if;
+        end if;
+    end process;
+
+    process(CLK)
+    begin
+        if rising_edge(CLK) then
+            if RST = '1' then
+                complete_event_count_r <= 0;
+            elsif event_commit = '1' and event_retire = '0' then
+                assert complete_event_count_r < MAX_COMPLETE_EVENTS
+                    report "event FIFO complete-event counter overflow"
+                    severity failure;
+                if complete_event_count_r < MAX_COMPLETE_EVENTS then
+                    complete_event_count_r <= complete_event_count_r + 1;
+                end if;
+            elsif event_commit = '0' and event_retire = '1' then
+                assert complete_event_count_r > 0
+                    report "event FIFO retired an uncommitted event"
+                    severity failure;
+                if complete_event_count_r > 0 then
+                    complete_event_count_r <= complete_event_count_r - 1;
+                end if;
             end if;
         end if;
     end process;
