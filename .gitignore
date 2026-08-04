@@ -216,3 +216,8 @@ build/vivado_sim/*
 !build/vivado_sim/generated/*.tcl
 !build/vivado_sim_analysis/
 !build/vivado_sim_analysis/**
+
+# Curated multimode validation report and reproducible artifacts.
+!build/multimode_trigger_validation/
+!build/multimode_trigger_validation/**
+build/multimode_trigger_validation/**/.DS_Store

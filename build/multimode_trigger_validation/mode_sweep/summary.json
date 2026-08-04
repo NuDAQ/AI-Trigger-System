@@ -1,0 +1,173 @@
+{
+  "dataset": {
+    "labels": "/home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream/labels.hex",
+    "samples": 1000,
+    "positive_labels": 180
+  },
+  "configuration": {
+    "force_trigger_interval": 4,
+    "hl_thresh": 192,
+    "hilo_window": 5,
+    "coinc_window": 32,
+    "bin_thr": 2
+  },
+  "modes": [
+    {
+      "mode": "0000",
+      "name": "capture_all",
+      "events": 1000,
+      "unique_event_chunks": 1000,
+      "duplicate_event_chunks": 0,
+      "cnn_evaluated": 0,
+      "cnn_accepted": 0,
+      "classification": null,
+      "contract": {
+        "name": "capture_every_chunk",
+        "expected_events": 1000,
+        "exact_match": true,
+        "missing_chunks": [],
+        "unexpected_chunks": []
+      },
+      "status": {
+        "dropped_triggers": 0,
+        "ring_misses": 0,
+        "hilo_blanking": 0,
+        "event_loss": 0,
+        "adc_input_overflows": 0
+      }
+    },
+    {
+      "mode": "0001",
+      "name": "external",
+      "events": 250,
+      "unique_event_chunks": 250,
+      "duplicate_event_chunks": 0,
+      "cnn_evaluated": 0,
+      "cnn_accepted": 0,
+      "classification": null,
+      "contract": {
+        "name": "scheduled_force_trigger",
+        "expected_events": 250,
+        "exact_match": true,
+        "missing_chunks": [],
+        "unexpected_chunks": []
+      },
+      "status": {
+        "dropped_triggers": 0,
+        "ring_misses": 0,
+        "hilo_blanking": 0,
+        "event_loss": 0,
+        "adc_input_overflows": 0
+      }
+    },
+    {
+      "mode": "0010",
+      "name": "ai",
+      "events": 162,
+      "unique_event_chunks": 162,
+      "duplicate_event_chunks": 0,
+      "cnn_evaluated": 1000,
+      "cnn_accepted": 162,
+      "classification": {
+        "tp": 162,
+        "tn": 820,
+        "fp": 0,
+        "fn": 18,
+        "accuracy": 0.982,
+        "recall": 0.9,
+        "false_positive_rate": 0.0,
+        "precision": 1.0
+      },
+      "contract": {
+        "name": "continuous_ai_final_events",
+        "all_chunks_evaluated": true,
+        "score_event_exact_match": true,
+        "positive_scores_without_event": [],
+        "events_without_positive_score": []
+      },
+      "status": {
+        "dropped_triggers": 0,
+        "ring_misses": 0,
+        "hilo_blanking": 0,
+        "event_loss": 0,
+        "adc_input_overflows": 0
+      }
+    },
+    {
+      "mode": "0011",
+      "name": "hilo",
+      "events": 24,
+      "unique_event_chunks": 24,
+      "duplicate_event_chunks": 0,
+      "cnn_evaluated": 0,
+      "cnn_accepted": 0,
+      "classification": {
+        "tp": 19,
+        "tn": 815,
+        "fp": 5,
+        "fn": 161,
+        "accuracy": 0.834,
+        "recall": 0.10555555555555556,
+        "false_positive_rate": 0.006097560975609756,
+        "precision": 0.7916666666666666
+      },
+      "contract": {
+        "name": "hilo_final_events",
+        "cnn_unused": true
+      },
+      "status": {
+        "dropped_triggers": 59,
+        "ring_misses": 0,
+        "hilo_blanking": 1,
+        "event_loss": 1,
+        "adc_input_overflows": 0
+      }
+    },
+    {
+      "mode": "0100",
+      "name": "hilo_ai",
+      "events": 0,
+      "unique_event_chunks": 0,
+      "duplicate_event_chunks": 0,
+      "cnn_evaluated": 24,
+      "cnn_accepted": 0,
+      "classification": {
+        "tp": 0,
+        "tn": 820,
+        "fp": 0,
+        "fn": 180,
+        "accuracy": 0.82,
+        "recall": 0.0,
+        "false_positive_rate": 0.0,
+        "precision": 0.0
+      },
+      "contract": {
+        "name": "hilo_gated_ai_final_events",
+        "accepted_score_count_matches_events": true
+      },
+      "status": {
+        "dropped_triggers": 59,
+        "ring_misses": 0,
+        "hilo_blanking": 1,
+        "event_loss": 1,
+        "adc_input_overflows": 0
+      }
+    }
+  ],
+  "hilo_software_reference": {
+    "scope": "independent fixed chunks; excludes integration busy/blanking",
+    "positive_chunks": 133,
+    "classification": {
+      "tp": 112,
+      "tn": 799,
+      "fp": 21,
+      "fn": 68,
+      "accuracy": 0.911,
+      "recall": 0.6222222222222222,
+      "false_positive_rate": 0.025609756097560974,
+      "precision": 0.8421052631578947
+    },
+    "rtl_decision_agreement": 0.891,
+    "rtl_final_events": 24
+  }
+}

@@ -1,0 +1,370 @@
+Time resolution is 1 ps
+[0] Asserting reset...
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_28  Scope: tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_DUT.u_MULTIMODE_PATH.u_EVENT_FIFO.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_MULTIMODE_PATH/u_EVENT_FIFO/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_1811  Scope: tb_AI_TRIGGER_TOP.dut.u_DUT.u_MULTIMODE_PATH.u_EVENT_FIFO.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+Note: DIST chunk_start seq=0 lane=0 busy='0'
+Time: 266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+[534000] Starting AI_TRIGGER_TOP test
+[534000] TESTHEX_DIR: /home/work1/Works/AI-Trigger-System/.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/cnn_core_wrapper/cnn_core_wrapper.sim/sim_1/behav/xsim/testhex_stream
+[534000] Samples: 1000  Threshold raw: 0 (0.0000)
+[534000] MIRROR_RAW_CHANNELS: 1
+[534000] TRIGGER_MODE: 0x0
+[534000] FORCE_TRIGGER: every 4 chunks at beat 31
+[534000] Hi-Lo config: threshold=192 hilo=5 coincidence=32 bin=2
+---------------------------------------------------------------------
+Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
+---------------------------------------------------------------------
+Note: DIST chunk_start seq=1 lane=1 busy='0'
+Time: 570 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=2 lane=2 busy='0'
+Time: 826 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=3 lane=3 busy='0'
+Time: 1082 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=4 lane=4 busy='0'
+Time: 1338 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=5 lane=0 busy='0'
+Time: 1594 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=6 lane=1 busy='0'
+Time: 1850 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=7 lane=2 busy='0'
+Time: 2106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=8 lane=3 busy='0'
+Time: 2362 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=9 lane=4 busy='0'
+Time: 2618 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=10 lane=0 busy='0'
+Time: 2874 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=11 lane=1 busy='0'
+Time: 3130 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=12 lane=2 busy='0'
+Time: 3386 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=13 lane=3 busy='0'
+Time: 3642 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=14 lane=4 busy='0'
+Time: 3898 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=15 lane=0 busy='0'
+Time: 4154 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=16 lane=1 busy='0'
+Time: 4410 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=17 lane=2 busy='0'
+Time: 4666 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=18 lane=3 busy='0'
+Time: 4922 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=19 lane=4 busy='0'
+Time: 5178 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=20 lane=0 busy='0'
+Time: 5434 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=21 lane=1 busy='0'
+Time: 5690 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=22 lane=2 busy='0'
+Time: 5946 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=23 lane=3 busy='0'
+Time: 6202 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=24 lane=4 busy='0'
+Time: 6458 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=25 lane=0 busy='0'
+Time: 6714 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=26 lane=1 busy='0'
+Time: 6970 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=27 lane=2 busy='0'
+Time: 7226 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=28 lane=3 busy='0'
+Time: 7482 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=29 lane=4 busy='0'
+Time: 7738 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=30 lane=0 busy='0'
+Time: 7994 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=31 lane=1 busy='0'
+Time: 8250 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=32 lane=2 busy='0'
+Time: 8506 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=33 lane=3 busy='0'
+Time: 8762 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=34 lane=4 busy='0'
+Time: 9018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=35 lane=0 busy='0'
+Time: 9274 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=36 lane=1 busy='0'
+Time: 9530 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=37 lane=2 busy='0'
+Time: 9786 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=38 lane=3 busy='0'
+Time: 10042 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=39 lane=4 busy='0'
+Time: 10298 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=40 lane=0 busy='0'
+Time: 10554 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=41 lane=1 busy='0'
+Time: 10810 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=42 lane=2 busy='0'
+Time: 11066 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=43 lane=3 busy='0'
+Time: 11322 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=44 lane=4 busy='0'
+Time: 11578 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=45 lane=0 busy='0'
+Time: 11834 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=46 lane=1 busy='0'
+Time: 12090 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=47 lane=2 busy='0'
+Time: 12346 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=48 lane=3 busy='0'
+Time: 12602 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=49 lane=4 busy='0'
+Time: 12858 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=50 lane=0 busy='0'
+Time: 13114 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=51 lane=1 busy='0'
+Time: 13370 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=52 lane=2 busy='0'
+Time: 13626 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=53 lane=3 busy='0'
+Time: 13882 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=54 lane=4 busy='0'
+Time: 14138 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=55 lane=0 busy='0'
+Time: 14394 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=56 lane=1 busy='0'
+Time: 14650 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=57 lane=2 busy='0'
+Time: 14906 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=58 lane=3 busy='0'
+Time: 15162 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=59 lane=4 busy='0'
+Time: 15418 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=60 lane=0 busy='0'
+Time: 15674 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=61 lane=1 busy='0'
+Time: 15930 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=62 lane=2 busy='0'
+Time: 16186 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=63 lane=3 busy='0'
+Time: 16442 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=64 lane=4 busy='0'
+Time: 16698 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=65 lane=0 busy='0'
+Time: 16954 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=66 lane=1 busy='0'
+Time: 17210 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=67 lane=2 busy='0'
+Time: 17466 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=68 lane=3 busy='0'
+Time: 17722 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=69 lane=4 busy='0'
+Time: 17978 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=70 lane=0 busy='0'
+Time: 18234 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=71 lane=1 busy='0'
+Time: 18490 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=72 lane=2 busy='0'
+Time: 18746 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=73 lane=3 busy='0'
+Time: 19002 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=74 lane=4 busy='0'
+Time: 19258 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=75 lane=0 busy='0'
+Time: 19514 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=76 lane=1 busy='0'
+Time: 19770 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=77 lane=2 busy='0'
+Time: 20026 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=78 lane=3 busy='0'
+Time: 20282 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=79 lane=4 busy='0'
+Time: 20538 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=80 lane=0 busy='0'
+Time: 20794 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=81 lane=1 busy='0'
+Time: 21050 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=82 lane=2 busy='0'
+Time: 21306 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=83 lane=3 busy='0'
+Time: 21562 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=84 lane=4 busy='0'
+Time: 21818 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=85 lane=0 busy='0'
+Time: 22074 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=86 lane=1 busy='0'
+Time: 22330 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=87 lane=2 busy='0'
+Time: 22586 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=88 lane=3 busy='0'
+Time: 22842 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=89 lane=4 busy='0'
+Time: 23098 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=90 lane=0 busy='0'
+Time: 23354 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=91 lane=1 busy='0'
+Time: 23610 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=92 lane=2 busy='0'
+Time: 23866 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=93 lane=3 busy='0'
+Time: 24122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=94 lane=4 busy='0'
+Time: 24378 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=95 lane=0 busy='0'
+Time: 24634 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=96 lane=1 busy='0'
+Time: 24890 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=97 lane=2 busy='0'
+Time: 25146 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=98 lane=3 busy='0'
+Time: 25402 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=99 lane=4 busy='0'
+Time: 25658 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=100 lane=0 busy='0'
+Time: 25914 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=101 lane=1 busy='0'
+Time: 26170 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=102 lane=2 busy='0'
+Time: 26426 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=103 lane=3 busy='0'
+Time: 26682 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=104 lane=4 busy='0'
+Time: 26938 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=105 lane=0 busy='0'
+Time: 27194 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=106 lane=1 busy='0'
+Time: 27450 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=107 lane=2 busy='0'
+Time: 27706 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=108 lane=3 busy='0'
+Time: 27962 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=109 lane=4 busy='0'
+Time: 28218 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=110 lane=0 busy='0'
+Time: 28474 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=111 lane=1 busy='0'
+Time: 28730 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=112 lane=2 busy='0'
+Time: 28986 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=113 lane=3 busy='0'
+Time: 29242 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=114 lane=4 busy='0'
+Time: 29498 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=115 lane=0 busy='0'
+Time: 29754 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=116 lane=1 busy='0'
+Time: 30010 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=117 lane=2 busy='0'
+Time: 30266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=118 lane=3 busy='0'
+Time: 30522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=119 lane=4 busy='0'
+Time: 30778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=120 lane=0 busy='0'
+Time: 31034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=121 lane=1 busy='0'
+Time: 31290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=122 lane=2 busy='0'
+Time: 31546 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=123 lane=3 busy='0'
+Time: 31802 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=124 lane=4 busy='0'
+Time: 32058 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=125 lane=0 busy='0'
+Time: 32314 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=126 lane=1 busy='0'
+Time: 32570 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=127 lane=2 busy='0'
+Time: 32826 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=128 lane=3 busy='0'
+Time: 33082 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=129 lane=4 busy='0'
+Time: 33338 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=130 lane=0 busy='0'
+Time: 33594 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=131 lane=1 busy='0'
+Time: 33850 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=132 lane=2 busy='0'
+Time: 34106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=133 lane=3 busy='0'
+Time: 34362 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=134 lane=4 busy='0'
+Time: 34618 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=135 lane=0 busy='0'
+Time: 34874 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=136 lane=1 busy='0'
+Time: 35130 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=137 lane=2 busy='0'
+Time: 35386 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=138 lane=3 busy='0'
+Time: 35642 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=139 lane=4 busy='0'
+Time: 35898 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=140 lane=0 busy='0'
+Time: 36154 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=141 lane=1 busy='0'
+Time: 36410 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=142 lane=2 busy='0'
+Time: 36666 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=143 lane=3 busy='0'
+Time: 36922 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=144 lane=4 busy='0'
+Time: 37178 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=145 lane=0 busy='0'
+Time: 37434 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=146 lane=1 busy='0'
+Time: 37690 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=147 lane=2 busy='0'
+Time: 37946 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=148 lane=3 busy='0'
+Time: 38202 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=149 lane=4 busy='0'
+Time: 38458 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=150 lane=0 busy='0'
+Time: 38714 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=151 lane=1 busy='0'
+Time: 38970 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=152 lane=2 busy='0'
+Time: 39226 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=153 lane=3 busy='0'
+Time: 39482 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=154 lane=4 busy='0'
+Time: 39738 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=155 lane=0 busy='0'
+Time: 39994 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=156 lane=1 busy='0'
+Time: 40250 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=157 lane=2 busy='0'
+Time: 40506 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=158 lane=3 busy='0'
+Time: 40762 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=159 lane=4 busy='0'
+Time: 41018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+
+=============================================================
+                    SIMULATION SUMMARY
+=============================================================
+Top module:       AI_TRIGGER_TOP
+CNN cores:        5 (parallel, round-robin)
+ADC_SRC_CLK:      250.0 MHz (4.000 ns period)
+CLK_ADC:          250.0 MHz (4.000 ns period)
+CLK_CNN:          200.0 MHz (5.000 ns period)
+CNN_THRESH:       0 raw (0.0000 float)
+Score threshold:  0.0000 float
+Requested mode:   0x0
+Hi-Lo config:     threshold=192 hilo=5 coincidence=32 bin=2
+-------------------------------------------------------------
+Samples sent:     1000
+Results received: 0
+Output drain:     8192 quiet CLK_CNN cycles
+Chunk overflows:  0 (should be 0 in normal operation)
+ADC input overflows: 0
+Events saved:     1000
+Event batches:    64000
+Dropped triggers: 0
+Ring misses:      0
+Active mode:      0x0
+Mode pending:     0
+Invalid mode:     0
+Hi-Lo blanking:   0
+Hi-Lo cfg error:  0
+Event loss:       0
+=============================================================
+Results saved to: /tmp/ai-trigger-mode-sweep-63477cd/mode_0000/scores.csv
+Events saved to:  /tmp/ai-trigger-mode-sweep-63477cd/mode_0000/events.csv
+Simulation complete.
+$finish called at time : 297874 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 358

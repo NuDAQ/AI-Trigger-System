@@ -1,0 +1,10 @@
+{
+  "windows": 24,
+  "background_rms": 1.020686388015747,
+  "raw_codes_per_rms": 65.32392883300781,
+  "hl_threshold_raw": 192,
+  "hl_threshold_rms": 2.9391985973596784,
+  "plot": "build/hilo_waveform_analysis/threshold_192/plot/hilo_gated_centered_waveforms.png",
+  "metadata_csv": "build/hilo_waveform_analysis/threshold_192/plot/hilo_gated_centered_metadata.csv",
+  "waveforms_npz": "build/hilo_waveform_analysis/threshold_192/plot/hilo_gated_centered_waveforms.npz"
+}

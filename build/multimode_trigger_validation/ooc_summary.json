@@ -1,0 +1,29 @@
+{
+  "rtl_commit": "63477cd",
+  "part": "xcku5p-ffva676-3-e",
+  "clocks_mhz": {
+    "CLK_ADC": 250,
+    "CLK_CNN": 200
+  },
+  "timing": {
+    "wns_ns": 0.322,
+    "tns_ns": 0.0,
+    "whs_ns": 0.024,
+    "ths_ns": 0.0,
+    "wpws_ns": 1.3,
+    "tpws_ns": 0.0
+  },
+  "utilization": {
+    "clb_luts": 32061,
+    "clb_registers": 20311,
+    "bram_tiles": 26,
+    "uram": 6,
+    "dsp": 20
+  },
+  "vectorless_power_w": {
+    "total": 1.264,
+    "dynamic": 0.807,
+    "static": 0.457
+  },
+  "reports": "../vivado_ooc_ai_trigger/reports"
+}
