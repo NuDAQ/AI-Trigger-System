@@ -38,6 +38,15 @@
 //   +NUM_SAMPLES=<N>        number of samples to run (default 1000)
 //   +SCORE_THRESHOLD=<f>    classification threshold (default 0.0)
 //   +CNN_THRESH_RAW=<N>     signed raw CNN_THRESH override (default 0)
+//   +TRIGGER_MODE=<0..4>     runtime trigger mode (default 2, continuous AI)
+//   +FORCE_TRIGGER_INTERVAL=<N>
+//                           pulse FORCE_TRIGGER every N input chunks; 0=off
+//   +FORCE_TRIGGER_BEAT=<0..63>
+//                           scheduled pulse position within each selected chunk
+//   +HL_THRESH=<0..2047>     Hi-Lo threshold in raw ADC codes (default 100)
+//   +HILO_WINDOW=<0..31>     Hi-Lo intra-channel window (default 5)
+//   +COINC_WINDOW=<0..63>    Hi-Lo coincidence window (default 3)
+//   +BIN_THR=<1..4>          Hi-Lo channel multiplicity (default 1)
 //   +MIRROR_RAW_CHANNELS=<0|1>
 //                           mirror ch0..ch3 into raw event channels ch4..ch7
 //                           (default 1 for legacy validation vectors)
@@ -68,7 +77,13 @@ module tb_AI_TRIGGER_TOP;
     // -------------------------------------------------------------------------
     reg  clk_adc_src, clk_adc, clk_cnn, rst, data_str, event_ready;
     reg  [383:0] adc_data4_flat;  // 8 ch * 4 samples * 12-bit = 384 bits
+    reg  [3:0]   trigger_mode;
+    reg          force_trigger;
     reg  [31:0]  cnn_thresh;
+    reg  [11:0]  hl_thresh;
+    reg  [4:0]   hilo_window;
+    reg  [5:0]   coinc_window;
+    reg  [3:0]   bin_thr;
 
     wire         adc_src_ready;
     wire         cnn_trig;
@@ -103,7 +118,13 @@ module tb_AI_TRIGGER_TOP;
         .DATA_STR       (data_str),
         .ADC_SRC_READY  (adc_src_ready),
         .ADC_DATA4_FLAT (adc_data4_flat),
+        .TRIGGER_MODE   (trigger_mode),
+        .FORCE_TRIGGER  (force_trigger),
         .CNN_THRESH     (cnn_thresh),
+        .HL_THRESH      (hl_thresh),
+        .HILO_WINDOW    (hilo_window),
+        .COINC_WINDOW   (coinc_window),
+        .BIN_THR        (bin_thr),
         .CNN_TRIG       (cnn_trig),
         .CNN_OUT_DATA   (cnn_out_data),
         .CNN_OUT_CHUNK_ID (cnn_out_chunk_id),
@@ -147,6 +168,13 @@ module tb_AI_TRIGGER_TOP;
     integer num_samples;
     real    score_threshold;
     integer cnn_thresh_raw;
+    integer trigger_mode_raw;
+    integer force_trigger_interval;
+    integer force_trigger_beat;
+    integer hl_thresh_raw;
+    integer hilo_window_raw;
+    integer coinc_window_raw;
+    integer bin_thr_raw;
     bit     has_score_threshold_arg;
     bit     has_cnn_thresh_raw_arg;
     integer mirror_raw_channels;
@@ -215,8 +243,38 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
         if (!$value$plusargs("MIRROR_RAW_CHANNELS=%d", mirror_raw_channels))
             mirror_raw_channels = 1;
+        if (!$value$plusargs("TRIGGER_MODE=%d", trigger_mode_raw))
+            trigger_mode_raw = 2;
+        if (!$value$plusargs("FORCE_TRIGGER_INTERVAL=%d", force_trigger_interval))
+            force_trigger_interval = 0;
+        if (!$value$plusargs("FORCE_TRIGGER_BEAT=%d", force_trigger_beat))
+            force_trigger_beat = 31;
+        if (!$value$plusargs("HL_THRESH=%d", hl_thresh_raw))
+            hl_thresh_raw = 100;
+        if (!$value$plusargs("HILO_WINDOW=%d", hilo_window_raw))
+            hilo_window_raw = 5;
+        if (!$value$plusargs("COINC_WINDOW=%d", coinc_window_raw))
+            coinc_window_raw = 3;
+        if (!$value$plusargs("BIN_THR=%d", bin_thr_raw))
+            bin_thr_raw = 1;
 
+        if (trigger_mode_raw < 0 || trigger_mode_raw > 4 ||
+            force_trigger_interval < 0 ||
+            force_trigger_beat < 0 || force_trigger_beat >= N_BATCHES ||
+            hl_thresh_raw < 0 || hl_thresh_raw > 2047 ||
+            hilo_window_raw < 0 || hilo_window_raw > 31 ||
+            coinc_window_raw < 0 || coinc_window_raw > 63 ||
+            bin_thr_raw < 1 || bin_thr_raw > 4) begin
+            $fatal(1, "invalid multimode simulation configuration");
+        end
+
+        trigger_mode = trigger_mode_raw;
+        force_trigger = 0;
         cnn_thresh    = cnn_thresh_raw;
+        hl_thresh     = hl_thresh_raw;
+        hilo_window   = hilo_window_raw;
+        coinc_window  = coinc_window_raw;
+        bin_thr       = bin_thr_raw;
         adc_data4_flat = 384'h0;
         data_str       = 0;
         event_ready    = 1;
@@ -266,6 +324,11 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
                  $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
         $display("[%0t] MIRROR_RAW_CHANNELS: %0d", $time, mirror_raw_channels);
+        $display("[%0t] TRIGGER_MODE: 0x%0h", $time, trigger_mode);
+        $display("[%0t] FORCE_TRIGGER: every %0d chunks at beat %0d",
+                 $time, force_trigger_interval, force_trigger_beat);
+        $display("[%0t] Hi-Lo config: threshold=%0d hilo=%0d coincidence=%0d bin=%0d",
+                 $time, hl_thresh_raw, hilo_window_raw, coinc_window_raw, bin_thr_raw);
         $display("---------------------------------------------------------------------");
         $display("Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)");
         $display("---------------------------------------------------------------------");
@@ -294,6 +357,7 @@ module tb_AI_TRIGGER_TOP;
         integer b;
         begin
             adc_data4_flat = 384'h0;
+            force_trigger = 0;
             data_str = 1;
             for (b = 0; b < N_BATCHES; b = b + 1) begin
                 do begin
@@ -301,7 +365,7 @@ module tb_AI_TRIGGER_TOP;
                 end while (!adc_src_ready);
             end
             data_str = 0;
-            while (active_trigger_mode != 4'b0010 || mode_switch_pending)
+            while (active_trigger_mode != trigger_mode || mode_switch_pending)
                 @(posedge clk_adc);
             repeat(2) @(posedge clk_adc);
         end
@@ -358,6 +422,9 @@ module tb_AI_TRIGGER_TOP;
                         end
                     end
                     adc_data4_flat = batch_flat;
+                    force_trigger = force_trigger_interval > 0 &&
+                        (s_id % force_trigger_interval) == 0 &&
+                        b == force_trigger_beat;
                     data_str = 1;
                     do begin
                         @(posedge clk_adc_src);
@@ -372,6 +439,7 @@ module tb_AI_TRIGGER_TOP;
             end
             // After all requested samples, stop the finite test stream.
             adc_data4_flat = 384'h0;
+            force_trigger = 0;
             data_str = 0;
             input_done = 1;
         end
@@ -397,12 +465,24 @@ module tb_AI_TRIGGER_TOP;
             forever begin
                 @(posedge clk_adc);
                 if (event_valid && event_ready) begin
-                    if (event_trigger_offset != 6'd0)
-                        $fatal(1, "continuous AI event trigger offset must be zero, got %0d",
-                               event_trigger_offset);
+                    case (trigger_mode)
+                        4'b0000, 4'b0010:
+                            if (event_trigger_offset != 6'd0)
+                                $fatal(1, "fixed-chunk event trigger offset must be zero, got %0d",
+                                       event_trigger_offset);
+                        4'b0001:
+                            if (event_trigger_offset != force_trigger_beat)
+                                $fatal(1, "external event trigger offset %0d, expected %0d",
+                                       event_trigger_offset, force_trigger_beat);
+                        4'b0011, 4'b0100:
+                            if (event_trigger_offset[1:0] != 2'b11)
+                                $fatal(1, "Hi-Lo event trigger offset must end a 4-beat aggregate, got %0d",
+                                       event_trigger_offset);
+                    endcase
                     if (have_previous_event_beat &&
                         (batch_in_event != 0 ||
-                         event_chunk_id == previous_event_chunk_id + 16'd1) &&
+                         ((trigger_mode == 4'b0000 || trigger_mode == 4'b0010) &&
+                          event_chunk_id == previous_event_chunk_id + 16'd1)) &&
                         $time - previous_event_time_ns != expected_beat_period_ns) begin
                         $fatal(
                             1,
@@ -474,7 +554,7 @@ module tb_AI_TRIGGER_TOP;
     // =========================================================================
     task automatic output_monitor_thread;
         integer latency_cycles, output_quiet_cycles, sample_id_int;
-        reg [63:0] t_start, t_end;
+        reg [63:0] t_start, t_last, t_end;
         real out_float;
         integer prediction, label_val, is_correct;
         begin
@@ -487,17 +567,22 @@ module tb_AI_TRIGGER_TOP;
                     output_quiet_cycles = 0;
                     sample_id_int = $unsigned({16'h0000, cnn_out_chunk_id}) - 1;
 
-                    if (sample_id_int < 0 || sample_id_int >= num_samples) begin
+                    if (trigger_mode == 4'b0010 &&
+                        (sample_id_int < 0 || sample_id_int >= num_samples)) begin
                         $display("[ERROR] CNN_OUT_CHUNK_ID=%0d outside sample range 0..%0d",
                                  sample_id_int, num_samples - 1);
                         $finish;
                     end
 
-                    // Retrieve matching send time by DUT chunk/sample id.
-                    if (sample_id_int < NUM_SAMPLES_MAX) begin
+                    // Continuous AI chunk ids identify dataset samples. Gated
+                    // mode ids identify the centered work window's start chunk,
+                    // which can legitimately precede sample zero.
+                    if (sample_id_int >= 0 && sample_id_int < num_samples) begin
                         t_start = start_time_by_sample[sample_id_int];
+                        t_last  = last_input_time_by_sample[sample_id_int];
                     end else begin
                         t_start = t_end;
+                        t_last  = t_end;
                     end
 
                     latency_cycles = $rtoi((t_end - t_start) / CLK_CNN_PERIOD);
@@ -505,10 +590,15 @@ module tb_AI_TRIGGER_TOP;
                     // Decode score: ap_fixed<22,11>, byte-aligned in [21:0].
                     out_float  = $itor($signed(cnn_out_data[21:0])) / 2048.0;
                     prediction = (out_float > score_threshold) ? 1 : 0;
-                    label_val  = labels[sample_id_int];
-                    is_correct = (prediction == label_val) ? 1 : 0;
+                    if (trigger_mode == 4'b0010) begin
+                        label_val  = labels[sample_id_int];
+                        is_correct = (prediction == label_val) ? 1 : 0;
+                    end else begin
+                        label_val  = -1;
+                        is_correct = -1;
+                    end
 
-                    if (is_correct != 0) correct_count = correct_count + 1;
+                    if (is_correct == 1) correct_count = correct_count + 1;
                     total_latency_acc = total_latency_acc + latency_cycles;
 
                     $display("%6d | 0x%08h    | %13.6f | %5d | %4d | %10.3f",
@@ -522,8 +612,8 @@ module tb_AI_TRIGGER_TOP;
                             label_val, prediction, is_correct,
                             latency_cycles,
                             latency_cycles * CLK_CNN_PERIOD / 1000.0,
-                            start_time_by_sample[sample_id_int],
-                            last_input_time_by_sample[sample_id_int],
+                            t_start,
+                            t_last,
                             t_end);
                     $fflush(csv_file);
 
@@ -563,6 +653,9 @@ module tb_AI_TRIGGER_TOP;
             $display("CNN_THRESH:       %0d raw (%.4f float)",
                      cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
             $display("Score threshold:  %.4f float", score_threshold);
+            $display("Requested mode:   0x%0h", trigger_mode);
+            $display("Hi-Lo config:     threshold=%0d hilo=%0d coincidence=%0d bin=%0d",
+                     hl_thresh_raw, hilo_window_raw, coinc_window_raw, bin_thr_raw);
             $display("-------------------------------------------------------------");
             $display("Samples sent:     %0d", sent_count);
             $display("Results received: %0d", received_count);
@@ -580,18 +673,24 @@ module tb_AI_TRIGGER_TOP;
             $display("Hi-Lo cfg error:  %0d", hilo_config_error);
             $display("Event loss:       %0d", event_loss);
 
-            if (active_trigger_mode != 4'b0010 || mode_switch_pending ||
-                invalid_trigger_mode || hilo_config_error || event_loss)
-                $fatal(1, "multimode status mismatch in continuous AI validation");
+            if (active_trigger_mode != trigger_mode || mode_switch_pending ||
+                invalid_trigger_mode || hilo_config_error)
+                $fatal(1, "multimode status mismatch in trigger-mode validation");
+            if (event_loss && trigger_mode != 4'b0011 && trigger_mode != 4'b0100)
+                $fatal(1, "unexpected event loss in housekeeping/continuous-AI validation");
+            if (event_loss)
+                $display("[WARNING] Hi-Lo raw requests were dropped while the centered window path was busy");
 
             if (received_count > 0) begin
-                accuracy      = 100.0 * correct_count / received_count;
                 avg_latency   = total_latency_acc / received_count;
                 total_time_us = (sim_end_time - sim_start_time) / 1000.0;
                 throughput    = received_count / (total_time_us / 1_000_000.0);
 
-                $display("Correct:          %0d / %0d (%.2f%%)",
-                         correct_count, received_count, accuracy);
+                if (trigger_mode == 4'b0010) begin
+                    accuracy = 100.0 * correct_count / received_count;
+                    $display("Correct:          %0d / %0d (%.2f%%)",
+                             correct_count, received_count, accuracy);
+                end
                 $display("-------------------------------------------------------------");
                 $display("Avg latency:      %.1f CLK_CNN cycles  (%.3f us)",
                          avg_latency, avg_latency * CLK_CNN_PERIOD / 1000.0);

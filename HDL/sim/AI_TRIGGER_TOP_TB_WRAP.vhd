@@ -27,7 +27,13 @@ entity AI_TRIGGER_TOP_TB_WRAP is
         DATA_STR        : in  std_logic;
         ADC_SRC_READY   : out std_logic;
         ADC_DATA4_FLAT  : in  std_logic_vector(RAW_ADC_BATCH_WIDTH - 1 downto 0);
+        TRIGGER_MODE    : in  std_logic_vector(3 downto 0);
+        FORCE_TRIGGER   : in  std_logic;
         CNN_THRESH      : in  std_logic_vector(31 downto 0);
+        HL_THRESH       : in  std_logic_vector(11 downto 0);
+        HILO_WINDOW     : in  std_logic_vector(4 downto 0);
+        COINC_WINDOW    : in  std_logic_vector(5 downto 0);
+        BIN_THR         : in  std_logic_vector(3 downto 0);
         CNN_TRIG        : out std_logic;
         CNN_OUT_DATA    : out std_logic_vector(31 downto 0);
         CNN_OUT_CHUNK_ID: out std_logic_vector(CHUNK_ID_WIDTH - 1 downto 0);
@@ -117,13 +123,13 @@ begin
             RST            => RST,
             DATA_STR       => data_str_core,
             ADC_DATA4      => adc_core,
-            TRIGGER_MODE   => TRIGGER_MODE_AI,
-            FORCE_TRIGGER  => '0',
+            TRIGGER_MODE   => TRIGGER_MODE,
+            FORCE_TRIGGER  => FORCE_TRIGGER,
             CNN_THRESH     => CNN_THRESH,
-            HL_THRESH      => std_logic_vector(to_signed(100, 12)),
-            HILO_WINDOW    => std_logic_vector(to_unsigned(5, 5)),
-            COINC_WINDOW   => std_logic_vector(to_unsigned(3, 6)),
-            BIN_THR        => x"1",
+            HL_THRESH      => HL_THRESH,
+            HILO_WINDOW    => HILO_WINDOW,
+            COINC_WINDOW   => COINC_WINDOW,
+            BIN_THR        => BIN_THR,
             CNN_TRIG       => CNN_TRIG,
             CNN_OUT_DATA   => CNN_OUT_DATA,
             CNN_OUT_CHUNK_ID => cnn_out_chunk_id_i,

@@ -80,6 +80,17 @@ def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
         lines.append(f"set ::RUN_SIM_CNN_THRESH_RAW {args.cnn_thresh_raw}")
     if args.mirror_raw_channels is not None:
         lines.append(f"set ::RUN_SIM_MIRROR_RAW_CHANNELS {args.mirror_raw_channels}")
+    lines.extend(
+        [
+            f"set ::RUN_SIM_TRIGGER_MODE {args.trigger_mode}",
+            f"set ::RUN_SIM_FORCE_TRIGGER_INTERVAL {args.force_trigger_interval}",
+            f"set ::RUN_SIM_FORCE_TRIGGER_BEAT {args.force_trigger_beat}",
+            f"set ::RUN_SIM_HL_THRESH {args.hl_thresh}",
+            f"set ::RUN_SIM_HILO_WINDOW {args.hilo_window}",
+            f"set ::RUN_SIM_COINC_WINDOW {args.coinc_window}",
+            f"set ::RUN_SIM_BIN_THR {args.bin_thr}",
+        ]
+    )
 
     lines.extend(
         [
@@ -147,6 +158,57 @@ def parse_args() -> argparse.Namespace:
             "Pass +MIRROR_RAW_CHANNELS=<0|1>. Default testbench behavior is 1; "
             "DAQ bring-up runs use 0 so channels 4-7 stay zero unless driven."
         ),
+    )
+    parser.add_argument(
+        "--trigger-mode",
+        type=int,
+        choices=range(5),
+        default=2,
+        help="Runtime trigger mode 0..4. Default: 2 (continuous AI).",
+    )
+    parser.add_argument(
+        "--force-trigger-interval",
+        type=int,
+        default=0,
+        help=(
+            "Pulse FORCE_TRIGGER once every N input chunks; 0 disables the "
+            "schedule. Default: 0."
+        ),
+    )
+    parser.add_argument(
+        "--force-trigger-beat",
+        type=int,
+        choices=range(64),
+        default=31,
+        help="Beat offset for scheduled FORCE_TRIGGER pulses. Default: 31.",
+    )
+    parser.add_argument(
+        "--hl-thresh",
+        type=int,
+        choices=range(2048),
+        default=100,
+        help="Hi-Lo signed-magnitude threshold input (non-negative raw ADC code).",
+    )
+    parser.add_argument(
+        "--hilo-window",
+        type=int,
+        choices=range(32),
+        default=5,
+        help="Hi-Lo intra-channel window input. Default: 5.",
+    )
+    parser.add_argument(
+        "--coinc-window",
+        type=int,
+        choices=range(64),
+        default=3,
+        help="Hi-Lo inter-channel coincidence window input. Default: 3.",
+    )
+    parser.add_argument(
+        "--bin-thr",
+        type=int,
+        choices=range(1, 5),
+        default=1,
+        help="Hi-Lo channel multiplicity threshold. Default: 1.",
     )
     parser.add_argument(
         "--keep-tcl",

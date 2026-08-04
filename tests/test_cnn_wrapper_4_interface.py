@@ -85,7 +85,17 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
             self.assertIn(name, wrap)
             self.assertIn(name, sv_tb)
         self.assertIn("event_trigger_offset", sv_tb)
-        self.assertIn("active_trigger_mode != 4'b0010", sv_tb)
+        self.assertIn("active_trigger_mode != trigger_mode", sv_tb)
+        for name in (
+            "TRIGGER_MODE",
+            "FORCE_TRIGGER",
+            "HL_THRESH",
+            "HILO_WINDOW",
+            "COINC_WINDOW",
+            "BIN_THR",
+        ):
+            self.assertRegex(wrap, rf"{name}\s*:\s+in")
+            self.assertIn(f".{name}", sv_tb)
 
     def test_top_level_adc_input_is_clk_adc_domain_flat_stream(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")

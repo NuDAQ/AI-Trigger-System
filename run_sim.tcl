@@ -8,6 +8,10 @@
 #   vivado -mode batch -source run_sim.tcl -tclargs \
 #       -num_samples 64 \
 #       -cnn_thresh_raw 0 \
+#       -trigger_mode 2 \
+#       -force_trigger_interval 0 \
+#       -force_trigger_beat 31 \
+#       -hl_thresh 100 -hilo_window 5 -coinc_window 3 -bin_thr 1 \
 #       -mirror_raw_channels 1 \
 #       -out_csv ai_trigger_results.csv \
 #       -event_csv ai_trigger_events.csv
@@ -46,6 +50,13 @@ set num_samples_arg [sim_arg_value $argv "-num_samples" ""]
 set score_threshold_arg [sim_arg_value $argv "-score_threshold" ""]
 set cnn_thresh_raw_arg [sim_arg_value $argv "-cnn_thresh_raw" ""]
 set mirror_raw_channels_arg [sim_arg_value $argv "-mirror_raw_channels" ""]
+set trigger_mode_arg [sim_arg_value $argv "-trigger_mode" "2"]
+set force_trigger_interval_arg [sim_arg_value $argv "-force_trigger_interval" "0"]
+set force_trigger_beat_arg [sim_arg_value $argv "-force_trigger_beat" "31"]
+set hl_thresh_arg [sim_arg_value $argv "-hl_thresh" "100"]
+set hilo_window_arg [sim_arg_value $argv "-hilo_window" "5"]
+set coinc_window_arg [sim_arg_value $argv "-coinc_window" "3"]
+set bin_thr_arg [sim_arg_value $argv "-bin_thr" "1"]
 
 if {[info exists ::RUN_SIM_REPO_ROOT] && $::RUN_SIM_REPO_ROOT ne ""} {
     set repo_root [file normalize $::RUN_SIM_REPO_ROOT]
@@ -90,6 +101,13 @@ dict set plusarg_values NUM_SAMPLES $num_samples_arg
 dict set plusarg_values SCORE_THRESHOLD $score_threshold_arg
 dict set plusarg_values CNN_THRESH_RAW $cnn_thresh_raw_arg
 dict set plusarg_values MIRROR_RAW_CHANNELS $mirror_raw_channels_arg
+dict set plusarg_values TRIGGER_MODE $trigger_mode_arg
+dict set plusarg_values FORCE_TRIGGER_INTERVAL $force_trigger_interval_arg
+dict set plusarg_values FORCE_TRIGGER_BEAT $force_trigger_beat_arg
+dict set plusarg_values HL_THRESH $hl_thresh_arg
+dict set plusarg_values HILO_WINDOW $hilo_window_arg
+dict set plusarg_values COINC_WINDOW $coinc_window_arg
+dict set plusarg_values BIN_THR $bin_thr_arg
 
 foreach {var plusarg} {
     RUN_SIM_TESTHEX_DIR       TESTHEX_DIR
@@ -99,6 +117,13 @@ foreach {var plusarg} {
     RUN_SIM_SCORE_THRESHOLD   SCORE_THRESHOLD
     RUN_SIM_CNN_THRESH_RAW    CNN_THRESH_RAW
     RUN_SIM_MIRROR_RAW_CHANNELS MIRROR_RAW_CHANNELS
+    RUN_SIM_TRIGGER_MODE      TRIGGER_MODE
+    RUN_SIM_FORCE_TRIGGER_INTERVAL FORCE_TRIGGER_INTERVAL
+    RUN_SIM_FORCE_TRIGGER_BEAT FORCE_TRIGGER_BEAT
+    RUN_SIM_HL_THRESH         HL_THRESH
+    RUN_SIM_HILO_WINDOW       HILO_WINDOW
+    RUN_SIM_COINC_WINDOW      COINC_WINDOW
+    RUN_SIM_BIN_THR           BIN_THR
 } {
     if {[info exists ::$var] && [set ::$var] ne ""} {
         dict set plusarg_values $plusarg [set ::$var]
