@@ -95,7 +95,8 @@ architecture structural of AI_TRIGGER_CORE is
     signal lane_valid : std_logic_vector(N_LANES - 1 downto 0);
     signal lane_ready : std_logic_vector(N_LANES - 1 downto 0);
 
-    signal result_valid, result_ready : std_logic;
+    signal result_valid, result_qualifying, result_ready : std_logic;
+    signal result_consumed : std_logic;
     signal result_request : event_request_t;
     signal result_arbiter_busy : std_logic;
 begin
@@ -175,6 +176,7 @@ begin
             LANE_TIMESTAMP      => lane_result_timestamp,
             LANE_TRIGGER_OFFSET => lane_result_trigger_offset,
             RESULT_VALID        => result_valid,
+            RESULT_QUALIFY      => result_qualifying,
             RESULT_READY        => result_ready,
             RESULT_REQUEST      => result_request,
             BUSY                => result_arbiter_busy
@@ -209,7 +211,7 @@ begin
             HILO_WINDOW          => HILO_WINDOW,
             COINC_WINDOW         => COINC_WINDOW,
             BIN_THR              => BIN_THR,
-            CNN_RESULT_VALID     => result_valid,
+            CNN_RESULT_VALID     => result_valid and result_qualifying,
             CNN_RESULT_READY     => result_ready,
             CNN_RESULT_REQUEST   => result_request,
             CNN_INPUT_BUSY_ADC   => cnn_input_busy_adc,
@@ -242,9 +244,11 @@ begin
             RING_MISS_COUNT       => RING_MISS_COUNT
         );
 
-    CNN_TRIG         <= result_valid and result_ready;
+    result_consumed  <= result_valid and
+        (not result_qualifying or result_ready);
+    CNN_TRIG         <= result_valid and result_qualifying and result_ready;
     CNN_OUT_DATA     <= result_request.score;
     CNN_OUT_CHUNK_ID <= result_request.start_address.chunk_id;
-    CNN_OUT_VALID    <= result_valid;
+    CNN_OUT_VALID    <= result_consumed;
     CHUNK_OVERFLOW   <= chunk_overflow_i;
 end architecture structural;

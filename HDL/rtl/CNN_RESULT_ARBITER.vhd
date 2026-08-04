@@ -17,6 +17,7 @@ entity CNN_RESULT_ARBITER is
         LANE_TRIGGER_OFFSET : in  beat_offset_arr_t;
 
         RESULT_VALID        : out std_logic;
+        RESULT_QUALIFY      : out std_logic;
         RESULT_READY        : in  std_logic;
         RESULT_REQUEST      : out event_request_t;
         BUSY                : out std_logic
@@ -45,6 +46,7 @@ begin
         variable ready_v    : std_logic_vector(N_LANES - 1 downto 0);
         variable request_v  : event_request_t;
         variable result_valid_v : std_logic;
+        variable result_qualify_v : std_logic;
         variable consume_v  : std_logic;
     begin
         selected_v := -1;
@@ -58,6 +60,7 @@ begin
         ready_v       := (others => '0');
         request_v     := NULL_EVENT_REQUEST;
         result_valid_v := '0';
+        result_qualify_v := '0';
         consume_v     := '0';
 
         if selected_v >= 0 then
@@ -69,9 +72,10 @@ begin
             request_v.event_timestamp := LANE_TIMESTAMP(selected_v);
             request_v.trigger_offset := LANE_TRIGGER_OFFSET(selected_v);
             request_v.score := LANE_SCORE(selected_v);
+            result_valid_v := '1';
 
             if qualifying then
-                result_valid_v := '1';
+                result_qualify_v := '1';
                 ready_v(selected_v) := RESULT_READY;
                 consume_v := RESULT_READY;
             else
@@ -84,6 +88,7 @@ begin
         consume_s      <= consume_v;
         LANE_READY     <= ready_v;
         RESULT_VALID   <= result_valid_v;
+        RESULT_QUALIFY <= result_qualify_v;
         RESULT_REQUEST <= request_v;
     end process;
 

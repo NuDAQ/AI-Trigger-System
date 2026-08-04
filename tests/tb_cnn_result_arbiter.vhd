@@ -19,6 +19,7 @@ architecture sim of tb_cnn_result_arbiter is
     signal lane_timestamp       : timestamp_arr_t := (others => (others => '0'));
     signal lane_trigger_offset  : beat_offset_arr_t := (others => (others => '0'));
     signal result_valid         : std_logic;
+    signal result_qualifying    : std_logic;
     signal result_ready         : std_logic := '0';
     signal result_request       : event_request_t;
     signal busy                 : std_logic;
@@ -38,6 +39,7 @@ begin
             LANE_TIMESTAMP      => lane_timestamp,
             LANE_TRIGGER_OFFSET => lane_trigger_offset,
             RESULT_VALID        => result_valid,
+            RESULT_QUALIFY      => result_qualifying,
             RESULT_READY        => result_ready,
             RESULT_REQUEST      => result_request,
             BUSY                => busy
@@ -60,13 +62,15 @@ begin
         lane_valid(1) <= '1';
         wait for 1 ps;
         assert lane_ready(0) = '1' and lane_ready(1) = '0' and
-               result_valid = '0' and busy = '1'
-            report "below-threshold head must be consumed without producing a result" severity failure;
+               result_valid = '1' and result_qualifying = '0' and busy = '1'
+            report "below-threshold score must remain visible without becoming a trigger"
+            severity failure;
 
         wait until rising_edge(clk);
         lane_valid(0) <= '0';
         wait for 1 ps;
-        assert result_valid = '1' and lane_ready(1) = '0'
+        assert result_valid = '1' and result_qualifying = '1' and
+               lane_ready(1) = '0'
             report "qualifying result must backpressure its lane" severity failure;
         assert result_request.start_address.chunk_id = to_unsigned(8, CHUNK_ID_WIDTH) and
                result_request.start_address.beat_offset = to_unsigned(45, BEAT_OFFSET_WIDTH) and
@@ -84,7 +88,8 @@ begin
         lane_thresh(2) <= std_logic_vector(to_signed(0, 32));
         lane_valid(2)  <= '1';
         wait for 1 ps;
-        assert lane_ready(2) = '1' and result_valid = '0'
+        assert lane_ready(2) = '1' and result_valid = '1' and
+               result_qualifying = '0'
             report "rotation did not advance to the next completed lane" severity failure;
 
         wait until rising_edge(clk);
