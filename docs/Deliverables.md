@@ -2,13 +2,18 @@
 
 ## Introduction
 
-This version of the system receives 8 channels of 1 Gsa/s data. It splits the continuous waveform into 256 ns chunks for inference. After inference, it internally compares CNN scores with the configured threshold, retains only events above the threshold, and outputs the original waveform samples with a timestamp.
+This version receives 8 channels of 1 Gsa/s data and records one 256-sample,
+eight-channel waveform for each accepted trigger. Channels 0-3 feed the
+configured trigger algorithm; channels 0-7 are preserved in event output.
+`TRIGGER_MODE[3:0]` selects Capture-All, External, AI, Hi-Lo, or Hi-Lo-gated AI
+at runtime without changing the bitstream.
 
 The delivered top-level interface has three groups:
 
 - Upstream ADC input, synchronous to `CLK_ADC = 250 MHz`
 - Downstream event output, synchronous to `CLK_ADC = 250 MHz`
-- Clock/reset/configuration inputs: `CLK_CNN = 200 MHz`, `RST`, and `CNN_THRESH`
+- Clock/reset/configuration inputs: `CLK_CNN = 200 MHz`, `RST`, trigger mode,
+  CNN threshold, and Hi-Lo configuration
 
 ## Upstream ADC Input Format
 
@@ -92,11 +97,28 @@ ADC_DATA[383:372] = ch7 sample3
 
 ## Trigger Function
 
-The system reduces data volume by retaining only CNN-triggered waveform events. The current version includes only the CNN trigger wrapper path. The CNN trigger path uses channels 0-3 for inference. Event output preserves all 8 raw ADC channels in the same 384-bit beat format as the input interface, but adds timestamps.
+The selected trigger mode is:
+
+| `TRIGGER_MODE` | Function |
+| --- | --- |
+| `0000` | Capture every complete 256-sample chunk. |
+| `0001` | Capture only on a rearmed `FORCE_TRIGGER` rising edge. |
+| `0010` | Run continuous AI and capture when `score > CNN_THRESH`. |
+| `0011` | Capture on a Hi-Lo decision. |
+| `0100` | Use Hi-Lo to select a window, then use the shared CNN to accept or reject it. |
+
+Reserved values fail closed. Mode changes are deferred until the current work
+and downstream event FIFO drain; only the latest requested value is applied.
+Event output always preserves all 8 raw ADC channels in the same 384-bit beat
+format as the input.
+
+After reset, the active mode is fail-closed (`1111`) until the first complete
+ADC chunk boundary. That first arming chunk advances the ring and timestamp but
+is not offered to a trigger engine.
 
 Each event contains one 256-sample chunk, output over 64 beats. When samples from the same chunk are output to downstream systems at a rate of 4 samples per beat at 250 MHz, the timestamp remains unchanged to represent the relative time of that chunk. The time resolution is 256 ns/timestamp.
 
-For testing purposes, you can ignore timestamp in this version.
+`EVENT_TIMESTAMP` and `EVENT_TRIGGER_OFFSET` identify the trigger-anchor beat.
 
 ## System and Control Interface
 
@@ -104,14 +126,22 @@ For testing purposes, you can ignore timestamp in this version.
 | --- | --- | --- |
 | `CLK_CNN` | in | CNN inference clock, target 200 MHz. It can vary slightly, but no less than 180 MHz. |
 | `RST` | in | Active-high reset for the trigger system. |
+| `TRIGGER_MODE[3:0]` | in | Coherent runtime mode request, synchronous to `CLK_ADC`. |
+| `FORCE_TRIGGER` | in | Synchronous External-mode request; one low-to-high transition requests one event. |
 | `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. `CNN_THRESH[31:22]` is ignored. Also `[MSB:LSB]`. |
+| `HL_THRESH[11:0]` | in | Non-negative Hi-Lo amplitude threshold, latched at safe Hi-Lo-mode entry. |
+| `HILO_WINDOW[4:0]` | in | Hi-Lo bipolar window configuration. |
+| `COINC_WINDOW[5:0]` | in | Hi-Lo coincidence window configuration. |
+| `BIN_THR[3:0]` | in | Hi-Lo multiplicity threshold, valid from 1 through 4. |
 
-In current version, for testing purpose, please configure `CNN_THRESH=2.0`. Specifically, give a constant input:
+For the AI bring-up described below, configure `TRIGGER_MODE=0010` and
+`CNN_THRESH=2.0`. Specifically, give constant inputs:
 
 ```
 use ieee.numeric_std.all;
 
 CNN_THRESH <= std_logic_vector(to_signed(4096, 32));  -- 32'h00001000
+TRIGGER_MODE <= "0010";
 ```
 
 See below for more details. 
@@ -128,7 +158,10 @@ ADC_DATA[371:360] = ch7 sample2
 ADC_DATA[383:372] = ch7 sample3
 ```
 
-For the current one-chunk event window, each event emits only the triggered chunk itself: 64 `EVENT_VALID` beats. `EVENT_TIMESTAMP` is a chunk-index timestamp and remains constant across those 64 beats. `EVENT_LAST` is asserted on the final beat.
+Each event emits 64 `EVENT_VALID` beats. `EVENT_TIMESTAMP` is a chunk-index
+timestamp, `EVENT_TRIGGER_OFFSET` is the trigger-anchor beat index within that
+chunk, and both remain constant across the event. `EVENT_LAST` is asserted on
+the final beat.
 
 ### Downstream Interface
 
@@ -139,8 +172,16 @@ For the current one-chunk event window, each event emits only the triggered chun
 | `EVENT_DATA[383:0]` | out | Original waveform beat, in the same format as `ADC_DATA`. |
 | `EVENT_LAST` | out | Last beat of the current event. |
 | `EVENT_TIMESTAMP[23:0]` | out | Chunk-index timestamp, constant for all beats of one 256-sample event chunk. Wraps around every about 4.3 seconds. |
+| `EVENT_TRIGGER_OFFSET[5:0]` | out | Trigger-anchor beat index `0..63` inside `EVENT_TIMESTAMP`. |
+| `ACTIVE_TRIGGER_MODE[3:0]` | out | Mode currently admitting and interpreting work. |
+| `MODE_SWITCH_PENDING` | out | Requested mode has not yet reached a safe application boundary. |
+| `INVALID_TRIGGER_MODE` | out | Requested mode is reserved. |
+| `HILO_BLANKING` | out | Hi-Lo rate protection is intentionally suppressing decisions. |
+| `HILO_CONFIG_ERROR` | out | Latched Hi-Lo configuration is unsafe; Hi-Lo decisions fail closed. |
+| `EVENT_LOSS` | out | Sticky indication that an otherwise relevant trigger/event was dropped. |
 
-The delivered interface does not expose CNN score, chunk ID, overflow counters, or trigger debug pulses. 
+The delivered interface does not expose CNN score, internal chunk ID, or debug
+counters.
 
 DAQ-side sampling contract:
 
@@ -148,6 +189,7 @@ DAQ-side sampling contract:
 if EVENT_VALID && EVENT_READY:
     read EVENT_DATA
     read EVENT_TIMESTAMP
+    read EVENT_TRIGGER_OFFSET
     if EVENT_LAST:
         event finished
 ```

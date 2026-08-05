@@ -1,0 +1,24 @@
+{
+  "rtl_commit": "63477cd",
+  "dataset_samples": 1000,
+  "system_mode": "0010",
+  "standalone_wrapper_rows": 1000,
+  "system_rows": 1000,
+  "compared_fields": [
+    "sample_id",
+    "hex_out",
+    "float_out",
+    "prediction"
+  ],
+  "mismatched_rows": 0,
+  "classification": {
+    "tp": 162,
+    "tn": 820,
+    "fp": 0,
+    "fn": 18,
+    "accuracy": 0.982,
+    "recall": 0.9,
+    "precision": 1.0
+  },
+  "conclusion": "The system mode-0010 score stream is bit-exact with the Bender-locked standalone CNN wrapper. The 18 false negatives are not caused by multimode chunk alignment."
+}

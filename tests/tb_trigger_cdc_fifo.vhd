@@ -17,11 +17,15 @@ architecture sim of tb_trigger_cdc_fifo is
     signal wr_chunk_id  : chunk_id_t := (others => '0');
     signal wr_score     : std_logic_vector(31 downto 0) := (others => '0');
     signal wr_timestamp : timestamp_t := (others => '0');
+    signal wr_start_offset : beat_offset_t := (others => '0');
+    signal wr_trigger_offset : beat_offset_t := (others => '0');
     signal rd_valid     : std_logic;
     signal rd_ready     : std_logic := '0';
     signal rd_chunk_id  : chunk_id_t;
     signal rd_score     : std_logic_vector(31 downto 0);
     signal rd_timestamp : timestamp_t;
+    signal rd_start_offset : beat_offset_t;
+    signal rd_trigger_offset : beat_offset_t;
 
     procedure enqueue_trigger(
         signal valid     : out std_logic;
@@ -66,16 +70,21 @@ begin
             WR_RST       => wr_rst,
             WR_VALID     => wr_valid,
             WR_READY     => wr_ready,
+            WR_BUSY      => open,
             WR_CHUNK_ID  => wr_chunk_id,
             WR_SCORE     => wr_score,
             WR_TIMESTAMP => wr_timestamp,
+            WR_START_OFFSET => wr_start_offset,
+            WR_TRIGGER_OFFSET => wr_trigger_offset,
             RD_CLK       => rd_clk,
             RD_RST       => rd_rst,
             RD_VALID     => rd_valid,
             RD_READY     => rd_ready,
             RD_CHUNK_ID  => rd_chunk_id,
             RD_SCORE     => rd_score,
-            RD_TIMESTAMP => rd_timestamp
+            RD_TIMESTAMP => rd_timestamp,
+            RD_START_OFFSET => rd_start_offset,
+            RD_TRIGGER_OFFSET => rd_trigger_offset
         );
 
     process
@@ -116,6 +125,8 @@ begin
             wait until rising_edge(wr_clk);
         end loop;
 
+        wr_start_offset <= to_unsigned(45, BEAT_OFFSET_WIDTH);
+        wr_trigger_offset <= to_unsigned(12, BEAT_OFFSET_WIDTH);
         enqueue_trigger(
             wr_valid,
             wr_chunk_id,
@@ -173,6 +184,9 @@ begin
         assert rd_timestamp = to_unsigned(199, TIMESTAMP_WIDTH)
             report "trigger fifo next descriptor timestamp mismatch"
             severity failure;
+        assert rd_start_offset = to_unsigned(45, BEAT_OFFSET_WIDTH) and
+               rd_trigger_offset = to_unsigned(12, BEAT_OFFSET_WIDTH)
+            report "trigger fifo offset metadata mismatch" severity failure;
         rd_ready <= '1';
         wait until rising_edge(rd_clk);
         rd_ready <= '0';

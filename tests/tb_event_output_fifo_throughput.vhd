@@ -44,13 +44,17 @@ begin
             WR_LAST      => wr_last,
             WR_CHUNK_ID  => wr_chunk_id,
             WR_TIMESTAMP => wr_timestamp,
+            WR_TRIGGER_OFFSET => (others => '0'),
             WR_SCORE     => wr_score,
+            EVENT_CREDIT => open,
+            FIFO_EMPTY   => open,
             RD_VALID     => rd_valid,
             RD_READY     => rd_ready,
             RD_DATA      => rd_data,
             RD_LAST      => rd_last,
             RD_CHUNK_ID  => rd_chunk_id,
             RD_TIMESTAMP => rd_timestamp,
+            RD_TRIGGER_OFFSET => open,
             RD_SCORE     => rd_score
         );
 

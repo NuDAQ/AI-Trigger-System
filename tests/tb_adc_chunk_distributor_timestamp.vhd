@@ -38,6 +38,7 @@ begin
             RST             => rst,
             DATA_STR        => data_str,
             ADC_DATA4       => adc_data4,
+            ENABLE          => '1',
             LANE_BUSY       => lane_busy,
             LANE_WE         => lane_we,
             BATCH_DATA      => batch_data,

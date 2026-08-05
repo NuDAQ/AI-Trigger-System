@@ -1,0 +1,1 @@
+sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us,input_first_fire_time_ns,input_last_fire_time_ns,cnn_result_time_ns

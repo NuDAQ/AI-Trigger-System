@@ -50,24 +50,41 @@ entity CNN_CORE_LANE is
         BATCH_DATA   : in  std_logic_vector(LANE_FIFO_WRITE_WIDTH - 1 downto 0);
         CHUNK_ID     : in  chunk_id_t;
         CHUNK_TIMESTAMP : in timestamp_t;
+        WORK_START_OFFSET : in beat_offset_t;
+        WORK_TRIGGER_OFFSET : in beat_offset_t;
         CNN_THRESH   : in  std_logic_vector(31 downto 0);
 
         -- To distributor (CLK_ADC domain) — lane cannot accept a full chunk
         CHUNK_BUSY   : out std_logic;
+        WORK_PENDING : out std_logic;
 
         -- Results (CLK_CNN domain)
         LANE_SCORE   : out std_logic_vector(31 downto 0);
         LANE_CHUNK_ID: out chunk_id_t;
         LANE_TIMESTAMP: out timestamp_t;
+        LANE_START_OFFSET : out beat_offset_t;
+        LANE_TRIGGER_OFFSET : out beat_offset_t;
         LANE_THRESH  : out std_logic_vector(31 downto 0);
-        LANE_VALID   : out std_logic
+        LANE_VALID   : out std_logic;
+        LANE_READY   : in  std_logic
     );
 end entity CNN_CORE_LANE;
 
 architecture rtl of CNN_CORE_LANE is
 
     constant CHUNK_CNT_W : integer := 4;
-    constant META_WIDTH : integer := CHUNK_ID_WIDTH + TIMESTAMP_WIDTH;
+    constant META_WIDTH : integer := CHUNK_ID_WIDTH + TIMESTAMP_WIDTH +
+        2 * BEAT_OFFSET_WIDTH + 32;
+    constant META_TIMESTAMP_LSB : integer := CHUNK_ID_WIDTH;
+    constant META_TIMESTAMP_MSB : integer := META_TIMESTAMP_LSB + TIMESTAMP_WIDTH - 1;
+    constant META_START_OFFSET_LSB : integer := META_TIMESTAMP_MSB + 1;
+    constant META_START_OFFSET_MSB : integer :=
+        META_START_OFFSET_LSB + BEAT_OFFSET_WIDTH - 1;
+    constant META_TRIGGER_OFFSET_LSB : integer := META_START_OFFSET_MSB + 1;
+    constant META_TRIGGER_OFFSET_MSB : integer :=
+        META_TRIGGER_OFFSET_LSB + BEAT_OFFSET_WIDTH - 1;
+    constant META_THRESH_LSB : integer := META_TRIGGER_OFFSET_MSB + 1;
+    constant META_THRESH_MSB : integer := META_THRESH_LSB + 31;
     subtype chunk_cnt_t is unsigned(CHUNK_CNT_W-1 downto 0);
 
     -- -------------------------------------------------------------------------
@@ -120,6 +137,7 @@ architecture rtl of CNN_CORE_LANE is
     signal rst_n_cnn    : std_logic;
 
     signal started_count_cnn : chunk_cnt_t := (others => '0');
+    signal consumed_count_cnn : chunk_cnt_t := (others => '0');
     signal stream_done_toggle_cnn : std_logic := '0';
 
     signal chunk_id_dest_req  : std_logic;
@@ -128,6 +146,9 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_id_meta_valid : std_logic := '0';
     signal chunk_id_meta_data  : chunk_id_t := (others => '0');
     signal timestamp_meta_data : timestamp_t := (others => '0');
+    signal start_offset_meta_data : beat_offset_t := (others => '0');
+    signal trigger_offset_meta_data : beat_offset_t := (others => '0');
+    signal threshold_meta_data : std_logic_vector(31 downto 0) := (others => '0');
     signal chunk_id_dest_seen  : std_logic := '0';
 
     -- synthesis translate_off
@@ -161,15 +182,13 @@ architecture rtl of CNN_CORE_LANE is
     signal cnn_state  : cnn_fsm_t := CC_IDLE;
     signal stream_cnt : integer range 0 to N_CHUNK_BEATS_CNN := 0;
 
-    signal lane_score_r : std_logic_vector(31 downto 0) := (others => '0');
-    signal lane_chunk_id_r : chunk_id_t := (others => '0');
-    signal lane_timestamp_r : timestamp_t := (others => '0');
-    signal lane_thresh_r : std_logic_vector(31 downto 0) := (others => '0');
-    signal lane_valid_r : std_logic := '0';
     signal score_id_mem : chunk_id_mem_t := (others => (others => '0'));
     type timestamp_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of timestamp_t;
+    type offset_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of beat_offset_t;
     type thresh_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of std_logic_vector(31 downto 0);
     signal score_timestamp_mem : timestamp_mem_t := (others => (others => '0'));
+    signal score_start_offset_mem : offset_mem_t := (others => (others => '0'));
+    signal score_trigger_offset_mem : offset_mem_t := (others => (others => '0'));
     signal score_thresh_mem : thresh_mem_t := (others => (others => '0'));
     signal score_id_wr_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
     signal score_id_rd_idx : integer range 0 to 2**CHUNK_CNT_W - 1 := 0;
@@ -224,7 +243,10 @@ begin
                 if WR_EN = '1' then
                     if wr_count = 0 then
                         chunk_id_src_send <= '1';
-                        chunk_id_src_data <= std_logic_vector(CHUNK_TIMESTAMP) &
+                        chunk_id_src_data <= CNN_THRESH &
+                                             std_logic_vector(WORK_TRIGGER_OFFSET) &
+                                             std_logic_vector(WORK_START_OFFSET) &
+                                             std_logic_vector(CHUNK_TIMESTAMP) &
                                              std_logic_vector(CHUNK_ID);
                         chunk_id_src_pending <= '1';
                         chunk_count_adc <= chunk_count_adc + 1;
@@ -279,36 +301,37 @@ begin
                 cnn_in_valid <= '0';
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
+                consumed_count_cnn <= (others => '0');
                 stream_done_toggle_cnn <= '0';
-                lane_valid_r <= '0';
-                lane_score_r <= (others => '0');
-                lane_chunk_id_r <= (others => '0');
-                lane_timestamp_r <= (others => '0');
-                lane_thresh_r <= (others => '0');
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
                 chunk_id_dest_ack <= '0';
                 chunk_id_meta_valid <= '0';
                 chunk_id_meta_data <= (others => '0');
                 timestamp_meta_data <= (others => '0');
+                start_offset_meta_data <= (others => '0');
+                trigger_offset_meta_data <= (others => '0');
+                threshold_meta_data <= (others => '0');
                 chunk_id_dest_seen <= '0';
             else
-                lane_valid_r <= '0';
                 chunk_id_dest_ack <= '0';
                 if chunk_id_dest_req = '0' then
                     chunk_id_dest_seen <= '0';
                 elsif chunk_id_dest_seen = '0' and chunk_id_meta_valid = '0' then
                     chunk_id_meta_data <= unsigned(chunk_id_dest_data(CHUNK_ID_WIDTH - 1 downto 0));
-                    timestamp_meta_data <= unsigned(chunk_id_dest_data(META_WIDTH - 1 downto CHUNK_ID_WIDTH));
+                    timestamp_meta_data <= unsigned(chunk_id_dest_data(
+                        META_TIMESTAMP_MSB downto META_TIMESTAMP_LSB));
+                    start_offset_meta_data <= unsigned(chunk_id_dest_data(
+                        META_START_OFFSET_MSB downto META_START_OFFSET_LSB));
+                    trigger_offset_meta_data <= unsigned(chunk_id_dest_data(
+                        META_TRIGGER_OFFSET_MSB downto META_TRIGGER_OFFSET_LSB));
+                    threshold_meta_data <= chunk_id_dest_data(
+                        META_THRESH_MSB downto META_THRESH_LSB);
                     chunk_id_meta_valid <= '1';
                     chunk_id_dest_seen <= '1';
                 end if;
-                if cnn_out_valid = '1' then
-                    lane_score_r <= cnn_out_data;
-                    lane_chunk_id_r <= score_id_mem(score_id_rd_idx);
-                    lane_timestamp_r <= score_timestamp_mem(score_id_rd_idx);
-                    lane_thresh_r <= score_thresh_mem(score_id_rd_idx);
-                    lane_valid_r <= '1';
+                if cnn_out_valid = '1' and LANE_READY = '1' then
+                    consumed_count_cnn <= consumed_count_cnn + 1;
                     if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
                         score_id_rd_idx <= 0;
                     else
@@ -342,7 +365,9 @@ begin
                             chunk_id_meta_valid <= '0';
                             score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                             score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
-                            score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
+                            score_start_offset_mem(score_id_wr_idx) <= start_offset_meta_data;
+                            score_trigger_offset_mem(score_id_wr_idx) <= trigger_offset_meta_data;
+                            score_thresh_mem(score_id_wr_idx) <= threshold_meta_data;
                             if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                 score_id_wr_idx <= 0;
                             else
@@ -381,7 +406,9 @@ begin
                                     chunk_id_meta_valid <= '0';
                                     score_id_mem(score_id_wr_idx) <= chunk_id_meta_data;
                                     score_timestamp_mem(score_id_wr_idx) <= timestamp_meta_data;
-                                    score_thresh_mem(score_id_wr_idx) <= CNN_THRESH;
+                                    score_start_offset_mem(score_id_wr_idx) <= start_offset_meta_data;
+                                    score_trigger_offset_mem(score_id_wr_idx) <= trigger_offset_meta_data;
+                                    score_thresh_mem(score_id_wr_idx) <= threshold_meta_data;
                                     if score_id_wr_idx = 2**CHUNK_CNT_W - 1 then
                                         score_id_wr_idx <= 0;
                                     else
@@ -425,11 +452,14 @@ begin
         end if;
     end process;
 
-    LANE_SCORE <= lane_score_r;
-    LANE_CHUNK_ID <= lane_chunk_id_r;
-    LANE_TIMESTAMP <= lane_timestamp_r;
-    LANE_THRESH <= lane_thresh_r;
-    LANE_VALID <= lane_valid_r;
+    LANE_SCORE <= cnn_out_data;
+    LANE_CHUNK_ID <= score_id_mem(score_id_rd_idx);
+    LANE_TIMESTAMP <= score_timestamp_mem(score_id_rd_idx);
+    LANE_START_OFFSET <= score_start_offset_mem(score_id_rd_idx);
+    LANE_TRIGGER_OFFSET <= score_trigger_offset_mem(score_id_rd_idx);
+    LANE_THRESH <= score_thresh_mem(score_id_rd_idx);
+    LANE_VALID <= cnn_out_valid;
+    WORK_PENDING <= '1' when started_count_cnn /= consumed_count_cnn else '0';
 
     -- =========================================================================
     -- FIFO instantiation.  XPM is used instead of a fixed generated FIFO IP so
@@ -523,7 +553,7 @@ begin
             input_ready  => cnn_in_ready,
             output_data  => cnn_out_data,
             output_valid => cnn_out_valid,
-            output_ready => '1'
+            output_ready => LANE_READY
         );
 
 end architecture rtl;

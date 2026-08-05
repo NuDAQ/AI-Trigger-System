@@ -70,6 +70,50 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+dropped_trigger_count")
         self.assertRegex(sv_tb, r"wire\s+\[31:0\]\s+ring_miss_count")
 
+    def test_system_testbench_observes_multimode_status_and_trigger_offset(self) -> None:
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
+        sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
+
+        for name in (
+            "EVENT_TRIGGER_OFFSET",
+            "ACTIVE_TRIGGER_MODE",
+            "MODE_SWITCH_PENDING",
+            "INVALID_TRIGGER_MODE",
+            "HILO_CONFIG_ERROR",
+            "EVENT_LOSS",
+        ):
+            self.assertIn(name, wrap)
+            self.assertIn(name, sv_tb)
+        self.assertIn("event_trigger_offset", sv_tb)
+        self.assertIn("active_trigger_mode != trigger_mode", sv_tb)
+        for name in (
+            "TRIGGER_MODE",
+            "FORCE_TRIGGER",
+            "HL_THRESH",
+            "HILO_WINDOW",
+            "COINC_WINDOW",
+            "BIN_THR",
+        ):
+            self.assertRegex(wrap, rf"{name}\s*:\s+in")
+            self.assertIn(f".{name}", sv_tb)
+
+    def test_force_schedule_is_aligned_to_core_valid_not_source_fifo_input(self) -> None:
+        wrap = read("HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd")
+        sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
+
+        self.assertRegex(wrap, r"ADC_CORE_VALID\s*:\s+out\s+std_logic")
+        self.assertIn("ADC_CORE_VALID <= data_str_core", wrap)
+        self.assertIn("force_trigger_driver_thread()", sv_tb)
+        self.assertIn("if (adc_core_valid)", sv_tb)
+        self.assertNotIn("(s_id % force_trigger_interval)", sv_tb)
+        driver = sv_tb.split("task automatic force_trigger_driver_thread;", 1)[1].split(
+            "endtask", 1
+        )[0]
+        self.assertLess(
+            driver.index("core_beat_offset = core_beat_count % N_BATCHES"),
+            driver.index("core_beat_count = core_beat_count + 1"),
+        )
+
     def test_top_level_adc_input_is_clk_adc_domain_flat_stream(self) -> None:
         top = read("HDL/rtl/AI_TRIGGER_TOP.vhd")
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
@@ -105,11 +149,12 @@ class CnnWrapper4InterfaceTest(unittest.TestCase):
 
     def test_score_decode_uses_ap_fixed_22_11(self) -> None:
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
+        arbiter = read("HDL/rtl/CNN_RESULT_ARBITER.vhd")
         sv_tb = read("HDL/sim/tb_ai_trigger_top.sv")
 
         self.assertIn("ap_fixed<22,11>", core)
-        self.assertRegex(core, r"lane_score\(i\)\(21 downto 0\)")
-        self.assertRegex(core, r"lane_thresh\(i\)\(21 downto 0\)")
+        self.assertRegex(arbiter, r"signed\(LANE_SCORE\(selected_v\)\(21 downto 0\)\)")
+        self.assertRegex(arbiter, r"signed\(LANE_THRESH\(selected_v\)\(21 downto 0\)\)")
         self.assertIn("/ 2048.0", sv_tb)
         self.assertIn("cnn_thresh_raw = 0", sv_tb)
 
