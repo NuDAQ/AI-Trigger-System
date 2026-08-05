@@ -24,6 +24,22 @@ class OocFlowChecks(unittest.TestCase):
         self.assertFalse(any(re.search(r"\bRST\b", line) for line in input_delay_lines))
         self.assertRegex(xdc, r"set_false_path\s+-from\s+\[get_ports\s+RST\]")
 
+    def test_hilo_mode_start_does_not_combinationally_drive_async_reset(self) -> None:
+        ctrl = read("HDL/rtl/HILO_TRIGGER_CTRL.vhd")
+
+        self.assertNotRegex(
+            ctrl,
+            r"pre_trigger_reset\s*<=\s*RST\s+or\s+MODE_START",
+        )
+        self.assertRegex(
+            ctrl,
+            r"(?s)process\s*\(CLK\).*?pre_trigger_reset_r\s*<=\s*RST\s+or\s+MODE_START",
+        )
+        self.assertRegex(
+            ctrl,
+            r"RESET\s*=>\s*pre_trigger_reset_r",
+        )
+
     def test_ooc_input_hold_checks_are_cut_at_block_boundary(self) -> None:
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
 
@@ -37,7 +53,9 @@ class OocFlowChecks(unittest.TestCase):
         )
         self.assertRegex(
             xdc,
-            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{CNN_THRESH\*\}\]",
+            r"set_false_path\s+-hold\s+-from\s+\[get_ports\s+-quiet\s+\{"
+            r"TRIGGER_MODE\* FORCE_TRIGGER CNN_THRESH\* HL_THRESH\* "
+            r"HILO_WINDOW\* COINC_WINDOW\* BIN_THR\*\}\]",
         )
 
     def test_ooc_flow_writes_detailed_cdc_reports(self) -> None:
@@ -47,17 +65,34 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("post_route_cdc_details.rpt", tcl)
         self.assertRegex(tcl, r"report_cdc\s+-details")
 
+    def test_ooc_flow_fails_closed_on_post_route_timing(self) -> None:
+        tcl = read("scripts/vivado_ooc_build.tcl")
+
+        self.assertIn("source [file join $repo_root scripts vivado_timing_gate.tcl]", tcl)
+        self.assertIn("report_timing_summary -return_string", tcl)
+        self.assertIn("ai_trigger_require_timing $post_route_timing_summary", tcl)
+
     def test_ooc_flow_rejects_stale_or_wrong_top_builds(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
 
         self.assertIn("file delete -force $rpt_dir $dcp_dir $gen_dir", tcl)
         self.assertIn("assert_file_contains $bender_script {AI_TRIGGER_CORE.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_script {HILO_TRIGGER_CTRL.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_script {Pre_trigger.vhd}", tcl)
         self.assertIn("assert_daq_top_boundary", tcl)
         self.assertRegex(tcl, r"get_ports\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_clocks\s+-quiet\s+ADC_SRC_CLK")
         self.assertRegex(tcl, r"get_cells\s+-quiet\s+-hierarchical\s+\*u_ADC_INPUT\*")
         self.assertNotIn("fifo_async_1024_to_64", tcl)
         self.assertNotIn("synth_ip", tcl)
+
+    def test_vivado_sim_refreshes_both_bender_dependencies(self) -> None:
+        tcl = read("run_sim.tcl")
+
+        self.assertIn("cnn-core-wrapper-*", tcl)
+        self.assertIn("hilo-trigger-*", tcl)
+        self.assertIn("assert_file_contains $bender_sim_script {HILO_TRIGGER_CTRL.vhd}", tcl)
+        self.assertIn("assert_file_contains $bender_sim_script {Pre_trigger.vhd}", tcl)
 
     def test_ooc_flow_does_not_add_simulation_wrapper(self) -> None:
         tcl = read("scripts/vivado_ooc_build.tcl")
@@ -107,8 +142,41 @@ class OocFlowChecks(unittest.TestCase):
         self.assertTrue(event_output_delay_lines)
         event_output_delay = " ".join(event_output_delay_lines)
         self.assertIn("EVENT_TIMESTAMP*", event_output_delay)
+        self.assertIn("EVENT_TRIGGER_OFFSET*", event_output_delay)
         self.assertNotIn("EVENT_CHUNK_ID", event_output_delay)
         self.assertNotIn("EVENT_SCORE", event_output_delay)
+
+    def test_multimode_control_ports_have_ooc_boundary_delays(self) -> None:
+        xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
+
+        adc_input_delay = " ".join(
+            line for line in xdc.splitlines()
+            if line.strip().startswith("set_input_delay") and "CLK_ADC" in line
+        )
+        for port in (
+            "TRIGGER_MODE*",
+            "FORCE_TRIGGER",
+            "CNN_THRESH*",
+            "HL_THRESH*",
+            "HILO_WINDOW*",
+            "COINC_WINDOW*",
+            "BIN_THR*",
+        ):
+            self.assertIn(port, adc_input_delay)
+
+        adc_output_delay = " ".join(
+            line for line in xdc.splitlines()
+            if line.strip().startswith("set_output_delay") and "CLK_ADC" in line
+        )
+        for port in (
+            "ACTIVE_TRIGGER_MODE*",
+            "MODE_SWITCH_PENDING",
+            "INVALID_TRIGGER_MODE",
+            "HILO_BLANKING",
+            "HILO_CONFIG_ERROR",
+            "EVENT_LOSS",
+        ):
+            self.assertIn(port, adc_output_delay)
 
     def test_daq_top_has_only_adc_and_cnn_clocks(self) -> None:
         xdc = read("HDL/constraints/ai_trigger_ooc.xdc")
@@ -198,24 +266,36 @@ class OocFlowChecks(unittest.TestCase):
         self.assertIn("dest_ack <= dest_ack_r;", trigger_cdc)
         self.assertNotRegex(trigger_cdc, r"dest_ack\s+<=\s+dest_req\s+and\s+RD_READY")
 
+    def test_cnn_idle_status_cdc_registers_source_inputs(self) -> None:
+        event_path = read("HDL/rtl/MULTIMODE_EVENT_PATH.vhd")
+
+        for instance in ("u_CNN_BUSY_SYNC", "u_CNN_WORK_SYNC"):
+            self.assertRegex(
+                event_path,
+                rf"(?s){instance}\s*:\s*xpm_cdc_array_single.*?"
+                r"SRC_INPUT_REG\s*=>\s*1.*?port map",
+            )
+
     def test_cnn_threshold_uses_config_cdc_and_lane_snapshot(self) -> None:
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
-        event_path = read("HDL/rtl/EVENT_CAPTURE_PATH.vhd")
+        arbiter = read("HDL/rtl/CNN_RESULT_ARBITER.vhd")
 
-        self.assertIn("xpm_cdc_array_single", core)
-        self.assertIn("cnn_thresh_cnn", core)
-        self.assertIn("agg_score_thresh", core)
-        self.assertRegex(core, r"LANE_THRESH\s*=>\s*lane_thresh\(i\)")
-        self.assertRegex(core, r"(?s)CNN_THRESH\s*=>\s*agg_score_thresh")
+        self.assertIn("lane_thresh_common", core)
+        self.assertRegex(core, r"LANE_THRESH\s*=>\s*lane_thresh\(lane_idx\)")
+        self.assertRegex(core, r"CNN_THRESH\s*=>\s*lane_thresh_common")
         self.assertNotRegex(core, r"signed\(CNN_THRESH\(21 downto 0\)\)")
 
         self.assertIn("score_thresh_mem", lane)
         self.assertIn("LANE_THRESH", lane)
-        self.assertRegex(lane, r"score_thresh_mem\(score_id_wr_idx\)\s*<=\s*CNN_THRESH")
-        self.assertRegex(lane, r"lane_thresh_r\s*<=\s*score_thresh_mem\(score_id_rd_idx\)")
-
-        self.assertRegex(event_path, r"CNN_THRESH\s+:\s+in\s+std_logic_vector\(31 downto 0\)")
+        self.assertRegex(lane, r"chunk_id_src_data\s*<=\s*CNN_THRESH\s*&")
+        self.assertRegex(lane, r"score_thresh_mem\(score_id_wr_idx\)\s*<=\s*threshold_meta_data")
+        self.assertRegex(lane, r"LANE_THRESH\s*<=\s*score_thresh_mem\(score_id_rd_idx\)")
+        self.assertRegex(
+            arbiter,
+            r"signed\(LANE_SCORE\(selected_v\)\(21 downto 0\)\)\s*>\s*"
+            r"signed\(LANE_THRESH\(selected_v\)\(21 downto 0\)\)",
+        )
 
     def test_core_synchronizes_external_reset_before_domain_fanout(self) -> None:
         bender = read("Bender.yml")
@@ -227,12 +307,12 @@ class OocFlowChecks(unittest.TestCase):
         self.assertNotIn("u_RST_ADC_SRC", core)
         self.assertNotIn("rst_adc_src", core)
         self.assertIn("u_RST_CNN", core)
-        self.assertRegex(core, r"(?s)u_DIST\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
+        self.assertRegex(core, r"(?s)u_LIVE_DISTRIBUTOR\s*:\s*entity work\.ADC_CHUNK_DISTRIBUTOR.*?RST\s*=>\s*rst_adc")
         self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ASYNC\s*=>\s*RST")
         self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_ADC\s*=>\s*rst_adc")
         self.assertRegex(core, r"(?s)u_LANE\s*:\s*entity work\.CNN_CORE_LANE.*?RST_CNN\s*=>\s*rst_cnn")
-        self.assertRegex(core, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_ADC\s*=>\s*rst_adc")
-        self.assertRegex(core, r"(?s)u_EVENT_PATH\s*:\s*entity work\.EVENT_CAPTURE_PATH.*?RST_CNN\s*=>\s*rst_cnn")
+        self.assertRegex(core, r"(?s)u_MULTIMODE_PATH\s*:\s*entity work\.MULTIMODE_EVENT_PATH.*?RST_ADC\s*=>\s*rst_adc")
+        self.assertRegex(core, r"(?s)u_MULTIMODE_PATH\s*:\s*entity work\.MULTIMODE_EVENT_PATH.*?RST_CNN\s*=>\s*rst_cnn")
 
     def test_cross_domain_modules_do_not_derive_cnn_reset_from_adc_reset(self) -> None:
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")

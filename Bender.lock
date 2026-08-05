@@ -12,3 +12,9 @@ packages:
       Git: git@github.com:NuDAQ/CNN-Core-Wrapper.git
     dependencies:
     - cnn-core
+  hilo-trigger:
+    revision: 5758b7c160fa74c8c55fc2a51ac114834f75bdac
+    version: 2.2.4
+    source:
+      Git: git@github.com:NuDAQ/Hi-Lo-Trigger.git
+    dependencies: []

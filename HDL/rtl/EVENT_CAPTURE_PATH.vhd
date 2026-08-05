@@ -72,6 +72,15 @@ begin
             ADC_DATA4       => ADC_DATA4,
             CHUNK_COMMIT    => chunk_commit,
             COMMIT_CHUNK_ID => commit_chunk_id,
+            COMMIT_TIMESTAMP => open,
+            WRITE_CHUNK_ID    => open,
+            WRITE_BEAT_OFFSET => open,
+            WRITE_TIMESTAMP   => open,
+            CHECK_START_CHUNK_ID => (others => '0'),
+            CHECK_START_OFFSET   => (others => '0'),
+            CHECK_PRESENT        => open,
+            CHECK_PROTECTED      => open,
+            CHECK_EXPIRED        => open,
             RD_EN           => rb_rd_en,
             RD_CHUNK_ID     => rb_rd_chunk_id,
             RD_BATCH_IDX    => rb_rd_batch_idx,
@@ -101,16 +110,21 @@ begin
             WR_RST      => RST_CNN,
             WR_VALID    => trigger_valid_cnn,
             WR_READY    => trigger_ready_cnn,
+            WR_BUSY     => open,
             WR_CHUNK_ID => trigger_id_cnn,
             WR_SCORE    => trigger_score_cnn,
             WR_TIMESTAMP => trigger_timestamp_cnn,
+            WR_START_OFFSET => (others => '0'),
+            WR_TRIGGER_OFFSET => (others => '0'),
             RD_CLK      => CLK_ADC,
             RD_RST      => RST_ADC,
             RD_VALID    => trigger_valid_adc,
             RD_READY    => trigger_ready_adc,
             RD_CHUNK_ID => trigger_id_adc,
             RD_SCORE    => trigger_score_adc,
-            RD_TIMESTAMP => trigger_timestamp_adc
+            RD_TIMESTAMP => trigger_timestamp_adc,
+            RD_START_OFFSET => open,
+            RD_TRIGGER_OFFSET => open
         );
 
     u_capture : entity work.EVENT_CAPTURE_CTRL
@@ -150,13 +164,17 @@ begin
             WR_LAST      => capture_event_last,
             WR_CHUNK_ID  => capture_event_chunk_id,
             WR_TIMESTAMP => capture_event_timestamp,
+            WR_TRIGGER_OFFSET => (others => '0'),
             WR_SCORE     => capture_event_score,
+            EVENT_CREDIT => open,
+            FIFO_EMPTY   => open,
             RD_VALID     => EVENT_VALID,
             RD_READY     => EVENT_READY,
             RD_DATA      => EVENT_DATA,
             RD_LAST      => EVENT_LAST,
             RD_CHUNK_ID  => EVENT_CHUNK_ID,
             RD_TIMESTAMP => EVENT_TIMESTAMP,
+            RD_TRIGGER_OFFSET => open,
             RD_SCORE     => EVENT_SCORE
         );
 

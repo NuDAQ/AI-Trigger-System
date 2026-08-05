@@ -21,6 +21,12 @@ PACKAGE_PREFIX = "ai-trigger-daq"
 DELIVERY_ASSETS = [
     ROOT / "docs" / "score_vs_offset.png",
 ]
+HILO_RTL_ORDER = [
+    "PRE_TRIGGER_PKG.vhd",
+    "Mult_to_bin.vhd",
+    "Pre_trigger_1ch.vhd",
+    "Pre_trigger.vhd",
+]
 
 
 @dataclass(frozen=True)
@@ -177,6 +183,26 @@ def wrapper_sources(bender_sources: list[Path]) -> list[Path]:
     raise FileNotFoundError("Could not find cnn_core_wrapper_top.v from Bender sources or .bender checkout")
 
 
+def hilo_trigger_sources(bender_sources: list[Path]) -> list[Path]:
+    by_name = {
+        path.name.lower(): path
+        for path in bender_sources
+        if path.exists() and "hilo-trigger" in str(path).lower()
+    }
+    if not by_name:
+        candidates = sorted(
+            ROOT.glob(".bender/git/checkouts/hilo-trigger-*/hw/rtl/*.vhd")
+        )
+        by_name = {path.name.lower(): path for path in candidates}
+
+    missing = [name for name in HILO_RTL_ORDER if name.lower() not in by_name]
+    if missing:
+        raise FileNotFoundError(
+            "Could not resolve required Hi-Lo RTL from Bender: " + ", ".join(missing)
+        )
+    return [by_name[name.lower()] for name in HILO_RTL_ORDER]
+
+
 def ai_trigger_sources(bender_sources: list[Path]) -> list[Path]:
     sources = [
         path
@@ -329,6 +355,7 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
     bender_sources = parse_bender_sources()
     core_sources = cnn_core_sources()
     wrap_sources = wrapper_sources(bender_sources)
+    hilo_sources = hilo_trigger_sources(bender_sources)
     ai_sources = ai_trigger_sources(bender_sources)
 
     copied_files: list[Path] = write_package_readme(package_dir)
@@ -344,6 +371,14 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
 
     for source in wrap_sources:
         dest = package_dir / "rtl" / "cnn-core-wrapper" / "hw" / "rtl" / source.name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, dest)
+        rel = dest.relative_to(package_dir)
+        copied_files.append(rel)
+        rtl_paths.append(rel)
+
+    for source in hilo_sources:
+        dest = package_dir / "rtl" / "hilo-trigger" / source.name
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, dest)
         rel = dest.relative_to(package_dir)

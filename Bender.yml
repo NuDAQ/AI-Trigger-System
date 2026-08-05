@@ -14,20 +14,30 @@ package:
 dependencies:
   # Path dependency.
   cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", version: "4.0.0" }
+  hilo-trigger: { git: "git@github.com:NuDAQ/Hi-Lo-Trigger.git", version: "2.2.4" }
 
 sources:
   - HDL/rtl/AI_TRIGGER_PKG.vhd
   - HDL/rtl/RESET_SYNC.vhd
+  - HDL/rtl/TRIGGER_MODE_CTRL.vhd
+  - HDL/rtl/HOUSEKEEPING_TRIGGER_CTRL.vhd
+  - HDL/rtl/HILO_INPUT_ADAPTER.vhd
+  - HDL/rtl/HILO_TRIGGER_CTRL.vhd
+  - HDL/rtl/GATED_CNN_READER.vhd
   - HDL/rtl/TRIGGER_DECISION.vhd
   - HDL/rtl/ADC_INPUT_CDC_FIFO.vhd
   - HDL/rtl/CHUNK_ID_CDC_FIFO.vhd
   - HDL/rtl/TRIGGER_CDC_FIFO.vhd
   - HDL/rtl/WAVEFORM_RING_BUFFER.vhd
+  - HDL/rtl/RING_READ_ARBITER.vhd
+  - HDL/rtl/EVENT_RECORDER.vhd
   - HDL/rtl/EVENT_CAPTURE_CTRL.vhd
   - HDL/rtl/EVENT_OUTPUT_FIFO.vhd
   - HDL/rtl/EVENT_CAPTURE_PATH.vhd
+  - HDL/rtl/MULTIMODE_EVENT_PATH.vhd
   - HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
   - HDL/rtl/CNN_CORE_LANE.vhd
+  - HDL/rtl/CNN_RESULT_ARBITER.vhd
   - HDL/rtl/AI_TRIGGER_CORE.vhd
   - HDL/rtl/AI_TRIGGER_TOP.vhd
 

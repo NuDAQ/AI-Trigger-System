@@ -1,0 +1,6 @@
+mode,name,events,cnn_evaluated,tp,tn,fp,fn,accuracy,recall,precision,dropped_triggers,hilo_blanking,event_loss
+0000,capture_all,1000,0,,,,,,,,0,0,0
+0001,external,250,0,,,,,,,,0,0,0
+0010,ai,162,1000,162,820,0,18,0.982,0.900000,1.000000,0,0,0
+0011,hilo,24,0,19,815,5,161,0.834,0.105556,0.791667,59,1,1
+0100,hilo_ai,0,24,0,820,0,180,0.820,0.000000,0.000000,59,1,1
