@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 from pathlib import Path
 
 
@@ -42,11 +43,19 @@ def load_scope_csv(path: Path) -> tuple[list[float], list[float]]:
         voltages_v = [float(row[1]) for row in rows]
     except (IndexError, ValueError) as exc:
         raise SystemExit(f"invalid numeric scope CSV row in {path}") from exc
+    for sample_index, (left, right) in enumerate(zip(times_s, times_s[1:])):
+        if not math.isclose(right - left, 1e-9, rel_tol=1e-6, abs_tol=1e-15):
+            raise SystemExit(
+                f"expected 1 ns sample spacing in {path}, but samples "
+                f"{sample_index}..{sample_index + 1} differ by "
+                f"{(right - left) * 1e9:.9f} ns"
+            )
     return times_s, voltages_v
 
 
 def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path:
     times_s, voltages_v = load_scope_csv(input_csv)
+    raw_codes = [round(voltage * 4096.0 / adc_vfs_v) for voltage in voltages_v]
     codes = [voltage_to_adc_code(voltage, adc_vfs_v) for voltage in voltages_v]
     window_count = len(codes) - SAMPLES_PER_CHUNK + 1
 
@@ -57,6 +66,7 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
     manifest_rows: list[dict[str, str]] = []
     for sample_id in range(window_count):
         window = codes[sample_id : sample_id + SAMPLES_PER_CHUNK]
+        raw_window = raw_codes[sample_id : sample_id + SAMPLES_PER_CHUNK]
         (testhex_dir / f"test_input_sample{sample_id}.hex").write_text(
             "\n".join(pack_ch0_timestep(code) for code in window) + "\n",
             encoding="utf-8",
@@ -70,6 +80,12 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
                 "window_start_ns": f"{times_s[sample_id] * 1e9:.6f}",
                 "window_end_ns": (
                     f"{times_s[sample_id + SAMPLES_PER_CHUNK - 1] * 1e9:.6f}"
+                ),
+                "adc_vfs_v": f"{adc_vfs_v:.6f}",
+                "adc_code_min": str(min(window)),
+                "adc_code_max": str(max(window)),
+                "adc_saturated_samples": str(
+                    sum(code < -2048 or code > 2047 for code in raw_window)
                 ),
             }
         )
@@ -90,7 +106,15 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-only", action="store_true")
-    parser.add_argument("--input-csv", type=Path, action="append", required=True)
+    parser.add_argument(
+        "--input-csv",
+        type=Path,
+        action="append",
+        help=(
+            "Scope CSV to scan; repeat for multiple files. Defaults to all CSVs "
+            "under data/Amp_Scope_Data_2."
+        ),
+    )
     parser.add_argument("--out-dir", type=Path, default=Path("build/real_noise_scan"))
     parser.add_argument("--adc-vfs-v", type=float, default=DEFAULT_ADC_VFS_V)
     return parser.parse_args()
@@ -105,7 +129,13 @@ def main() -> None:
 
     repo_root = Path(__file__).resolve().parents[1]
     out_root = args.out_dir if args.out_dir.is_absolute() else repo_root / args.out_dir
-    for input_path in args.input_csv:
+    input_paths = args.input_csv
+    if input_paths is None:
+        input_paths = sorted((repo_root / "data" / "Amp_Scope_Data_2").glob("*.csv"))
+    if not input_paths:
+        raise SystemExit("no scope CSV inputs found")
+
+    for input_path in input_paths:
         input_csv = input_path if input_path.is_absolute() else repo_root / input_path
         prepare_scope_csv(input_csv.resolve(), out_root.resolve(), args.adc_vfs_v)
 
