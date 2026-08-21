@@ -34,4 +34,5 @@ sources:
   - target: simulation
     files:
       - HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd
+      - HDL/sim/REAL_NOISE_SCAN_PACER.sv
       - HDL/sim/tb_ai_trigger_top.sv

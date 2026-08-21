@@ -41,6 +41,8 @@
 //   +MIRROR_RAW_CHANNELS=<0|1>
 //                           mirror ch0..ch3 into raw event channels ch4..ch7
 //                           (default 1 for legacy validation vectors)
+//   +PACE_CHUNKS=<0|1>       when 1, allow only one input chunk in flight and
+//                           wait for its score and optional event to complete
 //==============================================================================
 
 module tb_AI_TRIGGER_TOP;
@@ -85,6 +87,8 @@ module tb_AI_TRIGGER_TOP;
     wire [31:0]  dropped_trigger_count;
     wire [31:0]  ring_miss_count;
     wire         chunk_overflow;
+
+    real_noise_scan_pacer_if scan_pacer();
 
     // -------------------------------------------------------------------------
     // DUT instantiation (VHDL mixed-language bridge)
@@ -138,6 +142,7 @@ module tb_AI_TRIGGER_TOP;
     integer has_score_threshold_arg;
     integer has_cnn_thresh_raw_arg;
     integer mirror_raw_channels;
+    integer pace_chunks;
 
     // Per-sample hex storage (256 words)
     reg [63:0] sample_hex [0:N_CHUNK_W-1];
@@ -203,6 +208,12 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
         if (!$value$plusargs("MIRROR_RAW_CHANNELS=%d", mirror_raw_channels))
             mirror_raw_channels = 1;
+        if (!$value$plusargs("PACE_CHUNKS=%d", pace_chunks))
+            pace_chunks = 0;
+        if (pace_chunks != 0 && pace_chunks != 1) begin
+            $display("[ERROR] PACE_CHUNKS=%0d must be 0 or 1", pace_chunks);
+            $finish;
+        end
 
         cnn_thresh    = cnn_thresh_raw;
         adc_data4_flat = 384'h0;
@@ -248,6 +259,7 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
                  $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
         $display("[%0t] MIRROR_RAW_CHANNELS: %0d", $time, mirror_raw_channels);
+        $display("[%0t] PACE_CHUNKS: %0d", $time, pace_chunks);
         $display("---------------------------------------------------------------------");
         $display("Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)");
         $display("---------------------------------------------------------------------");
@@ -334,6 +346,10 @@ module tb_AI_TRIGGER_TOP;
                 end
 
                 sent_count = sent_count + 1;
+                if (pace_chunks != 0) begin
+                    scan_pacer.note_chunk_sent(s_id);
+                    scan_pacer.wait_until_safe(s_id);
+                end
             end
             // After all requested samples, stop the finite test stream.
             adc_data4_flat = 384'h0;
@@ -397,6 +413,8 @@ module tb_AI_TRIGGER_TOP;
                     have_previous_event_beat = 1;
                     event_batch_count = event_batch_count + 1;
                     if (event_last) begin
+                        if (pace_chunks != 0)
+                            scan_pacer.note_event_complete(event_chunk_id);
                         event_count = event_count + 1;
                         batch_in_event = 0;
                     end else begin
@@ -468,6 +486,9 @@ module tb_AI_TRIGGER_TOP;
                     prediction = (out_float > score_threshold) ? 1 : 0;
                     label_val  = labels[sample_id_int];
                     is_correct = (prediction == label_val) ? 1 : 0;
+
+                    if (pace_chunks != 0)
+                        scan_pacer.note_score(sample_id_int, cnn_trig);
 
                     if (is_correct) correct_count = correct_count + 1;
                     total_latency_acc = total_latency_acc + latency_cycles;

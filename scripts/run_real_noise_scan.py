@@ -7,6 +7,8 @@ import argparse
 import csv
 import math
 from pathlib import Path
+import subprocess
+import sys
 
 
 SAMPLES_PER_CHUNK = 256
@@ -117,15 +119,29 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--out-dir", type=Path, default=Path("build/real_noise_scan"))
     parser.add_argument("--adc-vfs-v", type=float, default=DEFAULT_ADC_VFS_V)
+    parser.add_argument("--score-threshold", type=float, default=0.0)
+    parser.add_argument("--cnn-thresh-raw", type=int, default=0)
+    parser.add_argument("--mirror-raw-channels", type=int, choices=(0, 1), default=0)
+    parser.add_argument(
+        "--sim-runner",
+        type=Path,
+        default=Path("scripts/run_vivado_sim.py"),
+        help="Simulation launcher. Defaults to scripts/run_vivado_sim.py.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    if not args.prepare_only:
-        raise SystemExit("only --prepare-only is implemented")
     if args.adc_vfs_v <= 0:
         raise SystemExit("--adc-vfs-v must be positive")
+    expected_threshold_raw = round(args.score_threshold * 2048.0)
+    if expected_threshold_raw != args.cnn_thresh_raw:
+        raise SystemExit(
+            "--score-threshold and --cnn-thresh-raw disagree: "
+            f"{args.score_threshold} maps to raw {expected_threshold_raw}, "
+            f"not {args.cnn_thresh_raw}"
+        )
 
     repo_root = Path(__file__).resolve().parents[1]
     out_root = args.out_dir if args.out_dir.is_absolute() else repo_root / args.out_dir
@@ -135,9 +151,42 @@ def main() -> None:
     if not input_paths:
         raise SystemExit("no scope CSV inputs found")
 
+    case_dirs = []
     for input_path in input_paths:
         input_csv = input_path if input_path.is_absolute() else repo_root / input_path
-        prepare_scope_csv(input_csv.resolve(), out_root.resolve(), args.adc_vfs_v)
+        case_dirs.append(
+            prepare_scope_csv(input_csv.resolve(), out_root.resolve(), args.adc_vfs_v)
+        )
+
+    if args.prepare_only:
+        return
+
+    sim_runner = args.sim_runner if args.sim_runner.is_absolute() else repo_root / args.sim_runner
+    for case_dir in case_dirs:
+        with (case_dir / "manifest.csv").open(newline="", encoding="utf-8") as csv_file:
+            num_samples = sum(1 for _ in csv.DictReader(csv_file))
+        command = [
+            sys.executable,
+            str(sim_runner.resolve()),
+            "--num-samples",
+            str(num_samples),
+            "--testhex-dir",
+            str((case_dir / "testhex_stream").resolve()),
+            "--out-csv",
+            str((case_dir / "scores.csv").resolve()),
+            "--event-csv",
+            str((case_dir / "events.csv").resolve()),
+            "--score-threshold",
+            str(args.score_threshold),
+            "--cnn-thresh-raw",
+            str(args.cnn_thresh_raw),
+            "--mirror-raw-channels",
+            str(args.mirror_raw_channels),
+            "--pace-chunks",
+            "1",
+        ]
+        print("Running paced simulation:", " ".join(command))
+        subprocess.run(command, cwd=repo_root, check=True)
 
 
 if __name__ == "__main__":

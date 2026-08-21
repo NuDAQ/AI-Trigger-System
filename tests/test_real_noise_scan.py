@@ -182,6 +182,94 @@ class RealNoiseScanTest(unittest.TestCase):
         self.assertEqual(manifest_row["adc_code_max"], "2047")
         self.assertEqual(manifest_row["adc_saturated_samples"], "2")
 
+    def test_full_cli_invokes_simulation_with_single_inflight_pacing(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-runner-"))
+        input_csv = work_dir / "scope.csv"
+        out_dir = work_dir / "out"
+        captured_args = work_dir / "runner_args.txt"
+        fake_runner = work_dir / "fake_runner.py"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
+        input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        fake_runner.write_text(
+            "\n".join(
+                [
+                    "#!/usr/bin/env python3",
+                    "from pathlib import Path",
+                    "import sys",
+                    f"Path({str(captured_args)!r}).write_text('\\n'.join(sys.argv[1:]) + '\\n')",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--input-csv",
+                str(input_csv),
+                "--out-dir",
+                str(out_dir),
+                "--sim-runner",
+                str(fake_runner),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        runner_args = captured_args.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(runner_args[runner_args.index("--num-samples") + 1], "1")
+        self.assertEqual(runner_args[runner_args.index("--pace-chunks") + 1], "1")
+        self.assertEqual(
+            runner_args[runner_args.index("--testhex-dir") + 1],
+            str((out_dir / "scope" / "testhex_stream").resolve()),
+        )
+        self.assertEqual(runner_args[runner_args.index("--mirror-raw-channels") + 1], "0")
+
+    def test_vivado_runner_forwards_pacing_to_xsim(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-xsim-"))
+        project = work_dir / "dummy.xpr"
+        fake_vivado = work_dir / "fake_vivado.py"
+        captured_tcl = work_dir / "captured.tcl"
+        project.write_text("dummy\n", encoding="utf-8")
+        fake_vivado.write_text(
+            "\n".join(
+                [
+                    "#!/usr/bin/env python3",
+                    "from pathlib import Path",
+                    "import shutil",
+                    "import sys",
+                    "source = Path(sys.argv[sys.argv.index('-source') + 1])",
+                    f"shutil.copy2(source, Path({str(captured_tcl)!r}))",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        fake_vivado.chmod(0o755)
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "run_vivado_sim.py"),
+                "--project",
+                str(project),
+                "--vivado",
+                str(fake_vivado),
+                "--pace-chunks",
+                "1",
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        self.assertIn(
+            "set ::RUN_SIM_PACE_CHUNKS 1",
+            captured_tcl.read_text(encoding="utf-8"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

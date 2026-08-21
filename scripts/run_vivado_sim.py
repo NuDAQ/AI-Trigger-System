@@ -65,6 +65,8 @@ def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
         lines.append(f"set ::RUN_SIM_CNN_THRESH_RAW {args.cnn_thresh_raw}")
     if args.mirror_raw_channels is not None:
         lines.append(f"set ::RUN_SIM_MIRROR_RAW_CHANNELS {args.mirror_raw_channels}")
+    if args.pace_chunks is not None:
+        lines.append(f"set ::RUN_SIM_PACE_CHUNKS {args.pace_chunks}")
 
     lines.extend(
         [
@@ -131,6 +133,15 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Pass +MIRROR_RAW_CHANNELS=<0|1>. Default testbench behavior is 1; "
             "DAQ bring-up runs use 0 so channels 4-7 stay zero unless driven."
+        ),
+    )
+    parser.add_argument(
+        "--pace-chunks",
+        type=int,
+        choices=(0, 1),
+        help=(
+            "Pass +PACE_CHUNKS=<0|1>. Real-noise scans use 1 so only one chunk "
+            "is in flight until its score and optional event are complete."
         ),
     )
     parser.add_argument(
