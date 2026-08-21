@@ -1,0 +1,5 @@
+case_name,source_file,window_count,score_min,score_max,score_mean,score_threshold,triggered_windows,trigger_fraction
+signal_10,signal_10.csv,745,-1.628418,4.336426,-1.009376,0.000000,47,0.063087
+signal_2,signal_2.csv,745,-1.732910,-0.750488,-1.314331,0.000000,0,0.000000
+signal_3,signal_3.csv,745,-1.625977,-0.483887,-1.213324,0.000000,0,0.000000
+signal_4,signal_4.csv,745,-1.629883,0.055664,-1.227044,0.000000,4,0.005369
