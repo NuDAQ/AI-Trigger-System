@@ -178,6 +178,14 @@ if {$testhex_arg ne ""} {
     }
 }
 
+# Bender sources and the selected top can change between batch invocations.
+# Remove XSim's incremental compile products before recreating any files inside
+# the simulation directory, otherwise stale VHDL .vdb files can be restored
+# against a different package revision.
+catch {close_sim}
+puts "INFO: resetting behavioral simulation products..."
+reset_simulation -mode behavioral sim_1
+
 set proj_dir [get_property DIRECTORY [current_project]]
 set proj_name [current_project]
 set xsim_dir [file normalize "$proj_dir/${proj_name}.sim/sim_1/behav/xsim"]
@@ -196,7 +204,6 @@ if {$testhex_src ne "" && [file exists $testhex_src]} {
     puts "WARNING: testhex_stream not found. Pass -testhex_dir or run bender update."
 }
 
-catch {close_sim}
 puts "INFO: launching behavioral simulation..."
 launch_simulation -simset sim_1 -mode behavioral
 
