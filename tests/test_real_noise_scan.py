@@ -188,6 +188,7 @@ class RealNoiseScanTest(unittest.TestCase):
         out_dir = work_dir / "out"
         captured_args = work_dir / "runner_args.txt"
         fake_runner = work_dir / "fake_runner.py"
+        xsim_log = work_dir / "simulate.log"
         rows = ["x-axis,1", "second,Volt"]
         rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
         input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
@@ -197,7 +198,14 @@ class RealNoiseScanTest(unittest.TestCase):
                     "#!/usr/bin/env python3",
                     "from pathlib import Path",
                     "import sys",
+                    "def arg_value(name):",
+                    "    return sys.argv[sys.argv.index(name) + 1]",
                     f"Path({str(captured_args)!r}).write_text('\\n'.join(sys.argv[1:]) + '\\n')",
+                    "Path(arg_value('--out-csv')).write_text('sample_id,float_out\\n0,-1.000000\\n')",
+                    "Path(arg_value('--event-csv')).write_text('event_chunk_id,event_batch_index\\n')",
+                    f"Path({str(xsim_log)!r}).write_text("
+                    "'Chunk overflows:  0\\nADC input overflows: 0\\n'"
+                    "'Dropped triggers: 0\\nRing misses:      0\\n')",
                     "",
                 ]
             ),
@@ -214,6 +222,8 @@ class RealNoiseScanTest(unittest.TestCase):
                 str(out_dir),
                 "--sim-runner",
                 str(fake_runner),
+                "--xsim-log",
+                str(xsim_log),
             ],
             cwd=ROOT,
             check=True,
@@ -227,6 +237,8 @@ class RealNoiseScanTest(unittest.TestCase):
             str((out_dir / "scope" / "testhex_stream").resolve()),
         )
         self.assertEqual(runner_args[runner_args.index("--mirror-raw-channels") + 1], "0")
+        self.assertTrue((out_dir / "scope" / "simulate.log").exists())
+        self.assertTrue((out_dir / "scan_summary.csv").exists())
 
     def test_vivado_runner_forwards_pacing_to_xsim(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-xsim-"))
@@ -269,6 +281,185 @@ class RealNoiseScanTest(unittest.TestCase):
             "set ::RUN_SIM_PACE_CHUNKS 1",
             captured_tcl.read_text(encoding="utf-8"),
         )
+
+    def test_analyze_cli_joins_window_scores_and_writes_summary(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-analysis-"))
+        input_csv = work_dir / "scope.csv"
+        out_dir = work_dir / "out"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(257))
+        input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--input-csv",
+                str(input_csv),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        case_dir = out_dir / "scope"
+        (case_dir / "scores.csv").write_text(
+            "sample_id,hex_out,float_out,label,prediction,correct,latency_cycles_cnn,latency_us\n"
+            "0,0x003ff800,-1.000000,0,0,1,200,1.000\n"
+            "1,0x00001000,2.000000,0,1,0,205,1.025\n",
+            encoding="utf-8",
+        )
+        (case_dir / "simulate.log").write_text(
+            "Chunk overflows:  0\n"
+            "ADC input overflows: 0\n"
+            "Dropped triggers: 0\n"
+            "Ring misses:      0\n",
+            encoding="utf-8",
+        )
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        with (case_dir / "scores_annotated.csv").open(
+            newline="", encoding="utf-8"
+        ) as csv_file:
+            annotated = list(csv.DictReader(csv_file))
+        with (out_dir / "scan_summary.csv").open(newline="", encoding="utf-8") as csv_file:
+            summary = list(csv.DictReader(csv_file))
+
+        self.assertEqual(
+            [(row["window_start_ns"], row["float_out"]) for row in annotated],
+            [("0.000000", "-1.000000"), ("1.000000", "2.000000")],
+        )
+        self.assertEqual(summary, [
+            {
+                "case_name": "scope",
+                "source_file": "scope.csv",
+                "window_count": "2",
+                "score_min": "-1.000000",
+                "score_max": "2.000000",
+                "score_mean": "0.500000",
+                "score_threshold": "0.000000",
+                "triggered_windows": "1",
+                "trigger_fraction": "0.500000",
+            }
+        ])
+        self.assertTrue((case_dir / "score_vs_window_start.png").exists())
+        self.assertTrue((case_dir / "score_histogram.png").exists())
+        self.assertTrue((out_dir / "score_vs_window_start_overlay.png").exists())
+        self.assertTrue((out_dir / "score_histogram_overlay.png").exists())
+
+    def test_analyze_cli_rejects_nonzero_simulation_health_counter(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-health-"))
+        input_csv = work_dir / "scope.csv"
+        out_dir = work_dir / "out"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
+        input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--input-csv",
+                str(input_csv),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        case_dir = out_dir / "scope"
+        (case_dir / "scores.csv").write_text(
+            "sample_id,float_out\n0,1.000000\n",
+            encoding="utf-8",
+        )
+        (case_dir / "simulate.log").write_text(
+            "Chunk overflows:  0\n"
+            "ADC input overflows: 0\n"
+            "Dropped triggers: 1\n"
+            "Ring misses:      0\n",
+            encoding="utf-8",
+        )
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Dropped triggers=1", result.stderr)
+
+    def test_analyze_cli_rejects_incomplete_scores_and_removes_stale_annotation(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-incomplete-"))
+        input_csv = work_dir / "scope.csv"
+        out_dir = work_dir / "out"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(257))
+        input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--input-csv",
+                str(input_csv),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        case_dir = out_dir / "scope"
+        (case_dir / "scores.csv").write_text(
+            "sample_id,float_out\n0,1.000000\n",
+            encoding="utf-8",
+        )
+        (case_dir / "simulate.log").write_text(
+            "Chunk overflows:  0\n"
+            "ADC input overflows: 0\n"
+            "Dropped triggers: 0\n"
+            "Ring misses:      0\n",
+            encoding="utf-8",
+        )
+        annotated_path = case_dir / "scores_annotated.csv"
+        annotated_path.write_text("stale\n", encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("incomplete score CSV", result.stderr)
+        self.assertFalse(annotated_path.exists())
 
 
 if __name__ == "__main__":
