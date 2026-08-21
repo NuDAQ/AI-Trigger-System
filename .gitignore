@@ -96,6 +96,10 @@ build/vivado_sim/*
 # zero baseline plus all pulse sweeps. Source launchers/tests remain tracked.
 build/bringup_sim/
 
+# Generated 256 ns sliding-window stimuli, XSim results, and plots for the
+# oscilloscope real-noise scans under data/Amp_Scope_Data_2.
+build/real_noise_scan/
+
 # Ignore bender dependency cache (large git objects)
 .bender/
 

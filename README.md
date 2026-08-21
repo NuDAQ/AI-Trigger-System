@@ -694,6 +694,60 @@ build/bringup_sim/score_histogram.png
 build/bringup_sim/bringup_score_summary.csv
 ```
 
+## Real-Noise Sliding-Window Score Scan
+
+`data/Amp_Scope_Data_2` contains four 1 GSa/s oscilloscope CSVs with time in
+seconds and amplitude in volts. Run the complete scan from the repository root
+with:
+
+```bash
+scripts/run_real_noise_scan.sh
+```
+
+The launcher uses XSim through `scripts/run_vivado_sim.py`. If Vivado is not on
+`PATH`, select it explicitly:
+
+```bash
+REAL_NOISE_VIVADO=/path/to/vivado scripts/run_real_noise_scan.sh
+```
+
+Each 1000-sample record is scanned with every complete 256-sample window. The
+window start moves by 1 ns from `-100 ns` through `644 ns`, producing 745 CNN
+inputs per CSV. The measured waveform drives trigger channel 0; channels 1
+through 7 remain at signed code zero. The conversion uses the raw signed 12-bit
+ADC contract and does not subtract a per-window baseline:
+
+```text
+adc_code = round(voltage_V * 4096 / 0.8)
+adc_code = clamp(adc_code, -2048, 2047)
+```
+
+The manifest records the ADC full-scale, code range, and saturation count for
+every window. The testbench runs with `PACE_CHUNKS=1`: after sending one chunk,
+it waits for that chunk's CNN score and, when triggered, the accepted
+`EVENT_LAST` beat before sending another chunk. This deliberately characterizes
+independent windows without creating an artificial back-to-back trigger rate.
+Analysis fails if a score is missing or duplicated, or if chunk overflow, ADC
+input overflow, dropped-trigger, or ring-miss counters are nonzero.
+
+Generate the four stimulus sets without Vivado with:
+
+```bash
+REAL_NOISE_PREPARE_ONLY=1 scripts/run_real_noise_scan.sh
+```
+
+Rebuild annotation, summaries, and plots from existing server outputs with:
+
+```bash
+REAL_NOISE_ANALYZE_ONLY=1 scripts/run_real_noise_scan.sh
+```
+
+The default output root is `build/real_noise_scan`. Override it with
+`REAL_NOISE_OUT_DIR`. Each `signal_*` directory contains `manifest.csv`,
+`testhex_stream/`, `scores.csv`, `events.csv`, `simulate.log`,
+`scores_annotated.csv`, and its score-vs-window-start and histogram PNGs. The
+output root also contains `scan_summary.csv` and cross-file overlay plots.
+
 ## Continuous Validation Plots
 
 Full-dataset score validation plots are generated with PyROOT:

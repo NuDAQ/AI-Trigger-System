@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import os
 import subprocess
 import sys
 import tempfile
@@ -16,6 +17,25 @@ SCRIPT = ROOT / "scripts" / "run_real_noise_scan.py"
 
 
 class RealNoiseScanTest(unittest.TestCase):
+    def test_shell_launcher_prepares_all_default_scope_files(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-launcher-"))
+        env = dict(os.environ)
+        env["PYTHON_BIN"] = sys.executable
+        env["REAL_NOISE_OUT_DIR"] = str(out_dir)
+        env["REAL_NOISE_PREPARE_ONLY"] = "1"
+
+        subprocess.run(
+            [str(ROOT / "scripts" / "run_real_noise_scan.sh")],
+            cwd=ROOT,
+            env=env,
+            check=True,
+        )
+
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            ["signal_10", "signal_2", "signal_3", "signal_4"],
+        )
+
     def test_prepare_cli_slides_complete_windows_and_quantizes_scope_volts(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-"))
         input_csv = work_dir / "scope.csv"
