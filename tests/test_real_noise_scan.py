@@ -353,6 +353,18 @@ class RealNoiseScanTest(unittest.TestCase):
         self.assertLess(wait_for_negedge, deassert_valid)
         self.assertLess(deassert_valid, wait_for_score)
 
+    def test_paced_event_monitor_allows_gaps_only_between_events(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("batch_in_event != 0", testbench)
+        self.assertRegex(
+            testbench,
+            r"pace_chunks\s*==\s*0\s*&&\s*"
+            r"event_chunk_id\s*==\s*previous_event_chunk_id\s*\+\s*16'd1",
+        )
+
     def test_analyze_cli_joins_window_scores_and_writes_summary(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-analysis-"))
         input_csv = work_dir / "scope.csv"

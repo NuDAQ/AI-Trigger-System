@@ -386,7 +386,8 @@ module tb_AI_TRIGGER_TOP;
                 if (event_valid && event_ready) begin
                     if (have_previous_event_beat &&
                         (batch_in_event != 0 ||
-                         event_chunk_id == previous_event_chunk_id + 16'd1) &&
+                         (pace_chunks == 0 &&
+                          event_chunk_id == previous_event_chunk_id + 16'd1)) &&
                         $time - previous_event_time_ns != expected_beat_period_ns) begin
                         $fatal(
                             1,
