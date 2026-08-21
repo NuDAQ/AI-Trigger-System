@@ -1026,6 +1026,1686 @@ Time: 80254 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2
 Note: LANE2 CNN output_valid score_raw=109 started=0
 Time: 80467500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
     77 | 0x0000006d    |      0.053223 |     0 |    1 |      1.010
-Fatal: Event output bubble: previous chunk=76 current chunk=77 batch=0 delta=1312 ns expected=4 ns
-Time: 80774 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/event_monitor_thread  Scope: tb_AI_TRIGGER_TOP.event_monitor_thread  File: /home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv Line: 391
-$finish called at time : 80774 ns
+Note: DIST chunk_start seq=78 lane=3 busy='0'
+Time: 81062 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=0 fifo_full='0'
+Time: 81062 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 81097500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=0 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 81807500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 81818 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-182 started=0
+Time: 82032500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    78 | 0x003fff4a    |     -0.088867 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=79 lane=4 busy='0'
+Time: 82078 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=0 fifo_full='0'
+Time: 82078 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 82112500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=0 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 82822500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 82834 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-217 started=0
+Time: 83047500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    79 | 0x003fff27    |     -0.105957 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=80 lane=0 busy='0'
+Time: 83090 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 83090 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 83127500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 83837500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 83846 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-554 started=1
+Time: 84062500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    80 | 0x003ffdd6    |     -0.270508 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=81 lane=1 busy='0'
+Time: 84106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 84106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 84142500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 84852500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 84862 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-476 started=1
+Time: 85077500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    81 | 0x003ffe24    |     -0.232422 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=82 lane=2 busy='0'
+Time: 85122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=1 fifo_full='0'
+Time: 85122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 85157500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 85867500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 85878 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=7 started=1
+Time: 86092500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    82 | 0x00000007    |      0.003418 |     0 |    1 |      1.015
+Note: DIST chunk_start seq=83 lane=3 busy='0'
+Time: 86686 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=1 fifo_full='0'
+Time: 86686 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 86722500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 87432500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 87442 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-132 started=1
+Time: 87657500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    83 | 0x003fff7c    |     -0.064453 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=84 lane=4 busy='0'
+Time: 87702 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=1 fifo_full='0'
+Time: 87702 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 87737500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 88447500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 88458 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-283 started=1
+Time: 88672500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    84 | 0x003ffee5    |     -0.138184 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=85 lane=0 busy='0'
+Time: 88718 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 88718 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 88752500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 89462500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 89474 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-760 started=2
+Time: 89687500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    85 | 0x003ffd08    |     -0.371094 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=86 lane=1 busy='0'
+Time: 89730 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 89730 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 89767500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 90477500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 90486 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-924 started=2
+Time: 90702500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    86 | 0x003ffc64    |     -0.451172 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=87 lane=2 busy='0'
+Time: 90746 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=2 fifo_full='0'
+Time: 90746 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 90782500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 91492500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 91502 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-1025 started=2
+Time: 91717500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    87 | 0x003ffbff    |     -0.500488 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=88 lane=3 busy='0'
+Time: 91762 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=2 fifo_full='0'
+Time: 91762 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 91797500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 92507500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 92518 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-649 started=2
+Time: 92732500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    88 | 0x003ffd77    |     -0.316895 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=89 lane=4 busy='0'
+Time: 92778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=2 fifo_full='0'
+Time: 92778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 92812500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=2 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 93522500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 93534 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-614 started=2
+Time: 93747500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    89 | 0x003ffd9a    |     -0.299805 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=90 lane=0 busy='0'
+Time: 93790 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=3 fifo_full='0'
+Time: 93790 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 93827500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=3 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 94537500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 94546 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-979 started=3
+Time: 94762500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    90 | 0x003ffc2d    |     -0.478027 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=91 lane=1 busy='0'
+Time: 94806 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=3 fifo_full='0'
+Time: 94806 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 94842500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=3 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 95552500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 95562 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1457 started=3
+Time: 95777500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    91 | 0x003ffa4f    |     -0.711426 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=92 lane=2 busy='0'
+Time: 95822 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=3 fifo_full='0'
+Time: 95822 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 95857500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=3 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 96567500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 96578 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-1318 started=3
+Time: 96792500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    92 | 0x003ffada    |     -0.643555 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=93 lane=3 busy='0'
+Time: 96838 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=3 fifo_full='0'
+Time: 96838 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 96872500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=3 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 97582500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 97594 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-1692 started=3
+Time: 97807500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    93 | 0x003ff964    |     -0.826172 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=94 lane=4 busy='0'
+Time: 97850 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=3 fifo_full='0'
+Time: 97850 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 97887500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=3 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 98597500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 98606 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-1360 started=3
+Time: 98822500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    94 | 0x003ffab0    |     -0.664062 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=95 lane=0 busy='0'
+Time: 98866 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=4 fifo_full='0'
+Time: 98866 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 98902500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=4 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 99612500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 99622 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1307 started=4
+Time: 99837500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    95 | 0x003ffae5    |     -0.638184 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=96 lane=1 busy='0'
+Time: 99882 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=4 fifo_full='0'
+Time: 99882 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 99917500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=4 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 100627500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 100638 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=4
+Time: 100852500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    96 | 0x003ff9c3    |     -0.779785 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=97 lane=2 busy='0'
+Time: 100898 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=4 fifo_full='0'
+Time: 100898 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 100932500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=4 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 101642500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 101654 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-1969 started=4
+Time: 101867500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    97 | 0x003ff84f    |     -0.961426 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=98 lane=3 busy='0'
+Time: 101910 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=4 fifo_full='0'
+Time: 101910 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 101947500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=4 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 102657500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 102666 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-1529 started=4
+Time: 102882500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    98 | 0x003ffa07    |     -0.746582 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=99 lane=4 busy='0'
+Time: 102926 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=4 fifo_full='0'
+Time: 102926 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 102962500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=4 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 103672500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 103682 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-2111 started=4
+Time: 103897500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+    99 | 0x003ff7c1    |     -1.030762 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=100 lane=0 busy='0'
+Time: 103942 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=5 fifo_full='0'
+Time: 103942 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 103977500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=5 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 104687500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 104698 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1723 started=5
+Time: 104912500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   100 | 0x003ff945    |     -0.841309 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=101 lane=1 busy='0'
+Time: 104958 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=5 fifo_full='0'
+Time: 104958 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 104992500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=5 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 105702500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 105714 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1584 started=5
+Time: 105927500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   101 | 0x003ff9d0    |     -0.773438 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=102 lane=2 busy='0'
+Time: 105970 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=5 fifo_full='0'
+Time: 105970 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 106007500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=5 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 106717500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 106726 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-1924 started=5
+Time: 106942500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   102 | 0x003ff87c    |     -0.939453 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=103 lane=3 busy='0'
+Time: 106986 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=5 fifo_full='0'
+Time: 106986 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 107022500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=5 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 107732500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 107742 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-2149 started=5
+Time: 107957500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   103 | 0x003ff79b    |     -1.049316 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=104 lane=4 busy='0'
+Time: 108002 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=5 fifo_full='0'
+Time: 108002 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 108037500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=5 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 108747500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 108758 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-1967 started=5
+Time: 108972500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   104 | 0x003ff851    |     -0.960449 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=105 lane=0 busy='0'
+Time: 109018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=6 fifo_full='0'
+Time: 109018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 109052500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=6 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 109762500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 109774 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2684 started=6
+Time: 109987500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   105 | 0x003ff584    |     -1.310547 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=106 lane=1 busy='0'
+Time: 110030 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=6 fifo_full='0'
+Time: 110030 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 110067500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=6 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 110777500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 110786 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-2371 started=6
+Time: 111002500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   106 | 0x003ff6bd    |     -1.157715 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=107 lane=2 busy='0'
+Time: 111046 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=6 fifo_full='0'
+Time: 111046 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 111082500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=6 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 111792500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 111802 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-2003 started=6
+Time: 112017500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   107 | 0x003ff82d    |     -0.978027 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=108 lane=3 busy='0'
+Time: 112062 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=6 fifo_full='0'
+Time: 112062 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 112097500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=6 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 112807500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 112818 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-1741 started=6
+Time: 113032500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   108 | 0x003ff933    |     -0.850098 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=109 lane=4 busy='0'
+Time: 113078 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=6 fifo_full='0'
+Time: 113078 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 113112500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=6 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 113822500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 113834 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-2061 started=6
+Time: 114047500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   109 | 0x003ff7f3    |     -1.006348 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=110 lane=0 busy='0'
+Time: 114090 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=7 fifo_full='0'
+Time: 114090 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 114127500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=7 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 114837500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 114846 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2056 started=7
+Time: 115062500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   110 | 0x003ff7f8    |     -1.003906 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=111 lane=1 busy='0'
+Time: 115106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=7 fifo_full='0'
+Time: 115106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 115142500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=7 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 115852500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 115862 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-2539 started=7
+Time: 116077500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   111 | 0x003ff615    |     -1.239746 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=112 lane=2 busy='0'
+Time: 116122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=7 fifo_full='0'
+Time: 116122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 116157500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=7 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 116867500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 116878 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-2266 started=7
+Time: 117092500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   112 | 0x003ff726    |     -1.106445 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=113 lane=3 busy='0'
+Time: 117138 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=7 fifo_full='0'
+Time: 117138 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 117172500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=7 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 117882500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 117894 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-2095 started=7
+Time: 118107500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   113 | 0x003ff7d1    |     -1.022949 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=114 lane=4 busy='0'
+Time: 118150 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=7 fifo_full='0'
+Time: 118150 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 118187500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=7 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 118897500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 118906 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-1884 started=7
+Time: 119122500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   114 | 0x003ff8a4    |     -0.919922 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=115 lane=0 busy='0'
+Time: 119166 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=8 fifo_full='0'
+Time: 119166 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 119202500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=8 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 119912500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 119922 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2227 started=8
+Time: 120137500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   115 | 0x003ff74d    |     -1.087402 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=116 lane=1 busy='0'
+Time: 120182 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=8 fifo_full='0'
+Time: 120182 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 120217500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=8 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 120927500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 120938 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-2299 started=8
+Time: 121152500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   116 | 0x003ff705    |     -1.122559 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=117 lane=2 busy='0'
+Time: 121198 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=8 fifo_full='0'
+Time: 121198 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 121232500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=8 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 121942500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 121954 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-2863 started=8
+Time: 122167500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   117 | 0x003ff4d1    |     -1.397949 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=118 lane=3 busy='0'
+Time: 122210 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=8 fifo_full='0'
+Time: 122210 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 122247500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=8 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 122957500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 122966 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-2738 started=8
+Time: 123182500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   118 | 0x003ff54e    |     -1.336914 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=119 lane=4 busy='0'
+Time: 123226 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=8 fifo_full='0'
+Time: 123226 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 123262500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=8 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 123972500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 123982 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-2693 started=8
+Time: 124197500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   119 | 0x003ff57b    |     -1.314941 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=120 lane=0 busy='0'
+Time: 124242 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=9 fifo_full='0'
+Time: 124242 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 124277500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=9 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 124987500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 124998 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2237 started=9
+Time: 125212500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   120 | 0x003ff743    |     -1.092285 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=121 lane=1 busy='0'
+Time: 125258 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=9 fifo_full='0'
+Time: 125258 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 125292500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=9 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 126002500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 126014 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-2533 started=9
+Time: 126227500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   121 | 0x003ff61b    |     -1.236816 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=122 lane=2 busy='0'
+Time: 126270 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=9 fifo_full='0'
+Time: 126270 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 126307500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=9 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 127017500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 127026 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-2424 started=9
+Time: 127242500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   122 | 0x003ff688    |     -1.183594 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=123 lane=3 busy='0'
+Time: 127286 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=9 fifo_full='0'
+Time: 127286 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 127322500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=9 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 128032500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 128042 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-2736 started=9
+Time: 128257500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   123 | 0x003ff550    |     -1.335938 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=124 lane=4 busy='0'
+Time: 128302 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=9 fifo_full='0'
+Time: 128302 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 128337500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=9 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 129047500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 129058 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-2846 started=9
+Time: 129272500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   124 | 0x003ff4e2    |     -1.389648 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=125 lane=0 busy='0'
+Time: 129318 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=10 fifo_full='0'
+Time: 129318 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 129352500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=10 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 130062500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 130074 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2799 started=10
+Time: 130287500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   125 | 0x003ff511    |     -1.366699 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=126 lane=1 busy='0'
+Time: 130330 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=10 fifo_full='0'
+Time: 130330 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 130367500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=10 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 131077500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 131086 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-2323 started=10
+Time: 131302500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   126 | 0x003ff6ed    |     -1.134277 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=127 lane=2 busy='0'
+Time: 131346 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=10 fifo_full='0'
+Time: 131346 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 131382500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=10 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 132092500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 132102 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 CNN output_valid score_raw=-2644 started=10
+Time: 132317500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   127 | 0x003ff5ac    |     -1.291016 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=128 lane=3 busy='0'
+Time: 132362 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=10 fifo_full='0'
+Time: 132362 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 132397500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=10 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 133107500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 133118 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 CNN output_valid score_raw=-2461 started=10
+Time: 133332500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   128 | 0x003ff663    |     -1.201660 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=129 lane=4 busy='0'
+Time: 133378 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=10 fifo_full='0'
+Time: 133378 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 133412500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=10 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 134122500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 134134 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 CNN output_valid score_raw=-2716 started=10
+Time: 134347500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   129 | 0x003ff564    |     -1.326172 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=130 lane=0 busy='0'
+Time: 134390 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=11 fifo_full='0'
+Time: 134390 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 134427500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=11 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 135137500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 135146 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   130 | 0x003ff3e8    |     -1.511719 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=131 lane=1 busy='0'
+Time: 135406 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=11 fifo_full='0'
+Time: 135406 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 135442500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started=11 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 136152500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 136162 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   131 | 0x003ff4f0    |     -1.382812 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=132 lane=2 busy='0'
+Time: 136422 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=11 fifo_full='0'
+Time: 136422 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 136457500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started=11 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 137167500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 137178 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   132 | 0x003ff661    |     -1.202637 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=133 lane=3 busy='0'
+Time: 137438 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=11 fifo_full='0'
+Time: 137438 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 137472500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started=11 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 138182500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 138194 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   133 | 0x003ff582    |     -1.311523 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=134 lane=4 busy='0'
+Time: 138450 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=11 fifo_full='0'
+Time: 138450 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 138487500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started=11 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 139197500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 139206 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   134 | 0x003ff645    |     -1.216309 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=135 lane=0 busy='0'
+Time: 139466 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=12 fifo_full='0'
+Time: 139466 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 140222 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   135 | 0x003ff5ee    |     -1.258789 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=136 lane=1 busy='0'
+Time: 140482 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=12 fifo_full='0'
+Time: 140482 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 141238 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   136 | 0x003ff45b    |     -1.455566 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=137 lane=2 busy='0'
+Time: 141498 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=12 fifo_full='0'
+Time: 141498 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 142254 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   137 | 0x003ff53b    |     -1.346191 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=138 lane=3 busy='0'
+Time: 142510 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=12 fifo_full='0'
+Time: 142510 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 143266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   138 | 0x003ff63f    |     -1.219238 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=139 lane=4 busy='0'
+Time: 143526 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=12 fifo_full='0'
+Time: 143526 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 144282 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   139 | 0x003ff52a    |     -1.354492 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=140 lane=0 busy='0'
+Time: 144542 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=13 fifo_full='0'
+Time: 144542 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 145298 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   140 | 0x003ff591    |     -1.304199 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=141 lane=1 busy='0'
+Time: 145558 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=13 fifo_full='0'
+Time: 145558 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 146314 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   141 | 0x003ff565    |     -1.325684 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=142 lane=2 busy='0'
+Time: 146570 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=13 fifo_full='0'
+Time: 146570 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 147326 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   142 | 0x003ff3f6    |     -1.504883 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=143 lane=3 busy='0'
+Time: 147586 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=13 fifo_full='0'
+Time: 147586 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 148342 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   143 | 0x003ff4a0    |     -1.421875 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=144 lane=4 busy='0'
+Time: 148602 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=13 fifo_full='0'
+Time: 148602 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 149358 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   144 | 0x003ff4e7    |     -1.387207 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=145 lane=0 busy='0'
+Time: 149618 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=14 fifo_full='0'
+Time: 149618 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 150374 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   145 | 0x003ff4dc    |     -1.392578 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=146 lane=1 busy='0'
+Time: 150630 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=14 fifo_full='0'
+Time: 150630 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 151386 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   146 | 0x003ff588    |     -1.308594 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=147 lane=2 busy='0'
+Time: 151646 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=14 fifo_full='0'
+Time: 151646 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 152402 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   147 | 0x003ff53e    |     -1.344727 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=148 lane=3 busy='0'
+Time: 152662 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=14 fifo_full='0'
+Time: 152662 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 153418 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   148 | 0x003ff446    |     -1.465820 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=149 lane=4 busy='0'
+Time: 153678 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=14 fifo_full='0'
+Time: 153678 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 154434 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   149 | 0x003ff54f    |     -1.336426 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=150 lane=0 busy='0'
+Time: 154690 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=15 fifo_full='0'
+Time: 154690 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 155446 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   150 | 0x003ff52f    |     -1.352051 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=151 lane=1 busy='0'
+Time: 155706 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=15 fifo_full='0'
+Time: 155706 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 156462 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   151 | 0x003ff4dd    |     -1.392090 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=152 lane=2 busy='0'
+Time: 156722 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=15 fifo_full='0'
+Time: 156722 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 157478 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   152 | 0x003ff594    |     -1.302734 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=153 lane=3 busy='0'
+Time: 157738 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=15 fifo_full='0'
+Time: 157738 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 158494 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   153 | 0x003ff4e8    |     -1.386719 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=154 lane=4 busy='0'
+Time: 158750 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=15 fifo_full='0'
+Time: 158750 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 159506 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   154 | 0x003ff3d7    |     -1.520020 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=155 lane=0 busy='0'
+Time: 159766 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=0 fifo_full='0'
+Time: 159766 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 160522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   155 | 0x003ff53a    |     -1.346680 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=156 lane=1 busy='0'
+Time: 160782 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=0 fifo_full='0'
+Time: 160782 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 161538 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   156 | 0x003ff4b3    |     -1.412598 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=157 lane=2 busy='0'
+Time: 161798 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=0 fifo_full='0'
+Time: 161798 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 162554 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   157 | 0x003ff4c6    |     -1.403320 |     0 |    0 |      1.010
+Note: DIST chunk_start seq=158 lane=3 busy='0'
+Time: 162810 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=0 fifo_full='0'
+Time: 162810 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 163566 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   158 | 0x003ff46d    |     -1.446777 |     0 |    0 |      1.015
+Note: DIST chunk_start seq=159 lane=4 busy='0'
+Time: 163826 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=0 fifo_full='0'
+Time: 163826 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 164582 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   159 | 0x003ff401    |     -1.499512 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 164842 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 165598 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   160 | 0x003ff450    |     -1.460938 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 165858 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 166614 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   161 | 0x003ff5a4    |     -1.294922 |     0 |    0 |      1.010
+Note: LANE2 ADC chunk_accept count=1 fifo_full='0'
+Time: 166870 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 167626 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   162 | 0x003ff5ad    |     -1.290527 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=1 fifo_full='0'
+Time: 167886 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 168642 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   163 | 0x003ff5d8    |     -1.269531 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=1 fifo_full='0'
+Time: 168902 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 169658 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   164 | 0x003ff575    |     -1.317871 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 169918 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 170674 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   165 | 0x003ff52c    |     -1.353516 |     0 |    0 |      1.010
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 170930 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 171686 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   166 | 0x003ff50c    |     -1.369141 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=2 fifo_full='0'
+Time: 171946 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 172702 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   167 | 0x003ff64a    |     -1.213867 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=2 fifo_full='0'
+Time: 172962 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 173718 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   168 | 0x003ff616    |     -1.239258 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=2 fifo_full='0'
+Time: 173978 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 174734 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   169 | 0x003ff62d    |     -1.228027 |     0 |    0 |      1.010
+Note: LANE0 ADC chunk_accept count=3 fifo_full='0'
+Time: 174990 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 175746 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   170 | 0x003ff501    |     -1.374512 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=3 fifo_full='0'
+Time: 176006 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 176762 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   171 | 0x003ff53f    |     -1.344238 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=3 fifo_full='0'
+Time: 177022 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 177778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   172 | 0x003ff5a1    |     -1.296387 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=3 fifo_full='0'
+Time: 178038 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 178794 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   173 | 0x003ff6f4    |     -1.130859 |     0 |    0 |      1.010
+Note: LANE4 ADC chunk_accept count=3 fifo_full='0'
+Time: 179050 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 179806 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   174 | 0x003ff788    |     -1.058594 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=4 fifo_full='0'
+Time: 180066 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 180822 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   175 | 0x003ff7fb    |     -1.002441 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=4 fifo_full='0'
+Time: 181082 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 181838 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   176 | 0x003ff60b    |     -1.244629 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=4 fifo_full='0'
+Time: 182098 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 182854 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   177 | 0x003ff683    |     -1.186035 |     0 |    0 |      1.010
+Note: LANE3 ADC chunk_accept count=4 fifo_full='0'
+Time: 183110 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 183866 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   178 | 0x003ff72d    |     -1.103027 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=4 fifo_full='0'
+Time: 184126 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 184882 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   179 | 0x003ff7c6    |     -1.028320 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=5 fifo_full='0'
+Time: 185142 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 185898 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   180 | 0x003ff82e    |     -0.977539 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=5 fifo_full='0'
+Time: 186158 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 186914 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   181 | 0x003ff832    |     -0.975586 |     0 |    0 |      1.010
+Note: LANE2 ADC chunk_accept count=5 fifo_full='0'
+Time: 187170 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 187926 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   182 | 0x003ff645    |     -1.216309 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=5 fifo_full='0'
+Time: 188186 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 188942 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   183 | 0x003ff723    |     -1.107910 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=5 fifo_full='0'
+Time: 189202 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 189958 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   184 | 0x003ff723    |     -1.107910 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=6 fifo_full='0'
+Time: 190218 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 190974 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   185 | 0x003ff785    |     -1.060059 |     0 |    0 |      1.010
+Note: LANE1 ADC chunk_accept count=6 fifo_full='0'
+Time: 191230 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 191986 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   186 | 0x003ff792    |     -1.053711 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=6 fifo_full='0'
+Time: 192246 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 193002 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   187 | 0x003ff7a2    |     -1.045898 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=6 fifo_full='0'
+Time: 193262 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 194018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   188 | 0x003ff67b    |     -1.189941 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=6 fifo_full='0'
+Time: 194278 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 195034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   189 | 0x003ff733    |     -1.100098 |     0 |    0 |      1.010
+Note: LANE0 ADC chunk_accept count=7 fifo_full='0'
+Time: 195290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 196046 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   190 | 0x003ff6ce    |     -1.149414 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=7 fifo_full='0'
+Time: 196306 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 197062 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   191 | 0x003ff6ea    |     -1.135742 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=7 fifo_full='0'
+Time: 197322 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 198078 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   192 | 0x003ff740    |     -1.093750 |     0 |    0 |      1.015
+Note: LANE3 ADC chunk_accept count=7 fifo_full='0'
+Time: 198338 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 199094 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   193 | 0x003ff698    |     -1.175781 |     0 |    0 |      1.010
+Note: LANE4 ADC chunk_accept count=7 fifo_full='0'
+Time: 199350 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 200106 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   194 | 0x003ff617    |     -1.238770 |     0 |    0 |      1.015
+Note: LANE0 ADC chunk_accept count=8 fifo_full='0'
+Time: 200366 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 201122 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   195 | 0x003ff5c3    |     -1.279785 |     0 |    0 |      1.015
+Note: LANE1 ADC chunk_accept count=8 fifo_full='0'
+Time: 201382 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 202138 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   196 | 0x003ff62f    |     -1.227051 |     0 |    0 |      1.015
+Note: LANE2 ADC chunk_accept count=8 fifo_full='0'
+Time: 202398 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 203154 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   197 | 0x003ff624    |     -1.232422 |     0 |    0 |      1.010
+Note: LANE3 ADC chunk_accept count=8 fifo_full='0'
+Time: 203410 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 204166 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   198 | 0x003ff53a    |     -1.346680 |     0 |    0 |      1.015
+Note: LANE4 ADC chunk_accept count=8 fifo_full='0'
+Time: 204426 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 205182 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+   199 | 0x003ff573    |     -1.318848 |     0 |    0 |      1.015
+   200 | 0x003ff654    |     -1.208984 |     0 |    0 |      1.015
+   201 | 0x003ff526    |     -1.356445 |     0 |    0 |      1.010
+   202 | 0x003ff56c    |     -1.322266 |     0 |    0 |      1.015
+   203 | 0x003ff5a8    |     -1.292969 |     0 |    0 |      1.015
+   204 | 0x003ff4ff    |     -1.375488 |     0 |    0 |      1.015
+   205 | 0x003ff4c8    |     -1.402344 |     0 |    0 |      1.010
+   206 | 0x003ff5a4    |     -1.294922 |     0 |    0 |      1.015
+   207 | 0x003ff457    |     -1.457520 |     0 |    0 |      1.015
+   208 | 0x003ff547    |     -1.340332 |     0 |    0 |      1.015
+   209 | 0x003ff549    |     -1.339355 |     0 |    0 |      1.010
+   210 | 0x003ff431    |     -1.476074 |     0 |    0 |      1.015
+   211 | 0x003ff515    |     -1.364746 |     0 |    0 |      1.015
+   212 | 0x003ff4f4    |     -1.380859 |     0 |    0 |      1.015
+   213 | 0x003ff436    |     -1.473633 |     0 |    0 |      1.010
+   214 | 0x003ff583    |     -1.311035 |     0 |    0 |      1.015
+   215 | 0x003ff5a2    |     -1.295898 |     0 |    0 |      1.015
+   216 | 0x003ff54d    |     -1.337402 |     0 |    0 |      1.015
+   217 | 0x003ff63f    |     -1.219238 |     0 |    0 |      1.010
+   218 | 0x003ff632    |     -1.225586 |     0 |    0 |      1.015
+   219 | 0x003ff5c5    |     -1.278809 |     0 |    0 |      1.015
+   220 | 0x003ff5b0    |     -1.289062 |     0 |    0 |      1.015
+   221 | 0x003ff62c    |     -1.228516 |     0 |    0 |      1.010
+   222 | 0x003ff64a    |     -1.213867 |     0 |    0 |      1.015
+   223 | 0x003ff6fb    |     -1.127441 |     0 |    0 |      1.015
+   224 | 0x003ff59b    |     -1.299316 |     0 |    0 |      1.015
+   225 | 0x003ff583    |     -1.311035 |     0 |    0 |      1.010
+   226 | 0x003ff4ed    |     -1.384277 |     0 |    0 |      1.015
+   227 | 0x003ff5b7    |     -1.285645 |     0 |    0 |      1.015
+   228 | 0x003ff5fc    |     -1.251953 |     0 |    0 |      1.015
+   229 | 0x003ff752    |     -1.084961 |     0 |    0 |      1.010
+   230 | 0x003ff620    |     -1.234375 |     0 |    0 |      1.015
+   231 | 0x003ff5fb    |     -1.252441 |     0 |    0 |      1.015
+   232 | 0x003ff51f    |     -1.359863 |     0 |    0 |      1.015
+   233 | 0x003ff5bd    |     -1.282715 |     0 |    0 |      1.010
+   234 | 0x003ff668    |     -1.199219 |     0 |    0 |      1.015
+   235 | 0x003ff7da    |     -1.018555 |     0 |    0 |      1.015
+   236 | 0x003ff616    |     -1.239258 |     0 |    0 |      1.015
+   237 | 0x003ff5c7    |     -1.277832 |     0 |    0 |      1.010
+   238 | 0x003ff4cf    |     -1.398926 |     0 |    0 |      1.015
+   239 | 0x003ff4e5    |     -1.388184 |     0 |    0 |      1.015
+   240 | 0x003ff591    |     -1.304199 |     0 |    0 |      1.015
+   241 | 0x003ff733    |     -1.100098 |     0 |    0 |      1.010
+   242 | 0x003ff56b    |     -1.322754 |     0 |    0 |      1.015
+   243 | 0x003ff60c    |     -1.244141 |     0 |    0 |      1.015
+   244 | 0x003ff4e2    |     -1.389648 |     0 |    0 |      1.015
+   245 | 0x003ff490    |     -1.429688 |     0 |    0 |      1.010
+   246 | 0x003ff5e7    |     -1.262207 |     0 |    0 |      1.015
+   247 | 0x003ff6fb    |     -1.127441 |     0 |    0 |      1.015
+   248 | 0x003ff4d8    |     -1.394531 |     0 |    0 |      1.015
+   249 | 0x003ff5b1    |     -1.288574 |     0 |    0 |      1.010
+   250 | 0x003ff52e    |     -1.352539 |     0 |    0 |      1.015
+   251 | 0x003ff3f4    |     -1.505859 |     0 |    0 |      1.015
+   252 | 0x003ff561    |     -1.327637 |     0 |    0 |      1.015
+   253 | 0x003ff66c    |     -1.197266 |     0 |    0 |      1.010
+   254 | 0x003ff4a1    |     -1.421387 |     0 |    0 |      1.015
+   255 | 0x003ff62f    |     -1.227051 |     0 |    0 |      1.015
+   256 | 0x003ff5e8    |     -1.261719 |     0 |    0 |      1.015
+   257 | 0x003ff495    |     -1.427246 |     0 |    0 |      1.010
+   258 | 0x003ff5ef    |     -1.258301 |     0 |    0 |      1.015
+   259 | 0x003ff5fe    |     -1.250977 |     0 |    0 |      1.015
+   260 | 0x003ff511    |     -1.366699 |     0 |    0 |      1.015
+   261 | 0x003ff691    |     -1.179199 |     0 |    0 |      1.010
+   262 | 0x003ff61d    |     -1.235840 |     0 |    0 |      1.015
+   263 | 0x003ff457    |     -1.457520 |     0 |    0 |      1.015
+   264 | 0x003ff52f    |     -1.352051 |     0 |    0 |      1.015
+   265 | 0x003ff524    |     -1.357422 |     0 |    0 |      1.010
+   266 | 0x003ff454    |     -1.458984 |     0 |    0 |      1.015
+   267 | 0x003ff5e3    |     -1.264160 |     0 |    0 |      1.015
+   268 | 0x003ff5a9    |     -1.292480 |     0 |    0 |      1.015
+   269 | 0x003ff472    |     -1.444336 |     0 |    0 |      1.010
+   270 | 0x003ff50e    |     -1.368164 |     0 |    0 |      1.015
+   271 | 0x003ff494    |     -1.427734 |     0 |    0 |      1.015
+   272 | 0x003ff438    |     -1.472656 |     0 |    0 |      1.015
+   273 | 0x003ff539    |     -1.347168 |     0 |    0 |      1.010
+   274 | 0x003ff517    |     -1.363770 |     0 |    0 |      1.015
+   275 | 0x003ff41b    |     -1.486816 |     0 |    0 |      1.015
+   276 | 0x003ff3c7    |     -1.527832 |     0 |    0 |      1.015
+   277 | 0x003ff410    |     -1.492188 |     0 |    0 |      1.010
+   278 | 0x003ff41c    |     -1.486328 |     0 |    0 |      1.015
+   279 | 0x003ff494    |     -1.427734 |     0 |    0 |      1.015
+   280 | 0x003ff43e    |     -1.469727 |     0 |    0 |      1.015
+   281 | 0x003ff469    |     -1.448730 |     0 |    0 |      1.010
+   282 | 0x003ff3cd    |     -1.524902 |     0 |    0 |      1.015
+   283 | 0x003ff405    |     -1.497559 |     0 |    0 |      1.015
+   284 | 0x003ff41a    |     -1.487305 |     0 |    0 |      1.015
+   285 | 0x003ff46b    |     -1.447754 |     0 |    0 |      1.010
+   286 | 0x003ff46e    |     -1.446289 |     0 |    0 |      1.015
+   287 | 0x003ff4e8    |     -1.386719 |     0 |    0 |      1.015
+   288 | 0x003ff457    |     -1.457520 |     0 |    0 |      1.015
+   289 | 0x003ff469    |     -1.448730 |     0 |    0 |      1.010
+   290 | 0x003ff522    |     -1.358398 |     0 |    0 |      1.015
+   291 | 0x003ff50b    |     -1.369629 |     0 |    0 |      1.015
+   292 | 0x003ff4e9    |     -1.386230 |     0 |    0 |      1.015
+   293 | 0x003ff55f    |     -1.328613 |     0 |    0 |      1.010
+   294 | 0x003ff47c    |     -1.439453 |     0 |    0 |      1.015
+   295 | 0x003ff48f    |     -1.430176 |     0 |    0 |      1.015
+   296 | 0x003ff59a    |     -1.299805 |     0 |    0 |      1.015
+   297 | 0x003ff559    |     -1.331543 |     0 |    0 |      1.010
+   298 | 0x003ff554    |     -1.333984 |     0 |    0 |      1.015
+   299 | 0x003ff610    |     -1.242188 |     0 |    0 |      1.015
+   300 | 0x003ff59a    |     -1.299805 |     0 |    0 |      1.015
+   301 | 0x003ff526    |     -1.356445 |     0 |    0 |      1.010
+   302 | 0x003ff6bf    |     -1.156738 |     0 |    0 |      1.015
+   303 | 0x003ff629    |     -1.229980 |     0 |    0 |      1.015
+   304 | 0x003ff5b8    |     -1.285156 |     0 |    0 |      1.015
+   305 | 0x003ff646    |     -1.215820 |     0 |    0 |      1.010
+   306 | 0x003ff545    |     -1.341309 |     0 |    0 |      1.015
+   307 | 0x003ff4eb    |     -1.385254 |     0 |    0 |      1.015
+   308 | 0x003ff688    |     -1.183594 |     0 |    0 |      1.015
+   309 | 0x003ff652    |     -1.209961 |     0 |    0 |      1.010
+   310 | 0x003ff52f    |     -1.352051 |     0 |    0 |      1.015
+   311 | 0x003ff59d    |     -1.298340 |     0 |    0 |      1.015
+   312 | 0x003ff4d3    |     -1.396973 |     0 |    0 |      1.015
+   313 | 0x003ff4ca    |     -1.401367 |     0 |    0 |      1.010
+   314 | 0x003ff5a4    |     -1.294922 |     0 |    0 |      1.015
+   315 | 0x003ff55c    |     -1.330078 |     0 |    0 |      1.015
+   316 | 0x003ff432    |     -1.475586 |     0 |    0 |      1.015
+   317 | 0x003ff491    |     -1.429199 |     0 |    0 |      1.010
+   318 | 0x003ff44c    |     -1.462891 |     0 |    0 |      1.015
+   319 | 0x003ff42b    |     -1.479004 |     0 |    0 |      1.015
+   320 | 0x003ff49d    |     -1.423340 |     0 |    0 |      1.015
+   321 | 0x003ff508    |     -1.371094 |     0 |    0 |      1.010
+   322 | 0x003ff3e6    |     -1.512695 |     0 |    0 |      1.015
+   323 | 0x003ff434    |     -1.474609 |     0 |    0 |      1.015
+   324 | 0x003ff490    |     -1.429688 |     0 |    0 |      1.015
+   325 | 0x003ff420    |     -1.484375 |     0 |    0 |      1.010
+   326 | 0x003ff408    |     -1.496094 |     0 |    0 |      1.015
+   327 | 0x003ff56a    |     -1.323242 |     0 |    0 |      1.015
+   328 | 0x003ff46e    |     -1.446289 |     0 |    0 |      1.015
+   329 | 0x003ff40e    |     -1.493164 |     0 |    0 |      1.010
+   330 | 0x003ff4b0    |     -1.414062 |     0 |    0 |      1.015
+   331 | 0x003ff4b7    |     -1.410645 |     0 |    0 |      1.015
+   332 | 0x003ff454    |     -1.458984 |     0 |    0 |      1.015
+   333 | 0x003ff60a    |     -1.245117 |     0 |    0 |      1.010
+   334 | 0x003ff4d5    |     -1.395996 |     0 |    0 |      1.015
+   335 | 0x003ff4c1    |     -1.405762 |     0 |    0 |      1.015
+   336 | 0x003ff56b    |     -1.322754 |     0 |    0 |      1.015
+   337 | 0x003ff58f    |     -1.305176 |     0 |    0 |      1.010
+   338 | 0x003ff559    |     -1.331543 |     0 |    0 |      1.015
+   339 | 0x003ff76c    |     -1.072266 |     0 |    0 |      1.015
+   340 | 0x003ff668    |     -1.199219 |     0 |    0 |      1.015
+   341 | 0x003ff612    |     -1.241211 |     0 |    0 |      1.010
+   342 | 0x003ff5ad    |     -1.290527 |     0 |    0 |      1.015
+   343 | 0x003ff65e    |     -1.204102 |     0 |    0 |      1.015
+   344 | 0x003ff6a5    |     -1.169434 |     0 |    0 |      1.015
+   345 | 0x003ff7fd    |     -1.001465 |     0 |    0 |      1.010
+   346 | 0x003ff655    |     -1.208496 |     0 |    0 |      1.015
+   347 | 0x003ff615    |     -1.239746 |     0 |    0 |      1.015
+   348 | 0x003ff5a4    |     -1.294922 |     0 |    0 |      1.015
+   349 | 0x003ff64a    |     -1.213867 |     0 |    0 |      1.010
+   350 | 0x003ff771    |     -1.069824 |     0 |    0 |      1.015
+   351 | 0x003ff83c    |     -0.970703 |     0 |    0 |      1.015
+   352 | 0x003ff724    |     -1.107422 |     0 |    0 |      1.015
+   353 | 0x003ff72f    |     -1.102051 |     0 |    0 |      1.010
+   354 | 0x003ff63f    |     -1.219238 |     0 |    0 |      1.015
+   355 | 0x003ff685    |     -1.185059 |     0 |    0 |      1.015
+   356 | 0x003ff807    |     -0.996582 |     0 |    0 |      1.015
+   357 | 0x003ff83a    |     -0.971680 |     0 |    0 |      1.010
+   358 | 0x003ff72b    |     -1.104004 |     0 |    0 |      1.015
+   359 | 0x003ff67a    |     -1.190430 |     0 |    0 |      1.015
+   360 | 0x003ff624    |     -1.232422 |     0 |    0 |      1.015
+   361 | 0x003ff67c    |     -1.189453 |     0 |    0 |      1.010
+   362 | 0x003ff79f    |     -1.047363 |     0 |    0 |      1.015
+   363 | 0x003ff73c    |     -1.095703 |     0 |    0 |      1.015
+   364 | 0x003ff6c7    |     -1.152832 |     0 |    0 |      1.015
+   365 | 0x003ff62f    |     -1.227051 |     0 |    0 |      1.010
+   366 | 0x003ff63a    |     -1.221680 |     0 |    0 |      1.015
+   367 | 0x003ff555    |     -1.333496 |     0 |    0 |      1.015
+   368 | 0x003ff621    |     -1.233887 |     0 |    0 |      1.015
+   369 | 0x003ff654    |     -1.208984 |     0 |    0 |      1.010
+   370 | 0x003ff639    |     -1.222168 |     0 |    0 |      1.015
+   371 | 0x003ff514    |     -1.365234 |     0 |    0 |      1.015
+   372 | 0x003ff66d    |     -1.196777 |     0 |    0 |      1.015
+   373 | 0x003ff580    |     -1.312500 |     0 |    0 |      1.010
+   374 | 0x003ff563    |     -1.326660 |     0 |    0 |      1.015
+   375 | 0x003ff623    |     -1.232910 |     0 |    0 |      1.015
+   376 | 0x003ff623    |     -1.232910 |     0 |    0 |      1.015
+   377 | 0x003ff4f7    |     -1.379395 |     0 |    0 |      1.010
+   378 | 0x003ff5ff    |     -1.250488 |     0 |    0 |      1.015
+   379 | 0x003ff515    |     -1.364746 |     0 |    0 |      1.015
+   380 | 0x003ff495    |     -1.427246 |     0 |    0 |      1.015
+   381 | 0x003ff5ee    |     -1.258789 |     0 |    0 |      1.010
+   382 | 0x003ff602    |     -1.249023 |     0 |    0 |      1.015
+   383 | 0x003ff45f    |     -1.453613 |     0 |    0 |      1.015
+   384 | 0x003ff5d6    |     -1.270508 |     0 |    0 |      1.015
+   385 | 0x003ff4cb    |     -1.400879 |     0 |    0 |      1.010
+   386 | 0x003ff4eb    |     -1.385254 |     0 |    0 |      1.015
+   387 | 0x003ff5fa    |     -1.252930 |     0 |    0 |      1.015
+   388 | 0x003ff5d0    |     -1.273438 |     0 |    0 |      1.015
+   389 | 0x003ff444    |     -1.466797 |     0 |    0 |      1.010
+   390 | 0x003ff5b0    |     -1.289062 |     0 |    0 |      1.015
+   391 | 0x003ff598    |     -1.300781 |     0 |    0 |      1.015
+   392 | 0x003ff565    |     -1.325684 |     0 |    0 |      1.015
+   393 | 0x003ff626    |     -1.231445 |     0 |    0 |      1.010
+   394 | 0x003ff619    |     -1.237793 |     0 |    0 |      1.015
+   395 | 0x003ff4c2    |     -1.405273 |     0 |    0 |      1.015
+   396 | 0x003ff5bd    |     -1.282715 |     0 |    0 |      1.015
+   397 | 0x003ff574    |     -1.318359 |     0 |    0 |      1.010
+   398 | 0x003ff61f    |     -1.234863 |     0 |    0 |      1.015
+   399 | 0x003ff6a5    |     -1.169434 |     0 |    0 |      1.015
+   400 | 0x003ff68b    |     -1.182129 |     0 |    0 |      1.015
+   401 | 0x003ff50a    |     -1.370117 |     0 |    0 |      1.010
+   402 | 0x003ff5b7    |     -1.285645 |     0 |    0 |      1.015
+   403 | 0x003ff60e    |     -1.243164 |     0 |    0 |      1.015
+   404 | 0x003ff628    |     -1.230469 |     0 |    0 |      1.015
+   405 | 0x003ff6be    |     -1.157227 |     0 |    0 |      1.010
+   406 | 0x003ff689    |     -1.183105 |     0 |    0 |      1.015
+   407 | 0x003ff4f3    |     -1.381348 |     0 |    0 |      1.015
+   408 | 0x003ff56d    |     -1.321777 |     0 |    0 |      1.015
+   409 | 0x003ff613    |     -1.240723 |     0 |    0 |      1.010
+   410 | 0x003ff623    |     -1.232910 |     0 |    0 |      1.015
+   411 | 0x003ff6fb    |     -1.127441 |     0 |    0 |      1.015
+   412 | 0x003ff644    |     -1.216797 |     0 |    0 |      1.015
+   413 | 0x003ff53d    |     -1.345215 |     0 |    0 |      1.010
+   414 | 0x003ff603    |     -1.248535 |     0 |    0 |      1.015
+   415 | 0x003ff64a    |     -1.213867 |     0 |    0 |      1.015
+   416 | 0x003ff60e    |     -1.243164 |     0 |    0 |      1.015
+   417 | 0x003ff6e7    |     -1.137207 |     0 |    0 |      1.010
+   418 | 0x003ff62d    |     -1.228027 |     0 |    0 |      1.015
+   419 | 0x003ff572    |     -1.319336 |     0 |    0 |      1.015
+   420 | 0x003ff56f    |     -1.320801 |     0 |    0 |      1.015
+   421 | 0x003ff5db    |     -1.268066 |     0 |    0 |      1.010
+   422 | 0x003ff60a    |     -1.245117 |     0 |    0 |      1.015
+   423 | 0x003ff657    |     -1.207520 |     0 |    0 |      1.015
+   424 | 0x003ff5ba    |     -1.284180 |     0 |    0 |      1.015
+   425 | 0x003ff5e0    |     -1.265625 |     0 |    0 |      1.010
+   426 | 0x003ff54f    |     -1.336426 |     0 |    0 |      1.015
+   427 | 0x003ff5a3    |     -1.295410 |     0 |    0 |      1.015
+   428 | 0x003ff661    |     -1.202637 |     0 |    0 |      1.015
+   429 | 0x003ff60d    |     -1.243652 |     0 |    0 |      1.010
+   430 | 0x003ff5a9    |     -1.292480 |     0 |    0 |      1.015
+   431 | 0x003ff5d9    |     -1.269043 |     0 |    0 |      1.015
+   432 | 0x003ff5ad    |     -1.290527 |     0 |    0 |      1.015
+   433 | 0x003ff60b    |     -1.244629 |     0 |    0 |      1.010
+   434 | 0x003ff668    |     -1.199219 |     0 |    0 |      1.015
+   435 | 0x003ff553    |     -1.334473 |     0 |    0 |      1.015
+   436 | 0x003ff58c    |     -1.306641 |     0 |    0 |      1.015
+   437 | 0x003ff63e    |     -1.219727 |     0 |    0 |      1.010
+   438 | 0x003ff5db    |     -1.268066 |     0 |    0 |      1.015
+   439 | 0x003ff5fa    |     -1.252930 |     0 |    0 |      1.015
+   440 | 0x003ff5c0    |     -1.281250 |     0 |    0 |      1.015
+   441 | 0x003ff4e2    |     -1.389648 |     0 |    0 |      1.010
+   442 | 0x003ff5d4    |     -1.271484 |     0 |    0 |      1.015
+   443 | 0x003ff61d    |     -1.235840 |     0 |    0 |      1.015
+   444 | 0x003ff69f    |     -1.172363 |     0 |    0 |      1.015
+   445 | 0x003ff6d1    |     -1.147949 |     0 |    0 |      1.010
+   446 | 0x003ff5ed    |     -1.259277 |     0 |    0 |      1.015
+   447 | 0x003ff501    |     -1.374512 |     0 |    0 |      1.015
+   448 | 0x003ff681    |     -1.187012 |     0 |    0 |      1.015
+   449 | 0x003ff677    |     -1.191895 |     0 |    0 |      1.010
+   450 | 0x003ff66c    |     -1.197266 |     0 |    0 |      1.015
+   451 | 0x003ff663    |     -1.201660 |     0 |    0 |      1.015
+   452 | 0x003ff585    |     -1.310059 |     0 |    0 |      1.015
+   453 | 0x003ff4af    |     -1.414551 |     0 |    0 |      1.010
+   454 | 0x003ff5b0    |     -1.289062 |     0 |    0 |      1.015
+   455 | 0x003ff5a4    |     -1.294922 |     0 |    0 |      1.015
+   456 | 0x003ff6c0    |     -1.156250 |     0 |    0 |      1.015
+   457 | 0x003ff6c4    |     -1.154297 |     0 |    0 |      1.010
+   458 | 0x003ff5cb    |     -1.275879 |     0 |    0 |      1.015
+   459 | 0x003ff4f8    |     -1.378906 |     0 |    0 |      1.015
+   460 | 0x003ff580    |     -1.312500 |     0 |    0 |      1.015
+   461 | 0x003ff626    |     -1.231445 |     0 |    0 |      1.010
+   462 | 0x003ff6f3    |     -1.131348 |     0 |    0 |      1.015
+   463 | 0x003ff6b4    |     -1.162109 |     0 |    0 |      1.015
+   464 | 0x003ff517    |     -1.363770 |     0 |    0 |      1.015
+   465 | 0x003ff585    |     -1.310059 |     0 |    0 |      1.010
+   466 | 0x003ff566    |     -1.325195 |     0 |    0 |      1.015
+   467 | 0x003ff58a    |     -1.307617 |     0 |    0 |      1.015
+   468 | 0x003ff6f8    |     -1.128906 |     0 |    0 |      1.015
+   469 | 0x003ff6d7    |     -1.145020 |     0 |    0 |      1.010
+   470 | 0x003ff544    |     -1.341797 |     0 |    0 |      1.015
+   471 | 0x003ff587    |     -1.309082 |     0 |    0 |      1.015
+   472 | 0x003ff4fc    |     -1.376953 |     0 |    0 |      1.015
+   473 | 0x003ff530    |     -1.351562 |     0 |    0 |      1.010
+   474 | 0x003ff6b4    |     -1.162109 |     0 |    0 |      1.015
+   475 | 0x003ff642    |     -1.217773 |     0 |    0 |      1.015
+   476 | 0x003ff485    |     -1.435059 |     0 |    0 |      1.015
+   477 | 0x003ff506    |     -1.372070 |     0 |    0 |      1.010
+   478 | 0x003ff49c    |     -1.423828 |     0 |    0 |      1.015
+   479 | 0x003ff597    |     -1.301270 |     0 |    0 |      1.015
+   480 | 0x003ff696    |     -1.176758 |     0 |    0 |      1.015
+   481 | 0x003ff603    |     -1.248535 |     0 |    0 |      1.010
+   482 | 0x003ff520    |     -1.359375 |     0 |    0 |      1.015
+   483 | 0x003ff5e6    |     -1.262695 |     0 |    0 |      1.015
+   484 | 0x003ff543    |     -1.342285 |     0 |    0 |      1.015
+   485 | 0x003ff5ee    |     -1.258789 |     0 |    0 |      1.010
+   486 | 0x003ff66e    |     -1.196289 |     0 |    0 |      1.015
+   487 | 0x003ff5f5    |     -1.255371 |     0 |    0 |      1.015
+   488 | 0x003ff4f7    |     -1.379395 |     0 |    0 |      1.015
+   489 | 0x003ff594    |     -1.302734 |     0 |    0 |      1.010
+   490 | 0x003ff523    |     -1.357910 |     0 |    0 |      1.015
+   491 | 0x003ff64a    |     -1.213867 |     0 |    0 |      1.015
+   492 | 0x003ff57d    |     -1.313965 |     0 |    0 |      1.015
+   493 | 0x003ff546    |     -1.340820 |     0 |    0 |      1.010
+   494 | 0x003ff571    |     -1.319824 |     0 |    0 |      1.015
+   495 | 0x003ff657    |     -1.207520 |     0 |    0 |      1.015
+   496 | 0x003ff571    |     -1.319824 |     0 |    0 |      1.015
+   497 | 0x003ff72d    |     -1.103027 |     0 |    0 |      1.010
+   498 | 0x003ff5f1    |     -1.257324 |     0 |    0 |      1.015
+   499 | 0x003ff586    |     -1.309570 |     0 |    0 |      1.015
+   500 | 0x003ff618    |     -1.238281 |     0 |    0 |      1.015
+   501 | 0x003ff6ef    |     -1.133301 |     0 |    0 |      1.010
+   502 | 0x003ff51f    |     -1.359863 |     0 |    0 |      1.015
+   503 | 0x003ff5f9    |     -1.253418 |     0 |    0 |      1.015
+   504 | 0x003ff511    |     -1.366699 |     0 |    0 |      1.015
+   505 | 0x003ff4be    |     -1.407227 |     0 |    0 |      1.010
+   506 | 0x003ff553    |     -1.334473 |     0 |    0 |      1.015
+   507 | 0x003ff6cd    |     -1.149902 |     0 |    0 |      1.015
+   508 | 0x003ff522    |     -1.358398 |     0 |    0 |      1.015
+   509 | 0x003ff5d3    |     -1.271973 |     0 |    0 |      1.010
+   510 | 0x003ff505    |     -1.372559 |     0 |    0 |      1.015
+   511 | 0x003ff44f    |     -1.461426 |     0 |    0 |      1.015
+   512 | 0x003ff558    |     -1.332031 |     0 |    0 |      1.015
+   513 | 0x003ff6ad    |     -1.165527 |     0 |    0 |      1.010
+   514 | 0x003ff4d5    |     -1.395996 |     0 |    0 |      1.015
+   515 | 0x003ff4b1    |     -1.413574 |     0 |    0 |      1.015
+   516 | 0x003ff543    |     -1.342285 |     0 |    0 |      1.015
+   517 | 0x003ff431    |     -1.476074 |     0 |    0 |      1.010
+   518 | 0x003ff53a    |     -1.346680 |     0 |    0 |      1.015
+   519 | 0x003ff68f    |     -1.180176 |     0 |    0 |      1.015
+   520 | 0x003ff5bf    |     -1.281738 |     0 |    0 |      1.015
+   521 | 0x003ff51b    |     -1.361816 |     0 |    0 |      1.010
+   522 | 0x003ff57f    |     -1.312988 |     0 |    0 |      1.015
+   523 | 0x003ff399    |     -1.550293 |     0 |    0 |      1.015
+   524 | 0x003ff497    |     -1.426270 |     0 |    0 |      1.015
+   525 | 0x003ff59b    |     -1.299316 |     0 |    0 |      1.010
+   526 | 0x003ff474    |     -1.443359 |     0 |    0 |      1.015
+   527 | 0x003ff3bd    |     -1.532715 |     0 |    0 |      1.015
+   528 | 0x003ff4c7    |     -1.402832 |     0 |    0 |      1.015
+   529 | 0x003ff394    |     -1.552734 |     0 |    0 |      1.010
+   530 | 0x003ff415    |     -1.489746 |     0 |    0 |      1.015
+   531 | 0x003ff4e1    |     -1.390137 |     0 |    0 |      1.015
+   532 | 0x003ff515    |     -1.364746 |     0 |    0 |      1.015
+   533 | 0x003ff3ce    |     -1.524414 |     0 |    0 |      1.010
+   534 | 0x003ff4f6    |     -1.379883 |     0 |    0 |      1.015
+   535 | 0x003ff488    |     -1.433594 |     0 |    0 |      1.015
+   536 | 0x003ff41c    |     -1.486328 |     0 |    0 |      1.015
+   537 | 0x003ff53f    |     -1.344238 |     0 |    0 |      1.010
+   538 | 0x003ff501    |     -1.374512 |     0 |    0 |      1.015
+   539 | 0x003ff3de    |     -1.516602 |     0 |    0 |      1.015
+   540 | 0x003ff52a    |     -1.354492 |     0 |    0 |      1.015
+   541 | 0x003ff500    |     -1.375000 |     0 |    0 |      1.010
+   542 | 0x003ff431    |     -1.476074 |     0 |    0 |      1.015
+   543 | 0x003ff521    |     -1.358887 |     0 |    0 |      1.015
+   544 | 0x003ff46b    |     -1.447754 |     0 |    0 |      1.015
+   545 | 0x003ff378    |     -1.566406 |     0 |    0 |      1.010
+   546 | 0x003ff520    |     -1.359375 |     0 |    0 |      1.015
+   547 | 0x003ff536    |     -1.348633 |     0 |    0 |      1.015
+   548 | 0x003ff392    |     -1.553711 |     0 |    0 |      1.015
+   549 | 0x003ff4e5    |     -1.388184 |     0 |    0 |      1.010
+   550 | 0x003ff481    |     -1.437012 |     0 |    0 |      1.015
+   551 | 0x003ff3b0    |     -1.539062 |     0 |    0 |      1.015
+   552 | 0x003ff542    |     -1.342773 |     0 |    0 |      1.015
+   553 | 0x003ff555    |     -1.333496 |     0 |    0 |      1.010
+   554 | 0x003ff3cf    |     -1.523926 |     0 |    0 |      1.015
+   555 | 0x003ff49b    |     -1.424316 |     0 |    0 |      1.015
+   556 | 0x003ff42b    |     -1.479004 |     0 |    0 |      1.015
+   557 | 0x003ff41d    |     -1.485840 |     0 |    0 |      1.010
+   558 | 0x003ff582    |     -1.311523 |     0 |    0 |      1.015
+   559 | 0x003ff572    |     -1.319336 |     0 |    0 |      1.015
+   560 | 0x003ff3ce    |     -1.524414 |     0 |    0 |      1.015
+   561 | 0x003ff484    |     -1.435547 |     0 |    0 |      1.010
+   562 | 0x003ff4be    |     -1.407227 |     0 |    0 |      1.015
+   563 | 0x003ff52e    |     -1.352539 |     0 |    0 |      1.015
+   564 | 0x003ff5e7    |     -1.262207 |     0 |    0 |      1.015
+   565 | 0x003ff5e5    |     -1.263184 |     0 |    0 |      1.010
+   566 | 0x003ff41e    |     -1.485352 |     0 |    0 |      1.015
+   567 | 0x003ff45e    |     -1.454102 |     0 |    0 |      1.015
+   568 | 0x003ff5e0    |     -1.265625 |     0 |    0 |      1.015
+   569 | 0x003ff5f1    |     -1.257324 |     0 |    0 |      1.010
+   570 | 0x003ff676    |     -1.192383 |     0 |    0 |      1.015
+   571 | 0x003ff5df    |     -1.266113 |     0 |    0 |      1.015
+   572 | 0x003ff50b    |     -1.369629 |     0 |    0 |      1.015
+   573 | 0x003ff525    |     -1.356934 |     0 |    0 |      1.010
+   574 | 0x003ff628    |     -1.230469 |     0 |    0 |      1.015
+   575 | 0x003ff63a    |     -1.221680 |     0 |    0 |      1.015
+   576 | 0x003ff6df    |     -1.141113 |     0 |    0 |      1.015
+   577 | 0x003ff5bd    |     -1.282715 |     0 |    0 |      1.010
+   578 | 0x003ff4ce    |     -1.399414 |     0 |    0 |      1.015
+   579 | 0x003ff520    |     -1.359375 |     0 |    0 |      1.015
+   580 | 0x003ff66e    |     -1.196289 |     0 |    0 |      1.015
+   581 | 0x003ff6e6    |     -1.137695 |     0 |    0 |      1.010
+   582 | 0x003ff726    |     -1.106445 |     0 |    0 |      1.015
+   583 | 0x003ff5ba    |     -1.284180 |     0 |    0 |      1.015
+   584 | 0x003ff54e    |     -1.336914 |     0 |    0 |      1.015
+   585 | 0x003ff5a1    |     -1.296387 |     0 |    0 |      1.010
+   586 | 0x003ff6e4    |     -1.138672 |     0 |    0 |      1.015
+   587 | 0x003ff719    |     -1.112793 |     0 |    0 |      1.015
+   588 | 0x003ff6cb    |     -1.150879 |     0 |    0 |      1.015
+   589 | 0x003ff5b1    |     -1.288574 |     0 |    0 |      1.010
+   590 | 0x003ff67c    |     -1.189453 |     0 |    0 |      1.015
+   591 | 0x003ff67e    |     -1.188477 |     0 |    0 |      1.015
+   592 | 0x003ff6f5    |     -1.130371 |     0 |    0 |      1.015
+   593 | 0x003ff78b    |     -1.057129 |     0 |    0 |      1.010
+   594 | 0x003ff64d    |     -1.212402 |     0 |    0 |      1.015
+   595 | 0x003ff58b    |     -1.307129 |     0 |    0 |      1.015
+   596 | 0x003ff731    |     -1.101074 |     0 |    0 |      1.015
+   597 | 0x003ff6a1    |     -1.171387 |     0 |    0 |      1.010
+   598 | 0x003ff6db    |     -1.143066 |     0 |    0 |      1.015
+   599 | 0x003ff6fc    |     -1.126953 |     0 |    0 |      1.015
+   600 | 0x003ff50c    |     -1.369141 |     0 |    0 |      1.015
+   601 | 0x003ff52e    |     -1.352539 |     0 |    0 |      1.010
+   602 | 0x003ff790    |     -1.054688 |     0 |    0 |      1.015
+   603 | 0x003ff75e    |     -1.079102 |     0 |    0 |      1.015
+   604 | 0x003ff7e4    |     -1.013672 |     0 |    0 |      1.015
+   605 | 0x003ff744    |     -1.091797 |     0 |    0 |      1.010
+   606 | 0x003ff52c    |     -1.353516 |     0 |    0 |      1.015
+   607 | 0x003ff5c9    |     -1.276855 |     0 |    0 |      1.015
+   608 | 0x003ff8e8    |     -0.886719 |     0 |    0 |      1.015
+   609 | 0x003ff862    |     -0.952148 |     0 |    0 |      1.010
+   610 | 0x003ff79d    |     -1.048340 |     0 |    0 |      1.015
+   611 | 0x003ff677    |     -1.191895 |     0 |    0 |      1.015
+   612 | 0x003ff416    |     -1.489258 |     0 |    0 |      1.015
+   613 | 0x003ff5bc    |     -1.283203 |     0 |    0 |      1.010
+   614 | 0x003ff95e    |     -0.829102 |     0 |    0 |      1.015
+   615 | 0x003ff96b    |     -0.822754 |     0 |    0 |      1.015
+   616 | 0x003ff880    |     -0.937500 |     0 |    0 |      1.015
+   617 | 0x003ff72a    |     -1.104492 |     0 |    0 |      1.010
+   618 | 0x003ff57e    |     -1.313477 |     0 |    0 |      1.015
+   619 | 0x003ff70a    |     -1.120117 |     0 |    0 |      1.015
+   620 | 0x003ffa2e    |     -0.727539 |     0 |    0 |      1.015
+   621 | 0x003ff9ec    |     -0.759766 |     0 |    0 |      1.010
+   622 | 0x003ff889    |     -0.933105 |     0 |    0 |      1.015
+   623 | 0x003ff680    |     -1.187500 |     0 |    0 |      1.015
+   624 | 0x003ff54e    |     -1.336914 |     0 |    0 |      1.015
+   625 | 0x003ff783    |     -1.061035 |     0 |    0 |      1.010
+   626 | 0x003ff9fa    |     -0.752930 |     0 |    0 |      1.015
+   627 | 0x003ff9cf    |     -0.773926 |     0 |    0 |      1.015
+   628 | 0x003ff89b    |     -0.924316 |     0 |    0 |      1.015
+   629 | 0x003ff6cf    |     -1.148926 |     0 |    0 |      1.010
+   630 | 0x003ff686    |     -1.184570 |     0 |    0 |      1.015
+   631 | 0x003ff890    |     -0.929688 |     0 |    0 |      1.015
+   632 | 0x003ff922    |     -0.858398 |     0 |    0 |      1.015
+   633 | 0x003ff91e    |     -0.860352 |     0 |    0 |      1.010
+   634 | 0x003ff796    |     -1.051758 |     0 |    0 |      1.015
+   635 | 0x003ff588    |     -1.308594 |     0 |    0 |      1.015
+   636 | 0x003ff5d6    |     -1.270508 |     0 |    0 |      1.015
+   637 | 0x003ff8d0    |     -0.898438 |     0 |    0 |      1.010
+   638 | 0x003ff8ea    |     -0.885742 |     0 |    0 |      1.015
+   639 | 0x003ff862    |     -0.952148 |     0 |    0 |      1.015
+   640 | 0x003ff7f1    |     -1.007324 |     0 |    0 |      1.015
+   641 | 0x003ff5fa    |     -1.252930 |     0 |    0 |      1.010
+   642 | 0x003ff665    |     -1.200684 |     0 |    0 |      1.015
+   643 | 0x003ff946    |     -0.840820 |     0 |    0 |      1.015
+   644 | 0x003ff7ec    |     -1.009766 |     0 |    0 |      1.015
+   645 | 0x003ff828    |     -0.980469 |     0 |    0 |      1.010
+   646 | 0x003ff74c    |     -1.087891 |     0 |    0 |      1.015
+   647 | 0x003ff4ab    |     -1.416504 |     0 |    0 |      1.015
+   648 | 0x003ff5c6    |     -1.278320 |     0 |    0 |      1.015
+   649 | 0x003ff855    |     -0.958496 |     0 |    0 |      1.010
+   650 | 0x003ff65a    |     -1.206055 |     0 |    0 |      1.015
+   651 | 0x003ff6ff    |     -1.125488 |     0 |    0 |      1.015
+   652 | 0x003ff6af    |     -1.164551 |     0 |    0 |      1.015
+   653 | 0x003ff43d    |     -1.470215 |     0 |    0 |      1.010
+   654 | 0x003ff4fe    |     -1.375977 |     0 |    0 |      1.015
+   655 | 0x003ff76c    |     -1.072266 |     0 |    0 |      1.015
+   656 | 0x003ff53b    |     -1.346191 |     0 |    0 |      1.015
+   657 | 0x003ff637    |     -1.223145 |     0 |    0 |      1.010
+   658 | 0x003ff5b7    |     -1.285645 |     0 |    0 |      1.015
+   659 | 0x003ff3ee    |     -1.508789 |     0 |    0 |      1.015
+   660 | 0x003ff4f8    |     -1.378906 |     0 |    0 |      1.015
+   661 | 0x003ff672    |     -1.194336 |     0 |    0 |      1.010
+   662 | 0x003ff402    |     -1.499023 |     0 |    0 |      1.015
+   663 | 0x003ff4ec    |     -1.384766 |     0 |    0 |      1.015
+   664 | 0x003ff515    |     -1.364746 |     0 |    0 |      1.015
+   665 | 0x003ff36c    |     -1.572266 |     0 |    0 |      1.010
+   666 | 0x003ff463    |     -1.451660 |     0 |    0 |      1.015
+   667 | 0x003ff510    |     -1.367188 |     0 |    0 |      1.015
+   668 | 0x003ff314    |     -1.615234 |     0 |    0 |      1.015
+   669 | 0x003ff3f3    |     -1.506348 |     0 |    0 |      1.010
+   670 | 0x003ff436    |     -1.473633 |     0 |    0 |      1.015
+   671 | 0x003ff2f6    |     -1.629883 |     0 |    0 |      1.015
+   672 | 0x003ff458    |     -1.457031 |     0 |    0 |      1.015
+   673 | 0x003ff4b4    |     -1.412109 |     0 |    0 |      1.010
+   674 | 0x003ff324    |     -1.607422 |     0 |    0 |      1.015
+   675 | 0x003ff307    |     -1.621582 |     0 |    0 |      1.015
+   676 | 0x003ff436    |     -1.473633 |     0 |    0 |      1.015
+   677 | 0x003ff397    |     -1.551270 |     0 |    0 |      1.010
+   678 | 0x003ff45b    |     -1.455566 |     0 |    0 |      1.015
+   679 | 0x003ff4c4    |     -1.404297 |     0 |    0 |      1.015
+   680 | 0x003ff407    |     -1.496582 |     0 |    0 |      1.015
+   681 | 0x003ff32c    |     -1.603516 |     0 |    0 |      1.010
+   682 | 0x003ff47d    |     -1.438965 |     0 |    0 |      1.015
+   683 | 0x003ff49e    |     -1.422852 |     0 |    0 |      1.015
+   684 | 0x003ff463    |     -1.451660 |     0 |    0 |      1.015
+   685 | 0x003ff47e    |     -1.438477 |     0 |    0 |      1.010
+   686 | 0x003ff483    |     -1.436035 |     0 |    0 |      1.015
+   687 | 0x003ff428    |     -1.480469 |     0 |    0 |      1.015
+   688 | 0x003ff555    |     -1.333496 |     0 |    0 |      1.015
+   689 | 0x003ff54e    |     -1.336914 |     0 |    0 |      1.010
+   690 | 0x003ff554    |     -1.333984 |     0 |    0 |      1.015
+   691 | 0x003ff5bd    |     -1.282715 |     0 |    0 |      1.015
+   692 | 0x003ff572    |     -1.319336 |     0 |    0 |      1.015
+   693 | 0x003ff521    |     -1.358887 |     0 |    0 |      1.010
+   694 | 0x003ff747    |     -1.090332 |     0 |    0 |      1.015
+   695 | 0x003ff712    |     -1.116211 |     0 |    0 |      1.015
+   696 | 0x003ff63a    |     -1.221680 |     0 |    0 |      1.015
+   697 | 0x003ff65d    |     -1.204590 |     0 |    0 |      1.010
+   698 | 0x003ff654    |     -1.208984 |     0 |    0 |      1.015
+   699 | 0x003ff637    |     -1.223145 |     0 |    0 |      1.015
+   700 | 0x003ff794    |     -1.052734 |     0 |    0 |      1.015
+   701 | 0x003ff6d4    |     -1.146484 |     0 |    0 |      1.010
+   702 | 0x003ff5d5    |     -1.270996 |     0 |    0 |      1.015
+   703 | 0x003ff634    |     -1.224609 |     0 |    0 |      1.015
+   704 | 0x003ff55a    |     -1.331055 |     0 |    0 |      1.015
+   705 | 0x003ff5c0    |     -1.281250 |     0 |    0 |      1.010
+   706 | 0x003ff71b    |     -1.111816 |     0 |    0 |      1.015
+   707 | 0x003ff649    |     -1.214355 |     0 |    0 |      1.015
+   708 | 0x003ff5a1    |     -1.296387 |     0 |    0 |      1.015
+   709 | 0x003ff59a    |     -1.299805 |     0 |    0 |      1.010
+   710 | 0x003ff5ad    |     -1.290527 |     0 |    0 |      1.015
+   711 | 0x003ff643    |     -1.217285 |     0 |    0 |      1.015
+   712 | 0x003ff771    |     -1.069824 |     0 |    0 |      1.015
+   713 | 0x003ff636    |     -1.223633 |     0 |    0 |      1.010
+   714 | 0x003ff590    |     -1.304688 |     0 |    0 |      1.015
+   715 | 0x003ff588    |     -1.308594 |     0 |    0 |      1.015
+   716 | 0x003ff5d7    |     -1.270020 |     0 |    0 |      1.015
+   717 | 0x003ff55e    |     -1.329102 |     0 |    0 |      1.010
+   718 | 0x003ff5ea    |     -1.260742 |     0 |    0 |      1.015
+   719 | 0x003ff564    |     -1.326172 |     0 |    0 |      1.015
+   720 | 0x003ff465    |     -1.450684 |     0 |    0 |      1.015
+   721 | 0x003ff424    |     -1.482422 |     0 |    0 |      1.010
+   722 | 0x003ff56f    |     -1.320801 |     0 |    0 |      1.015
+   723 | 0x003ff49a    |     -1.424805 |     0 |    0 |      1.015
+   724 | 0x003ff5c6    |     -1.278320 |     0 |    0 |      1.015
+   725 | 0x003ff510    |     -1.367188 |     0 |    0 |      1.010
+   726 | 0x003ff42d    |     -1.478027 |     0 |    0 |      1.015
+   727 | 0x003ff47b    |     -1.439941 |     0 |    0 |      1.015
+   728 | 0x003ff67f    |     -1.187988 |     0 |    0 |      1.015
+   729 | 0x003ff52b    |     -1.354004 |     0 |    0 |      1.010
+   730 | 0x003ff5ea    |     -1.260742 |     0 |    0 |      1.015
+   731 | 0x003ff53f    |     -1.344238 |     0 |    0 |      1.015
+   732 | 0x003ff462    |     -1.452148 |     0 |    0 |      1.015
+   733 | 0x003ff509    |     -1.370605 |     0 |    0 |      1.010
+   734 | 0x003ff700    |     -1.125000 |     0 |    0 |      1.015
+   735 | 0x003ff5be    |     -1.282227 |     0 |    0 |      1.015
+   736 | 0x003ff642    |     -1.217773 |     0 |    0 |      1.015
+   737 | 0x003ff525    |     -1.356934 |     0 |    0 |      1.010
+   738 | 0x003ff519    |     -1.362793 |     0 |    0 |      1.015
+   739 | 0x003ff585    |     -1.310059 |     0 |    0 |      1.015
+   740 | 0x003ff6af    |     -1.164551 |     0 |    0 |      1.015
+   741 | 0x003ff643    |     -1.217285 |     0 |    0 |      1.010
+   742 | 0x003ff6e3    |     -1.139160 |     0 |    0 |      1.015
+   743 | 0x003ff4aa    |     -1.416992 |     0 |    0 |      1.015
+   744 | 0x003ff5d6    |     -1.270508 |     0 |    0 |      1.015
+
+=============================================================
+                    SIMULATION SUMMARY
+=============================================================
+Top module:       AI_TRIGGER_TOP
+CNN cores:        5 (parallel, round-robin)
+ADC_SRC_CLK:      250.0 MHz (4.000 ns period)
+CLK_ADC:          250.0 MHz (4.000 ns period)
+CLK_CNN:          200.0 MHz (5.000 ns period)
+CNN_THRESH:       0 raw (0.0000 float)
+Score threshold:  0.0000 float
+-------------------------------------------------------------
+Samples sent:     745
+Results received: 745
+Output drain:     8192 quiet CLK_CNN cycles
+Chunk overflows:  0 (should be 0 in normal operation)
+ADC input overflows: 0
+Events saved:     4
+Event batches:    256
+Dropped triggers: 0
+Ring misses:      0
+Correct:          741 / 745 (99.46%)
+-------------------------------------------------------------
+Avg latency:      202.7 CLK_CNN cycles  (1.014 us)
+Total sim time:   799.720 us
+Throughput:       931576.05 samples/sec
+=============================================================
+Results saved to: /home/work1/Works/AI-Trigger-System/build/real_noise_scan/signal_4/scores.csv
+Events saved to:  /home/work1/Works/AI-Trigger-System/build/real_noise_scan/signal_4/events.csv
+Simulation complete.
+$finish called at time : 799926 ns : File "/home/work1/Works/AI-Trigger-System/HDL/sim/tb_ai_trigger_top.sv" Line 284
+INFO: xsimkernel Simulation Memory Usage: 166952 KB (Peak: 194152 KB), Simulation CPU Usage: 18070 ms
