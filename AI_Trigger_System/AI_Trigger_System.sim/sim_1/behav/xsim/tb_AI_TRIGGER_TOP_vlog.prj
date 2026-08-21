@@ -27,6 +27,10 @@ verilog xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIMULATION=" -d "TARGET_VIV
 "../../../../../.bender/git/checkouts/cnn-core-338ad22ef78c637b/hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_28u_array_ap_ufixed_15_5_5_3_0_28u_relu_config5bkb.v" \
 "../../../../../.bender/git/checkouts/cnn-core-wrapper-85593ce6023e5d56/hw/rtl/cnn_core_wrapper_top.v" \
 
+sv xil_defaultlib  -d "TARGET_FPGA=" -d "TARGET_SIMULATION=" -d "TARGET_VIVADO=" -d "TARGET_XILINX=" \
+"../../../../../HDL/sim/REAL_NOISE_SCAN_PACER.sv" \
+"../../../../../HDL/sim/tb_ai_trigger_top.sv" \
+
 # compile glbl module
 verilog xil_defaultlib "glbl.v"
 

@@ -1,3 +1,60 @@
 Time resolution is 1 ps
-Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. AI_TRIGGER_TOP.u_CORE.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
-Time: 1 ps  Iteration: 0  Process: /AI_TRIGGER_TOP/u_CORE/u_EVENT_PATH/u_output_fifo/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_1710  Scope: AI_TRIGGER_TOP.u_CORE.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /wrk/ci/prod/2023.2/sw/continuous/3079/packages/customer/vivado/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+[0] Asserting reset...
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_ADC_INPUT/u_FIFO/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_28  Scope: tb_AI_TRIGGER_TOP.dut.u_ADC_INPUT.u_FIFO.\gnuram_async_fifo.xpm_fifo_base_inst .\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_EVENT_PATH/u_output_fifo/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_1807  Scope: tb_AI_TRIGGER_TOP.dut.u_DUT.u_EVENT_PATH.u_output_fifo.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+[206000] Starting AI_TRIGGER_TOP test
+[206000] TESTHEX_DIR: /home/work1/Works/AI-Trigger-System/build/real_noise_scan/signal_4/testhex_stream
+[206000] Samples: 745  Threshold raw: 0 (0.0000)
+[206000] MIRROR_RAW_CHANNELS: 0
+[206000] PACE_CHUNKS: 1
+---------------------------------------------------------------------
+Sample | Score (hex) | Score (float) | Label | Pred | Latency (us)
+---------------------------------------------------------------------
+Note: DIST chunk_start seq=0 lane=0 busy='0'
+Time: 266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 266 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 302500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=1 lane=1 busy='0'
+Time: 522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 522 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 557500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=2 lane=2 busy='0'
+Time: 778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE2 ADC chunk_accept count=1 fifo_full='0'
+Time: 778 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE2 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 812500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(2)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1007500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1018 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=3 lane=3 busy='0'
+Time: 1034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE3 ADC chunk_accept count=1 fifo_full='0'
+Time: 1034 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE3 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1072500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(3)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-2741 started=1
+Time: 1232500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+     0 | 0x003ff54b    |     -1.338379 |     0 |    0 |      1.010
+Note: LANE1 started=1 fifo_empty='0' fifo_data_valid='1' ready='0'
+Time: 1262500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1274 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=4 lane=4 busy='0'
+Time: 1290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/u_DIST/line__134  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE4 ADC chunk_accept count=1 fifo_full='0'
+Time: 1290 ns  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__191  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE4 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1327500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(4)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-3415 started=1
+Time: 1487500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__273  File: /home/work1/Works/AI-Trigger-System/HDL/rtl/CNN_CORE_LANE.vhd
+Fatal: scan pacer score chunk 1 does not match active chunk 0
+Time: 1497500 ps  Iteration: 0  Process: /tb_AI_TRIGGER_TOP/scan_pacer/note_score  Scope: tb_AI_TRIGGER_TOP.scan_pacer.note_score  File: /home/work1/Works/AI-Trigger-System/HDL/sim/REAL_NOISE_SCAN_PACER.sv Line: 27
+$finish called at time : 1497500 ps
