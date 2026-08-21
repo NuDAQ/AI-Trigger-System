@@ -327,6 +327,24 @@ class RealNoiseScanTest(unittest.TestCase):
             run_sim_tcl.index(set_top), run_sim_tcl.index("launch_simulation")
         )
 
+    def test_paced_driver_deasserts_valid_while_waiting_for_score(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(
+            encoding="utf-8"
+        )
+        driver_tail = testbench[
+            testbench.index("sent_count = sent_count + 1;") : testbench.index(
+                "// After all requested samples"
+            )
+        ]
+
+        note_sent = driver_tail.index("scan_pacer.note_chunk_sent(s_id);")
+        wait_for_negedge = driver_tail.index("@(negedge clk_adc_src);")
+        deassert_valid = driver_tail.index("data_str = 0;")
+        wait_for_score = driver_tail.index("scan_pacer.wait_until_safe(s_id);")
+        self.assertLess(note_sent, wait_for_negedge)
+        self.assertLess(wait_for_negedge, deassert_valid)
+        self.assertLess(deassert_valid, wait_for_score)
+
     def test_analyze_cli_joins_window_scores_and_writes_summary(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-analysis-"))
         input_csv = work_dir / "scope.csv"

@@ -348,6 +348,12 @@ module tb_AI_TRIGGER_TOP;
                 sent_count = sent_count + 1;
                 if (pace_chunks != 0) begin
                     scan_pacer.note_chunk_sent(s_id);
+                    // DATA_STR is a level-valid input to the source CDC FIFO.
+                    // Drop it between chunks before blocking on the score;
+                    // otherwise the final beat is accepted repeatedly while
+                    // the source clock continues to run.
+                    @(negedge clk_adc_src);
+                    data_str = 0;
                     scan_pacer.wait_until_safe(s_id);
                 end
             end
