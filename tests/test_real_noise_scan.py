@@ -302,6 +302,23 @@ class RealNoiseScanTest(unittest.TestCase):
             captured_tcl.read_text(encoding="utf-8"),
         )
 
+    def test_vivado_flow_forces_real_noise_testbench_top(self) -> None:
+        run_sim_tcl = (ROOT / "run_sim.tcl").read_text(encoding="utf-8")
+
+        disable_auto_top = "set_property top_auto_set 0 [get_filesets sim_1]"
+        set_top = "set_property top tb_AI_TRIGGER_TOP [get_filesets sim_1]"
+        set_top_lib = "set_property top_lib xil_defaultlib [get_filesets sim_1]"
+        self.assertIn(disable_auto_top, run_sim_tcl)
+        self.assertIn(set_top, run_sim_tcl)
+        self.assertIn(set_top_lib, run_sim_tcl)
+        self.assertLess(
+            run_sim_tcl.index("source $bender_sim_script"),
+            run_sim_tcl.index(set_top),
+        )
+        self.assertLess(
+            run_sim_tcl.index(set_top), run_sim_tcl.index("launch_simulation")
+        )
+
     def test_analyze_cli_joins_window_scores_and_writes_summary(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-analysis-"))
         input_csv = work_dir / "scope.csv"

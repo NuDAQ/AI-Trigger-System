@@ -148,6 +148,14 @@ if {![file exists $bender_sim_script] || [file size $bender_sim_script] == 0} {
 puts "INFO: sourcing Bender simulation source list: $bender_sim_script"
 source $bender_sim_script
 
+# The committed project may have auto-selected the synthesizable DUT as the
+# simulation root.  Force the self-checking testbench so clocks, stimulus,
+# pacing, CSV writers, and health counters are active in batch runs.
+set_property top_auto_set 0 [get_filesets sim_1]
+set_property top tb_AI_TRIGGER_TOP [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+puts "INFO: simulation top = [get_property top [get_filesets sim_1]]"
+
 foreach vhdl_file [get_files -quiet *.vhd] {
     catch {set_property file_type {VHDL 2008} $vhdl_file}
 }
