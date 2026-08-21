@@ -309,6 +309,7 @@ class RealNoiseScanTest(unittest.TestCase):
         set_top = "set_property top tb_AI_TRIGGER_TOP [get_filesets sim_1]"
         set_top_lib = "set_property top_lib xil_defaultlib [get_filesets sim_1]"
         reset_sim = "reset_simulation -mode behavioral sim_1"
+        unlink_testhex = "catch {file delete -force $link_path}"
         self.assertIn(disable_auto_top, run_sim_tcl)
         self.assertIn(set_top, run_sim_tcl)
         self.assertIn(set_top_lib, run_sim_tcl)
@@ -319,6 +320,13 @@ class RealNoiseScanTest(unittest.TestCase):
         )
         self.assertLess(
             run_sim_tcl.index("catch {close_sim}"), run_sim_tcl.index(reset_sim)
+        )
+        self.assertLess(
+            run_sim_tcl.index("set link_path [file join $xsim_dir testhex_stream]"),
+            run_sim_tcl.index(unlink_testhex),
+        )
+        self.assertLess(
+            run_sim_tcl.index(unlink_testhex), run_sim_tcl.index(reset_sim)
         )
         self.assertLess(
             run_sim_tcl.index(reset_sim), run_sim_tcl.index("file mkdir $xsim_dir")

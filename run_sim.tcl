@@ -178,24 +178,25 @@ if {$testhex_arg ne ""} {
     }
 }
 
-# Bender sources and the selected top can change between batch invocations.
-# Remove XSim's incremental compile products before recreating any files inside
-# the simulation directory, otherwise stale VHDL .vdb files can be restored
-# against a different package revision.
-catch {close_sim}
-puts "INFO: resetting behavioral simulation products..."
-reset_simulation -mode behavioral sim_1
-
 set proj_dir [get_property DIRECTORY [current_project]]
 set proj_name [current_project]
 set xsim_dir [file normalize "$proj_dir/${proj_name}.sim/sim_1/behav/xsim"]
+set link_path [file join $xsim_dir testhex_stream]
+
+# Bender sources and the selected top can change between batch invocations.
+# Unlink external test vectors before reset_simulation cleans XSim products;
+# otherwise Vivado can follow the directory link and remove generated inputs
+# outside the simulation directory.
+catch {close_sim}
+catch {file delete -force $link_path}
+puts "INFO: resetting behavioral simulation products..."
+reset_simulation -mode behavioral sim_1
+
 file mkdir $xsim_dir
 puts "INFO: xsim_dir = $xsim_dir"
 
 if {$testhex_src ne "" && [file exists $testhex_src]} {
     puts "INFO: testhex_stream = $testhex_src"
-    set link_path [file join $xsim_dir testhex_stream]
-    catch {file delete -force $link_path}
     if {[catch {exec ln -sfn $testhex_src $link_path} err]} {
         puts "WARNING: symlink failed ($err); copying testhex_stream instead"
         file copy -force $testhex_src $link_path
