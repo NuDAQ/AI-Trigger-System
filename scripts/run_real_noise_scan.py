@@ -307,6 +307,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--analyze-only", action="store_true")
     parser.add_argument(
+        "--dataset",
+        choices=("all", "signal", "noise"),
+        default="all",
+        help="Built-in scope dataset to scan when --input-csv is not supplied.",
+    )
+    parser.add_argument(
         "--input-csv",
         type=Path,
         action="append",
@@ -360,15 +366,33 @@ def main() -> None:
         return
     input_paths = args.input_csv
     if input_paths is None:
-        input_paths = sorted((repo_root / "data" / "Amp_Scope_Data_2").glob("*.csv"))
+        input_dirs = {
+            "all": ("Amp_Scope_Data_1", "Amp_Scope_Data_2"),
+            "noise": ("Amp_Scope_Data_1",),
+            "signal": ("Amp_Scope_Data_2",),
+        }[args.dataset]
+        input_paths = sorted(
+            path
+            for input_dir in input_dirs
+            for path in (repo_root / "data" / input_dir).glob("*.csv")
+        )
     if not input_paths:
         raise SystemExit("no scope CSV inputs found")
 
-    case_dirs = []
+    resolved_input_paths = []
+    case_names = set()
     for input_path in input_paths:
         input_csv = input_path if input_path.is_absolute() else repo_root / input_path
+        input_csv = input_csv.resolve()
+        if input_csv.stem in case_names:
+            raise SystemExit(f"duplicate scan case name '{input_csv.stem}'")
+        case_names.add(input_csv.stem)
+        resolved_input_paths.append(input_csv)
+
+    case_dirs = []
+    for input_csv in resolved_input_paths:
         case_dirs.append(
-            prepare_scope_csv(input_csv.resolve(), out_root, args.adc_vfs_v)
+            prepare_scope_csv(input_csv, out_root, args.adc_vfs_v)
         )
 
     if args.prepare_only:

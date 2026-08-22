@@ -33,7 +33,36 @@ class RealNoiseScanTest(unittest.TestCase):
 
         self.assertEqual(
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
-            ["signal_10", "signal_2", "signal_3", "signal_4"],
+            [
+                "noise_1",
+                "noise_2",
+                "noise_3",
+                "noise_4",
+                "signal_10",
+                "signal_2",
+                "signal_3",
+                "signal_4",
+            ],
+        )
+
+    def test_shell_launcher_selects_pure_noise_dataset(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-pure-noise-launcher-"))
+        env = dict(os.environ)
+        env["PYTHON_BIN"] = sys.executable
+        env["REAL_NOISE_OUT_DIR"] = str(out_dir)
+        env["REAL_NOISE_PREPARE_ONLY"] = "1"
+        env["REAL_NOISE_DATASET"] = "noise"
+
+        subprocess.run(
+            [str(ROOT / "scripts" / "run_real_noise_scan.sh")],
+            cwd=ROOT,
+            env=env,
+            check=True,
+        )
+
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            ["noise_1", "noise_2", "noise_3", "noise_4"],
         )
 
     def test_prepare_cli_slides_complete_windows_and_quantizes_scope_volts(self) -> None:
@@ -117,9 +146,27 @@ class RealNoiseScanTest(unittest.TestCase):
 
         self.assertEqual(
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
-            ["signal_10", "signal_2", "signal_3", "signal_4"],
+            [
+                "noise_1",
+                "noise_2",
+                "noise_3",
+                "noise_4",
+                "signal_10",
+                "signal_2",
+                "signal_3",
+                "signal_4",
+            ],
         )
-        for case_name in ("signal_10", "signal_2", "signal_3", "signal_4"):
+        for case_name in (
+            "noise_1",
+            "noise_2",
+            "noise_3",
+            "noise_4",
+            "signal_10",
+            "signal_2",
+            "signal_3",
+            "signal_4",
+        ):
             with (out_dir / case_name / "manifest.csv").open(
                 newline="", encoding="utf-8"
             ) as csv_file:
@@ -128,6 +175,70 @@ class RealNoiseScanTest(unittest.TestCase):
             self.assertEqual(manifest[0]["window_start_ns"], "-100.000000")
             self.assertEqual(manifest[-1]["window_start_ns"], "644.000000")
             self.assertEqual(manifest[-1]["window_end_ns"], "899.000000")
+
+    def test_prepare_cli_selects_pure_noise_dataset(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-pure-noise-data-"))
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--dataset",
+                "noise",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            ["noise_1", "noise_2", "noise_3", "noise_4"],
+        )
+        for case_name in ("noise_1", "noise_2", "noise_3", "noise_4"):
+            with (out_dir / case_name / "manifest.csv").open(
+                newline="", encoding="utf-8"
+            ) as csv_file:
+                manifest = list(csv.DictReader(csv_file))
+            self.assertEqual(len(manifest), 745)
+            self.assertEqual(manifest[0]["window_start_ns"], "-100.000000")
+            self.assertEqual(manifest[-1]["window_end_ns"], "899.000000")
+
+    def test_prepare_cli_rejects_duplicate_output_case_names(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-duplicate-case-"))
+        input_a = work_dir / "a" / "scope.csv"
+        input_b = work_dir / "b" / "scope.csv"
+        out_dir = work_dir / "out"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
+        input_a.parent.mkdir()
+        input_b.parent.mkdir()
+        input_a.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        input_b.write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--input-csv",
+                str(input_a),
+                "--input-csv",
+                str(input_b),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate scan case name 'scope'", result.stderr)
+        self.assertFalse(out_dir.exists())
 
     def test_prepare_cli_rejects_scope_data_without_one_ns_spacing(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-spacing-"))

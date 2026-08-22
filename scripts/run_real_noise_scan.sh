@@ -7,6 +7,7 @@ cd "${repo_root}"
 
 python_bin="${PYTHON_BIN:-python3}"
 out_dir="${REAL_NOISE_OUT_DIR:-build/real_noise_scan}"
+dataset="${REAL_NOISE_DATASET:-all}"
 prepare_only="${REAL_NOISE_PREPARE_ONLY:-0}"
 analyze_only="${REAL_NOISE_ANALYZE_ONLY:-0}"
 adc_vfs_v="${REAL_NOISE_ADC_VFS_V:-0.8}"
@@ -27,6 +28,7 @@ fi
 
 args=(
     --out-dir "${out_dir}"
+    --dataset "${dataset}"
     --adc-vfs-v "${adc_vfs_v}"
     --score-threshold "${score_threshold}"
     --cnn-thresh-raw "${cnn_thresh_raw}"
@@ -41,5 +43,6 @@ if [[ -n "${REAL_NOISE_VIVADO:-}" ]]; then
 fi
 
 echo "INFO: real-noise scan output: ${out_dir}"
+echo "INFO: scope dataset: ${dataset}"
 echo "INFO: ADC full-scale: ${adc_vfs_v} V; score threshold: ${score_threshold}"
 "${python_bin}" scripts/run_real_noise_scan.py "${args[@]}"
