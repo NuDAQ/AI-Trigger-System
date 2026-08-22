@@ -207,6 +207,16 @@ def analyze_results(out_root: Path, score_threshold: float) -> Path:
         writer = csv.DictWriter(csv_file, fieldnames=list(summaries[0]))
         writer.writeheader()
         writer.writerows(summaries)
+    noise_summaries = [
+        summary for summary in summaries
+        if summary["case_name"].startswith("noise_")
+    ]
+    if noise_summaries:
+        noise_summary_path = out_root / "noise_scan_summary.csv"
+        with noise_summary_path.open("w", newline="", encoding="utf-8") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=list(noise_summaries[0]))
+            writer.writeheader()
+            writer.writerows(noise_summaries)
     build_score_plots(out_root, case_dirs, score_threshold)
     print(f"Wrote {summary_path}")
     return summary_path
@@ -300,6 +310,42 @@ def build_score_plots(
     plt.tight_layout()
     plt.savefig(out_root / "score_histogram_overlay.png", dpi=160)
     plt.close()
+
+    noise_score_sets = [
+        score_set for score_set in score_sets
+        if score_set[0].startswith("noise_")
+    ]
+    if noise_score_sets:
+        plt.figure(figsize=(10, 5.2))
+        for case_name, window_starts, scores in noise_score_sets:
+            plt.plot(window_starts, scores, linewidth=1.0, label=case_name)
+        plt.axhline(score_threshold, color="black", linestyle="--", label="threshold")
+        plt.xlabel("256 ns window start time (ns)")
+        plt.ylabel("CNN score")
+        plt.title("Pure-noise scan score vs window start")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_root / "noise_score_vs_window_start_overlay.png", dpi=160)
+        plt.close()
+
+        plt.figure(figsize=(9, 5.2))
+        for case_name, _, scores in noise_score_sets:
+            plt.hist(
+                scores,
+                bins=min(40, max(1, len(scores))),
+                alpha=0.5,
+                label=case_name,
+            )
+        plt.axvline(score_threshold, color="black", linestyle="--", label="threshold")
+        plt.xlabel("CNN score")
+        plt.ylabel("Window count")
+        plt.title("Pure-noise scan score distributions")
+        plt.grid(True, alpha=0.25)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_root / "noise_score_histogram_overlay.png", dpi=160)
+        plt.close()
 
 
 def parse_args() -> argparse.Namespace:

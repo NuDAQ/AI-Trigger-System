@@ -552,6 +552,63 @@ class RealNoiseScanTest(unittest.TestCase):
         self.assertTrue((out_dir / "score_vs_window_start_overlay.png").exists())
         self.assertTrue((out_dir / "score_histogram_overlay.png").exists())
 
+    def test_analyze_cli_writes_pure_noise_summary(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-pure-noise-analysis-"))
+        input_csv = work_dir / "noise_1.csv"
+        out_dir = work_dir / "out"
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
+        input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--input-csv",
+                str(input_csv),
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        case_dir = out_dir / "noise_1"
+        (case_dir / "scores.csv").write_text(
+            "sample_id,float_out\n0,-0.250000\n",
+            encoding="utf-8",
+        )
+        (case_dir / "simulate.log").write_text(
+            "Chunk overflows:  0\n"
+            "ADC input overflows: 0\n"
+            "Dropped triggers: 0\n"
+            "Ring misses:      0\n",
+            encoding="utf-8",
+        )
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        with (out_dir / "noise_scan_summary.csv").open(
+            newline="", encoding="utf-8"
+        ) as csv_file:
+            summary = list(csv.DictReader(csv_file))
+        self.assertEqual(summary[0]["case_name"], "noise_1")
+        self.assertEqual(summary[0]["window_count"], "1")
+        self.assertEqual(summary[0]["triggered_windows"], "0")
+        self.assertTrue(
+            (out_dir / "noise_score_vs_window_start_overlay.png").exists()
+        )
+        self.assertTrue((out_dir / "noise_score_histogram_overlay.png").exists())
+
     def test_analyze_cli_rejects_nonzero_simulation_health_counter(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-health-"))
         input_csv = work_dir / "scope.csv"
