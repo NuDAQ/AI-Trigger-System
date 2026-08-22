@@ -97,7 +97,7 @@ build/vivado_sim/*
 build/bringup_sim/
 
 # Generated 256 ns sliding-window stimuli, XSim results, and plots for the
-# oscilloscope real-noise scans under data/Amp_Scope_Data_2.
+# oscilloscope scans under data/Amp_Scope_Data_1 and Amp_Scope_Data_2.
 build/real_noise_scan/
 
 # Ignore bender dependency cache (large git objects)

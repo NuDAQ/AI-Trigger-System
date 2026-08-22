@@ -696,9 +696,10 @@ build/bringup_sim/bringup_score_summary.csv
 
 ## Real-Noise Sliding-Window Score Scan
 
-`data/Amp_Scope_Data_2` contains four 1 GSa/s oscilloscope CSVs with time in
-seconds and amplitude in volts. Run the complete scan from the repository root
-with:
+`data/Amp_Scope_Data_1` contains four pure-noise 1 GSa/s oscilloscope CSVs;
+`data/Amp_Scope_Data_2` contains four signal-plus-noise CSVs in the same format.
+Both store time in seconds and amplitude in volts. Run all eight records from
+the repository root with:
 
 ```bash
 scripts/run_real_noise_scan.sh
@@ -710,6 +711,16 @@ The launcher uses XSim through `scripts/run_vivado_sim.py`. If Vivado is not on
 ```bash
 REAL_NOISE_VIVADO=/path/to/vivado scripts/run_real_noise_scan.sh
 ```
+
+Select only the pure-noise or signal-plus-noise dataset when a partial server
+run is sufficient:
+
+```bash
+REAL_NOISE_DATASET=noise scripts/run_real_noise_scan.sh
+REAL_NOISE_DATASET=signal scripts/run_real_noise_scan.sh
+```
+
+`REAL_NOISE_DATASET` accepts `all` (the default), `noise`, or `signal`.
 
 Each 1000-sample record is scanned with every complete 256-sample window. The
 window start moves by 1 ns from `-100 ns` through `644 ns`, producing 745 CNN
@@ -726,11 +737,13 @@ The manifest records the ADC full-scale, code range, and saturation count for
 every window. The testbench runs with `PACE_CHUNKS=1`: after sending one chunk,
 it waits for that chunk's CNN score and, when triggered, the accepted
 `EVENT_LAST` beat before sending another chunk. This deliberately characterizes
-independent windows without creating an artificial back-to-back trigger rate.
-Analysis fails if a score is missing or duplicated, or if chunk overflow, ADC
-input overflow, dropped-trigger, or ring-miss counters are nonzero.
+each window without creating an artificial back-to-back trigger rate. Adjacent
+1 ns scan positions overlap by 255 samples, so their trigger fraction is not an
+independent-event false-trigger rate. Analysis fails if a score is missing or
+duplicated, or if chunk overflow, ADC input overflow, dropped-trigger, or
+ring-miss counters are nonzero.
 
-Generate the four stimulus sets without Vivado with:
+Generate all eight stimulus sets without Vivado with:
 
 ```bash
 REAL_NOISE_PREPARE_ONLY=1 scripts/run_real_noise_scan.sh
@@ -743,10 +756,13 @@ REAL_NOISE_ANALYZE_ONLY=1 scripts/run_real_noise_scan.sh
 ```
 
 The default output root is `build/real_noise_scan`. Override it with
-`REAL_NOISE_OUT_DIR`. Each `signal_*` directory contains `manifest.csv`,
-`testhex_stream/`, `scores.csv`, `events.csv`, `simulate.log`,
+`REAL_NOISE_OUT_DIR`. Each `noise_*` and `signal_*` directory contains
+`manifest.csv`, `testhex_stream/`, `scores.csv`, `events.csv`, `simulate.log`,
 `scores_annotated.csv`, and its score-vs-window-start and histogram PNGs. The
-output root also contains `scan_summary.csv` and cross-file overlay plots.
+output root contains `scan_summary.csv`, `noise_scan_summary.csv`, the combined
+cross-file overlays, and pure-noise-only overlays. Final CSV, PNG, and log
+artifacts are trackable; generated `testhex_stream` stimulus files remain
+ignored.
 
 ## Continuous Validation Plots
 

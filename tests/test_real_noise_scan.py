@@ -446,6 +446,41 @@ class RealNoiseScanTest(unittest.TestCase):
             run_sim_tcl.index(set_top), run_sim_tcl.index("launch_simulation")
         )
 
+    def test_git_tracks_pure_noise_results_but_ignores_generated_stimuli(self) -> None:
+        for case_name in ("noise_1", "noise_2", "noise_3", "noise_4"):
+            for result_name in ("scores.csv", "score_histogram.png", "simulate.log"):
+                result = subprocess.run(
+                    [
+                        "git",
+                        "check-ignore",
+                        "--no-index",
+                        f"build/real_noise_scan/{case_name}/{result_name}",
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(
+                    result.returncode,
+                    1,
+                    msg=f"expected {case_name}/{result_name} to be trackable",
+                )
+
+            stimulus = subprocess.run(
+                [
+                    "git",
+                    "check-ignore",
+                    "--no-index",
+                    f"build/real_noise_scan/{case_name}/testhex_stream/sample.hex",
+                ],
+                cwd=ROOT,
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(stimulus.returncode, 0)
+
     def test_paced_driver_deasserts_valid_while_waiting_for_score(self) -> None:
         testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(
             encoding="utf-8"
