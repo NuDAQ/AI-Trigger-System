@@ -354,7 +354,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--analyze-only", action="store_true")
     parser.add_argument(
         "--dataset",
-        choices=("all", "signal", "noise"),
+        choices=("all", "signal", "noise", "offset"),
         default="all",
         help="Built-in scope dataset to scan when --input-csv is not supplied.",
     )
@@ -364,7 +364,7 @@ def parse_args() -> argparse.Namespace:
         action="append",
         help=(
             "Scope CSV to scan; repeat for multiple files. Defaults to all CSVs "
-            "under data/Amp_Scope_Data_2."
+            "under the built-in scope dataset directories."
         ),
     )
     parser.add_argument("--out-dir", type=Path, default=Path("build/real_noise_scan"))
@@ -413,9 +413,14 @@ def main() -> None:
     input_paths = args.input_csv
     if input_paths is None:
         input_dirs = {
-            "all": ("Amp_Scope_Data_1", "Amp_Scope_Data_2"),
+            "all": (
+                "Amp_Scope_Data_1",
+                "Amp_Scope_Data_2",
+                "Amp_Scope_Data_3_Offsetted",
+            ),
             "noise": ("Amp_Scope_Data_1",),
             "signal": ("Amp_Scope_Data_2",),
+            "offset": ("Amp_Scope_Data_3_Offsetted",),
         }[args.dataset]
         input_paths = sorted(
             path

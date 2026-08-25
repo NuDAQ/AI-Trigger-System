@@ -35,13 +35,21 @@ class RealNoiseScanTest(unittest.TestCase):
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
             [
                 "noise_1",
+                "noise_1_offset",
                 "noise_2",
+                "noise_2_offset",
                 "noise_3",
+                "noise_3_offset",
                 "noise_4",
+                "noise_4_offset",
                 "signal_10",
+                "signal_10rms_offset",
                 "signal_2",
+                "signal_2rms_offset",
                 "signal_3",
+                "signal_3rms_offset",
                 "signal_4",
+                "signal_4rms_offset",
             ],
         )
 
@@ -63,6 +71,35 @@ class RealNoiseScanTest(unittest.TestCase):
         self.assertEqual(
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
             ["noise_1", "noise_2", "noise_3", "noise_4"],
+        )
+
+    def test_shell_launcher_selects_offset_dataset(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-offset-launcher-"))
+        env = dict(os.environ)
+        env["PYTHON_BIN"] = sys.executable
+        env["REAL_NOISE_OUT_DIR"] = str(out_dir)
+        env["REAL_NOISE_PREPARE_ONLY"] = "1"
+        env["REAL_NOISE_DATASET"] = "offset"
+
+        subprocess.run(
+            [str(ROOT / "scripts" / "run_real_noise_scan.sh")],
+            cwd=ROOT,
+            env=env,
+            check=True,
+        )
+
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            [
+                "noise_1_offset",
+                "noise_2_offset",
+                "noise_3_offset",
+                "noise_4_offset",
+                "signal_10rms_offset",
+                "signal_2rms_offset",
+                "signal_3rms_offset",
+                "signal_4rms_offset",
+            ],
         )
 
     def test_prepare_cli_slides_complete_windows_and_quantizes_scope_volts(self) -> None:
@@ -148,24 +185,40 @@ class RealNoiseScanTest(unittest.TestCase):
             sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
             [
                 "noise_1",
+                "noise_1_offset",
                 "noise_2",
+                "noise_2_offset",
                 "noise_3",
+                "noise_3_offset",
                 "noise_4",
+                "noise_4_offset",
                 "signal_10",
+                "signal_10rms_offset",
                 "signal_2",
+                "signal_2rms_offset",
                 "signal_3",
+                "signal_3rms_offset",
                 "signal_4",
+                "signal_4rms_offset",
             ],
         )
         for case_name in (
             "noise_1",
+            "noise_1_offset",
             "noise_2",
+            "noise_2_offset",
             "noise_3",
+            "noise_3_offset",
             "noise_4",
+            "noise_4_offset",
             "signal_10",
+            "signal_10rms_offset",
             "signal_2",
+            "signal_2rms_offset",
             "signal_3",
+            "signal_3rms_offset",
             "signal_4",
+            "signal_4rms_offset",
         ):
             with (out_dir / case_name / "manifest.csv").open(
                 newline="", encoding="utf-8"
@@ -198,6 +251,46 @@ class RealNoiseScanTest(unittest.TestCase):
             ["noise_1", "noise_2", "noise_3", "noise_4"],
         )
         for case_name in ("noise_1", "noise_2", "noise_3", "noise_4"):
+            with (out_dir / case_name / "manifest.csv").open(
+                newline="", encoding="utf-8"
+            ) as csv_file:
+                manifest = list(csv.DictReader(csv_file))
+            self.assertEqual(len(manifest), 745)
+            self.assertEqual(manifest[0]["window_start_ns"], "-100.000000")
+            self.assertEqual(manifest[-1]["window_end_ns"], "899.000000")
+
+    def test_prepare_cli_selects_offset_dataset(self) -> None:
+        out_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-offset-data-"))
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                "--dataset",
+                "offset",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        case_names = [
+            "noise_1_offset",
+            "noise_2_offset",
+            "noise_3_offset",
+            "noise_4_offset",
+            "signal_10rms_offset",
+            "signal_2rms_offset",
+            "signal_3rms_offset",
+            "signal_4rms_offset",
+        ]
+        self.assertEqual(
+            sorted(path.name for path in out_dir.iterdir() if path.is_dir()),
+            case_names,
+        )
+        for case_name in case_names:
             with (out_dir / case_name / "manifest.csv").open(
                 newline="", encoding="utf-8"
             ) as csv_file:
