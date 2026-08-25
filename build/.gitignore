@@ -29,6 +29,10 @@
 !real_noise_scan/noise_4/*.png
 !real_noise_scan/noise_4/*.csv
 !real_noise_scan/noise_4/*.log
+!real_noise_scan/*_offset/
+!real_noise_scan/*_offset/*.png
+!real_noise_scan/*_offset/*.csv
+!real_noise_scan/*_offset/*.log
 !real_noise_scan/signal_2/
 !real_noise_scan/signal_3/
 !real_noise_scan/signal_4/

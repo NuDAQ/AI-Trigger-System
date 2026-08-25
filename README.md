@@ -698,8 +698,9 @@ build/bringup_sim/bringup_score_summary.csv
 
 `data/Amp_Scope_Data_1` contains four pure-noise 1 GSa/s oscilloscope CSVs;
 `data/Amp_Scope_Data_2` contains four signal-plus-noise CSVs in the same format.
-Both store time in seconds and amplitude in volts. Run all eight records from
-the repository root with:
+`data/Amp_Scope_Data_3_Offsetted` contains four offset-corrected pure-noise and
+four offset-corrected signal-plus-noise CSVs. All store time in seconds and
+amplitude in volts. Run all 16 records from the repository root with:
 
 ```bash
 scripts/run_real_noise_scan.sh
@@ -718,9 +719,12 @@ run is sufficient:
 ```bash
 REAL_NOISE_DATASET=noise scripts/run_real_noise_scan.sh
 REAL_NOISE_DATASET=signal scripts/run_real_noise_scan.sh
+REAL_NOISE_DATASET=offset scripts/run_real_noise_scan.sh
 ```
 
-`REAL_NOISE_DATASET` accepts `all` (the default), `noise`, or `signal`.
+`REAL_NOISE_DATASET` accepts `all` (the default), `noise`, `signal`, or
+`offset`. Use `offset` to run only the eight records under
+`Amp_Scope_Data_3_Offsetted` on the server.
 
 Each 1000-sample record is scanned with every complete 256-sample window. The
 window start moves by 1 ns from `-100 ns` through `644 ns`, producing 745 CNN
@@ -743,7 +747,7 @@ independent-event false-trigger rate. Analysis fails if a score is missing or
 duplicated, or if chunk overflow, ADC input overflow, dropped-trigger, or
 ring-miss counters are nonzero.
 
-Generate all eight stimulus sets without Vivado with:
+Generate all 16 stimulus sets without Vivado with:
 
 ```bash
 REAL_NOISE_PREPARE_ONLY=1 scripts/run_real_noise_scan.sh
@@ -759,10 +763,12 @@ The default output root is `build/real_noise_scan`. Override it with
 `REAL_NOISE_OUT_DIR`. Each `noise_*` and `signal_*` directory contains
 `manifest.csv`, `testhex_stream/`, `scores.csv`, `events.csv`, `simulate.log`,
 `scores_annotated.csv`, and its score-vs-window-start and histogram PNGs. The
-output root contains `scan_summary.csv`, `noise_scan_summary.csv`, the combined
-cross-file overlays, and pure-noise-only overlays. Final CSV, PNG, and log
-artifacts are trackable; generated `testhex_stream` stimulus files remain
-ignored.
+output root contains `scan_summary.csv`, `noise_scan_summary.csv`,
+`offset_scan_summary.csv`, the combined cross-file overlays, pure-noise-only
+overlays, and offset-dataset-only overlays. `offset_scan_summary.csv` and the
+`offset_score_*_overlay.png` files contain all eight Data 3 cases. Final CSV,
+PNG, and log artifacts are trackable; generated `testhex_stream` stimulus files
+remain ignored.
 
 ## Continuous Validation Plots
 

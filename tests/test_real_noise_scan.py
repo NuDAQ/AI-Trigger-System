@@ -574,6 +574,51 @@ class RealNoiseScanTest(unittest.TestCase):
             )
             self.assertEqual(stimulus.returncode, 0)
 
+    def test_git_tracks_offset_results_but_ignores_generated_stimuli(self) -> None:
+        case_names = (
+            "noise_1_offset",
+            "noise_2_offset",
+            "noise_3_offset",
+            "noise_4_offset",
+            "signal_10rms_offset",
+            "signal_2rms_offset",
+            "signal_3rms_offset",
+            "signal_4rms_offset",
+        )
+        for case_name in case_names:
+            for result_name in ("scores.csv", "score_histogram.png", "simulate.log"):
+                result = subprocess.run(
+                    [
+                        "git",
+                        "check-ignore",
+                        "--no-index",
+                        f"build/real_noise_scan/{case_name}/{result_name}",
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(
+                    result.returncode,
+                    1,
+                    msg=f"expected {case_name}/{result_name} to be trackable",
+                )
+
+            stimulus = subprocess.run(
+                [
+                    "git",
+                    "check-ignore",
+                    "--no-index",
+                    f"build/real_noise_scan/{case_name}/testhex_stream/sample.hex",
+                ],
+                cwd=ROOT,
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(stimulus.returncode, 0)
+
     def test_paced_driver_deasserts_valid_while_waiting_for_score(self) -> None:
         testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_top.sv").read_text(
             encoding="utf-8"
