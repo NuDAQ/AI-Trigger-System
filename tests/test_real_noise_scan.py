@@ -737,6 +737,66 @@ class RealNoiseScanTest(unittest.TestCase):
         )
         self.assertTrue((out_dir / "noise_score_histogram_overlay.png").exists())
 
+    def test_analyze_cli_writes_offset_summary_and_overlays(self) -> None:
+        work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-offset-analysis-"))
+        out_dir = work_dir / "out"
+        case_names = ("noise_1_offset", "signal_2rms_offset")
+        rows = ["x-axis,1", "second,Volt"]
+        rows.extend(f"{sample_index * 1e-9:.12e},0.0" for sample_index in range(256))
+        input_paths = []
+        for case_name in case_names:
+            input_csv = work_dir / f"{case_name}.csv"
+            input_csv.write_text("\n".join(rows) + "\n", encoding="utf-8")
+            input_paths.extend(["--input-csv", str(input_csv)])
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--prepare-only",
+                *input_paths,
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+        for sample_id, case_name in enumerate(case_names):
+            case_dir = out_dir / case_name
+            (case_dir / "scores.csv").write_text(
+                f"sample_id,float_out\n0,{sample_id - 0.5:.6f}\n",
+                encoding="utf-8",
+            )
+            (case_dir / "simulate.log").write_text(
+                "Chunk overflows:  0\n"
+                "ADC input overflows: 0\n"
+                "Dropped triggers: 0\n"
+                "Ring misses:      0\n",
+                encoding="utf-8",
+            )
+
+        subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--analyze-only",
+                "--out-dir",
+                str(out_dir),
+            ],
+            cwd=ROOT,
+            check=True,
+        )
+
+        with (out_dir / "offset_scan_summary.csv").open(
+            newline="", encoding="utf-8"
+        ) as csv_file:
+            summary = list(csv.DictReader(csv_file))
+        self.assertEqual([row["case_name"] for row in summary], list(case_names))
+        self.assertTrue(
+            (out_dir / "offset_score_vs_window_start_overlay.png").exists()
+        )
+        self.assertTrue((out_dir / "offset_score_histogram_overlay.png").exists())
+
     def test_analyze_cli_rejects_nonzero_simulation_health_counter(self) -> None:
         work_dir = Path(tempfile.mkdtemp(prefix="ai-trigger-real-noise-health-"))
         input_csv = work_dir / "scope.csv"
