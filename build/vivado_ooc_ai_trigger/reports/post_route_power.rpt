@@ -1,9 +1,9 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date             : Tue Aug  4 05:18:28 2026
+| Date             : Thu Aug 27 20:36:19 2026
 | Host             : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
-| Command          : report_power -file /tmp/ai-trigger-ooc-63477cd/reports/post_route_power.rpt
+| Command          : report_power -file /home/work1/Works/AI-Trigger-System/build/vivado_ooc_ai_trigger/reports/post_route_power.rpt
 | Design           : AI_TRIGGER_TOP
 | Device           : xcku5p-ffvb676-2-e
 | Design State     : routed
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 1.264        |
+| Total On-Chip Power (W)  | 2.315        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.807        |
-| Device Static (W)        | 0.457        |
+| Dynamic (W)              | 1.849        |
+| Device Static (W)        | 0.466        |
 | Effective TJA (C/W)      | 1.7          |
-| Max Ambient (C)          | 97.8         |
-| Junction Temperature (C) | 27.2         |
+| Max Ambient (C)          | 96.0         |
+| Junction Temperature (C) | 29.0         |
 | Confidence Level         | Medium       |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,22 +52,22 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.151 |        4 |       --- |             --- |
-| CLB Logic                |     0.308 |    71153 |       --- |             --- |
-|   LUT as Logic           |     0.258 |    28976 |    216960 |           13.36 |
-|   CARRY8                 |     0.024 |     2779 |     27120 |           10.25 |
-|   LUT as Shift Register  |     0.017 |     2745 |     99840 |            2.75 |
-|   Register               |     0.008 |    20311 |    433920 |            4.68 |
+| Clocks                   |     0.187 |        4 |       --- |             --- |
+| CLB Logic                |     0.670 |    89442 |       --- |             --- |
+|   LUT as Logic           |     0.577 |    36082 |    216960 |           16.63 |
+|   CARRY8                 |     0.045 |     3444 |     27120 |           12.70 |
+|   Register               |     0.031 |    33406 |    433920 |            7.70 |
+|   LUT as Shift Register  |     0.016 |      785 |     99840 |            0.79 |
 |   LUT as Distributed RAM |     0.001 |      340 |     99840 |            0.34 |
-|   Others                 |     0.000 |      897 |       --- |             --- |
-|   F7/F8 Muxes            |     0.000 |     1718 |    216960 |            0.79 |
-|   BUFG                   |     0.000 |        1 |        32 |            3.13 |
-| Signals                  |     0.247 |    53182 |       --- |             --- |
-| Block RAM                |     0.043 |       26 |       480 |            5.42 |
+|   BUFG                   |    <0.001 |        2 |        32 |            6.25 |
+|   Others                 |     0.000 |      907 |       --- |             --- |
+|   F7/F8 Muxes            |     0.000 |     1625 |    216960 |            0.75 |
+| Signals                  |     0.626 |    66986 |       --- |             --- |
+| Block RAM                |     0.060 |     33.5 |       480 |            6.98 |
 | URAM                     |     0.041 |        6 |        64 |            9.38 |
-| DSPs                     |     0.016 |       20 |      1824 |            1.10 |
-| Static Power             |     0.457 |          |           |                 |
-| Total                    |     1.264 |          |           |                 |
+| DSPs                     |     0.265 |      200 |      1824 |           10.96 |
+| Static Power             |     0.466 |          |           |                 |
+| Total                    |     2.315 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -77,10 +77,10 @@ Table of Contents
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source     | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint     |       0.850 |     1.092 |       0.946 |      0.146 |       NA    | Unspecified | NA         |
+| Vccint     |       0.850 |     2.330 |       2.172 |      0.157 |       NA    | Unspecified | NA         |
 | Vccint_io  |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
-| Vccbram    |       0.850 |     0.005 |       0.003 |      0.002 |       NA    | Unspecified | NA         |
-| Vccaux     |       1.800 |     0.128 |       0.000 |      0.128 |       NA    | Unspecified | NA         |
+| Vccbram    |       0.850 |     0.006 |       0.003 |      0.002 |       NA    | Unspecified | NA         |
+| Vccaux     |       1.800 |     0.127 |       0.000 |      0.127 |       NA    | Unspecified | NA         |
 | Vccaux_io  |       1.800 |     0.031 |       0.000 |      0.031 |       NA    | Unspecified | NA         |
 | Vcco33     |       3.300 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco25     |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -150,36 +150,36 @@ Table of Contents
 +-------------------------+-----------+
 | Name                    | Power (W) |
 +-------------------------+-----------+
-| AI_TRIGGER_TOP          |     0.807 |
-|   u_CORE                |     0.807 |
-|     gen_lanes[0].u_LANE |     0.146 |
+| AI_TRIGGER_TOP          |     1.849 |
+|   u_CORE                |     1.849 |
+|     gen_lanes[0].u_LANE |     0.351 |
+|       u_CHUNK_ID_CDC    |     0.001 |
+|       u_FIFO            |     0.010 |
+|       u_WRAPPER         |     0.338 |
+|     gen_lanes[1].u_LANE |     0.351 |
+|       u_CHUNK_ID_CDC    |     0.001 |
+|       u_FIFO            |     0.010 |
+|       u_WRAPPER         |     0.338 |
+|     gen_lanes[2].u_LANE |     0.357 |
 |       u_CHUNK_ID_CDC    |     0.001 |
 |       u_FIFO            |     0.009 |
-|       u_WRAPPER         |     0.134 |
-|     gen_lanes[1].u_LANE |     0.149 |
+|       u_WRAPPER         |     0.344 |
+|     gen_lanes[3].u_LANE |     0.361 |
 |       u_CHUNK_ID_CDC    |     0.001 |
 |       u_FIFO            |     0.009 |
-|       u_WRAPPER         |     0.136 |
-|     gen_lanes[2].u_LANE |     0.138 |
+|       u_WRAPPER         |     0.348 |
+|     gen_lanes[4].u_LANE |     0.339 |
 |       u_CHUNK_ID_CDC    |     0.001 |
 |       u_FIFO            |     0.009 |
-|       u_WRAPPER         |     0.126 |
-|     gen_lanes[3].u_LANE |     0.141 |
-|       u_CHUNK_ID_CDC    |     0.001 |
-|       u_FIFO            |     0.009 |
-|       u_WRAPPER         |     0.128 |
-|     gen_lanes[4].u_LANE |     0.140 |
-|       u_CHUNK_ID_CDC    |     0.001 |
-|       u_FIFO            |     0.009 |
-|       u_WRAPPER         |     0.128 |
-|     u_MULTIMODE_PATH    |     0.079 |
-|       u_CNN_REQUEST_CDC |     0.004 |
-|       u_EVENT_FIFO      |     0.017 |
-|       u_HILO            |     0.003 |
+|       u_WRAPPER         |     0.326 |
+|     u_MULTIMODE_PATH    |     0.076 |
+|       u_CNN_REQUEST_CDC |     0.003 |
+|       u_EVENT_FIFO      |     0.016 |
+|       u_HILO            |     0.002 |
 |       u_HILO_ADAPTER    |     0.005 |
 |       u_RECORDER        |     0.002 |
 |       u_RING            |     0.046 |
-|     u_RESULT_ARBITER    |     0.006 |
+|     u_RESULT_ARBITER    |     0.007 |
 +-------------------------+-----------+
 
 
