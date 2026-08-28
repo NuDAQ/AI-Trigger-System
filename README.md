@@ -233,20 +233,19 @@ Plots for 3.4 and 4 RMS are included in the full report.
 
 ### OOC implementation
 
-The table below is the last tracked Wrapper v4 baseline. It closes timing at
-`CLK_ADC=250 MHz` and `CLK_CNN=200 MHz`. It does not qualify Wrapper v5 or CNN
-Core v4.1.0; rerun OOC implementation after the dependency upgrade.
+The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
+`CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.
 
 | Metric | Result |
 | --- | ---: |
-| WNS / TNS | 0.322 ns / 0 ns |
-| WHS / THS | 0.024 ns / 0 ns |
-| CLB LUTs | 32,061 |
-| CLB registers | 20,311 |
-| BRAM tiles | 26 |
-| URAM | 6 |
-| DSP | 20 |
-| Vectorless power | 1.264 W |
+| WNS / TNS | 0.039 ns / 0 ns |
+| WHS / THS | 0.029 ns / 0 ns |
+| CLB LUTs | 37,207 (17.15%) |
+| CLB registers | 33,406 (7.70%) |
+| BRAM tiles | 33.5 (6.98%) |
+| URAM | 6 (9.38%) |
+| DSP | 200 (10.96%) |
+| Vectorless power | 2.315 W (medium confidence) |
 
 The tracked
 [`build/vivado_ooc_ai_trigger/reports/`](build/vivado_ooc_ai_trigger/reports/)
