@@ -163,7 +163,10 @@ Main integration files:
 
 ## Dependencies
 
-Bender manages `cnn-core-wrapper`, its CNN RTL, and Hi-Lo Trigger v2.2.4.
+Bender requests CNN Core Wrapper v5.0.0, CNN Core v4.1.0, and Hi-Lo Trigger
+v2.2.4. Wrapper v5 keeps the 128-bit input and 32-bit score interfaces. It
+packs four input beats for the 512-bit CNN interface and converts the CNN score
+back to signed `ap_fixed<22,11>`.
 
 ```bash
 cargo install bender
@@ -172,6 +175,9 @@ bender update
 
 Vivado launchers regenerate their source list from the Bender graph. Do not add
 a parallel manual source list.
+
+Before Wrapper v5.0.0 is published, use `Bender.local` overrides for both the
+wrapper and CNN repositories.
 
 ## Validation
 
@@ -227,7 +233,9 @@ Plots for 3.4 and 4 RMS are included in the full report.
 
 ### OOC implementation
 
-The final OOC run closes timing at `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz`.
+The table below is the last tracked Wrapper v4 baseline. It closes timing at
+`CLK_ADC=250 MHz` and `CLK_CNN=200 MHz`. It does not qualify Wrapper v5 or CNN
+Core v4.1.0; rerun OOC implementation after the dependency upgrade.
 
 | Metric | Result |
 | --- | ---: |
@@ -275,7 +283,10 @@ python3 scripts/run_trigger_mode_sweep.py \
 Run OOC synthesis and implementation:
 
 ```bash
-python3 scripts/run_vivado_build.py --impl
+python3 scripts/run_vivado_build.py \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
+  --bender /home/work1/.cargo/bin/bender \
+  --impl
 ```
 
 The OOC flow uses Bender for source order, applies
