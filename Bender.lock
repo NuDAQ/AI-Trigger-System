@@ -3,13 +3,13 @@ packages:
     revision: null
     version: null
     source:
-      Path: /home/work1/Works/CNN-Core-Generator
+      Path: /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator
     dependencies: []
   cnn-core-wrapper:
-    revision: 1a9554f554c495730117a688b5bb953cfddb89f1
-    version: 4.0.0
+    revision: null
+    version: null
     source:
-      Git: git@github.com:NuDAQ/CNN-Core-Wrapper.git
+      Path: /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Wrapper
     dependencies:
     - cnn-core
   hilo-trigger:

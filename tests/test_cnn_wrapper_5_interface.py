@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Interface checks for the cnn-core-wrapper 4.x integration."""
+"""Interface checks for the cnn-core-wrapper 5.x integration."""
 
 from pathlib import Path
 import re
@@ -13,11 +13,13 @@ def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
 
 
-class CnnWrapper4InterfaceTest(unittest.TestCase):
-    def test_bender_lock_uses_wrapper_4(self) -> None:
+class CnnWrapper5InterfaceTest(unittest.TestCase):
+    def test_bender_uses_wrapper_5(self) -> None:
+        manifest = read("Bender.yml")
         lock = read("Bender.lock")
-        self.assertIn("version: 4.0.0", lock)
-        self.assertIn("revision: 1a9554f554c495730117a688b5bb953cfddb89f1", lock)
+        self.assertIn('version: "5.0.0"', manifest)
+        self.assertIn("cnn-core-wrapper:", lock)
+        self.assertNotIn("version: 4.0.0", lock)
 
     def test_system_uses_five_lanes_with_250_mhz_ingest_and_200_mhz_cnn(self) -> None:
         pkg = read("HDL/rtl/AI_TRIGGER_PKG.vhd")
