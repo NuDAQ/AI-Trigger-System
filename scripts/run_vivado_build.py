@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from source_manifest import capture
 
 
 def tcl_quote(value: str | Path) -> str:
@@ -117,6 +118,8 @@ def main() -> int:
 
     vivado = find_executable(args.vivado, "VIVADO", "vivado")
     bender = find_executable(args.bender, "BENDER", "bender")
+
+    capture(repo_root, out_dir, ['vivado'], [repo_root/'HDL/constraints/ai_trigger_ooc.xdc', repo_root/'scripts/vivado_ooc_build.tcl'], bender=bender)
 
     launcher = out_dir / "run_vivado_ooc_build.tcl"
     launcher.write_text(build_launcher_tcl(args, repo_root, out_dir), encoding="utf-8")
