@@ -141,15 +141,17 @@ package body AI_TRIGGER_PKG is
         sample_value : adc_sample_t
     ) return std_logic_vector is
         variable raw_value    : signed(11 downto 0);
-        variable scaled_value : signed(11 downto 0);
-        variable fixed_value  : signed(8 downto 0);
+        variable scaled_value : signed(12 downto 0);
+        variable fixed_value  : signed(9 downto 0);
     begin
         raw_value := signed(sample_value);
-        scaled_value := shift_right(raw_value, 1);
-        if scaled_value > to_signed(255, scaled_value'length) then
-            fixed_value := to_signed(255, fixed_value'length);
-        elsif scaled_value < to_signed(-256, scaled_value'length) then
-            fixed_value := to_signed(-256, fixed_value'length);
+        -- model = raw / 64; native ap_fixed<10,5,AP_RND,AP_SAT_SYM>.
+        -- Widen before adding the rounding bias, including raw=2047.
+        scaled_value := shift_right(resize(raw_value, 13) + 1, 1);
+        if scaled_value > to_signed(511, scaled_value'length) then
+            fixed_value := to_signed(511, fixed_value'length);
+        elsif scaled_value < to_signed(-511, scaled_value'length) then
+            fixed_value := to_signed(-511, fixed_value'length);
         else
             fixed_value := resize(scaled_value, fixed_value'length);
         end if;
