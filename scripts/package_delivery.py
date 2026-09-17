@@ -168,11 +168,15 @@ def write_version(package_dir: Path, version: str) -> None:
     commit = git_value(["rev-parse", "--short=12", "HEAD"], "unknown") + git_dirty_suffix()
     branch = git_value(["branch", "--show-current"], "unknown")
     wrapper_revision = "unknown"
+    core_revision = "unknown"
     lock = ROOT / "Bender.lock"
     if lock.exists():
         match = re.search(r"cnn-core-wrapper:.*?revision:\s*([0-9a-f]+)", lock.read_text(encoding="utf-8"), re.S)
         if match:
             wrapper_revision = match.group(1)
+        match = re.search(r"cnn-core:.*?revision:\s*([0-9a-f]+)", lock.read_text(encoding="utf-8"), re.S)
+        if match:
+            core_revision = match.group(1)
 
     content = "\n".join(
         [
@@ -186,6 +190,10 @@ def write_version(package_dir: Path, version: str) -> None:
             "CLK_ADC target: 250 MHz",
             "CLK_CNN target: 200 MHz",
             "cnn-core-wrapper revision: " + wrapper_revision,
+            "cnn-core revision: " + core_revision,
+            "CNN lanes: 2",
+            "CNN input: 32 x 512-bit transfers per 256 x 4 window",
+            "Score format: signed low 21 bits / 512",
             "",
         ]
     )
