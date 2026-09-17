@@ -12,9 +12,8 @@ documentation:
 rtl:
   source_order_policy: >
     Use Bender source order for repository RTL and cnn-core-wrapper RTL.
-    Include generated cnn-core HLS Verilog before the wrapper because Bender
-    may resolve cnn-core through a local override or a machine-specific lock
-    path.
+    Include the exact resolved native Verilog, headers, and ROM data before
+    the wrapper. Never fall back to another checkout or an old HLS directory.
   ai_trigger_sources: Bender.yml
   cnn_core_wrapper_sources: bender dependency cnn-core-wrapper
   cnn_core_sources: bender dependency cnn-core
@@ -26,3 +25,4 @@ generated_files:
   - VERSION.txt
   - MANIFEST.txt
   - scripts/add_files.tcl
+  - SHA256SUMS
