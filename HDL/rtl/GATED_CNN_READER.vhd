@@ -43,7 +43,7 @@ entity GATED_CNN_READER is
 end entity GATED_CNN_READER;
 
 architecture rtl of GATED_CNN_READER is
-    type state_t is (IDLE, READING, WAIT_DROP);
+    type state_t is (IDLE, READING, DRAIN_WRITE, WAIT_DROP);
     signal state_r          : state_t := IDLE;
     signal priority_r       : integer range 0 to N_LANES - 1 := 0;
     signal candidate_lane_s : integer range -1 to N_LANES - 1 := -1;
@@ -57,6 +57,8 @@ architecture rtl of GATED_CNN_READER is
     signal rb_rd_batch_idx_r : integer range 0 to N_BATCHES - 1 := 0;
     signal ring_done_r      : std_logic := '0';
     signal event_loss_pulse_r : std_logic := '0';
+    signal raw_batch_r : raw_adc_batch_t := (others => '0');
+    signal lane_we_r : std_logic_vector(N_LANES - 1 downto 0) := (others => '0');
 begin
     process (LANE_BUSY, priority_r)
         variable selected_v : integer range -1 to N_LANES - 1;
@@ -89,10 +91,13 @@ begin
                 rb_rd_batch_idx_r  <= 0;
                 ring_done_r        <= '0';
                 event_loss_pulse_r <= '0';
+                raw_batch_r <= (others => '0');
+                lane_we_r <= (others => '0');
             else
                 rb_rd_en_r         <= '0';
                 ring_done_r        <= '0';
                 event_loss_pulse_r <= '0';
+                lane_we_r <= (others => '0');
 
                 case state_r is
                     when IDLE =>
@@ -127,6 +132,10 @@ begin
                         end if;
 
                         if RB_RD_VALID = '1' then
+                            -- Break the URAM read-to-quantizer-to-lane BRAM path.
+                            -- Valid and data advance together through this stage.
+                            raw_batch_r <= RB_RD_DATA;
+                            lane_we_r(selected_lane_r) <= RB_RD_HIT;
                             -- synthesis translate_off
                             assert RB_RD_HIT = '1'
                                 report "protected gated-CNN ring transaction missed"
@@ -138,17 +147,21 @@ begin
 
                             if response_count_r = N_BATCHES - 1 then
                                 response_count_r <= N_BATCHES;
-                                ring_done_r <= '1';
                                 if selected_lane_r = N_LANES - 1 then
                                     priority_r <= 0;
                                 else
                                     priority_r <= selected_lane_r + 1;
                                 end if;
-                                state_r <= WAIT_DROP;
+                                state_r <= DRAIN_WRITE;
                             else
                                 response_count_r <= response_count_r + 1;
                             end if;
                         end if;
+
+                    when DRAIN_WRITE =>
+                        -- The registered final batch is accepted on this edge.
+                        ring_done_r <= '1';
+                        state_r <= WAIT_DROP;
 
                     when WAIT_DROP =>
                         if WORK_VALID = '0' then
@@ -170,17 +183,8 @@ begin
     RB_RD_CHUNK_ID  <= rb_rd_chunk_id_r;
     RB_RD_BATCH_IDX <= rb_rd_batch_idx_r;
 
-    process (state_r, RB_RD_VALID, RB_RD_HIT, selected_lane_r)
-        variable lane_we_v : std_logic_vector(N_LANES - 1 downto 0);
-    begin
-        lane_we_v := (others => '0');
-        if state_r = READING and RB_RD_VALID = '1' and RB_RD_HIT = '1' then
-            lane_we_v(selected_lane_r) := '1';
-        end if;
-        LANE_WE <= lane_we_v;
-    end process;
-
-    BATCH_DATA          <= pack_cnn_raw_batch(RB_RD_DATA);
+    LANE_WE             <= lane_we_r;
+    BATCH_DATA          <= pack_cnn_raw_batch(raw_batch_r);
     LANE_START_CHUNK    <= active_work_r.start_address.chunk_id;
     LANE_START_OFFSET   <= active_work_r.start_address.beat_offset;
     LANE_TIMESTAMP      <= active_work_r.event_timestamp;

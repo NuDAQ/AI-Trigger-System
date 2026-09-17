@@ -142,7 +142,8 @@ begin
             if lane_we /= (lane_we'range => '0') then
                 assert lane_we = LANE_ONE
                     report "gated work was not reserved on the selected free lane" severity failure;
-                assert batch_data = pack_cnn_raw_batch(rb_rd_data)
+                assert batch_data = pack_cnn_raw_batch(raw_for(
+                    add_beats(work_value.start_address, written_count)))
                     report "gated reader did not use the shared CNN packer" severity failure;
                 written_count := written_count + 1;
             end if;
