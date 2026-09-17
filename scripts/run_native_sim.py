@@ -60,7 +60,10 @@ exit
         result = subprocess.run(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
     logs = list((output/'project').rglob('simulate.log'))
     transcript = '\n'.join(p.read_text(errors='replace') for p in logs)
-    if result.returncode or 'PASS native ' not in transcript or 'Fatal:' in transcript:
+    completion = {'tb_native_system':'PASS native system windows=',
+                  'tb_native_modes':'PASS native modes complete',
+                  'tb_native_lane':'PASS native lane input/compute/output resets'}[args.testbench]
+    if result.returncode or completion not in transcript or 'Fatal:' in transcript:
         print(f'FAIL native simulation; inspect {output}/console.log and project/**/simulate.log',file=sys.stderr)
         return 1
     for line in transcript.splitlines():
