@@ -337,10 +337,16 @@ entity xpm_fifo_async is
 end entity xpm_fifo_async;
 
 architecture functional of xpm_fifo_async is
-    constant READS_PER_WRITE : positive := WRITE_DATA_WIDTH / READ_DATA_WIDTH;
-    constant READ_CAPACITY   : positive := FIFO_WRITE_DEPTH * READS_PER_WRITE;
+    function minimum(a, b : positive) return positive is
+    begin
+        if a < b then return a; else return b; end if;
+    end function;
+    constant UNIT_WIDTH : positive := minimum(WRITE_DATA_WIDTH, READ_DATA_WIDTH);
+    constant WRITE_UNITS : positive := WRITE_DATA_WIDTH / UNIT_WIDTH;
+    constant READ_UNITS : positive := READ_DATA_WIDTH / UNIT_WIDTH;
+    constant READ_CAPACITY : positive := FIFO_WRITE_DEPTH * WRITE_UNITS;
     type memory_t is array (0 to READ_CAPACITY - 1) of
-        std_logic_vector(READ_DATA_WIDTH - 1 downto 0);
+        std_logic_vector(UNIT_WIDTH - 1 downto 0);
     signal memory_r : memory_t := (others => (others => '0'));
     signal head_r   : integer range 0 to READ_CAPACITY - 1 := 0;
     signal tail_r   : integer range 0 to READ_CAPACITY - 1 := 0;
@@ -351,7 +357,7 @@ architecture functional of xpm_fifo_async is
         return (index_value + amount) mod READ_CAPACITY;
     end function;
 begin
-    assert WRITE_DATA_WIDTH mod READ_DATA_WIDTH = 0
+    assert WRITE_DATA_WIDTH mod READ_DATA_WIDTH = 0 or READ_DATA_WIDTH mod WRITE_DATA_WIDTH = 0
         report "xpm_fifo_async test model requires integral width conversion"
         severity failure;
     assert READ_MODE = "fwft"
@@ -373,19 +379,19 @@ begin
             count_v := count_r;
 
             if rising_edge(wr_clk) and wr_en = '1' and
-               count_v <= READ_CAPACITY - READS_PER_WRITE then
-                for part_idx in 0 to READS_PER_WRITE - 1 loop
+               count_v <= READ_CAPACITY - WRITE_UNITS then
+                for part_idx in 0 to WRITE_UNITS - 1 loop
                     memory_r(advance(tail_v, part_idx)) <= din(
-                        (part_idx + 1) * READ_DATA_WIDTH - 1 downto
-                        part_idx * READ_DATA_WIDTH);
+                        (part_idx + 1) * UNIT_WIDTH - 1 downto
+                        part_idx * UNIT_WIDTH);
                 end loop;
-                tail_v  := advance(tail_v, READS_PER_WRITE);
-                count_v := count_v + READS_PER_WRITE;
+                tail_v  := advance(tail_v, WRITE_UNITS);
+                count_v := count_v + WRITE_UNITS;
             end if;
 
-            if rising_edge(rd_clk) and rd_en = '1' and count_v > 0 then
-                head_v  := advance(head_v, 1);
-                count_v := count_v - 1;
+            if rising_edge(rd_clk) and rd_en = '1' and count_r >= READ_UNITS then
+                head_v  := advance(head_v, READ_UNITS);
+                count_v := count_v - READ_UNITS;
             end if;
 
             head_r  <= head_v;
@@ -394,20 +400,23 @@ begin
         end if;
     end process;
 
-    dout       <= memory_r(head_r) when count_r > 0 else (others => '0');
-    empty      <= '1' when count_r = 0 else '0';
-    data_valid <= '1' when count_r > 0 else '0';
-    full       <= '1' when count_r > READ_CAPACITY - READS_PER_WRITE else '0';
+    read_parts : for part in 0 to READ_UNITS - 1 generate
+        dout((part + 1) * UNIT_WIDTH - 1 downto part * UNIT_WIDTH) <=
+            memory_r(advance(head_r, part)) when count_r >= READ_UNITS else (others => '0');
+    end generate;
+    empty      <= '1' when count_r < READ_UNITS else '0';
+    data_valid <= '1' when count_r >= READ_UNITS else '0';
+    full       <= '1' when count_r > READ_CAPACITY - WRITE_UNITS else '0';
     overflow   <= '1' when wr_en = '1' and
-                           count_r > READ_CAPACITY - READS_PER_WRITE else '0';
-    underflow  <= '1' when rd_en = '1' and count_r = 0 else '0';
-    prog_full  <= '1' when count_r >= PROG_FULL_THRESH * READS_PER_WRITE else '0';
-    prog_empty <= '1' when count_r <= PROG_EMPTY_THRESH else '0';
+                           count_r > READ_CAPACITY - WRITE_UNITS else '0';
+    underflow  <= '1' when rd_en = '1' and count_r < READ_UNITS else '0';
+    prog_full  <= '1' when count_r >= PROG_FULL_THRESH * WRITE_UNITS else '0';
+    prog_empty <= '1' when count_r <= PROG_EMPTY_THRESH * READ_UNITS else '0';
     wr_rst_busy <= rst;
     rd_rst_busy <= rst;
     wr_data_count <= std_logic_vector(to_unsigned(
-        count_r / READS_PER_WRITE, WR_DATA_COUNT_WIDTH));
-    rd_data_count <= std_logic_vector(to_unsigned(count_r, RD_DATA_COUNT_WIDTH));
+        count_r / WRITE_UNITS, WR_DATA_COUNT_WIDTH));
+    rd_data_count <= std_logic_vector(to_unsigned(count_r / READ_UNITS, RD_DATA_COUNT_WIDTH));
     sbiterr <= '0';
     dbiterr <= '0';
 end architecture functional;

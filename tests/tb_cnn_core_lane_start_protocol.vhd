@@ -6,7 +6,7 @@ use work.AI_TRIGGER_PKG.all;
 
 entity WRAPPER_TOP is
     generic (
-        INPUT_WIDTH   : integer := 128;
+        INPUT_WIDTH   : integer := 512;
         OUTPUT_WIDTH  : integer := 32;
         NUM_TIMESTEPS : integer := 256;
         NUM_CHANNELS  : integer := 4
@@ -18,7 +18,7 @@ entity WRAPPER_TOP is
         done         : out std_logic;
         idle         : out std_logic;
         ready        : out std_logic;
-        input_data   : in  std_logic_vector(127 downto 0);
+        input_data   : in  std_logic_vector(511 downto 0);
         input_valid  : in  std_logic;
         input_ready  : out std_logic;
         output_data  : out std_logic_vector(31 downto 0);
@@ -28,35 +28,43 @@ entity WRAPPER_TOP is
 end entity WRAPPER_TOP;
 
 architecture sim of WRAPPER_TOP is
-    signal input_count : integer range 0 to N_CHUNK_BEATS_CNN := 0;
+    signal input_count : integer range 0 to 32 := 0;
+    signal ack_delay : integer range 0 to 4 := 0;
+    signal acknowledged : std_logic := '0';
 begin
-    input_ready <= '1';
-    ready <= '0';
+    input_ready <= '1' when input_count < 32 else '0';
+    ready <= '1' when ack_delay = 4 and acknowledged = '0' else '0';
     idle <= '1' when input_count = 0 else '0';
     done <= output_valid;
-    output_data <= std_logic_vector(to_signed(2048, 32));
+    output_data <= x"001FFE00"; -- native -1, upper eleven bits zero
 
     process(clk)
     begin
         if rising_edge(clk) then
             if rst_n = '0' then
                 input_count <= 0;
+                ack_delay <= 0;
+                acknowledged <= '0';
                 output_valid <= '0';
             else
                 if output_valid = '1' and output_ready = '1' then
                     output_valid <= '0';
                 end if;
-
-                if input_valid = '1' then
+                if input_valid = '1' and input_ready = '1' then
+                    input_count <= input_count + 1;
+                end if;
+                if input_count = 32 and acknowledged = '0' then
                     assert start = '1'
-                        report "CNN_CORE_LANE must keep HLS start asserted while streaming payload"
-                        severity failure;
-                    if input_count = N_CHUNK_BEATS_CNN - 1 then
-                        input_count <= 0;
+                        report "native start was released before ready acknowledgement" severity failure;
+                    if ack_delay = 4 then
+                        acknowledged <= '1';
                         output_valid <= '1';
                     else
-                        input_count <= input_count + 1;
+                        ack_delay <= ack_delay + 1;
                     end if;
+                elsif acknowledged = '1' then
+                    assert start = '0'
+                        report "native start must retire after exactly one ready acknowledgement" severity failure;
                 end if;
             end if;
         end if;

@@ -12,9 +12,9 @@ package AI_TRIGGER_PKG is
     constant N_BATCH_S  : integer := 4;    -- samples per channel per ADC beat
     constant N_BATCHES  : integer := 64;   -- beats per chunk (64 * 4 = 256 timesteps)
     constant N_CHUNK_W  : integer := 256;  -- total CNN input words per chunk
-    constant N_CHUNK_BEATS_CNN : integer := 128;  -- two timesteps per 128-bit CNN beat
+    constant N_CHUNK_BEATS_CNN : integer := 32;   -- eight timesteps per native 512-bit beat
     constant LANE_FIFO_WRITE_WIDTH : integer := N_BATCH_S * 64;
-    constant LANE_FIFO_READ_WIDTH  : integer := 128;
+    constant LANE_FIFO_READ_WIDTH  : integer := 512;
     constant LANE_FIFO_WRITE_ADDR_WIDTH : integer := 7;
     constant LANE_FIFO_WRITE_DEPTH : integer := 2 ** LANE_FIFO_WRITE_ADDR_WIDTH;
     constant CHUNK_ID_WIDTH : integer := 16;
