@@ -80,6 +80,15 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertIn("rtl/hilo-trigger/Pre_trigger.vhd", manifest)
             self.assertIn("rtl/ai-trigger/AI_TRIGGER_PKG.vhd", manifest)
 
+            native_assets = list((package / "rtl/cnn-core").glob("*.vh"))
+            native_roms = list((package / "rtl/cnn-core").glob("*.dat"))
+            self.assertEqual(len(native_assets), 3)
+            self.assertEqual(len(native_roms), 1)
+            for asset in native_assets + native_roms:
+                self.assertIn(asset.name, add_files)
+            self.assertTrue((package / "SHA256SUMS").is_file())
+            self.assertNotIn("wrapper_ooc_top", add_files)
+
             core_idx = add_files.index("rtl cnn-core cnn_core.v")
             wrapper_idx = add_files.index("rtl cnn-core-wrapper hw rtl cnn_core_wrapper_top.v")
             hilo_idx = add_files.index("rtl hilo-trigger PRE_TRIGGER_PKG.vhd")

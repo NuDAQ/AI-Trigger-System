@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -16,7 +17,6 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE_RTL_REL = Path("hls_streaming/cnn_core_streaming_prj/solution1/impl/verilog")
 PACKAGE_PREFIX = "ai-trigger-daq"
 DELIVERY_ASSETS = [
     ROOT / "docs" / "score_vs_offset.png",
@@ -72,150 +72,43 @@ def sanitize_version(version: str) -> str:
 def parse_bender_sources() -> list[Path]:
     result = run(["bender", "sources", "-f", "-t", "vivado"])
     if result.returncode != 0:
-        return []
-
-    text = result.stdout
-    start = text.find("[")
-    end = text.rfind("]")
-    if start < 0 or end < start:
-        return []
-
-    try:
-        packages = json.loads(text[start : end + 1])
-    except json.JSONDecodeError:
-        return []
-
-    files: list[Path] = []
-    for package in packages:
-        for item in package.get("files", []):
-            path = Path(item)
-            if path.suffix.lower() in {".v", ".sv", ".vhd", ".vhdl"}:
-                files.append(path)
+        raise RuntimeError("Bender source resolution failed: " + result.stderr.strip())
+    packages = json.loads(result.stdout)
+    files = [Path(item) for package in packages for item in package.get("files", [])
+             if Path(item).suffix.lower() in {".v", ".sv", ".vhd", ".vhdl", ".vh", ".dat"}]
+    if not files or any(not path.is_file() for path in files):
+        raise FileNotFoundError("Bender source closure is empty or contains missing assets")
     return files
 
 
-def parse_ai_trigger_sources_from_bender_yml() -> list[Path]:
-    sources: list[Path] = []
-    in_sources = False
-    for line in (ROOT / "Bender.yml").read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if stripped == "sources:":
-            in_sources = True
-            continue
-        if not in_sources:
-            continue
-        if stripped.startswith("- target:"):
-            break
-        match = re.match(r"-\s+(HDL/rtl/[^#\s]+)", stripped)
-        if match:
-            sources.append(ROOT / match.group(1))
-    return sources
-
-
-def parse_cnn_core_override_path() -> Path | None:
-    path = ROOT / "Bender.local"
-    if not path.exists():
-        return None
-
-    text = path.read_text(encoding="utf-8")
-    match = re.search(r"cnn-core:\s*\{\s*path:\s*\"([^\"]+)\"", text)
-    if not match:
-        return None
-    return Path(match.group(1)).expanduser()
-
-
-def parse_cnn_core_lock_path() -> Path | None:
-    path = ROOT / "Bender.lock"
-    if not path.exists():
-        return None
-
-    in_core = False
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if re.match(r"\s{2}cnn-core:\s*$", line):
-            in_core = True
-            continue
-        if in_core and re.match(r"\s{2}[A-Za-z0-9_-]+:\s*$", line):
-            return None
-        match = re.match(r"\s{6}Path:\s*(.+)\s*$", line)
-        if in_core and match:
-            return Path(match.group(1)).expanduser()
-    return None
-
-
-def find_cnn_core_verilog_dir() -> Path:
-    candidates: list[Path] = []
-    for base in (parse_cnn_core_override_path(), parse_cnn_core_lock_path()):
-        if base is not None:
-            candidates.append(base / CORE_RTL_REL)
-    candidates.extend(ROOT.glob(".bender/git/checkouts/cnn-core-*/" + str(CORE_RTL_REL)))
-
-    for candidate in candidates:
-        if (candidate / "cnn_core.v").exists():
-            return candidate
-
-    searched = "\n".join(str(path) for path in candidates) or "(no candidates)"
-    raise FileNotFoundError(
-        "Could not find generated cnn-core Verilog. Run bender update/checkouts "
-        "or set Bender.local cnn-core path.\nSearched:\n" + searched
-    )
-
-
-def cnn_core_sources() -> list[Path]:
-    source_dir = find_cnn_core_verilog_dir()
-    files = sorted(source_dir.glob("*.v"))
-    files.sort(key=lambda path: (path.name != "cnn_core.v", path.name))
-    return files
+def cnn_core_sources(bender_sources: list[Path]) -> list[Path]:
+    tops = [path for path in bender_sources if path.name == "cnn_core.v"]
+    if len(tops) != 1:
+        raise ValueError("Bender must resolve exactly one generated cnn_core.v")
+    return [path for path in bender_sources if path.parent == tops[0].parent]
 
 
 def wrapper_sources(bender_sources: list[Path]) -> list[Path]:
-    sources = [
-        path
-        for path in bender_sources
-        if path.name == "cnn_core_wrapper_top.v" and path.exists()
-    ]
-    if sources:
-        return sources
-
-    sources = sorted(ROOT.glob(".bender/git/checkouts/cnn-core-wrapper-*/hw/rtl/cnn_core_wrapper_top.v"))
-    if sources:
-        return [sources[0]]
-
-    raise FileNotFoundError("Could not find cnn_core_wrapper_top.v from Bender sources or .bender checkout")
+    sources = [path for path in bender_sources if path.name == "cnn_core_wrapper_top.v"]
+    if len(sources) != 1:
+        raise ValueError("Bender must resolve exactly one CNN wrapper")
+    return sources
 
 
 def hilo_trigger_sources(bender_sources: list[Path]) -> list[Path]:
-    by_name = {
-        path.name.lower(): path
-        for path in bender_sources
-        if path.exists() and "hilo-trigger" in str(path).lower()
-    }
-    if not by_name:
-        candidates = sorted(
-            ROOT.glob(".bender/git/checkouts/hilo-trigger-*/hw/rtl/*.vhd")
-        )
-        by_name = {path.name.lower(): path for path in candidates}
-
-    missing = [name for name in HILO_RTL_ORDER if name.lower() not in by_name]
-    if missing:
-        raise FileNotFoundError(
-            "Could not resolve required Hi-Lo RTL from Bender: " + ", ".join(missing)
-        )
-    return [by_name[name.lower()] for name in HILO_RTL_ORDER]
+    sources = []
+    for name in HILO_RTL_ORDER:
+        matches = [path for path in bender_sources if path.name.lower() == name.lower()]
+        if len(matches) != 1:
+            raise ValueError("Bender must resolve exactly one " + name)
+        sources.extend(matches)
+    return sources
 
 
 def ai_trigger_sources(bender_sources: list[Path]) -> list[Path]:
-    sources = [
-        path
-        for path in bender_sources
-        if path.is_relative_to(ROOT / "HDL" / "rtl") and path.exists()
-    ]
-    if sources:
-        return sources
-
-    sources = parse_ai_trigger_sources_from_bender_yml()
-    missing = [path for path in sources if not path.exists()]
-    if missing:
-        raise FileNotFoundError("Missing AI trigger RTL source: " + ", ".join(str(path) for path in missing))
+    sources = [path for path in bender_sources if path.is_relative_to(ROOT / "HDL/rtl")]
+    if not sources:
+        raise ValueError("Bender did not resolve AI trigger RTL")
     return sources
 
 
@@ -353,7 +246,7 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
     package_dir.mkdir(parents=True)
 
     bender_sources = parse_bender_sources()
-    core_sources = cnn_core_sources()
+    core_sources = cnn_core_sources(bender_sources)
     wrap_sources = wrapper_sources(bender_sources)
     hilo_sources = hilo_trigger_sources(bender_sources)
     ai_sources = ai_trigger_sources(bender_sources)
@@ -405,6 +298,12 @@ def build_package(version: str, out_dir: Path, make_zip: bool) -> Path:
     copied_files.append(Path("VERSION.txt"))
 
     write_manifest(package_dir, copied_files + [Path("MANIFEST.txt")])
+
+    # Hash every delivered source, header, ROM and document, so a package can
+    # be audited without the source checkout or personal Bender overrides.
+    checksums = [f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(package_dir).as_posix()}"
+                 for path in sorted(package_dir.rglob("*")) if path.is_file()]
+    (package_dir / "SHA256SUMS").write_text("\n".join(checksums) + "\n")
 
     if make_zip:
         zip_path = create_zip(package_dir)
