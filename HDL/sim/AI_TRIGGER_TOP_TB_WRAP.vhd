@@ -19,6 +19,7 @@ use ieee.numeric_std.all;
 use work.AI_TRIGGER_PKG.all;
 
 entity AI_TRIGGER_TOP_TB_WRAP is
+    generic (DIRECT_ADC : boolean := false);
     port (
         CLK_ADC         : in  std_logic;
         ADC_SRC_CLK     : in  std_logic;
@@ -93,6 +94,13 @@ begin
             RST_SYNC  => rst_adc
         );
 
+    direct_input : if DIRECT_ADC generate
+        adc_ingest_raw <= ADC_DATA4_FLAT;
+        data_str_core <= DATA_STR;
+        ADC_SRC_READY <= not rst_adc;
+        adc_input_overflow_count_i <= (others => '0');
+    end generate;
+    source_cdc : if not DIRECT_ADC generate
     u_ADC_INPUT : entity work.ADC_INPUT_CDC_FIFO
         port map (
             WR_CLK         => ADC_SRC_CLK,
@@ -107,6 +115,8 @@ begin
             RD_DATA        => adc_ingest_raw,
             OVERFLOW_COUNT => adc_input_overflow_count_i
         );
+
+    end generate;
 
     -- Unpack the CLK_ADC-domain flat vector into adc_data4_t.
     -- adc_ingest_raw[(ch*N_BATCH_S+s)*12 +: 12] -> adc_data4_t(ch)(s)

@@ -671,7 +671,7 @@ module tb_AI_TRIGGER_TOP;
             $display("                    SIMULATION SUMMARY");
             $display("=============================================================");
             $display("Top module:       AI_TRIGGER_TOP");
-            $display("CNN cores:        5 (parallel, round-robin)");
+            $display("CNN cores:        2 (parallel, round-robin)");
             $display("ADC_SRC_CLK:      %.1f MHz (%.3f ns period)",
                      1000.0/ADC_SRC_CLK_PERIOD, ADC_SRC_CLK_PERIOD);
             $display("CLK_ADC:          %.1f MHz (%.3f ns period)",
