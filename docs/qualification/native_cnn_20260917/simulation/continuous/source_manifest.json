@@ -1,0 +1,398 @@
+{
+  "targets": [
+    "vivado",
+    "simulation"
+  ],
+  "files": [
+    {
+      "package": "cnn-core",
+      "file": "cnn_core.v",
+      "sha256": "59f1dbb32a7d87cedc386cdcd959a52a6027d3c84875fcc0f619d943f9178186",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v",
+      "sha256": "b467ef1942f6773ab7e98dbeb44a9205b98b82884bb7330b487821ebbca0b7ce",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.dat",
+      "sha256": "36d633f214617952c7bdb9a06094d361f35262f5b3c0c633417fa9d67ed8d9b6",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.dat"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v",
+      "sha256": "94736fe3304f9f2050eb43fac55f773af22b5eb9d99dc6e688b1aac4838788c1",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_s.v",
+      "sha256": "6ac6517cf87d6f315aa843fd068c4d3ec15c97d2bf3b000d47546f1f8ef2dfa6",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_s.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w480_d4_A.v",
+      "sha256": "a2dde849abe1c85653d7a61a2149e852c5c0bbf4297eec9b0dab60692c361afe",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w480_d4_A.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w816_d4_A.v",
+      "sha256": "cd4e1e9d3749ba9af55f7549a354343071894f3daa474885fc3c9f1addcf4325",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w816_d4_A.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w864_d4_A.v",
+      "sha256": "91c82cacc91389aeecfe862284f0600c392a1cd3a5fdf2f0ce89b9310ae05f26",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w864_d4_A.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_flow_control_loop_pipe.v",
+      "sha256": "596c69e8d271e05f225495f7e9f0035dfebcc5eba6334f0281cadcc1144cd91b",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_flow_control_loop_pipe_sequential_init.v",
+      "sha256": "6e2ad6efc3694745d72562e4e2a8366323ff33df6212d32a03c0ff473979ddca",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_detection_unit.v",
+      "sha256": "02e16596a1b339b0b43178094f49d0b02251498cbe5e55f318ca0df00d643871",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detection_unit.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_detector.vh",
+      "sha256": "f28ca44b1214dec2de225f0874aeac617be1e353ddf6230aacb93cf8d00925ec",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detector.vh"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_idx0_monitor.v",
+      "sha256": "162c6911b41ea46e9d49446ce908ba77abd5bbe8acc3d05d6e37dafb2294181e",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_idx0_monitor.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_kernel_monitor_top.vh",
+      "sha256": "275d2f0b3ddd6dd2fa047e66a6f415c1e5f1c2ecaa26f198c2747c7be3771826",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_kernel_monitor_top.vh"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_report_unit.vh",
+      "sha256": "8419c7331277403ad42b4266c88d6b47025328e08f44813fb06dcad1954c1e5f",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_report_unit.vh"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_4ns_13s_15_1_1.v",
+      "sha256": "64925695caec8887c171d3b84de7e00eac87e99fae26bc749ebbfe0c8ef52cae",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_4ns_13s_15_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_4ns_15s_15_1_1.v",
+      "sha256": "1a383215f607ae0466fec86a58d7950087147b051e64e076ed014fc5931d9419",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_4ns_15s_15_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_5s_15s_16_1_1.v",
+      "sha256": "27a35054dd90e876b59acf3c22d96a423ae5645573e2156969b951c8f908878e",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_5s_15s_16_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_5s_16s_16_1_1.v",
+      "sha256": "36dc17e2f552c71d4e86d609f9e8a91f38e6eb3261c5fc25847c6e949e9578e4",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_5s_16s_16_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mul_10s_5s_15_1_1.v",
+      "sha256": "5f5e11d685e143bdd20d0aa133d8a506ff1526a419663301e67f84cd609abd36",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_10s_5s_15_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v",
+      "sha256": "ca90c2630e5bf0a444ccb7f07ec9bc820e7878366ff91a4fb7802709b9d97a1a",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_regslice_both.v",
+      "sha256": "7a3224dbeb831791f952f1c4a566fa57e3e0bfaf394d110a4eb381249c32c30a",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8_s.v",
+      "sha256": "21393f202d2b3cd190ce59968056c93471de7746b2413bf5c6b391e2400bb3c2",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8_s.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v",
+      "sha256": "643be0b5d135647853c7d039cf4fc85539576ebb6fd93672ed788594155dd31d",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v",
+      "sha256": "537bda4a4225a18efec3c63ac43facbbf7bf25f87792c873b07a6ecbe611dfe8",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_sparsemux_17_3_10_1_1.v",
+      "sha256": "4b0262f8b9982712672e27690edf33d09a13806691c35f9631efc005e565cfe6",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_17_3_10_1_1.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_U0.v",
+      "sha256": "4b5e6f835233ec0c252ceadc3365a5210355dda5d413853fa5eaabbe36e1ffdb",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_U0.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8dEe.v",
+      "sha256": "b23167f4125e0cfd0f8b4b4244536e410efc65de6db041332e769211841b1dea",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8dEe.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v",
+      "sha256": "beddb7e4e93ead15bc47e3cca39bb22cc99e56f55df9acdc89a9ed93a1e6915e",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v",
+      "sha256": "d9e5147b5a7512df63c365974d5910946e98e0ec425a062babd9de4a63a02066",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v"
+    },
+    {
+      "package": "cnn-core-wrapper",
+      "file": "cnn_core_wrapper_top.v",
+      "sha256": "c9632e4e0ef2928732969d293acbf4f4e9542ffb84deb4242d3a62ffceaa4ba4",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/cnn-core-wrapper/hw/rtl/cnn_core_wrapper_top.v"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "PRE_TRIGGER_PKG.vhd",
+      "sha256": "7e7b64c7e57bfd96cd7aa9b5166896be55fce0595db22c93ff4bf072a26e9f6a",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/rtl/PRE_TRIGGER_PKG.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Mult_to_bin.vhd",
+      "sha256": "933c5fcd5a95e01fef3618e42f6fa4ef479ce8086d20971380511f34260ff472",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/rtl/Mult_to_bin.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Pre_trigger_1ch.vhd",
+      "sha256": "d18ba0f5c1af3cec9dbda6a24cfe261d7ae5e1dca7478fff6d845a05628856d5",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/rtl/Pre_trigger_1ch.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Pre_trigger.vhd",
+      "sha256": "c1689045cab4f9fcac7220e153de47432ba6e6d550f1c6a8bc6277776c14edcc",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/rtl/Pre_trigger.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "tb_pre_trigger_1ch.vhd",
+      "sha256": "63e3f4ca77bba1694efadd33c60bdb60ff9924b45a13f4b5a9d198aad5a44fc5",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/sim/tb_pre_trigger_1ch.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "tb_pre_trigger.vhd",
+      "sha256": "b464893c56b4426bc58f07be2722e0b7d0b8ff49119e058f7ba940b1ca252fe3",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/sim/tb_pre_trigger.vhd"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "tb_pre_trigger_cosim.vhd",
+      "sha256": "778ad587965a7e9ee520de73b0fc831c58dc7a6c34192d78664d36ebcd0f67ff",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/hilo-trigger/hw/sim/tb_pre_trigger_cosim.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "AI_TRIGGER_PKG.vhd",
+      "sha256": "b4c295ae5350da198f308527b336985534b2ffb9a4f2bfceaa51a1fca6a570fd",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/AI_TRIGGER_PKG.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "RESET_SYNC.vhd",
+      "sha256": "daddcd47a1c518399342011f136d6a7ca8098bdeb426f488ec82c5208929abdc",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/RESET_SYNC.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "TRIGGER_MODE_CTRL.vhd",
+      "sha256": "f41e67c64b1c16bd61d119538a87a9f021c13240eb0972d09a45adf1b6d4e2a1",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/TRIGGER_MODE_CTRL.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "HOUSEKEEPING_TRIGGER_CTRL.vhd",
+      "sha256": "3baf70b3157e68934ab7e47877b352afb2c85784119e7008b9aaf2f937b06116",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/HOUSEKEEPING_TRIGGER_CTRL.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "HILO_INPUT_ADAPTER.vhd",
+      "sha256": "7831a51dd6257280468ba93e704aaa79f95fd4f2770c402e81e1d89301505176",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/HILO_INPUT_ADAPTER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "HILO_TRIGGER_CTRL.vhd",
+      "sha256": "18b7211b6c438e5ba74894abaa7cdbff14e216265b143bb66a5a82ba8556707d",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/HILO_TRIGGER_CTRL.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "GATED_CNN_READER.vhd",
+      "sha256": "e649376848cabecd3274247b7a2548ede84bb937f29fc09c15998c74bae8a46c",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/GATED_CNN_READER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "TRIGGER_DECISION.vhd",
+      "sha256": "4f3e7d0a3fa782107f957766eed6e6c0a20011ed904f54d562eb59b0a0b6963d",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/TRIGGER_DECISION.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "ADC_INPUT_CDC_FIFO.vhd",
+      "sha256": "f23fa06a993ac1f47a96b5c0be3e7151ea33ec9aab9d537b19be8aa179e5bb77",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_INPUT_CDC_FIFO.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "CHUNK_ID_CDC_FIFO.vhd",
+      "sha256": "b2c1e91e978c880dd2d6643118db256c84e27496689caba7b545be092e8ee29e",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CHUNK_ID_CDC_FIFO.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "TRIGGER_CDC_FIFO.vhd",
+      "sha256": "6d0e83a17c150da247b40100b4a88888fb1185c9ac158156db0cc3d9ac6e625a",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/TRIGGER_CDC_FIFO.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "WAVEFORM_RING_BUFFER.vhd",
+      "sha256": "ca86d975c7f600b13dc8517caeb0b0c1753a3317940395c7bb5cf367021cfb95",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/WAVEFORM_RING_BUFFER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "RING_READ_ARBITER.vhd",
+      "sha256": "859567be29e5277d04677a3ccb0865e3f9864aaec33a15a47e9875c8173bf516",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/RING_READ_ARBITER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "EVENT_RECORDER.vhd",
+      "sha256": "33b64371b476803ade7b7ae2c8e849e6b40543dd3cfb7cdcf6ead092d2ddcb89",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/EVENT_RECORDER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "EVENT_CAPTURE_CTRL.vhd",
+      "sha256": "e5aa39d4aa323ddc8dcf3398079bdd5f784124b9e38137dc239143d41680216b",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/EVENT_CAPTURE_CTRL.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "EVENT_OUTPUT_FIFO.vhd",
+      "sha256": "dd93716cff89e91958a52832afd692490d5cd3549610f3dc0cc275d8d5d154f8",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/EVENT_OUTPUT_FIFO.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "EVENT_CAPTURE_PATH.vhd",
+      "sha256": "cf8cf49bb23331243c2a2c542a67e2a86a26dab445f49980f25eadcff243f8c1",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/EVENT_CAPTURE_PATH.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "MULTIMODE_EVENT_PATH.vhd",
+      "sha256": "d33c3d89730ee2064933572273e9ef439fafe82f41b5f3269a7e2480d9d6958f",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/MULTIMODE_EVENT_PATH.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "ADC_CHUNK_DISTRIBUTOR.vhd",
+      "sha256": "524473d34cc37edea5a83ba6be1e3a425608436b897fa89d301990162822e8e4",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "CNN_CORE_LANE.vhd",
+      "sha256": "70e58f3ffc4c4d13c838a3291ace747dae83417596eeadd9cdeb6dd9948ec218",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "CNN_RESULT_ARBITER.vhd",
+      "sha256": "0aa692f937979e11208b50a62dbf0e425827812aff5e27f1f2694ccc6c96de02",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_RESULT_ARBITER.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "AI_TRIGGER_CORE.vhd",
+      "sha256": "f553c9c8de821b6d3bc01ddf222ee00b6c439ea545a027509c38384c1e7d7ba5",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/AI_TRIGGER_CORE.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "AI_TRIGGER_TOP.vhd",
+      "sha256": "307b5fcb87f671dee1d611e607e52985c8ce64229daa6363ea8105cd5659fc54",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/AI_TRIGGER_TOP.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "AI_TRIGGER_TOP_TB_WRAP.vhd",
+      "sha256": "7470dc8e159765e71781485ba91ca8d0ecb1dfb3ea3f69773d61c41c9e8d1ab2",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd"
+    },
+    {
+      "package": "ai-trigger-system",
+      "file": "tb_ai_trigger_top.sv",
+      "sha256": "ecbb7470c203f212a9adf3896a4eeee47a5a93f972d17b9d48a517081f37e094",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/sim/tb_ai_trigger_top.sv"
+    },
+    {
+      "package": "validation",
+      "file": "tb_native_system.sv",
+      "sha256": "52d33882e2eab66047c89e133bdd58af96ef1757ead1168b10de24c30a479871",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/tests/tb_native_system.sv"
+    },
+    {
+      "package": "validation",
+      "file": "run_native_sim.py",
+      "sha256": "50b7293938d383a00b56676c524f9f1e1d795ded50d0121d2b140bb7da7d0f37",
+      "resolved_path": "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py"
+    }
+  ]
+}

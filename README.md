@@ -187,6 +187,11 @@ can change compiled code independently of the published pins.
 See [NativeCNNQualification.md](docs/NativeCNNQualification.md) for the current
 two-lane source identities, functional evidence, OOC result, and reproduction commands.
 
+The final actual-IP suite passes all five scenarios, including 1096 exact-score
+windows and 475 complete eight-channel events in continuous operation. Routed
+OOC meets 250/200 MHz with WNS +0.041 ns and WHS +0.032 ns, zero DRC errors,
+and zero unsafe or unknown CDC endpoints. This is block-level qualification.
+
 ## Historical validation (previous CNN)
 
 The following plots, scores, and counts are retained for historical comparison;
@@ -245,7 +250,7 @@ Plots for 3.4 and 4 RMS are included in the full report.
 ### Historical OOC implementation (superseded CNN)
 
 The figures below describe the previous five-lane system, not native two-lane
-qualification. Current evidence will be recorded in `docs/NativeCNNQualification.md`.
+qualification. Current evidence is recorded in `docs/NativeCNNQualification.md`.
 
 The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
 `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.

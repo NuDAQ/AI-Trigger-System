@@ -1,6 +1,6 @@
 # Native CNN two-lane qualification
 
-Status: functional cases pass; final routed OOC qualification is in progress.
+Status: native two-lane integration, functional regression and routed OOC qualification passed.
 Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS 2023.2 on Ubuntu 22.04.5.
 
 ## Source and interface contract
@@ -18,12 +18,20 @@ Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS
 
 Bender is the only source authority. The lockfile was resolved without local overrides. Native builds record compiled source hashes in `source_manifest.json`. Delivery includes the exact `.v`, `.vh`, and `.dat` assets and a `SHA256SUMS` file. Neither wrapper qualification fixtures nor wrapper OOC constraints are imported.
 
+The qualified RTL is commit `8002ae318674b686b8f0f4fb9bf4bcf9e2d0b7f1`.
+The final source audit records two text differences from the server snapshot:
+ordinary packing comments in `ADC_CHUNK_DISTRIBUTOR.vhd`, with every
+non-comment line identical, and a lane-count display string in the unused
+legacy testbench. All other source hashes, the selected native testbenches,
+93 reference firmware files and all six reference outputs match.
+See the [source audit](qualification/native_cnn_20260917/source_audit.json).
+
 ## Functional evidence
 
 | Boundary | Result |
 | --- | --- |
 | Local GHDL suite | 39 passed; behavioral XPM models, not vendor timing models |
-| Python / CLI suite | 69 passed, including rejection of partial simulation completion |
+| Python / CLI suite | 70 passed, including rejection of partial simulation completion |
 | ADC conversion | All 4096 signed raw codes agree between the generated native fixed-point type and VHDL conversion |
 | ADC-aware corpus | 96 committed windows plus all 1000 supplied NPZ windows; additive coverage |
 | Continuous actual-IP / actual-XPM simulation | 1096 exact scores; 475 exact complete eight-channel events; zero normal-operation loss |
@@ -35,13 +43,42 @@ Bender is the only source authority. The lockfile was resolved without local ove
 
 The reference first encodes floating-point model inputs into signed 12-bit ADC codes (`rint(X*64)` with ADC saturation), then runs those exact ADC-representable samples through the generated native HLS C++. It does not compare lossy ADC data against unmodified floating-point inputs. These are numerical and integration checks, not a new model-accuracy or physical-voltage calibration claim.
 
-`run_native_qualification.py` runs every vendor scenario sequentially and stores compact case logs, source manifests and `summary.json`. The current final suite is still running; individual scenarios above were already exercised during development.
+`run_native_qualification.py` runs every vendor scenario sequentially and stores compact case logs, source manifests and `summary.json`. The final `qualification-qualified` suite completed with all five cases passing. Its [summary](qualification/native_cnn_20260917/simulation_summary.json) and [reference manifest](qualification/native_cnn_20260917/reference.json) are checked in. The supplied NPZ SHA256 is `c662edb897f09ea93de1f524b1ce12f00e54b9b028565d4d2082d4c1bb0b64a4`.
 
 ## OOC evidence
 
-The first complete OOC route failed correctly: ADC WNS -0.195 ns / TNS -7.547 ns (160 endpoints), CNN WNS +0.210 ns, overall WHS +0.007 ns and WPWS +1.300 ns. Its critical path was waveform URAM through native conversion into a lane BRAM. It is diagnostic evidence, not a passing qualification.
+The final `ooc-qualified` run completed synthesis, optimization, placement,
+physical optimization and routing with exit code zero. Reports are preserved
+in [qualification/native_cnn_20260917](qualification/native_cnn_20260917/README.md).
 
-A fresh run with the registered gated replay path and the mode-drain correction is in progress. Final timing, utilization, route status, CDC and constraint coverage will replace this status after review. Wide subsystem ports remain internal OOC boundaries; the flow does not implement package-level I/O or claim full-board timing.
+| Check | Final result |
+| --- | --- |
+| ADC / CNN clocks | 250 / 200 MHz |
+| ADC / CNN setup WNS | +0.041 / +0.191 ns |
+| Overall hold WHS / pulse-width WPWS | +0.032 / +1.300 ns |
+| Setup / hold / pulse-width failing endpoints | 0 / 0 / 0 |
+| Routable nets | All 107,891 fully routed; zero routing errors |
+| LUT / FF | 60,851 (28.05%) / 45,511 (10.49%) |
+| DSP / BRAM tiles / URAM | 128 (7.02%) / 21 (4.38%) / 6 (9.38%) |
+| Bonded IOB | 0; subsystem OOC ports |
+| CDC | 253 safe endpoints; zero unsafe, unknown or critical crossings |
+| DRC | Zero errors; 558 DSP pipeline recommendations and one no-routable-load warning |
+| Constraint coverage | Zero unclocked registers, unconstrained internal endpoints or combinational loops |
+
+The ADC setup margin is only 41 ps. These results qualify this block under
+`ai_trigger_ooc.xdc`; integrating it into the full FPGA requires fresh timing
+qualification. Boundary delays are zero, input hold checks are excluded,
+the two clocks are asynchronous, and external reset is false-pathed. The
+reported hold result therefore does not qualify upstream input hold timing.
+Clock arrival is ideal at the OOC boundary. Power reports use default activity;
+no SAIF-based or board power claim is made.
+
+The first route exposed a URAM-to-conversion-to-lane-BRAM setup failure;
+registered gated replay fixed that path. CDC review then identified 16
+external-reset connections into the lane XPM reset sequencers.
+[AMD's XPM FIFO contract](https://docs.amd.com/r/2023.1-English/ug1344-versal-architecture-libraries/XPM_FIFO_ASYNC)
+requires reset synchronous to the write clock. Registering the ADC-domain
+reset before each FIFO eliminated those crossings in the final route.
 
 ## Reproduce
 
@@ -72,6 +109,6 @@ python3 scripts/run_vivado_build.py \
 python3 scripts/package_delivery.py --version native-two-lane
 ```
 
-Use empty directories for reference generation and the qualification suite. Full vendor logs stay in each output directory; a nonzero return code or incomplete final marker fails the run. OOC fails for unresolved black boxes, missing clocks, DRC errors or negative setup/hold/pulse-width slack.
+Use empty directories for reference generation and the qualification suite. Full vendor logs stay in each output directory; a nonzero return code or incomplete final marker fails the run. OOC fails for unresolved black boxes, missing clocks, DRC errors, critical CDC crossings or negative setup/hold/pulse-width slack.
 
 Downstream gateware/software integration, physical ADC calibration, activity-based power qualification and board validation are outside this delivery. Future one-lane full-rate operation needs a separate admission/overlap design and throughput qualification.

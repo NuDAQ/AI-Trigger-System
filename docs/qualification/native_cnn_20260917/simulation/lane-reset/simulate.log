@@ -1,0 +1,5 @@
+Time resolution is 1 ps
+WARNING: Too many words specified in data file /home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2/all_input.hex
+WARNING: Too many words specified in data file /home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2/all_expected.hex
+PASS native lane input/compute/output resets, gaps and held results
+$finish called at time : 4555 ns : File "/home/work1/Works/_codex_ai_trigger_native_20260917/system/tests/tb_native_lane.sv" Line 77

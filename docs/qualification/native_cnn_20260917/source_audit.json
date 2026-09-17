@@ -1,0 +1,59 @@
+{
+  "rtl_revision": "8002ae318674b686b8f0f4fb9bf4bcf9e2d0b7f1",
+  "simulation_sources": [
+    {
+      "case": "continuous",
+      "exact_hash_matches": 63,
+      "ordinary_comment_difference": 1,
+      "unelaborated_legacy_display_difference": 1
+    },
+    {
+      "case": "gaps",
+      "exact_hash_matches": 63,
+      "ordinary_comment_difference": 1,
+      "unelaborated_legacy_display_difference": 1
+    },
+    {
+      "case": "lane-reset",
+      "exact_hash_matches": 63,
+      "ordinary_comment_difference": 1,
+      "unelaborated_legacy_display_difference": 1
+    },
+    {
+      "case": "modes",
+      "exact_hash_matches": 63,
+      "ordinary_comment_difference": 1,
+      "unelaborated_legacy_display_difference": 1
+    },
+    {
+      "case": "overload",
+      "exact_hash_matches": 63,
+      "ordinary_comment_difference": 1,
+      "unelaborated_legacy_display_difference": 1
+    }
+  ],
+  "reference_firmware_hashes_matched": 93,
+  "reference_files_matched": 6,
+  "npz_sha256": "c662edb897f09ea93de1f524b1ce12f00e54b9b028565d4d2082d4c1bb0b64a4",
+  "comment_only_change": {
+    "file": "HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd",
+    "compiled_sha256": "524473d34cc37edea5a83ba6be1e3a425608436b897fa89d301990162822e8e4",
+    "documented_sha256": "dbab560bdc880ff6f92d04a95c4b8f241294ae6e3532dc1af5f4632d8d649712",
+    "non_comment_lines_identical": true
+  },
+  "unelaborated_legacy_bench": {
+    "file": "HDL/sim/tb_ai_trigger_top.sv",
+    "compiled_sha256": "ecbb7470c203f212a9adf3896a4eeee47a5a93f972d17b9d48a517081f37e094",
+    "local_sha256": "b30e644ccfb464d0b58eac206bd2bc8d58ca177ab8305c83559af6cdfc3d95a7",
+    "difference": "Only the display string CNN cores: 5 becomes 2; none of the qualification cases selects this top."
+  },
+  "ooc_sources": {
+    "exact_hash_matches": 59,
+    "ordinary_comment_difference": 1,
+    "additional_build_scripts_verified": [
+      "scripts/vivado_timing_gate.tcl",
+      "scripts/run_vivado_build.py"
+    ]
+  },
+  "post_route_dcp_sha256": "941028992402af0e8c8874e832de86cb9e82a7b588eec69a82768bba44d94941"
+}
