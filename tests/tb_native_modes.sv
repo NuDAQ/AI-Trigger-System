@@ -76,13 +76,13 @@ module tb_native_modes;
         // Switch from gated AI to Capture-All without resetting waveform
         // history; the request applies only at the next complete chunk.
         @(negedge clk_adc); mode=0; expected_beats=0; event_beats=0; score_count=0;
-        for (integer i=0;i<64;i++) begin
-            adc_data=waveform[i]; data_str=1; @(negedge clk_adc);
+        for (integer i=0;i<128;i++) begin
+            adc_data=waveform[i%64]; data_str=1; @(negedge clk_adc);
         end
         data_str=0;
         wait(active_mode==0);
         repeat(20) @(negedge clk_adc);
-        first_timestamp=4; expected_beats=128;
+        first_timestamp=5; expected_beats=128;
         for (integer i=64;i<192;i++) begin
             adc_data=waveform[i]; data_str=1; @(negedge clk_adc);
         end

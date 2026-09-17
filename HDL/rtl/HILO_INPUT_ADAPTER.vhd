@@ -36,7 +36,9 @@ begin
     process (CLK)
     begin
         if rising_edge(CLK) then
-            if RST = '1' or MODE_START = '1' then
+            -- A disabled adapter cannot complete a partial aggregate. Drop that
+            -- unissued work so mode draining can reach the next safe boundary.
+            if RST = '1' or MODE_START = '1' or ENABLE = '0' then
                 batch_r         <= (others => (others => (others => '0')));
                 beat_count_r    <= 0;
                 hl_data_str_r   <= '0';
