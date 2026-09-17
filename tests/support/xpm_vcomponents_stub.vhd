@@ -279,10 +279,38 @@ entity xpm_cdc_handshake is
 end entity xpm_cdc_handshake;
 
 architecture functional of xpm_cdc_handshake is
+    signal send_sync : std_logic_vector(DEST_SYNC_FF - 1 downto 0) := (others => '0');
+    signal ack_sync : std_logic_vector(SRC_SYNC_FF - 1 downto 0) := (others => '0');
+    signal received : std_logic := '0';
+    signal ack : std_logic := '0';
 begin
-    dest_out <= src_in;
-    dest_req <= src_send;
-    src_rcv  <= dest_ack when DEST_EXT_HSK /= 0 else src_send;
+    process(dest_clk)
+    begin
+        if rising_edge(dest_clk) then
+            send_sync <= send_sync(DEST_SYNC_FF - 2 downto 0) & src_send;
+            if DEST_EXT_HSK = 0 then
+                dest_req <= '0';
+                if send_sync(DEST_SYNC_FF - 1) = '1' and received = '0' then
+                    dest_out <= src_in;
+                    dest_req <= '1';
+                    received <= '1';
+                elsif send_sync(DEST_SYNC_FF - 1) = '0' then
+                    received <= '0';
+                end if;
+            else
+                dest_req <= send_sync(DEST_SYNC_FF - 1);
+                dest_out <= src_in;
+            end if;
+        end if;
+    end process;
+    ack <= received when DEST_EXT_HSK = 0 else dest_ack;
+    process(src_clk)
+    begin
+        if rising_edge(src_clk) then
+            ack_sync <= ack_sync(SRC_SYNC_FF - 2 downto 0) & ack;
+        end if;
+    end process;
+    src_rcv <= ack_sync(SRC_SYNC_FF - 1);
 end architecture functional;
 
 library ieee;

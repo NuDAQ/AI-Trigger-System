@@ -9,7 +9,7 @@
 --   * CLK_ADC domain event stream: waveform batch, LAST, timestamp, and anchor
 --
 -- CNN_THRESH is kept as a 32-bit DAQ-friendly word.  The core uses only
--- bits [21:0] as signed ap_fixed<22,11> raw threshold.
+-- bits [20:0] as signed ap_fixed<21,12> raw threshold.
 -- =============================================================================
 
 library ieee;

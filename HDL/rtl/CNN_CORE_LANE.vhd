@@ -136,6 +136,7 @@ architecture rtl of CNN_CORE_LANE is
 
     signal started_count_cnn : chunk_cnt_t := (others => '0');
     signal consumed_count_cnn : chunk_cnt_t := (others => '0');
+    signal metadata_count : integer range 0 to 2**CHUNK_CNT_W := 0;
     signal stream_done_toggle_cnn : std_logic := '0';
 
     signal chunk_id_dest_req  : std_logic;
@@ -289,6 +290,7 @@ begin
     fifo_rd_en <= cnn_in_valid and cnn_in_ready;
 
     process(CLK_CNN)
+        variable metadata_count_next : integer range 0 to 2**CHUNK_CNT_W;
     begin
         if rising_edge(CLK_CNN) then
             if rst_n_cnn = '0' then
@@ -297,6 +299,7 @@ begin
                 stream_cnt   <= 0;
                 started_count_cnn <= (others => '0');
                 consumed_count_cnn <= (others => '0');
+                metadata_count <= 0;
                 stream_done_toggle_cnn <= '0';
                 score_id_wr_idx <= 0;
                 score_id_rd_idx <= 0;
@@ -309,6 +312,7 @@ begin
                 threshold_meta_data <= (others => '0');
                 chunk_id_dest_seen <= '0';
             else
+                metadata_count_next := metadata_count;
                 if cnn_start = '1' and cnn_ready = '1' then
                     cnn_start <= '0';
                 end if;
@@ -330,6 +334,7 @@ begin
                 end if;
                 if cnn_out_valid = '1' and LANE_READY = '1' then
                     consumed_count_cnn <= consumed_count_cnn + 1;
+                    metadata_count_next := metadata_count_next - 1;
                     if score_id_rd_idx = 2**CHUNK_CNT_W - 1 then
                         score_id_rd_idx <= 0;
                     else
@@ -339,7 +344,7 @@ begin
                     if dbg_cnn_events < DEBUG_EVENTS then
                         report "LANE" & integer'image(LANE_ID) &
                                " CNN output_valid score_raw=" &
-                               integer'image(to_integer(signed(cnn_out_data(21 downto 0)))) &
+                               integer'image(to_integer(signed(cnn_out_data(20 downto 0)))) &
                                " started=" &
                                integer'image(to_integer(started_count_cnn));
                         dbg_cnn_events <= dbg_cnn_events + 1;
@@ -354,7 +359,8 @@ begin
                         cnn_start    <= '0';
                         stream_cnt   <= N_CHUNK_BEATS_CNN;
 
-                        if chunk_id_meta_valid = '1' and fifo_data_valid = '1' then
+                        if chunk_id_meta_valid = '1' and fifo_data_valid = '1' and
+                           metadata_count_next < 2**CHUNK_CNT_W then
                             -- Assert start and first word simultaneously.
                             -- Hold start until native ready acknowledges this request.
                             cnn_start    <= '1';
@@ -370,6 +376,7 @@ begin
                                 score_id_wr_idx <= score_id_wr_idx + 1;
                             end if;
                             started_count_cnn <= started_count_cnn + 1;
+                            metadata_count_next := metadata_count_next + 1;
                             cnn_state    <= CC_STREAM;
                             -- synthesis translate_off
                             if dbg_cnn_events < DEBUG_EVENTS then
@@ -407,6 +414,7 @@ begin
                         end if;
 
                 end case;
+                metadata_count <= metadata_count_next;
             end if;
         end if;
     end process;
@@ -418,7 +426,8 @@ begin
     LANE_TRIGGER_OFFSET <= score_trigger_offset_mem(score_id_rd_idx);
     LANE_THRESH <= score_thresh_mem(score_id_rd_idx);
     LANE_VALID <= cnn_out_valid;
-    WORK_PENDING <= '1' when started_count_cnn /= consumed_count_cnn else '0';
+    WORK_PENDING <= '1' when metadata_count /= 0 or
+        chunk_id_meta_valid = '1' or cnn_state /= CC_IDLE else '0';
 
     -- =========================================================================
     -- FIFO instantiation.  XPM is used instead of a fixed generated FIFO IP so

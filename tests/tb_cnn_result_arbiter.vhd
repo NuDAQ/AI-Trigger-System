@@ -84,16 +84,16 @@ begin
         lane_valid(1) <= '0';
         result_ready <= '0';
 
-        lane_score(2)  <= std_logic_vector(to_signed(-20, 32));
-        lane_thresh(2) <= std_logic_vector(to_signed(0, 32));
-        lane_valid(2)  <= '1';
+        lane_score(0)  <= x"001FFE00"; -- native -1, zero-padded container
+        lane_thresh(0) <= std_logic_vector(to_signed(0, 32));
+        lane_valid(0)  <= '1';
         wait for 1 ps;
-        assert lane_ready(2) = '1' and result_valid = '1' and
+        assert lane_ready(0) = '1' and result_valid = '1' and
                result_qualifying = '0'
             report "rotation did not advance to the next completed lane" severity failure;
 
         wait until rising_edge(clk);
-        lane_valid(2) <= '0';
+        lane_valid(0) <= '0';
         wait until rising_edge(clk);
         wait for 1 ps;
         assert busy = '0'

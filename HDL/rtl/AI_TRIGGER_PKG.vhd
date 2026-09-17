@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
-    constant N_LANES    : integer := 5;    -- parallel CNN cores
+    constant N_LANES    : integer := 2;    -- parallel CNN cores
     constant N_ADC_CH   : integer := 8;    -- raw ADC channels captured into events
     constant N_TRIGGER_CH : integer := 4;  -- leading channels used by the CNN trigger
     constant N_CH       : integer := N_ADC_CH; -- historical alias for raw ADC channels

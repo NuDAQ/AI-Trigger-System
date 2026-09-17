@@ -86,6 +86,8 @@ begin
             assert lane_we /= (lane_we'range => '0')
                 report "lane write should be asserted when all lanes are ready"
                 severity failure;
+            assert lane_we(to_integer(chunk_id) mod 2) = '1'
+                report "continuous chunks must rotate between exactly two CNN lanes" severity failure;
             assert chunk_timestamp = resize(chunk_id, TIMESTAMP_WIDTH)
                 report "chunk timestamp must match chunk id"
                 severity failure;
