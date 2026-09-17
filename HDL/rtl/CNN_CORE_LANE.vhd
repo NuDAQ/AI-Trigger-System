@@ -39,7 +39,7 @@ entity CNN_CORE_LANE is
     port (
         CLK_ADC      : in  std_logic;
         CLK_CNN      : in  std_logic;
-        RST_ASYNC    : in  std_logic;   -- active-high, async reset for FIFO IP
+        RST_ASYNC    : in  std_logic;   -- active-high external reset; domain resets supplied below
         RST_ADC      : in  std_logic;   -- active-high, synchronous to CLK_ADC
         RST_CNN      : in  std_logic;   -- active-high, synchronous to CLK_CNN
 
@@ -121,6 +121,7 @@ architecture rtl of CNN_CORE_LANE is
     signal fifo_wr_rst_busy : std_logic;
     signal fifo_rd_rst_busy : std_logic;
     signal fifo_wr_en : std_logic;
+    signal fifo_reset_adc : std_logic := '1';
     type chunk_id_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of chunk_id_t;
 
     signal chunk_id_src_send    : std_logic := '0';
@@ -198,6 +199,16 @@ architecture rtl of CNN_CORE_LANE is
 begin
 
     cnn_in_data <= fifo_dout;
+
+    -- XPM FIFO rst must be synchronous to its write clock. Register the
+    -- domain reset so even its asynchronous assertion does not feed the
+    -- vendor reset sequencer directly from an external port.
+    process(CLK_ADC)
+    begin
+        if rising_edge(CLK_ADC) then
+            fifo_reset_adc <= RST_ADC;
+        end if;
+    end process;
 
     -- =========================================================================
     -- CLK_ADC DOMAIN
@@ -462,7 +473,7 @@ begin
         )
         port map (
             sleep       => '0',
-            rst         => RST_ASYNC,
+            rst         => fifo_reset_adc,
             wr_clk      => CLK_ADC,
             wr_en       => fifo_wr_en,
             din         => BATCH_DATA,

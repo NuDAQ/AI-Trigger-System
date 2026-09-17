@@ -324,7 +324,6 @@ class OocFlowChecks(unittest.TestCase):
             self.assertNotRegex(source, r"rst_n_cnn\s*<=\s*not\s+rst_cnn_ff")
 
         self.assertIn("RST_ASYNC", lane)
-        self.assertRegex(lane, r"(?s)u_FIFO\s*:\s*xpm_fifo_async.*?rst\s*=>\s*RST_ASYNC")
         self.assertRegex(lane, r"WRITE_DATA_WIDTH\s+=>\s+LANE_FIFO_WRITE_WIDTH")
         self.assertRegex(lane, r"READ_DATA_WIDTH\s+=>\s+LANE_FIFO_READ_WIDTH")
         self.assertRegex(lane, r"FIFO_WRITE_DEPTH\s+=>\s+LANE_FIFO_WRITE_DEPTH")

@@ -198,6 +198,10 @@ if {$::RUN_BUILD_IMPL} {
     if {[llength $fatal_drc] > 0} {
         error "Post-route DRC errors: $fatal_drc"
     }
+    set cdc_fp [open [file join $rpt_dir post_route_cdc.rpt] r]
+    set cdc_summary [read $cdc_fp]
+    close $cdc_fp
+    ai_trigger_require_cdc $cdc_summary
     report_route_status -file [file join $rpt_dir post_route_status.rpt]
     report_power -file [file join $rpt_dir post_route_power.rpt]
     ai_trigger_require_timing $post_route_timing_summary

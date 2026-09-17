@@ -53,3 +53,13 @@ proc ai_trigger_require_timing {timing_summary} {
         error "Timing constraints are not met: [join $violations {, }]"
     }
 }
+
+# Critical CDC rows cannot be waived by the asynchronous clock groups.
+proc ai_trigger_require_cdc {summary} {
+    if {[string first "Severity" $summary] < 0} {
+        error "CDC summary is unavailable"
+    }
+    if {[regexp -line {^Critical[[:space:]]} $summary]} {
+        error "Unqualified critical CDC crossings"
+    }
+}

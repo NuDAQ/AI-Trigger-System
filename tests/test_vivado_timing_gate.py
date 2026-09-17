@@ -40,6 +40,17 @@ if {{[catch {{
             env={**os.environ, "AI_TRIGGER_TIMING_SUMMARY": summary},
         )
 
+    def test_critical_cdc_summary_fails_qualification(self) -> None:
+        program = f"""
+source {{{TIMING_GATE}}}
+if {{[catch {{ai_trigger_require_cdc {{Severity Source Clock Destination Clock CDC Type
+Critical input port clock CLK_ADC No Common Primary Clock False Path 17 1 0 16 0
+}}}} message]}} {{puts stderr $message; exit 1}}
+"""
+        result = subprocess.run(["tclsh"], input=program, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Unqualified critical CDC crossings", result.stderr)
+
     def test_positive_setup_hold_and_pulse_width_pass(self) -> None:
         result = self._run_gate(self._summary("0.115", "0.007", "1.300"))
 

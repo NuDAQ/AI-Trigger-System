@@ -126,6 +126,8 @@ begin
         rst_adc <= '0';
         rst_cnn <= '0';
 
+        wait until chunk_busy = '0';
+        wait until falling_edge(clk_adc);
         for i in 0 to N_BATCHES - 1 loop
             wr_en <= '1';
             batch_data <= std_logic_vector(to_unsigned(i, batch_data'length));
