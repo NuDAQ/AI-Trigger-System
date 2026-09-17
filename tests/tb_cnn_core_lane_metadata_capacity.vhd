@@ -161,7 +161,9 @@ begin
             wr_en <= '0';
         end procedure;
     begin
-        wait for 40 ns;
+        wait for 20 ns;
+        assert chunk_busy = '1' report "lane advertised acquisition capacity during reset" severity failure;
+        wait for 20 ns;
         wait until falling_edge(clk_adc);
         rst <= '0'; rst_adc <= '0'; rst_cnn <= '0';
         -- 16 outstanding results must not make WORK_PENDING appear empty.

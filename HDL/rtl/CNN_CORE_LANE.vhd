@@ -118,6 +118,9 @@ architecture rtl of CNN_CORE_LANE is
     signal chunk_count_adc : chunk_cnt_t := (others => '0');
     signal chunk_busy_adc  : std_logic := '0';
     signal fifo_full_s    : std_logic;
+    signal fifo_wr_rst_busy : std_logic;
+    signal fifo_rd_rst_busy : std_logic;
+    signal fifo_wr_en : std_logic;
     type chunk_id_mem_t is array (0 to 2**CHUNK_CNT_W - 1) of chunk_id_t;
 
     signal chunk_id_src_send    : std_logic := '0';
@@ -236,7 +239,7 @@ begin
                     -- synthesis translate_on
                 end if;
 
-                if WR_EN = '1' then
+                if fifo_wr_en = '1' then
                     if wr_count = 0 then
                         chunk_id_src_send <= '1';
                         chunk_id_src_data <= CNN_THRESH &
@@ -275,7 +278,9 @@ begin
         end if;
     end process;
 
-    CHUNK_BUSY <= chunk_busy_adc or fifo_full_s or chunk_id_src_pending;
+    CHUNK_BUSY <= RST_ADC or fifo_wr_rst_busy or chunk_busy_adc or
+        fifo_full_s or chunk_id_src_pending;
+    fifo_wr_en <= WR_EN and not fifo_wr_rst_busy and not RST_ADC;
 
     -- =========================================================================
     -- CLK_CNN DOMAIN
@@ -286,7 +291,8 @@ begin
     -- -------------------------------------------------------------------------
     -- CNN stream FSM + FIFO read logic (mirrors original CNN_FIFO_CONNECTOR)
     -- -------------------------------------------------------------------------
-    cnn_in_valid <= fifo_data_valid when cnn_state = CC_STREAM else '0';
+    cnn_in_valid <= fifo_data_valid and not fifo_rd_rst_busy and not RST_CNN
+        when cnn_state = CC_STREAM else '0';
     fifo_rd_en <= cnn_in_valid and cnn_in_ready;
 
     process(CLK_CNN)
@@ -360,6 +366,7 @@ begin
                         stream_cnt   <= N_CHUNK_BEATS_CNN;
 
                         if chunk_id_meta_valid = '1' and fifo_data_valid = '1' and
+                           fifo_rd_rst_busy = '0' and
                            metadata_count_next < 2**CHUNK_CNT_W then
                             -- Assert start and first word simultaneously.
                             -- Hold start until native ready acknowledges this request.
@@ -457,17 +464,17 @@ begin
             sleep       => '0',
             rst         => RST_ASYNC,
             wr_clk      => CLK_ADC,
-            wr_en       => WR_EN,
+            wr_en       => fifo_wr_en,
             din         => BATCH_DATA,
             full        => fifo_full_s,
             overflow    => open,
-            wr_rst_busy => open,
+            wr_rst_busy => fifo_wr_rst_busy,
             rd_clk      => CLK_CNN,
             rd_en       => fifo_rd_en,
             dout        => fifo_dout,
             empty       => fifo_empty,
             underflow   => open,
-            rd_rst_busy => open,
+            rd_rst_busy => fifo_rd_rst_busy,
             prog_full   => open,
             prog_empty  => open,
             data_valid  => fifo_data_valid,
