@@ -13,6 +13,7 @@ are not implemented as FPGA package IO.
 from __future__ import annotations
 
 import argparse
+import math
 import os
 import signal
 import shutil
@@ -54,6 +55,7 @@ def build_launcher_tcl(args: argparse.Namespace, repo_root: Path, out_dir: Path)
             f"set ::RUN_BUILD_TOP {args.top}",
             f"set ::RUN_BUILD_IMPL {1 if args.impl else 0}",
             f"set ::RUN_BUILD_THREADS {args.threads}",
+            f"set ::RUN_BUILD_MIN_SETUP_SLACK {args.min_setup_slack}",
             f"cd {tcl_quote(repo_root)}",
             f"source {tcl_quote(repo_root / 'scripts' / 'vivado_ooc_build.tcl')}",
             "exit",
@@ -101,11 +103,20 @@ def parse_args() -> argparse.Namespace:
         help="Vivado general.maxThreads value.",
     )
     parser.add_argument(
+        "--min-setup-slack",
+        type=float,
+        default=0.0,
+        help="Required post-route setup slack in ns, in addition to hold/CDC/DRC checks.",
+    )
+    parser.add_argument(
         "--keep-tcl",
         action="store_true",
         help="Keep the generated launcher Tcl file.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not math.isfinite(args.min_setup_slack) or args.min_setup_slack < 0:
+        parser.error("--min-setup-slack must be finite and nonnegative")
+    return args
 
 
 def main() -> int:
@@ -119,7 +130,7 @@ def main() -> int:
     vivado = find_executable(args.vivado, "VIVADO", "vivado")
     bender = find_executable(args.bender, "BENDER", "bender")
 
-    capture(repo_root, out_dir, ['vivado'], [repo_root/'HDL/constraints/ai_trigger_ooc.xdc', repo_root/'scripts/vivado_ooc_build.tcl'], bender=bender)
+    capture(repo_root, out_dir, ['vivado'], [repo_root/'HDL/constraints/ai_trigger_ooc.xdc', repo_root/'scripts/vivado_ooc_build.tcl', repo_root/'scripts/vivado_timing_gate.tcl', Path(__file__)], bender=bender)
 
     launcher = out_dir / "run_vivado_ooc_build.tcl"
     launcher.write_text(build_launcher_tcl(args, repo_root, out_dir), encoding="utf-8")

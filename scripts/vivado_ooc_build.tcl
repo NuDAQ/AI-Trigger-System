@@ -22,6 +22,9 @@ if {![info exists ::RUN_BUILD_IMPL]} {
 if {![info exists ::RUN_BUILD_THREADS]} {
     set ::RUN_BUILD_THREADS 8
 }
+if {![info exists ::RUN_BUILD_MIN_SETUP_SLACK]} {
+    set ::RUN_BUILD_MIN_SETUP_SLACK 0.0
+}
 
 set repo_root [file normalize $::RUN_BUILD_REPO_ROOT]
 set out_dir   [file normalize $::RUN_BUILD_OUT_DIR]
@@ -204,7 +207,7 @@ if {$::RUN_BUILD_IMPL} {
     ai_trigger_require_cdc $cdc_summary
     report_route_status -file [file join $rpt_dir post_route_status.rpt]
     report_power -file [file join $rpt_dir post_route_power.rpt]
-    ai_trigger_require_timing $post_route_timing_summary
+    ai_trigger_require_timing $post_route_timing_summary $::RUN_BUILD_MIN_SETUP_SLACK
 }
 
 puts "INFO: build complete"

@@ -22,11 +22,11 @@ class VivadoTimingGateTest(unittest.TestCase):
     {wns} 0.000 0 63711 {whs} 0.000 0 62481 {wpws} 0.000 0 26453
 """
 
-    def _run_gate(self, summary: str) -> subprocess.CompletedProcess[str]:
+    def _run_gate(self, summary: str, minimum_setup: str = "") -> subprocess.CompletedProcess[str]:
         program = f"""
 if {{[catch {{
   source {{{TIMING_GATE}}}
-  ai_trigger_require_timing $::env(AI_TRIGGER_TIMING_SUMMARY)
+  ai_trigger_require_timing $::env(AI_TRIGGER_TIMING_SUMMARY) {minimum_setup}
 }} message]}} {{
   puts stderr $message
   exit 1
@@ -54,6 +54,14 @@ Critical input port clock CLK_ADC No Common Primary Clock False Path 17 1 0 16 0
     def test_positive_setup_hold_and_pulse_width_pass(self) -> None:
         result = self._run_gate(self._summary("0.115", "0.007", "1.300"))
 
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_requested_setup_margin_rejects_barely_passing_route(self) -> None:
+        result = self._run_gate(self._summary("0.041", "0.032", "1.300"), "0.200")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Setup margin is not met: WNS=0.041 < 0.200 ns", result.stderr)
+
+        result = self._run_gate(self._summary("0.200", "0.032", "1.300"), "0.200")
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_negative_setup_slack_fails(self) -> None:
