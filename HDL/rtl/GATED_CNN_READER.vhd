@@ -103,14 +103,22 @@ begin
                     when IDLE =>
                         issue_count_r    <= 0;
                         response_count_r <= 0;
+                        -- Prepare metadata while waiting for admission. The
+                        -- grant edge still captures the current threshold,
+                        -- and READING holds that snapshot for the whole work.
+                        -- Keep the wide register enable off the ring-check
+                        -- and arbitration path; only transaction control
+                        -- needs to depend on the grant.
+                        if WORK_VALID = '1' then
+                            active_work_r   <= WORK_VALUE;
+                            active_thresh_r <= CNN_THRESH;
+                        end if;
                         if WORK_VALID = '1' and CHECK_EXPIRED = '1' then
                             event_loss_pulse_r <= '1';
                             state_r <= WAIT_DROP;
                         elsif WORK_VALID = '1' and CHECK_PRESENT = '1' and
                               CHECK_PROTECTED = '1' and candidate_lane_s >= 0 and
                               RING_GRANT = '1' then
-                            active_work_r   <= WORK_VALUE;
-                            active_thresh_r <= CNN_THRESH;
                             selected_lane_r <= candidate_lane_s;
                             issue_address := WORK_VALUE.start_address;
                             rb_rd_en_r        <= '1';

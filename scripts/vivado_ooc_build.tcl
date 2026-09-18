@@ -190,6 +190,11 @@ if {$::RUN_BUILD_IMPL} {
     write_text_file \
         [file join $rpt_dir post_route_timing_summary.rpt] \
         $post_route_timing_summary
+    foreach clock_name {CLK_ADC CLK_CNN} {
+        report_timing -from [get_clocks $clock_name] -to [get_clocks $clock_name] \
+            -max_paths 20 -nworst 1 \
+            -file [file join $rpt_dir post_route_${clock_name}_setup.rpt]
+    }
     report_clock_interaction -file [file join $rpt_dir post_route_clock_interaction.rpt]
     write_cdc_reports \
         [file join $rpt_dir post_route_cdc.rpt] \

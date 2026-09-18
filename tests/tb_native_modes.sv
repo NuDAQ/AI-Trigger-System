@@ -5,6 +5,7 @@ module tb_native_modes;
     always #2.5 clk_cnn=~clk_cnn;
     reg [3:0] mode=0;
     reg [383:0] adc_data=0;
+    reg [31:0] cnn_thresh=32'h00100000;
     reg [383:0] waveform [0:191];
     reg [31:0] expected [0:0];
     wire event_valid, event_last, event_loss, score_valid;
@@ -20,7 +21,7 @@ module tb_native_modes;
     AI_TRIGGER_TOP_TB_WRAP #(.DIRECT_ADC(1)) dut (
         .CLK_ADC(clk_adc), .ADC_SRC_CLK(clk_adc), .CLK_CNN(clk_cnn), .RST(rst),
         .DATA_STR(data_str), .ADC_DATA4_FLAT(adc_data), .TRIGGER_MODE(mode),
-        .FORCE_TRIGGER(force_trigger), .CNN_THRESH(32'h00100000), .HL_THRESH(12'd100),
+        .FORCE_TRIGGER(force_trigger), .CNN_THRESH(cnn_thresh), .HL_THRESH(12'd100),
         .HILO_WINDOW(5'd5), .COINC_WINDOW(6'd3), .BIN_THR(4'd1),
         .CNN_OUT_DATA(score), .CNN_OUT_VALID(score_valid),
         .EVENT_VALID(event_valid), .EVENT_READY(ready), .EVENT_DATA(event_data),
@@ -50,12 +51,17 @@ module tb_native_modes;
     task automatic run_mode(input integer selected);
         rst=1; data_str=0; force_trigger=0; ready=1;
         mode=selected;
+        cnn_thresh=(selected==4 ? 32'h000fffff : 32'h00100000);
         repeat(40) @(negedge clk_adc);
         event_beats=0; score_count=0; expected_beats=(selected==0 ? 128 : 64);
         rst=0;
         repeat(40) @(negedge clk_adc);
         for (integer i=0;i<192;i++) begin
             adc_data=waveform[i]; data_str=1;
+            // The gated window becomes readable after chunk 1 commits.
+            // Use the threshold at launch, then preserve it through inference.
+            if (selected==4 && i==120) cnn_thresh=32'h00100000;
+            if (selected==4 && i==160) cnn_thresh=32'h000fffff;
             force_trigger=(selected==1 && i==69);
             // Short event-sink stalls must preserve all eight raw channels.
             ready=(i%11!=2);
