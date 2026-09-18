@@ -113,6 +113,19 @@ begin
                 request_last_pipe_r(1)  <= request_last_pipe_r(0);
                 request_pipe_r(1)       <= request_pipe_r(0);
 
+                -- Prepare the address and metadata independently of read
+                -- admission. Only the valid bits depend on ring checks,
+                -- credit and grant, keeping that path off the wide enables.
+                -- Use the current request even on the final beat: promotion
+                -- of a pending request below applies to the next cycle.
+                issue_address := active_request_r.start_address;
+                if reading_r = '1' then
+                    issue_address := add_beats(active_request_r.start_address, next_beat_r);
+                end if;
+                rb_rd_chunk_id_r  <= issue_address.chunk_id;
+                rb_rd_batch_idx_r <= to_integer(issue_address.beat_offset);
+                request_pipe_r(0) <= active_request_r;
+
                 -- synthesis translate_off
                 assert not (RB_RD_VALID = '1' and request_valid_pipe_r(1) = '0')
                     report "ring response arrived without Event Request metadata"
@@ -134,12 +147,8 @@ begin
                 end if;
 
                 if reading_v = '1' then
-                    issue_address := add_beats(active_request_v.start_address, next_beat_v);
                     rb_rd_en_r        <= '1';
-                    rb_rd_chunk_id_r  <= issue_address.chunk_id;
-                    rb_rd_batch_idx_r <= to_integer(issue_address.beat_offset);
                     request_valid_pipe_r(0) <= '1';
-                    request_pipe_r(0)       <= active_request_v;
 
                     if next_beat_v = N_BATCHES - 1 then
                         request_last_pipe_r(0) <= '1';
@@ -164,13 +173,9 @@ begin
                         pending_valid_v := '0';
                     elsif CHECK_PRESENT = '1' and CHECK_PROTECTED = '1' and
                           EVENT_CREDIT = '1' and RING_GRANT = '1' then
-                        issue_address := active_request_v.start_address;
                         rb_rd_en_r        <= '1';
-                        rb_rd_chunk_id_r  <= issue_address.chunk_id;
-                        rb_rd_batch_idx_r <= to_integer(issue_address.beat_offset);
                         request_valid_pipe_r(0) <= '1';
                         request_last_pipe_r(0)  <= '0';
-                        request_pipe_r(0)       <= active_request_v;
                         reading_v  := '1';
                         next_beat_v := 1;
                     end if;
