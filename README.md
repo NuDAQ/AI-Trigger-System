@@ -103,21 +103,27 @@ the original 12-bit samples.
 | --- | --- |
 | `TRIGGER_MODE[3:0]` | Requested runtime mode |
 | `FORCE_TRIGGER` | External housekeeping trigger pulse |
-| `CNN_THRESH[31:0]` | CNN threshold container; comparator uses signed bits `[20:0]` |
+| `CNN_THRESH[31:0]` | Stable signed 32-bit threshold word, unit 1/16 (step 0.0625) |
 | `HL_THRESH[11:0]` | Non-negative Hi-Lo threshold in raw ADC codes |
 | `HILO_WINDOW[4:0]` | Hi-Lo high/low coincidence window |
 | `COINC_WINDOW[5:0]` | Cross-channel coincidence window |
 | `BIN_THR[3:0]` | Required channel multiplicity, valid range 1-4 |
 
-CNN scores use signed `ap_fixed<21,12>`:
+CNN scores retain native `ap_fixed<21,12>`; the external threshold format is
+independent of the IP:
 
 ```text
 score_float = signed(score[20:0]) / 512
-CNN_THRESH_raw = threshold_float * 512
+threshold_float = signed(CNN_THRESH[31:0]) / 16
+CNN_THRESH_raw = threshold_float * 16
 ```
 
 Configuration is sampled with the work item so one inference uses one stable
 threshold. Hi-Lo configuration is latched at safe Hi-Lo mode entry.
+The comparison remains strictly greater than, with full-width handling of
+negative and out-of-native-range thresholds. See
+[CNNThresholdInterface.md](docs/CNNThresholdInterface.md) for the fixed contract
+and migration examples; threshold 2.0 is now the external word 32.
 
 ### Event output
 
