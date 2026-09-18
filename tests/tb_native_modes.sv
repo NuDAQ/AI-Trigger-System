@@ -5,7 +5,7 @@ module tb_native_modes;
     always #2.5 clk_cnn=~clk_cnn;
     reg [3:0] mode=0;
     reg [383:0] adc_data=0;
-    reg [31:0] cnn_thresh=32'h00100000;
+    reg [31:0] cnn_thresh=32'h80000000;
     reg [383:0] waveform [0:191];
     reg [31:0] expected [0:0];
     wire event_valid, event_last, event_loss, score_valid;
@@ -48,26 +48,30 @@ module tb_native_modes;
             event_beats++;
         end
     end
-    task automatic run_mode(input integer selected);
+    task automatic run_mode(input integer selected,
+                            input integer gated_threshold=-2147483648,
+                            input bit gated_accept=1);
         rst=1; data_str=0; force_trigger=0; ready=1;
         mode=selected;
-        cnn_thresh=(selected==4 ? 32'h000fffff : 32'h00100000);
+        cnn_thresh=(selected==4 ? 32'h7fffffff : 32'h80000000);
         repeat(40) @(negedge clk_adc);
-        event_beats=0; score_count=0; expected_beats=(selected==0 ? 128 : 64);
+        event_beats=0; score_count=0;
+        expected_beats=(selected==0 ? 128 : (selected==4 && !gated_accept ? 0 : 64));
         rst=0;
         repeat(40) @(negedge clk_adc);
         for (integer i=0;i<192;i++) begin
             adc_data=waveform[i]; data_str=1;
             // The gated window becomes readable after chunk 1 commits.
             // Use the threshold at launch, then preserve it through inference.
-            if (selected==4 && i==120) cnn_thresh=32'h00100000;
-            if (selected==4 && i==160) cnn_thresh=32'h000fffff;
+            if (selected==4 && i==120) cnn_thresh=gated_threshold;
+            if (selected==4 && i==160) cnn_thresh=32'h7fffffff;
             force_trigger=(selected==1 && i==69);
             // Short event-sink stalls must preserve all eight raw channels.
             ready=(i%11!=2);
             @(negedge clk_adc);
         end
         data_str=0; force_trigger=0; ready=1;
+        if (selected==4) wait(score_count==1);
         wait(event_beats==expected_beats);
         repeat(200) @(negedge clk_adc);
         if ((selected==4 && score_count!=1) || (selected!=4 && score_count!=0))
@@ -79,6 +83,9 @@ module tb_native_modes;
         $readmemh({reference,"/gated/adc.hex"},waveform);
         $readmemh({reference,"/gated/all_expected.hex"},expected);
         run_mode(0); run_mode(1); run_mode(3); run_mode(4);
+        // The reference score is -1495/512 = -2.919921875. Adjacent external
+        // thresholds -47/16 and -46/16 must respectively accept and reject it.
+        run_mode(4, -47, 1); run_mode(4, -46, 0);
         // Switch from gated AI to Capture-All without resetting waveform
         // history; the request applies only at the next complete chunk.
         @(negedge clk_adc); mode=0; expected_beats=0; event_beats=0; score_count=0;

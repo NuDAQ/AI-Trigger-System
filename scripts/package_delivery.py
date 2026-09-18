@@ -194,6 +194,7 @@ def write_version(package_dir: Path, version: str) -> None:
             "CNN lanes: 2",
             "CNN input: 32 x 512-bit transfers per 256 x 4 window",
             "Score format: signed low 21 bits / 512",
+            "CNN_THRESH format: signed 32-bit two's-complement / 16 (step 0.0625)",
             "",
         ]
     )

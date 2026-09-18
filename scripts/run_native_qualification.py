@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES = {
     'continuous': [],
     'gaps': ['--gap','9','--phase','1.3'],
+    'threshold-positive': ['--threshold','32'],
+    'threshold-negative': ['--threshold','-32'],
     'lane-reset': ['--testbench','tb_native_lane'],
     'modes': ['--testbench','tb_native_modes'],
     'overload': ['--overload'],

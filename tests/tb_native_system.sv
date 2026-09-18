@@ -29,6 +29,12 @@ module tb_native_system;
     bit event_seen [0:MAX_WINDOWS-1];
     string reference;
     reg event_ready = 1;
+    // Independent real-valued checker for the fixed external configuration.
+    function automatic bit qualifies(input reg [31:0] native_score,
+                                     input reg [31:0] external_threshold);
+        qualifies = ($itor($signed(native_score[20:0])) / 512.0) >
+                    ($itor($signed(external_threshold)) / 16.0);
+    endfunction
     AI_TRIGGER_TOP_TB_WRAP #(.DIRECT_ADC(1)) dut (
         .CLK_ADC(clk_adc), .ADC_SRC_CLK(clk_adc), .CLK_CNN(clk_cnn), .RST(rst),
         .DATA_STR(data_str), .ADC_DATA4_FLAT(adc_data), .TRIGGER_MODE(4'd2),
@@ -54,7 +60,7 @@ module tb_native_system;
             $fatal(1, "loss at full-rate: overflow=%b loss=%b dropped=%0d ring=%0d scores=%0d", overflow,event_loss,dropped,ring_miss,received);
         if (event_valid && event_ready) begin
             if (event_id < 1 || event_id > windows) $fatal(1, "unexpected event id");
-            if ($signed(expected[event_id-1][20:0]) <= $signed(threshold[20:0]))
+            if (!qualifies(expected[event_id-1], threshold))
                 $fatal(1,"nonqualifying native score produced an event");
             if (event_seen[event_id-1]) $fatal(1,"duplicate event id=%0d",event_id);
             if (event_data !== adc_words[(event_id-1)*64+event_beat])
@@ -77,12 +83,12 @@ module tb_native_system;
         $readmemh({reference,"/all_expected.hex"},expected,0,windows-1);
         for (integer i=0;i<windows;i++) begin
             seen[i]=0; event_seen[i]=0;
-            if ($signed(expected[i][20:0]) > $signed(threshold[20:0])) expected_events++;
+            if (qualifies(expected[i], threshold)) expected_events++;
         end
         if (overload != 0) begin
             // Saturate finite event/trigger/core capacity with a stalled sink.
             // Returned work still has to match the original window exactly.
-            allow_loss=1; threshold=32'h00100000; event_ready=0;
+            allow_loss=1; threshold=32'h80000000; event_ready=0;
             repeat(40) @(negedge clk_adc); rst=0;
             repeat(40) @(negedge clk_adc);
             data_str=1; repeat(64) @(negedge clk_adc); data_str=0;
