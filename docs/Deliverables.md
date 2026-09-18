@@ -128,7 +128,7 @@ Each event contains one 256-sample chunk, output over 64 beats. When samples fro
 | `RST` | in | Active-high reset for the trigger system. |
 | `TRIGGER_MODE[3:0]` | in | Coherent runtime mode request, synchronous to `CLK_ADC`. |
 | `FORCE_TRIGGER` | in | Synchronous External-mode request; one low-to-high transition requests one event. |
-| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[21:0]` are interpreted as signed `ap_fixed<22,11>` raw threshold data. `CNN_THRESH[31:22]` is ignored. Also `[MSB:LSB]`. |
+| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[20:0]` are interpreted as signed `ap_fixed<21,12>` raw threshold data. `CNN_THRESH[31:21]` is ignored. Also `[MSB:LSB]`. |
 | `HL_THRESH[11:0]` | in | Non-negative Hi-Lo amplitude threshold, latched at safe Hi-Lo-mode entry. |
 | `HILO_WINDOW[4:0]` | in | Hi-Lo bipolar window configuration. |
 | `COINC_WINDOW[5:0]` | in | Hi-Lo coincidence window configuration. |
@@ -196,12 +196,23 @@ if EVENT_VALID && EVENT_READY:
 
 ## How to test?
 
-These are the scores for some typical inputs. By adjusting the threshold, you can allow certain waveforms to trigger. A trigger rate that is too high may cause overflow, so we use bipolar square pulses for testing.
+The native score is signed bits 20:0 divided by 512, with the upper eleven
+output bits zero. Encode a desired threshold in the same low 21-bit format.
+The comparison is strictly greater than: equal scores do not trigger.
+Historical thresholds and zero-input scores from wrapper v5 do not apply.
 
-| Purpose                               | CNN_THRESH[31:0] | Raw threshold | Float threshold | Notes                                                        |
-| ------------------------------------- | ---------------- | ------------: | --------------: | ------------------------------------------------------------ |
-| Guarantee all possible scores trigger | 32'hFFE00000     |      -2097152 |         -1024.0 | Lowest representable signed `ap_fixed<22,11> `threshold.     |
-| Score for all-zero input              | 32'hFFFFEE53     |         -4525 |       -2.209473 | All-zero input measured score is raw -4524, float -2.208984. |
+| Purpose | CNN_THRESH[31:0] | Raw threshold | Model threshold |
+| --- | --- | ---: | ---: |
+| Select positive scores | `32'h00000000` | 0 | 0 |
+| Example positive threshold | `32'h00000200` | 512 | 1 |
+| Suppress every representable score | `32'h000FFFFF` | 1048575 | 2047.998046875 |
+| Lowest threshold (equality still does not trigger) | `32'h00100000` | -1048576 | -2048 |
+
+The unchanged signed 12-bit ADC input is converted inside the system using
+`q = clamp(floor((raw + 1) / 2), -511, 511)` and sign-extended into 16-bit slots.
+This implements native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` at model scale `raw/64`.
+Two chronological ADC writes form each 512-bit CNN input beat; earliest time
+and lowest channel occupy the low bits. Raw event samples are not quantized.
 
 For testing purposes, please use bipolar square waves with intervals (the period) that are not integer multiples of 256 ns as the input waveform, and only use ch0. The pulse shape is: `5 ns +50 mV, 5 ns -50 mV`. In the simulation, the actual bits input I entered was
 ```
@@ -210,16 +221,12 @@ For testing purposes, please use bipolar square waves with intervals (the period
 0000000000000000       # remaining samples are zero; full input ch1..ch7 are held at 0
 ```
 
-However, I converted the values to mV based on the [ADC chip's datasheet](https://www.ti.com/lit/ds/symlink/adc12dj1600.pdf), page 58. If I'm wrong, it would be best to calculate the voltage corresponding to that 12-bit input, although the actual voltage may not make much difference, since this trigger is primarily based on the waveform shape.
+The waveform generator voltage must be calibrated against the actual ADC setup;
+raw codes, not a voltage claim, define the digital integration contract above.
 
-Simply put, the input is: 
-
-1. Connect the waveform generator only to `ch0`. 
-2. Set the input of the other 7 channels to 0
-3. Input a bipolar waveform shaped `5 ns +50 mV, 5 ns -50 mV` to ch0. Ensure that the interval between any two pulses is greater than 2 μs and is not an integer multiple of 256 ns. Therefore, we recommend using `3pps`. Approximately 14.2%, or a similar proportion, of the waveforms will be triggered and sent to the backend for recording.
-
-*Note: Due to the limitations of the model we are currently using, when we set the CNN threshold to 2, only bipolar pulses with start times roughly between 54 ns and 88 ns within a 256 ns time window will be triggered. Therefore, it is expected that most of the recorded waveforms will be pulses whose start times fall within this time window:*
+The following figure is retained only as a historical wrapper-v5 experiment.
+Its score curve, pulse-position acceptance and threshold settings do not apply
+to the native CNN. Use the current ADC-aware reference and qualification report
+to assess the new model. Hardware validation is outside this delivery.
 
 ![score_vs_offset](/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/docs/score_vs_offset.png)
-
-*Since this trigger is not yet a mature version, bipolar pulses starting at different positions (The trigger processes each 256 ns as a chunk) will receive different scores. This is why you should use a period that isn't a multiple of 256; otherwise, there's a chance you'll never see the trigger.*

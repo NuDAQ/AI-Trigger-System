@@ -22,6 +22,9 @@ if {![info exists ::RUN_BUILD_IMPL]} {
 if {![info exists ::RUN_BUILD_THREADS]} {
     set ::RUN_BUILD_THREADS 8
 }
+if {![info exists ::RUN_BUILD_MIN_SETUP_SLACK]} {
+    set ::RUN_BUILD_MIN_SETUP_SLACK 0.0
+}
 
 set repo_root [file normalize $::RUN_BUILD_REPO_ROOT]
 set out_dir   [file normalize $::RUN_BUILD_OUT_DIR]
@@ -132,6 +135,14 @@ synth_design \
     -mode out_of_context \
     -flatten_hierarchy none
 assert_daq_top_boundary
+if {[llength [get_cells -quiet -hierarchical -filter {IS_BLACKBOX == 1}]] != 0} {
+    error "Unresolved black boxes in system OOC synthesis"
+}
+foreach clock_name {CLK_ADC CLK_CNN} {
+    if {[llength [get_clocks -quiet $clock_name]] != 1} {
+        error "Missing system clock constraint: $clock_name"
+    }
+}
 
 # Keep the OOC implementation from trimming CNN internals across the block
 # boundary.  Do not lock lane FIFOs here: their BRAM-heavy read-side paths are
@@ -179,13 +190,29 @@ if {$::RUN_BUILD_IMPL} {
     write_text_file \
         [file join $rpt_dir post_route_timing_summary.rpt] \
         $post_route_timing_summary
+    foreach clock_name {CLK_ADC CLK_CNN} {
+        report_timing -from [get_clocks $clock_name] -to [get_clocks $clock_name] \
+            -max_paths 20 -nworst 1 \
+            -file [file join $rpt_dir post_route_${clock_name}_setup.rpt]
+    }
     report_clock_interaction -file [file join $rpt_dir post_route_clock_interaction.rpt]
     write_cdc_reports \
         [file join $rpt_dir post_route_cdc.rpt] \
         [file join $rpt_dir post_route_cdc_details.rpt]
+    report_drc -file [file join $rpt_dir post_route_drc.rpt]
+    report_exceptions -coverage -file [file join $rpt_dir post_route_exception_coverage.rpt]
+    check_timing -verbose -file [file join $rpt_dir post_route_check_timing.rpt]
+    set fatal_drc [get_drc_violations -quiet -filter {SEVERITY == Error}]
+    if {[llength $fatal_drc] > 0} {
+        error "Post-route DRC errors: $fatal_drc"
+    }
+    set cdc_fp [open [file join $rpt_dir post_route_cdc.rpt] r]
+    set cdc_summary [read $cdc_fp]
+    close $cdc_fp
+    ai_trigger_require_cdc $cdc_summary
     report_route_status -file [file join $rpt_dir post_route_status.rpt]
     report_power -file [file join $rpt_dir post_route_power.rpt]
-    ai_trigger_require_timing $post_route_timing_summary
+    ai_trigger_require_timing $post_route_timing_summary $::RUN_BUILD_MIN_SETUP_SLACK
 }
 
 puts "INFO: build complete"

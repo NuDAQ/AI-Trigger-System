@@ -1,0 +1,966 @@
+Time resolution is 1 ps
+Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value. tb_native_system.dut.u_DUT.u_MULTIMODE_PATH.u_EVENT_FIFO.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc
+Time: 1 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_MULTIMODE_PATH/u_EVENT_FIFO/u_FIFO/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/Initial302_5314  Scope: tb_native_system.dut.u_DUT.u_MULTIMODE_PATH.u_EVENT_FIFO.u_FIFO.xpm_fifo_base_inst.\gen_sdpram.xpm_memory_base_inst .config_drc  File: /tools/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 506
+Note: DIST chunk_start seq=0 lane=0 busy='0'
+Time: 322 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=1 lane=1 busy='0'
+Time: 658 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 658 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 697500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=2 lane=0 busy='0'
+Time: 914 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 914 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 952500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 962 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=1
+Time: 1112500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=3 lane=1 busy='0'
+Time: 1170 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 1170 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1212500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1218 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=373430 started=1
+Time: 1367500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=4 lane=0 busy='0'
+Time: 1426 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 1426 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1467500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 1474 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=508349 started=2
+Time: 1622500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=5 lane=1 busy='0'
+Time: 1682 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=3 fifo_full='0'
+Time: 1682 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1722500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 1726 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=441981 started=2
+Time: 1877500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=6 lane=0 busy='0'
+Time: 1938 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=3 fifo_full='0'
+Time: 1938 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 1977500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 1986 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=3
+Time: 2137500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=7 lane=1 busy='0'
+Time: 2194 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=4 fifo_full='0'
+Time: 2194 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 2232500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 2242 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=3
+Time: 2392500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=8 lane=0 busy='0'
+Time: 2450 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=4 fifo_full='0'
+Time: 2450 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 2492500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 2498 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=4
+Time: 2647500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=9 lane=1 busy='0'
+Time: 2706 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=5 fifo_full='0'
+Time: 2706 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 2747500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 2754 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=4
+Time: 2902500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=10 lane=0 busy='0'
+Time: 2962 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=5 fifo_full='0'
+Time: 2962 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 3002500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 3006 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=5
+Time: 3157500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=11 lane=1 busy='0'
+Time: 3218 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=6 fifo_full='0'
+Time: 3218 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 3257500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 3266 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=5
+Time: 3417500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=12 lane=0 busy='0'
+Time: 3474 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=6 fifo_full='0'
+Time: 3474 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 3512500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 3522 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=6
+Time: 3672500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=13 lane=1 busy='0'
+Time: 3730 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=7 fifo_full='0'
+Time: 3730 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 3772500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 3778 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=6
+Time: 3927500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=14 lane=0 busy='0'
+Time: 3986 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=7 fifo_full='0'
+Time: 3986 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 4027500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 4034 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=459979 started=7
+Time: 4182500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=15 lane=1 busy='0'
+Time: 4242 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=8 fifo_full='0'
+Time: 4242 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 4282500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 4286 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=473121 started=7
+Time: 4437500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=16 lane=0 busy='0'
+Time: 4498 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=8 fifo_full='0'
+Time: 4498 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 4537500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 4546 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=461153 started=8
+Time: 4697500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=17 lane=1 busy='0'
+Time: 4754 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=9 fifo_full='0'
+Time: 4754 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 4792500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 4802 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=462950 started=8
+Time: 4952500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=18 lane=0 busy='0'
+Time: 5010 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=9 fifo_full='0'
+Time: 5010 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 5052500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 5058 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=466878 started=9
+Time: 5207500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=19 lane=1 busy='0'
+Time: 5266 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=10 fifo_full='0'
+Time: 5266 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 5307500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 5314 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=477993 started=9
+Time: 5462500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=20 lane=0 busy='0'
+Time: 5522 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=10 fifo_full='0'
+Time: 5522 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 5562500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 5566 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=468471 started=10
+Time: 5717500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=21 lane=1 busy='0'
+Time: 5778 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=11 fifo_full='0'
+Time: 5778 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 5817500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 5826 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=453579 started=10
+Time: 5977500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=22 lane=0 busy='0'
+Time: 6034 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=11 fifo_full='0'
+Time: 6034 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 6072500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 6082 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=443390 started=11
+Time: 6232500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=23 lane=1 busy='0'
+Time: 6290 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=12 fifo_full='0'
+Time: 6290 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=12 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 6332500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 6338 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=467888 started=11
+Time: 6487500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=24 lane=0 busy='0'
+Time: 6546 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=12 fifo_full='0'
+Time: 6546 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=12 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 6587500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 6594 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=457549 started=12
+Time: 6742500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=25 lane=1 busy='0'
+Time: 6802 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=13 fifo_full='0'
+Time: 6802 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=13 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 6842500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 6846 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=461596 started=12
+Time: 6997500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=26 lane=0 busy='0'
+Time: 7058 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=13 fifo_full='0'
+Time: 7058 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=13 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 7097500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 7106 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=472796 started=13
+Time: 7257500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=27 lane=1 busy='0'
+Time: 7314 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=14 fifo_full='0'
+Time: 7314 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=14 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 7352500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 7362 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=455282 started=13
+Time: 7512500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=28 lane=0 busy='0'
+Time: 7570 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=14 fifo_full='0'
+Time: 7570 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=14 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 7612500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 7618 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=445371 started=14
+Time: 7767500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=29 lane=1 busy='0'
+Time: 7826 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=15 fifo_full='0'
+Time: 7826 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=15 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 7867500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 7874 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=478995 started=14
+Time: 8022500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=30 lane=0 busy='0'
+Time: 8082 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=15 fifo_full='0'
+Time: 8082 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=15 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 8122500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 8126 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=461388 started=15
+Time: 8277500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=31 lane=1 busy='0'
+Time: 8338 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=0 fifo_full='0'
+Time: 8338 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 8377500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 8386 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=460417 started=15
+Time: 8537500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=32 lane=0 busy='0'
+Time: 8594 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=0 fifo_full='0'
+Time: 8594 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 8632500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 8642 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=459492 started=0
+Time: 8792500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=33 lane=1 busy='0'
+Time: 8850 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 8850 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 8892500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 8898 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=465224 started=0
+Time: 9047500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=34 lane=0 busy='0'
+Time: 9106 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 9106 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 9147500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 9154 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-951 started=1
+Time: 9302500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=35 lane=1 busy='0'
+Time: 9362 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 9362 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 9402500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 9406 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-921 started=1
+Time: 9557500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=36 lane=0 busy='0'
+Time: 9618 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 9618 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 9657500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 9666 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-440 started=2
+Time: 9817500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=37 lane=1 busy='0'
+Time: 9874 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=3 fifo_full='0'
+Time: 9874 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 9912500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 9922 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-432 started=2
+Time: 10072500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=38 lane=0 busy='0'
+Time: 10130 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=3 fifo_full='0'
+Time: 10130 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 10172500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 10178 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-235 started=3
+Time: 10327500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=39 lane=1 busy='0'
+Time: 10386 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=4 fifo_full='0'
+Time: 10386 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 10427500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 10434 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-146 started=3
+Time: 10582500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=40 lane=0 busy='0'
+Time: 10642 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=4 fifo_full='0'
+Time: 10642 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 10682500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 10686 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-183 started=4
+Time: 10837500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=41 lane=1 busy='0'
+Time: 10898 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=5 fifo_full='0'
+Time: 10898 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 10937500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 10946 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-171 started=4
+Time: 11097500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=42 lane=0 busy='0'
+Time: 11154 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=5 fifo_full='0'
+Time: 11154 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 11192500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 11202 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-440 started=5
+Time: 11352500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=43 lane=1 busy='0'
+Time: 11410 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=6 fifo_full='0'
+Time: 11410 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 11452500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 11458 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-432 started=5
+Time: 11607500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=44 lane=0 busy='0'
+Time: 11666 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=6 fifo_full='0'
+Time: 11666 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 11707500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 11714 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=890 started=6
+Time: 11862500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=45 lane=1 busy='0'
+Time: 11922 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=7 fifo_full='0'
+Time: 11922 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 11962500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 11966 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=719 started=6
+Time: 12117500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=46 lane=0 busy='0'
+Time: 12178 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=7 fifo_full='0'
+Time: 12178 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 12217500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 12226 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=1362 started=7
+Time: 12377500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=47 lane=1 busy='0'
+Time: 12434 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=8 fifo_full='0'
+Time: 12434 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 12472500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 12482 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=1285 started=7
+Time: 12632500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=48 lane=0 busy='0'
+Time: 12690 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=8 fifo_full='0'
+Time: 12690 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 12732500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 12738 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=571 started=8
+Time: 12887500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=49 lane=1 busy='0'
+Time: 12946 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=9 fifo_full='0'
+Time: 12946 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 12987500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 12994 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=446 started=8
+Time: 13142500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=50 lane=0 busy='0'
+Time: 13202 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=9 fifo_full='0'
+Time: 13202 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=9 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 13242500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 13246 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=1034 started=9
+Time: 13397500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=51 lane=1 busy='0'
+Time: 13458 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=10 fifo_full='0'
+Time: 13458 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 13497500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 13506 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=951 started=9
+Time: 13657500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=52 lane=0 busy='0'
+Time: 13714 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=10 fifo_full='0'
+Time: 13714 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=10 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 13752500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 13762 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=1409 started=10
+Time: 13912500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=53 lane=1 busy='0'
+Time: 13970 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=11 fifo_full='0'
+Time: 13970 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 14012500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 14018 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=1287 started=10
+Time: 14167500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=54 lane=0 busy='0'
+Time: 14226 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=11 fifo_full='0'
+Time: 14226 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=11 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 14267500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 14274 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=2115 started=11
+Time: 14422500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=55 lane=1 busy='0'
+Time: 14482 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=12 fifo_full='0'
+Time: 14482 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=12 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 14522500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 14526 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=1965 started=11
+Time: 14677500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=56 lane=0 busy='0'
+Time: 14738 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=12 fifo_full='0'
+Time: 14738 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=12 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 14777500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 14786 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=1034 started=12
+Time: 14937500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=57 lane=1 busy='0'
+Time: 14994 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=13 fifo_full='0'
+Time: 14994 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=13 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 15032500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 15042 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=951 started=12
+Time: 15192500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=58 lane=0 busy='0'
+Time: 15250 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=13 fifo_full='0'
+Time: 15250 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=13 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 15292500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 15298 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=1034 started=13
+Time: 15447500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=59 lane=1 busy='0'
+Time: 15506 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=14 fifo_full='0'
+Time: 15506 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=14 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 15547500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 15554 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=951 started=13
+Time: 15702500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=60 lane=0 busy='0'
+Time: 15762 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=14 fifo_full='0'
+Time: 15762 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=14 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 15802500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 15806 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=2604 started=14
+Time: 15957500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=61 lane=1 busy='0'
+Time: 16018 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=15 fifo_full='0'
+Time: 16018 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=15 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 16057500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 16066 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=2556 started=14
+Time: 16217500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=62 lane=0 busy='0'
+Time: 16274 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=15 fifo_full='0'
+Time: 16274 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=15 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 16312500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 16322 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=4442 started=15
+Time: 16472500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=63 lane=1 busy='0'
+Time: 16530 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=0 fifo_full='0'
+Time: 16530 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 16572500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 16578 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=4363 started=15
+Time: 16727500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=64 lane=0 busy='0'
+Time: 16786 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=0 fifo_full='0'
+Time: 16786 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=0 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 16827500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 16834 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=2554 started=0
+Time: 16982500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=65 lane=1 busy='0'
+Time: 17042 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=1 fifo_full='0'
+Time: 17042 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 17082500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 17086 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=2536 started=0
+Time: 17237500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=66 lane=0 busy='0'
+Time: 17298 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=1 fifo_full='0'
+Time: 17298 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=1 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 17337500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 17346 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1481 started=1
+Time: 17497500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=67 lane=1 busy='0'
+Time: 17554 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=2 fifo_full='0'
+Time: 17554 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 17592500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 17602 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1458 started=1
+Time: 17752500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=68 lane=0 busy='0'
+Time: 17810 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=2 fifo_full='0'
+Time: 17810 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=2 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 17852500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 17858 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=2
+Time: 18007500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=69 lane=1 busy='0'
+Time: 18066 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=3 fifo_full='0'
+Time: 18066 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 18107500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 18114 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=2
+Time: 18262500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=70 lane=0 busy='0'
+Time: 18322 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=3 fifo_full='0'
+Time: 18322 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=3 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 18362500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 18366 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=3
+Time: 18517500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=71 lane=1 busy='0'
+Time: 18578 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=4 fifo_full='0'
+Time: 18578 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 18617500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 18626 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=3
+Time: 18777500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=72 lane=0 busy='0'
+Time: 18834 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=4 fifo_full='0'
+Time: 18834 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=4 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 18872500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 18882 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=4
+Time: 19032500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=73 lane=1 busy='0'
+Time: 19090 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=5 fifo_full='0'
+Time: 19090 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 19132500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 19138 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=4
+Time: 19287500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=74 lane=0 busy='0'
+Time: 19346 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=5 fifo_full='0'
+Time: 19346 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=5 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 19387500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 19394 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1597 started=5
+Time: 19542500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=75 lane=1 busy='0'
+Time: 19602 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=6 fifo_full='0'
+Time: 19602 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 19642500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 19646 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1597 started=5
+Time: 19797500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=76 lane=0 busy='0'
+Time: 19858 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=6 fifo_full='0'
+Time: 19858 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=6 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 19897500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 19906 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=373430 started=6
+Time: 20057500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=77 lane=1 busy='0'
+Time: 20114 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=7 fifo_full='0'
+Time: 20114 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 20152500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 20162 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=373750 started=6
+Time: 20312500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=78 lane=0 busy='0'
+Time: 20370 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=7 fifo_full='0'
+Time: 20370 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=7 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 20412500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 20418 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1149 started=7
+Time: 20567500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=79 lane=1 busy='0'
+Time: 20626 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE1 ADC chunk_accept count=8 fifo_full='0'
+Time: 20626 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 20667500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='1' wr_count=0
+Time: 20674 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1255 started=7
+Time: 20822500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=80 lane=0 busy='0'
+Time: 20882 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC chunk_accept count=8 fifo_full='0'
+Time: 20882 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 started_next=8 fifo_empty='0' fifo_data_valid='1' ready='0' idle='1'
+Time: 20922500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 20926 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE1 CNN output_valid score_raw=-1295 started=8
+Time: 21077500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(1)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=81 lane=1 busy='0'
+Time: 21138 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: LANE0 ADC busy_clear stream_done_seen='0' wr_count=0
+Time: 21186 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__220  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: LANE0 CNN output_valid score_raw=-1567 started=8
+Time: 21337500 ps  Iteration: 0  Process: /tb_native_system/dut/u_DUT/\gen_lanes(0)\/u_LANE/line__309  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/CNN_CORE_LANE.vhd
+Note: DIST chunk_start seq=82 lane=0 busy='0'
+Time: 21394 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=83 lane=1 busy='0'
+Time: 21650 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=84 lane=0 busy='0'
+Time: 21906 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=85 lane=1 busy='0'
+Time: 22162 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=86 lane=0 busy='0'
+Time: 22418 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=87 lane=1 busy='0'
+Time: 22674 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=88 lane=0 busy='0'
+Time: 22930 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=89 lane=1 busy='0'
+Time: 23186 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=90 lane=0 busy='0'
+Time: 23442 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=91 lane=1 busy='0'
+Time: 23698 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=92 lane=0 busy='0'
+Time: 23954 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=93 lane=1 busy='0'
+Time: 24210 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=94 lane=0 busy='0'
+Time: 24466 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=95 lane=1 busy='0'
+Time: 24722 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=96 lane=0 busy='0'
+Time: 24978 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=97 lane=1 busy='0'
+Time: 25234 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=98 lane=0 busy='0'
+Time: 25490 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=99 lane=1 busy='0'
+Time: 25746 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=100 lane=0 busy='0'
+Time: 26002 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=101 lane=1 busy='0'
+Time: 26258 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=102 lane=0 busy='0'
+Time: 26514 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=103 lane=1 busy='0'
+Time: 26770 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=104 lane=0 busy='0'
+Time: 27026 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=105 lane=1 busy='0'
+Time: 27282 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=106 lane=0 busy='0'
+Time: 27538 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=107 lane=1 busy='0'
+Time: 27794 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=108 lane=0 busy='0'
+Time: 28050 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=109 lane=1 busy='0'
+Time: 28306 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=110 lane=0 busy='0'
+Time: 28562 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=111 lane=1 busy='0'
+Time: 28818 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=112 lane=0 busy='0'
+Time: 29074 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=113 lane=1 busy='0'
+Time: 29330 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=114 lane=0 busy='0'
+Time: 29586 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=115 lane=1 busy='0'
+Time: 29842 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=116 lane=0 busy='0'
+Time: 30098 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=117 lane=1 busy='0'
+Time: 30354 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=118 lane=0 busy='0'
+Time: 30610 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=119 lane=1 busy='0'
+Time: 30866 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=120 lane=0 busy='0'
+Time: 31122 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=121 lane=1 busy='0'
+Time: 31378 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=122 lane=0 busy='0'
+Time: 31634 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=123 lane=1 busy='0'
+Time: 31890 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=124 lane=0 busy='0'
+Time: 32146 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=125 lane=1 busy='0'
+Time: 32402 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=126 lane=0 busy='0'
+Time: 32658 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=127 lane=1 busy='0'
+Time: 32914 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=128 lane=0 busy='0'
+Time: 33170 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=129 lane=1 busy='0'
+Time: 33426 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=130 lane=0 busy='0'
+Time: 33682 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=131 lane=1 busy='0'
+Time: 33938 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=132 lane=0 busy='0'
+Time: 34194 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=133 lane=1 busy='0'
+Time: 34450 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=134 lane=0 busy='0'
+Time: 34706 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=135 lane=1 busy='0'
+Time: 34962 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=136 lane=0 busy='0'
+Time: 35218 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=137 lane=1 busy='0'
+Time: 35474 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=138 lane=0 busy='0'
+Time: 35730 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=139 lane=1 busy='0'
+Time: 35986 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=140 lane=0 busy='0'
+Time: 36242 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=141 lane=1 busy='0'
+Time: 36498 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=142 lane=0 busy='0'
+Time: 36754 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=143 lane=1 busy='0'
+Time: 37010 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=144 lane=0 busy='0'
+Time: 37266 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=145 lane=1 busy='0'
+Time: 37522 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=146 lane=0 busy='0'
+Time: 37778 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=147 lane=1 busy='0'
+Time: 38034 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=148 lane=0 busy='0'
+Time: 38290 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=149 lane=1 busy='0'
+Time: 38546 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=150 lane=0 busy='0'
+Time: 38802 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=151 lane=1 busy='0'
+Time: 39058 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=152 lane=0 busy='0'
+Time: 39314 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=153 lane=1 busy='0'
+Time: 39570 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=154 lane=0 busy='0'
+Time: 39826 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=155 lane=1 busy='0'
+Time: 40082 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=156 lane=0 busy='0'
+Time: 40338 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=157 lane=1 busy='0'
+Time: 40594 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=158 lane=0 busy='0'
+Time: 40850 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+Note: DIST chunk_start seq=159 lane=1 busy='0'
+Time: 41106 ns  Iteration: 0  Process: /tb_native_system/dut/u_DUT/u_LIVE_DISTRIBUTOR/line__102  File: /home/work1/Works/_codex_ai_trigger_native_20260917/system/HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd
+PASS native system windows=1096 events=475 gap=0 phase=0.000000
+$finish called at time : 282772 ns : File "/home/work1/Works/_codex_ai_trigger_native_20260917/system/tests/tb_native_system.sv" Line 132
+INFO: xsimkernel Simulation Memory Usage: 154608 KB (Peak: 183372 KB), Simulation CPU Usage: 60600 ms

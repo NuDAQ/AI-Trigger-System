@@ -21,8 +21,8 @@
 //   channels while the CNN trigger still uses only ch0..ch3.
 //
 // Score decoding follows cnn-core-wrapper/hw/sim/tb_stream.sv:
-//   float_score = $signed(CNN_OUT_DATA[21:0]) / 2048.0
-// The core output is ap_fixed<22,11>, byte-aligned into a 32-bit TDATA word.
+//   float_score = $signed(CNN_OUT_DATA[20:0]) / 512.0
+// The core output is ap_fixed<21,12>, byte-aligned into a 32-bit TDATA word.
 // The current full-system validation point uses SCORE_THRESHOLD=0.0, so the
 // matching CNN_THRESH default is 22'sd0.
 //
@@ -242,9 +242,9 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = 0.0;
         has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
         if (!has_cnn_thresh_raw_arg)
-            cnn_thresh_raw = 0;  // 0.0 in ap_fixed<22,11>
+            cnn_thresh_raw = 0;  // 0.0 in ap_fixed<21,12>
         if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
-            score_threshold = real'($signed(cnn_thresh_raw)) / 2048.0;
+            score_threshold = real'($signed(cnn_thresh_raw[20:0])) / 512.0;
         if (!$value$plusargs("MIRROR_RAW_CHANNELS=%d", mirror_raw_channels))
             mirror_raw_channels = 1;
         if (!$value$plusargs("TRIGGER_MODE=%d", trigger_mode_raw))
@@ -326,7 +326,7 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
-                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
+                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw[20:0])) / 512.0);
         $display("[%0t] MIRROR_RAW_CHANNELS: %0d", $time, mirror_raw_channels);
         $display("[%0t] TRIGGER_MODE: 0x%0h", $time, trigger_mode);
         $display("[%0t] FORCE_TRIGGER: every %0d chunks at beat %0d",
@@ -615,8 +615,8 @@ module tb_AI_TRIGGER_TOP;
 
                     latency_cycles = $rtoi((t_end - t_start) / CLK_CNN_PERIOD);
 
-                    // Decode score: ap_fixed<22,11>, byte-aligned in [21:0].
-                    out_float  = $itor($signed(cnn_out_data[21:0])) / 2048.0;
+                    // Decode score: ap_fixed<21,12>, byte-aligned in [20:0].
+                    out_float  = $itor($signed(cnn_out_data[20:0])) / 512.0;
                     prediction = (out_float > score_threshold) ? 1 : 0;
                     if (trigger_mode == 4'b0010) begin
                         label_val  = labels[sample_id_int];
@@ -671,7 +671,7 @@ module tb_AI_TRIGGER_TOP;
             $display("                    SIMULATION SUMMARY");
             $display("=============================================================");
             $display("Top module:       AI_TRIGGER_TOP");
-            $display("CNN cores:        5 (parallel, round-robin)");
+            $display("CNN cores:        2 (parallel, round-robin)");
             $display("ADC_SRC_CLK:      %.1f MHz (%.3f ns period)",
                      1000.0/ADC_SRC_CLK_PERIOD, ADC_SRC_CLK_PERIOD);
             $display("CLK_ADC:          %.1f MHz (%.3f ns period)",
@@ -679,7 +679,7 @@ module tb_AI_TRIGGER_TOP;
             $display("CLK_CNN:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
-                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 2048.0);
+                     cnn_thresh_raw, real'($signed(cnn_thresh_raw[20:0])) / 512.0);
             $display("Score threshold:  %.4f float", score_threshold);
             $display("Requested mode:   0x%0h", trigger_mode);
             $display("Hi-Lo config:     threshold=%0d hilo=%0d coincidence=%0d bin=%0d",

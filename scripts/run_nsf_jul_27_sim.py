@@ -312,8 +312,8 @@ def build_report(
         )
 
         score_raw_container = int(score["hex_out"], 0)
-        score_raw22 = signed_bits(score_raw_container & ((1 << 22) - 1), 22)
-        trigger_decision = int(score_raw22 > cnn_thresh_raw)
+        score_raw21 = signed_bits(score_raw_container & ((1 << 21) - 1), 21)
+        trigger_decision = int(score_raw21 > cnn_thresh_raw)
         if int(score["prediction"]) != trigger_decision:
             raise SystemExit(
                 f"threshold decision mismatch for local chunk {local_chunk_id}: "
@@ -419,7 +419,7 @@ def build_report(
                 "cnn_score_hex": score["hex_out"],
                 "cnn_score_float": score["float_out"],
                 "cnn_threshold_raw": cnn_thresh_raw,
-                "cnn_threshold_float": f"{cnn_thresh_raw / 2048.0:.6f}",
+                "cnn_threshold_float": f"{cnn_thresh_raw / 512.0:.6f}",
                 "trigger_decision": trigger_decision,
                 "cnn_latency_cycles": score["latency_cycles_cnn"],
                 "cnn_latency_ns": f"{float(score['latency_us']) * 1000.0:.3f}",
@@ -668,7 +668,7 @@ def main() -> None:
     if args.prepare_only:
         return
 
-    expected_threshold_raw = round(args.score_threshold * 2048.0)
+    expected_threshold_raw = round(args.score_threshold * 512.0)
     if expected_threshold_raw != args.cnn_thresh_raw:
         raise SystemExit(
             "--score-threshold and --cnn-thresh-raw disagree: "

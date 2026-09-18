@@ -61,7 +61,10 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertTrue(package_zip.exists())
             self.assertTrue((package / "README.md").exists())
             self.assertTrue((package / "assets" / "score_vs_offset.png").exists())
-            self.assertTrue((package / "VERSION.txt").exists())
+            version = (package / "VERSION.txt").read_text()
+            self.assertIn("cnn-core revision: eca9b12f9f49f4b7324ed9ed241a44086ca9c842", version)
+            self.assertIn("CNN lanes: 2", version)
+            self.assertIn("Score format: signed low 21 bits / 512", version)
             self.assertTrue((package / "constraints" / "ai_trigger_ooc.xdc").exists())
             self.assertTrue((package / "rtl" / "cnn-core" / "cnn_core.v").exists())
             self.assertTrue((package / "rtl" / "cnn-core-wrapper" / "hw" / "rtl" / "cnn_core_wrapper_top.v").exists())
@@ -79,6 +82,15 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertIn("rtl/hilo-trigger/PRE_TRIGGER_PKG.vhd", manifest)
             self.assertIn("rtl/hilo-trigger/Pre_trigger.vhd", manifest)
             self.assertIn("rtl/ai-trigger/AI_TRIGGER_PKG.vhd", manifest)
+
+            native_assets = list((package / "rtl/cnn-core").glob("*.vh"))
+            native_roms = list((package / "rtl/cnn-core").glob("*.dat"))
+            self.assertEqual(len(native_assets), 3)
+            self.assertEqual(len(native_roms), 1)
+            for asset in native_assets + native_roms:
+                self.assertIn(asset.name, add_files)
+            self.assertTrue((package / "SHA256SUMS").is_file())
+            self.assertNotIn("wrapper_ooc_top", add_files)
 
             core_idx = add_files.index("rtl cnn-core cnn_core.v")
             wrapper_idx = add_files.index("rtl cnn-core-wrapper hw rtl cnn_core_wrapper_top.v")

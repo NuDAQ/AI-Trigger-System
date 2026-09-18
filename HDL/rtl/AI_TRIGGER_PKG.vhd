@@ -5,16 +5,16 @@ use ieee.numeric_std.all;
 package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
-    constant N_LANES    : integer := 5;    -- parallel CNN cores
+    constant N_LANES    : integer := 2;    -- parallel CNN cores
     constant N_ADC_CH   : integer := 8;    -- raw ADC channels captured into events
     constant N_TRIGGER_CH : integer := 4;  -- leading channels used by the CNN trigger
     constant N_CH       : integer := N_ADC_CH; -- historical alias for raw ADC channels
     constant N_BATCH_S  : integer := 4;    -- samples per channel per ADC beat
     constant N_BATCHES  : integer := 64;   -- beats per chunk (64 * 4 = 256 timesteps)
     constant N_CHUNK_W  : integer := 256;  -- total CNN input words per chunk
-    constant N_CHUNK_BEATS_CNN : integer := 128;  -- two timesteps per 128-bit CNN beat
+    constant N_CHUNK_BEATS_CNN : integer := 32;   -- eight timesteps per native 512-bit beat
     constant LANE_FIFO_WRITE_WIDTH : integer := N_BATCH_S * 64;
-    constant LANE_FIFO_READ_WIDTH  : integer := 128;
+    constant LANE_FIFO_READ_WIDTH  : integer := 512;
     constant LANE_FIFO_WRITE_ADDR_WIDTH : integer := 7;
     constant LANE_FIFO_WRITE_DEPTH : integer := 2 ** LANE_FIFO_WRITE_ADDR_WIDTH;
     constant CHUNK_ID_WIDTH : integer := 16;
@@ -141,15 +141,17 @@ package body AI_TRIGGER_PKG is
         sample_value : adc_sample_t
     ) return std_logic_vector is
         variable raw_value    : signed(11 downto 0);
-        variable scaled_value : signed(11 downto 0);
-        variable fixed_value  : signed(8 downto 0);
+        variable scaled_value : signed(12 downto 0);
+        variable fixed_value  : signed(9 downto 0);
     begin
         raw_value := signed(sample_value);
-        scaled_value := shift_right(raw_value, 1);
-        if scaled_value > to_signed(255, scaled_value'length) then
-            fixed_value := to_signed(255, fixed_value'length);
-        elsif scaled_value < to_signed(-256, scaled_value'length) then
-            fixed_value := to_signed(-256, fixed_value'length);
+        -- model = raw / 64; native ap_fixed<10,5,AP_RND,AP_SAT_SYM>.
+        -- Widen before adding the rounding bias, including raw=2047.
+        scaled_value := shift_right(resize(raw_value, 13) + 1, 1);
+        if scaled_value > to_signed(511, scaled_value'length) then
+            fixed_value := to_signed(511, fixed_value'length);
+        elsif scaled_value < to_signed(-511, scaled_value'length) then
+            fixed_value := to_signed(-511, fixed_value'length);
         else
             fixed_value := resize(scaled_value, fixed_value'length);
         end if;

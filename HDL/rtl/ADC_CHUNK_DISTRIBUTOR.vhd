@@ -9,16 +9,16 @@
 -- selected lane via LANE_WE.  The lane counter advances round-robin every chunk.
 --
 -- CHUNK_BUSY feedback (CLK_ADC domain) means the selected lane cannot accept
--- a complete 16-batch chunk.  The decision is made once at the chunk boundary:
+-- a complete 64-batch chunk.  The decision is made once at the chunk boundary:
 -- either all 64 beats are written, or the whole chunk is dropped.
 --
--- BATCH_DATA packing (256-bit = 2 words x 128-bit):
---   XPM width-conversion FIFO readout emits the low 128-bit segment of a
---   256-bit write first.  Keep chronological CNN beats in ascending 128-bit
---   segment order so the read side sees samples 0-1, then samples 2-3.
+-- BATCH_DATA packing (256-bit = four timesteps x four 16-bit slots):
+--   The lane FIFO combines two chronological writes into one native 512-bit
+--   word. Earlier timesteps occupy the low bits; each timestep lists channels
+--   0 through 3 in ascending 16-bit slots.
 --
 --   beat[p] low  64 bits = row 2*p:
---     bits [15: 0] = ch0, quantized 12-bit ADC -> ap_fixed<9,4>
+--     bits [15: 0] = ch0, quantized 12-bit ADC -> ap_fixed<10,5,AP_RND,AP_SAT_SYM>
 --     bits [31:16] = ch1
 --     bits [47:32] = ch2
 --     bits [63:48] = ch3
@@ -70,9 +70,8 @@ begin
 
     -- -------------------------------------------------------------------------
     -- Combinational packing: 4 ch x 4 samples -> 256-bit FIFO write.
-    -- Each 128-bit segment contains two consecutive timesteps.  Segments are
-    -- written in chronological order because the asymmetric FIFO read side
-    -- returns the low segment before the high segment.
+    -- Timesteps and channels occupy ascending 16-bit slots. The lane FIFO
+    -- places the first complete write in the low half of its 512-bit read.
     -- -------------------------------------------------------------------------
     BATCH_DATA <= pack_cnn_batch(ADC_DATA4);
 
