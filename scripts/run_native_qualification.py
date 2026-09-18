@@ -12,6 +12,8 @@ CASES = {
     'gaps': ['--gap','9','--phase','1.3'],
     'threshold-positive': ['--threshold','32'],
     'threshold-negative': ['--threshold','-32'],
+    'threshold-all': ['--threshold','-2147483648'],
+    'threshold-none': ['--threshold','2147483647'],
     'lane-reset': ['--testbench','tb_native_lane'],
     'modes': ['--testbench','tb_native_modes'],
     'overload': ['--overload'],
