@@ -1,0 +1,35 @@
+.FFF
+======================================================================
+FAIL: test_threshold_preserves_the_complete_signed_external_word (test_native_sim.NativeSimulationCliTest.test_threshold_preserves_the_complete_signed_external_word) (threshold=-33)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_native_sim.py", line 35, in test_threshold_preserves_the_complete_signed_external_word
+    self.assertEqual(result.returncode,0,result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : FAIL native simulation; inspect /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/tmpmhetgeia/result/console.log and project/**/simulate.log
+
+
+======================================================================
+FAIL: test_threshold_preserves_the_complete_signed_external_word (test_native_sim.NativeSimulationCliTest.test_threshold_preserves_the_complete_signed_external_word) (threshold=-2147483648)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_native_sim.py", line 35, in test_threshold_preserves_the_complete_signed_external_word
+    self.assertEqual(result.returncode,0,result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : FAIL native simulation; inspect /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/tmp6yy3degz/result/console.log and project/**/simulate.log
+
+
+======================================================================
+FAIL: test_threshold_preserves_the_complete_signed_external_word (test_native_sim.NativeSimulationCliTest.test_threshold_preserves_the_complete_signed_external_word) (threshold=2147483647)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_native_sim.py", line 35, in test_threshold_preserves_the_complete_signed_external_word
+    self.assertEqual(result.returncode,0,result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : FAIL native simulation; inspect /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/tmpp5brp_oz/result/console.log and project/**/simulate.log
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.218s
+
+FAILED (failures=3)

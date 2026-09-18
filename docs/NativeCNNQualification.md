@@ -3,6 +3,8 @@
 Status: the native two-lane integration below passed functional and routed OOC
 qualification. Its threshold encoding is historical; the current fixed external
 format is specified in [CNNThresholdInterface.md](CNNThresholdInterface.md).
+The [accepted stable-threshold qualification](qualification/stable_cnn_threshold_20260918/README.md)
+supersedes the timing and functional results below for the current checkout.
 Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS 2023.2 on Ubuntu 22.04.5.
 
 ## Source and interface contract

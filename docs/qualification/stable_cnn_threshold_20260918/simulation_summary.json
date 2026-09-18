@@ -1,0 +1,171 @@
+{
+  "passed": true,
+  "complete": true,
+  "combined_runs": [
+    "threshold-qualification-01",
+    "threshold-extremes-01"
+  ],
+  "results": [
+    {
+      "case": "continuous",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/continuous",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=475 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "gaps",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/gaps",
+        "--gap",
+        "9",
+        "--phase",
+        "1.3",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=475 gap=9 phase=1.300000",
+      "error": ""
+    },
+    {
+      "case": "threshold-positive",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/threshold-positive",
+        "--threshold",
+        "32",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=431 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "threshold-negative",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/threshold-negative",
+        "--threshold",
+        "-32",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=643 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "lane-reset",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/lane-reset",
+        "--testbench",
+        "tb_native_lane",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native lane input/compute/output resets, gaps and held results",
+      "error": ""
+    },
+    {
+      "case": "modes",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/modes",
+        "--testbench",
+        "tb_native_modes",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native mode=0 events=2 CNN=0\nPASS native mode=1 events=1 CNN=0\nPASS native mode=3 events=1 CNN=0\nPASS native mode=4 events=1 CNN=1\nPASS native mode=4 events=1 CNN=1\nPASS native mode=4 events=0 CNN=1\nPASS native runtime mode switch gated AI to Capture-All\nPASS native modes complete",
+      "error": ""
+    },
+    {
+      "case": "overload",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-qualification-01/overload",
+        "--overload",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native overload accepted_scores=36 complete_events=2\nPASS native system windows=1096 events=475 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "threshold-all",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-extremes-01/threshold-all",
+        "--threshold",
+        "-2147483648",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=1096 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "threshold-none",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/threshold-extremes-01/threshold-none",
+        "--threshold",
+        "2147483647",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=0 gap=0 phase=0.000000",
+      "error": ""
+    }
+  ]
+}

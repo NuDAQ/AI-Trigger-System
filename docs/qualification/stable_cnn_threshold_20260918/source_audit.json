@@ -1,0 +1,50 @@
+{
+  "qualified_rtl_equivalent_to": "5841b98",
+  "ooc_run": "threshold-ooc-01",
+  "exact_ooc_source_hash_matches": 62,
+  "simulation": [
+    {
+      "case": "continuous",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "gaps",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "threshold-positive",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "threshold-negative",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "lane-reset",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "modes",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "overload",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "threshold-all",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "threshold-none",
+      "exact_source_hash_matches": 65
+    }
+  ],
+  "unchanged_dependency_assets": 35,
+  "top_unchanged_except_comments": true,
+  "constraints_sha256": "f5cfb55f051f414573a6c01c6a5270a9384bade6b9e154d7f08c6db402f55e65",
+  "original_run_exit_code": 1,
+  "original_failure": "Positive WNS 0.191 ns below then-requested 0.200 ns margin; normal clock constraints met",
+  "accepted_minimum_setup_slack_ns": 0.0,
+  "restored_source_revision": "bfba85734eca37e9c31c0bdc4950b32eaa506c5e"
+}
