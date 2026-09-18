@@ -189,7 +189,7 @@ two-lane source identities, functional evidence, OOC result, and reproduction co
 
 The final actual-IP suite passes all five scenarios, including 1096 exact-score
 windows and 475 complete eight-channel events in continuous operation. Routed
-OOC meets 250/200 MHz with WNS +0.041 ns and WHS +0.032 ns, zero DRC errors,
+OOC meets 250/200 MHz with WNS +0.300 ns and WHS +0.007 ns, zero DRC errors,
 and zero unsafe or unknown CDC endpoints. This is block-level qualification.
 
 ## Historical validation (previous CNN)

@@ -1,0 +1,212 @@
+{
+  "rtl_revision": "ba888f65a7b3e03f6ef92c63167366c075880181",
+  "exact_source_hash_matches": 62,
+  "constraints_unchanged_from_baseline": "f5cfb55f051f414573a6c01c6a5270a9384bade6b9e154d7f08c6db402f55e65",
+  "simulation": [
+    {
+      "case": "continuous",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "gaps",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "lane-reset",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "modes",
+      "exact_source_hash_matches": 65
+    },
+    {
+      "case": "overload",
+      "exact_source_hash_matches": 65
+    }
+  ],
+  "unchanged_dependency_assets": [
+    {
+      "package": "cnn-core",
+      "file": "cnn_core.v",
+      "sha256": "59f1dbb32a7d87cedc386cdcd959a52a6027d3c84875fcc0f619d943f9178186"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v",
+      "sha256": "b467ef1942f6773ab7e98dbeb44a9205b98b82884bb7330b487821ebbca0b7ce"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.dat",
+      "sha256": "36d633f214617952c7bdb9a06094d361f35262f5b3c0c633417fa9d67ed8d9b6"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v",
+      "sha256": "94736fe3304f9f2050eb43fac55f773af22b5eb9d99dc6e688b1aac4838788c1"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_s.v",
+      "sha256": "6ac6517cf87d6f315aa843fd068c4d3ec15c97d2bf3b000d47546f1f8ef2dfa6"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w480_d4_A.v",
+      "sha256": "a2dde849abe1c85653d7a61a2149e852c5c0bbf4297eec9b0dab60692c361afe"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w816_d4_A.v",
+      "sha256": "cd4e1e9d3749ba9af55f7549a354343071894f3daa474885fc3c9f1addcf4325"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_fifo_w864_d4_A.v",
+      "sha256": "91c82cacc91389aeecfe862284f0600c392a1cd3a5fdf2f0ce89b9310ae05f26"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_flow_control_loop_pipe.v",
+      "sha256": "596c69e8d271e05f225495f7e9f0035dfebcc5eba6334f0281cadcc1144cd91b"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_flow_control_loop_pipe_sequential_init.v",
+      "sha256": "6e2ad6efc3694745d72562e4e2a8366323ff33df6212d32a03c0ff473979ddca"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_detection_unit.v",
+      "sha256": "02e16596a1b339b0b43178094f49d0b02251498cbe5e55f318ca0df00d643871"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_detector.vh",
+      "sha256": "f28ca44b1214dec2de225f0874aeac617be1e353ddf6230aacb93cf8d00925ec"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_idx0_monitor.v",
+      "sha256": "162c6911b41ea46e9d49446ce908ba77abd5bbe8acc3d05d6e37dafb2294181e"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_kernel_monitor_top.vh",
+      "sha256": "275d2f0b3ddd6dd2fa047e66a6f415c1e5f1c2ecaa26f198c2747c7be3771826"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_hls_deadlock_report_unit.vh",
+      "sha256": "8419c7331277403ad42b4266c88d6b47025328e08f44813fb06dcad1954c1e5f"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_4ns_13s_15_1_1.v",
+      "sha256": "64925695caec8887c171d3b84de7e00eac87e99fae26bc749ebbfe0c8ef52cae"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_4ns_15s_15_1_1.v",
+      "sha256": "1a383215f607ae0466fec86a58d7950087147b051e64e076ed014fc5931d9419"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_5s_15s_16_1_1.v",
+      "sha256": "27a35054dd90e876b59acf3c22d96a423ae5645573e2156969b951c8f908878e"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mac_muladd_10s_5s_16s_16_1_1.v",
+      "sha256": "36dc17e2f552c71d4e86d609f9e8a91f38e6eb3261c5fc25847c6e949e9578e4"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_mul_10s_5s_15_1_1.v",
+      "sha256": "5f5e11d685e143bdd20d0aa133d8a506ff1526a419663301e67f84cd609abd36"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v",
+      "sha256": "ca90c2630e5bf0a444ccb7f07ec9bc820e7878366ff91a4fb7802709b9d97a1a"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_regslice_both.v",
+      "sha256": "7a3224dbeb831791f952f1c4a566fa57e3e0bfaf394d110a4eb381249c32c30a"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8_s.v",
+      "sha256": "21393f202d2b3cd190ce59968056c93471de7746b2413bf5c6b391e2400bb3c2"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v",
+      "sha256": "643be0b5d135647853c7d039cf4fc85539576ebb6fd93672ed788594155dd31d"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v",
+      "sha256": "537bda4a4225a18efec3c63ac43facbbf7bf25f87792c873b07a6ecbe611dfe8"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_sparsemux_17_3_10_1_1.v",
+      "sha256": "4b0262f8b9982712672e27690edf33d09a13806691c35f9631efc005e565cfe6"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_U0.v",
+      "sha256": "4b5e6f835233ec0c252ceadc3365a5210355dda5d413853fa5eaabbe36e1ffdb"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8dEe.v",
+      "sha256": "b23167f4125e0cfd0f8b4b4244536e410efc65de6db041332e769211841b1dea"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v",
+      "sha256": "beddb7e4e93ead15bc47e3cca39bb22cc99e56f55df9acdc89a9ed93a1e6915e"
+    },
+    {
+      "package": "cnn-core",
+      "file": "cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v",
+      "sha256": "d9e5147b5a7512df63c365974d5910946e98e0ec425a062babd9de4a63a02066"
+    },
+    {
+      "package": "cnn-core-wrapper",
+      "file": "cnn_core_wrapper_top.v",
+      "sha256": "c9632e4e0ef2928732969d293acbf4f4e9542ffb84deb4242d3a62ffceaa4ba4"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "PRE_TRIGGER_PKG.vhd",
+      "sha256": "7e7b64c7e57bfd96cd7aa9b5166896be55fce0595db22c93ff4bf072a26e9f6a"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Mult_to_bin.vhd",
+      "sha256": "933c5fcd5a95e01fef3618e42f6fa4ef479ce8086d20971380511f34260ff472"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Pre_trigger_1ch.vhd",
+      "sha256": "d18ba0f5c1af3cec9dbda6a24cfe261d7ae5e1dca7478fff6d845a05628856d5"
+    },
+    {
+      "package": "hilo-trigger",
+      "file": "Pre_trigger.vhd",
+      "sha256": "c1689045cab4f9fcac7220e153de47432ba6e6d550f1c6a8bc6277776c14edcc"
+    }
+  ],
+  "reference_manifest": "../native_cnn_20260917/reference.json",
+  "ooc_exit_code": 0,
+  "minimum_setup_slack_ns": 0.2,
+  "routed_checkpoint": {
+    "file": "ooc-final/checkpoints/post_route.dcp",
+    "sha256": "5907d579aaa4fd045bc9847eab3543abee183a7c20523e836e87d499036c0915",
+    "bytes": 51652379
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "complete": true,
+  "results": [
+    {
+      "case": "continuous",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/timing-qualification-02/continuous",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=475 gap=0 phase=0.000000",
+      "error": ""
+    },
+    {
+      "case": "gaps",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/timing-qualification-02/gaps",
+        "--gap",
+        "9",
+        "--phase",
+        "1.3",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native system windows=1096 events=475 gap=9 phase=1.300000",
+      "error": ""
+    },
+    {
+      "case": "lane-reset",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/timing-qualification-02/lane-reset",
+        "--testbench",
+        "tb_native_lane",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native lane input/compute/output resets, gaps and held results",
+      "error": ""
+    },
+    {
+      "case": "modes",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/timing-qualification-02/modes",
+        "--testbench",
+        "tb_native_modes",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native mode=0 events=2 CNN=0\nPASS native mode=1 events=1 CNN=0\nPASS native mode=3 events=1 CNN=0\nPASS native mode=4 events=1 CNN=1\nPASS native runtime mode switch gated AI to Capture-All\nPASS native modes complete",
+      "error": ""
+    },
+    {
+      "case": "overload",
+      "passed": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/system/scripts/run_native_sim.py",
+        "--reference",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+        "--output",
+        "/home/work1/Works/_codex_ai_trigger_native_20260917/timing-qualification-02/overload",
+        "--overload",
+        "--vivado",
+        "/tools/Xilinx/Vivado/2023.2/bin/vivado"
+      ],
+      "summary": "PASS native overload accepted_scores=36 complete_events=2\nPASS native system windows=1096 events=475 gap=0 phase=0.000000",
+      "error": ""
+    }
+  ]
+}
