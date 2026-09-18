@@ -112,10 +112,6 @@ begin
                         if WORK_VALID = '1' then
                             active_work_r   <= WORK_VALUE;
                             active_thresh_r <= CNN_THRESH;
-                            -- Prepare the first address independently of the
-                            -- ring grant. RB_RD_EN still authorizes the read.
-                            rb_rd_chunk_id_r  <= WORK_VALUE.start_address.chunk_id;
-                            rb_rd_batch_idx_r <= to_integer(WORK_VALUE.start_address.beat_offset);
                         end if;
                         if WORK_VALID = '1' and CHECK_EXPIRED = '1' then
                             event_loss_pulse_r <= '1';
@@ -124,7 +120,10 @@ begin
                               CHECK_PROTECTED = '1' and candidate_lane_s >= 0 and
                               RING_GRANT = '1' then
                             selected_lane_r <= candidate_lane_s;
+                            issue_address := WORK_VALUE.start_address;
                             rb_rd_en_r        <= '1';
+                            rb_rd_chunk_id_r  <= issue_address.chunk_id;
+                            rb_rd_batch_idx_r <= to_integer(issue_address.beat_offset);
                             issue_count_r    <= 1;
                             response_count_r <= 0;
                             state_r <= READING;
