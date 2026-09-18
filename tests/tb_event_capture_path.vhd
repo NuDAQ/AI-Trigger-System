@@ -99,7 +99,7 @@ begin
         variable wait_cycles : integer := 0;
         variable output_stream_started : boolean := false;
     begin
-        cnn_thresh <= std_logic_vector(to_signed(1024, 32));
+        cnn_thresh <= std_logic_vector(to_signed(32, 32)); -- external 2.0
         for ch in 0 to N_CH - 1 loop
             for s in 0 to N_BATCH_S - 1 loop
                 adc_data4(ch)(s) <= (others => '0');

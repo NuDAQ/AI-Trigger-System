@@ -35,7 +35,7 @@ proc ai_trigger_timing_summary_metrics {timing_summary} {
     error "Design Timing Summary metrics are unavailable"
 }
 
-proc ai_trigger_require_timing {timing_summary} {
+proc ai_trigger_require_timing {timing_summary {minimum_setup 0.0}} {
     set violations {}
     set metrics [ai_trigger_timing_summary_metrics $timing_summary]
 
@@ -51,5 +51,18 @@ proc ai_trigger_require_timing {timing_summary} {
 
     if {[llength $violations] != 0} {
         error "Timing constraints are not met: [join $violations {, }]"
+    }
+    if {[dict get $metrics WNS] < $minimum_setup} {
+        error "Setup margin is not met: WNS=[dict get $metrics WNS] < $minimum_setup ns"
+    }
+}
+
+# Critical CDC rows cannot be waived by the asynchronous clock groups.
+proc ai_trigger_require_cdc {summary} {
+    if {[string first "Severity" $summary] < 0} {
+        error "CDC summary is unavailable"
+    }
+    if {[regexp -line {^Critical[[:space:]]} $summary]} {
+        error "Unqualified critical CDC crossings"
     }
 }

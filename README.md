@@ -18,7 +18,7 @@ and [`trigger_system_architecture.drawio.pdf`](pic/trigger_system_architecture.d
 
 The raw eight-channel stream always advances one shared 64-chunk waveform ring.
 Only the active trigger path creates work. The event recorder, output FIFO, ring,
-five CNN lanes, and Hi-Lo engine are shared across modes.
+two CNN lanes, and Hi-Lo engine are shared across modes.
 
 ```text
 AI_TRIGGER_TOP
@@ -91,10 +91,11 @@ ADC_DATA[(ch * 4 + sample) * 12 +: 12] = ADC_DATA4(ch)(sample)
 `DATA_STR` is the beat-valid signal. There is no ADC backpressure port; every
 beat with `DATA_STR=1` is accepted.
 
-The CNN uses channels 0-3. The RTL converts each raw sample to the wrapper's
-signed `ap_fixed<9,4>` input by shifting right one bit, saturating to
-`[-256, 255]`, and sign-extending into a 16-bit AXI-stream lane. The event path
-keeps the original 12-bit samples.
+The CNN uses channels 0-3 at the existing model scale `raw/64`. Conversion to
+native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
+`q = clamp(floor((raw + 1)/2), -511, 511)`, sign-extended into each 16-bit slot.
+Two chronological ADC writes form a 512-bit native beat. The event path keeps
+the original 12-bit samples.
 
 ### Configuration
 
@@ -102,21 +103,27 @@ keeps the original 12-bit samples.
 | --- | --- |
 | `TRIGGER_MODE[3:0]` | Requested runtime mode |
 | `FORCE_TRIGGER` | External housekeeping trigger pulse |
-| `CNN_THRESH[31:0]` | CNN threshold container; comparator uses signed bits `[21:0]` |
+| `CNN_THRESH[31:0]` | Stable signed 32-bit threshold word, unit 1/16 (step 0.0625) |
 | `HL_THRESH[11:0]` | Non-negative Hi-Lo threshold in raw ADC codes |
 | `HILO_WINDOW[4:0]` | Hi-Lo high/low coincidence window |
 | `COINC_WINDOW[5:0]` | Cross-channel coincidence window |
 | `BIN_THR[3:0]` | Required channel multiplicity, valid range 1-4 |
 
-CNN scores use signed `ap_fixed<22,11>`:
+CNN scores retain native `ap_fixed<21,12>`; the external threshold format is
+independent of the IP:
 
 ```text
-score_float = signed(score[21:0]) / 2048
-CNN_THRESH_raw = threshold_float * 2048
+score_float = signed(score[20:0]) / 512
+threshold_float = signed(CNN_THRESH[31:0]) / 16
+CNN_THRESH_raw = threshold_float * 16
 ```
 
 Configuration is sampled with the work item so one inference uses one stable
 threshold. Hi-Lo configuration is latched at safe Hi-Lo mode entry.
+The comparison remains strictly greater than, with full-width handling of
+negative and out-of-native-range thresholds. See
+[CNNThresholdInterface.md](docs/CNNThresholdInterface.md) for the fixed contract
+and migration examples; threshold 2.0 is now the external word 32.
 
 ### Event output
 
@@ -163,7 +170,11 @@ Main integration files:
 
 ## Dependencies
 
-Bender manages `cnn-core-wrapper`, its CNN RTL, and Hi-Lo Trigger v2.2.4.
+Bender pins the native wrapper at `a82a717403c8346d027f62b017295d8ea6fa3344`
+and CNN Core at `eca9b12f9f49f4b7324ed9ed241a44086ca9c842`, with Hi-Lo Trigger
+v2.2.4. Each of the two lanes sends 32 native 512-bit beats per window; the
+wrapper passes native control and scores through unchanged. The system owns
+ADC conversion, FIFO width conversion, work metadata, and scheduling.
 
 ```bash
 cargo install bender
@@ -173,7 +184,27 @@ bender update
 Vivado launchers regenerate their source list from the Bender graph. Do not add
 a parallel manual source list.
 
-## Validation
+A normal checkout resolves the exact Git pins without local overrides. If using
+`Bender.local` during development, verify the resolved source hashes; an override
+can change compiled code independently of the published pins.
+
+## Native CNN validation
+
+See the [stable threshold qualification](docs/qualification/stable_cnn_threshold_20260918/README.md)
+for the accepted two-lane implementation, source audit and reproduction commands.
+The earlier integration results remain in [NativeCNNQualification.md](docs/NativeCNNQualification.md).
+
+All nine actual-IP scenarios pass, including 1096 exact-score windows and 475
+complete eight-channel events at threshold zero, plus positive, negative and
+extreme external thresholds. Routed OOC meets 250/200 MHz with ADC/CNN setup
+WNS +0.191/+0.310 ns and overall WHS +0.007 ns, zero DRC errors and zero unsafe
+or unknown CDC endpoints. The user accepted this route without the previous
+additional +0.200 ns margin requirement. This is block-level qualification.
+
+## Historical validation (previous CNN)
+
+The following plots, scores, and counts are retained for historical comparison;
+they do not describe the native CNN.
 
 The complete report, raw CSVs, XSim logs, centered waveform arrays, and machine
 summaries are in
@@ -225,20 +256,25 @@ boundary.
 
 Plots for 3.4 and 4 RMS are included in the full report.
 
-### OOC implementation
+### Historical OOC implementation (superseded CNN)
 
-The final OOC run closes timing at `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz`.
+The figures below describe the previous five-lane system, not native two-lane
+qualification. Current evidence is recorded in
+`docs/qualification/stable_cnn_threshold_20260918/README.md`.
+
+The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
+`CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.
 
 | Metric | Result |
 | --- | ---: |
-| WNS / TNS | 0.322 ns / 0 ns |
-| WHS / THS | 0.024 ns / 0 ns |
-| CLB LUTs | 32,061 |
-| CLB registers | 20,311 |
-| BRAM tiles | 26 |
-| URAM | 6 |
-| DSP | 20 |
-| Vectorless power | 1.264 W |
+| WNS / TNS | 0.039 ns / 0 ns |
+| WHS / THS | 0.029 ns / 0 ns |
+| CLB LUTs | 37,207 (17.15%) |
+| CLB registers | 33,406 (7.70%) |
+| BRAM tiles | 33.5 (6.98%) |
+| URAM | 6 (9.38%) |
+| DSP | 200 (10.96%) |
+| Vectorless power | 2.315 W (medium confidence) |
 
 The tracked
 [`build/vivado_ooc_ai_trigger/reports/`](build/vivado_ooc_ai_trigger/reports/)
@@ -254,28 +290,28 @@ python3 -m unittest discover -s tests
 python3 scripts/run_ghdl_tests.py
 ```
 
-Run one full-system Vivado/XSim scenario:
+Build the ADC-aware reference and run the actual-IP/XPM suite using the commands
+in [NativeCNNQualification.md](docs/NativeCNNQualification.md). Once the reference
+exists, the complete suite is:
 
 ```bash
-python3 scripts/run_vivado_sim.py --num-samples 1000
+python3 scripts/run_native_qualification.py \
+  --reference build/native_reference \
+  --output build/native_qualification \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado
 ```
 
-Run all five modes with the same input:
-
-```bash
-python3 scripts/run_trigger_mode_sweep.py \
-  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
-  --output-dir build/multimode_trigger_validation/mode_sweep \
-  --hl-thresh 192 \
-  --hilo-window 5 \
-  --coinc-window 32 \
-  --bin-thr 2
-```
+The older `run_vivado_sim.py`, dataset sweeps and pulse plots remain useful for
+historical experiments; their default test-data directories are not the new
+native qualification corpus.
 
 Run OOC synthesis and implementation:
 
 ```bash
-python3 scripts/run_vivado_build.py --impl
+python3 scripts/run_vivado_build.py \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
+  --bender /home/work1/.cargo/bin/bender \
+  --impl
 ```
 
 The OOC flow uses Bender for source order, applies
@@ -295,11 +331,9 @@ scripts/run_bringup_pulse_sweeps.sh
 python3 scripts/plot_bringup_scores.py --out-dir build/bringup_sim
 ```
 
-Post-route SAIF power analysis remains available through:
-
-```bash
-python3 scripts/run_post_impl_saif.py --samples 64
-```
+The older `run_post_impl_saif.py` flow is retained as historical tooling. It
+has not been qualified for this native two-lane delivery; no activity-based
+power result is claimed here.
 
 ## Delivery
 
@@ -308,7 +342,7 @@ DAQ-facing port definitions and basic test guidance are in
 archive with:
 
 ```bash
-python3 scripts/package_delivery.py --version v3.3.0
+python3 scripts/package_delivery.py --version stable-threshold
 ```
 
 `dist/` is generated output and is not committed.

@@ -39,7 +39,7 @@ begin
 
     process
     begin
-        cnn_thresh <= std_logic_vector(to_signed(1024, 32));
+        cnn_thresh <= std_logic_vector(to_signed(32, 32)); -- external 2.0
 
         wait until rising_edge(clk);
         rst <= '0';

@@ -6,7 +6,7 @@ use work.AI_TRIGGER_PKG.all;
 
 entity WRAPPER_TOP is
     generic (
-        INPUT_WIDTH   : integer := 128;
+        INPUT_WIDTH   : integer := 512;
         OUTPUT_WIDTH  : integer := 32;
         NUM_TIMESTEPS : integer := 256;
         NUM_CHANNELS  : integer := 4
@@ -18,7 +18,7 @@ entity WRAPPER_TOP is
         done         : out std_logic;
         idle         : out std_logic;
         ready        : out std_logic;
-        input_data   : in  std_logic_vector(127 downto 0);
+        input_data   : in  std_logic_vector(511 downto 0);
         input_valid  : in  std_logic;
         input_ready  : out std_logic;
         output_data  : out std_logic_vector(31 downto 0);
@@ -28,10 +28,10 @@ entity WRAPPER_TOP is
 end entity WRAPPER_TOP;
 
 architecture sim of WRAPPER_TOP is
-    signal input_count : integer range 0 to N_CHUNK_BEATS_CNN := 0;
+    signal input_count : integer range 0 to 32 := 0;
 begin
     input_ready <= '1';
-    ready <= '0';
+    ready <= '1' when input_count = 32 else '0';
     idle <= '1' when input_count = 0 else '0';
     done <= output_valid;
     output_data <= std_logic_vector(to_signed(2048, 32));
@@ -45,13 +45,14 @@ begin
             else
                 output_valid <= '0';
 
-                if input_valid = '1' then
-                    assert input_data = std_logic_vector(to_unsigned(input_count, input_data'length))
-                        report "CNN_CORE_LANE delivered a non-sequential AXIS input beat"
-                        severity failure;
+                if input_valid = '1' and input_ready = '1' then
+                    assert input_count < 32 report "extra native input beat" severity failure;
+                    assert unsigned(input_data(255 downto 0)) = 2 * input_count and
+                           unsigned(input_data(511 downto 256)) = 2 * input_count + 1
+                        report "native word lost ADC chronology or consumed an empty FIFO" severity failure;
 
-                    if input_count = N_CHUNK_BEATS_CNN - 1 then
-                        input_count <= 0;
+                    if input_count = 31 then
+                        input_count <= 32;
                         output_valid <= '1';
                     else
                         input_count <= input_count + 1;
@@ -90,7 +91,7 @@ architecture sim of tb_cnn_core_lane_stream_sequence is
     signal lane_valid      : std_logic;
 begin
     clk_adc <= not clk_adc after 2 ns;
-    clk_cnn <= not clk_cnn after 2 ns;
+    clk_cnn <= not clk_cnn after 2.5 ns;
 
     u_dut : entity work.CNN_CORE_LANE
         port map (
@@ -125,11 +126,19 @@ begin
         rst_adc <= '0';
         rst_cnn <= '0';
 
+        wait until chunk_busy = '0';
+        wait until falling_edge(clk_adc);
         for i in 0 to N_BATCHES - 1 loop
             wr_en <= '1';
-            batch_data(127 downto 0) <= std_logic_vector(to_unsigned(2 * i, 128));
-            batch_data(255 downto 128) <= std_logic_vector(to_unsigned(2 * i + 1, 128));
+            batch_data <= std_logic_vector(to_unsigned(i, batch_data'length));
             wait until rising_edge(clk_adc);
+            wr_en <= '0';
+            -- Empty periods are much longer than both CDC and the read clock.
+            if i < N_BATCHES - 1 then
+            for gap in 0 to 8 loop
+                wait until rising_edge(clk_adc);
+            end loop;
+            end if;
         end loop;
         wr_en <= '0';
 

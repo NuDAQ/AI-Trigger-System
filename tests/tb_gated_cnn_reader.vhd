@@ -8,7 +8,7 @@ entity tb_gated_cnn_reader is
 end entity tb_gated_cnn_reader;
 
 architecture sim of tb_gated_cnn_reader is
-    constant LANE_TWO : std_logic_vector(N_LANES - 1 downto 0) := "00100";
+    constant LANE_ONE : std_logic_vector(N_LANES - 1 downto 0) := "10";
     signal clk                  : std_logic := '0';
     signal rst                  : std_logic := '1';
     signal work_valid           : std_logic := '0';
@@ -111,7 +111,7 @@ begin
         variable issued_count   : integer := 0;
         variable written_count  : integer := 0;
     begin
-        lane_busy(2) <= '0';
+        lane_busy(1) <= '0';
         work_value.start_address.chunk_id    <= to_unsigned(4, CHUNK_ID_WIDTH);
         work_value.start_address.beat_offset <= to_unsigned(45, BEAT_OFFSET_WIDTH);
         work_value.event_timestamp           <= to_unsigned(5, TIMESTAMP_WIDTH);
@@ -140,9 +140,10 @@ begin
                 issued_count := issued_count + 1;
             end if;
             if lane_we /= (lane_we'range => '0') then
-                assert lane_we = LANE_TWO
+                assert lane_we = LANE_ONE
                     report "gated work was not reserved on the selected free lane" severity failure;
-                assert batch_data = pack_cnn_raw_batch(rb_rd_data)
+                assert batch_data = pack_cnn_raw_batch(raw_for(
+                    add_beats(work_value.start_address, written_count)))
                     report "gated reader did not use the shared CNN packer" severity failure;
                 written_count := written_count + 1;
             end if;

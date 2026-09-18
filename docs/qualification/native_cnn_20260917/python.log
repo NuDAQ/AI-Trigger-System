@@ -1,0 +1,48 @@
+INFO: generated monopolar_50mv_20ns_erf_tr5ns_sweep: 276 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-74ouqa13/monopolar_50mv_20ns_erf_tr5ns_sweep/testhex_stream
+INFO: generated monopolar_100mv_20ns_erf_tr5ns_sweep: 276 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-6v0yi59s/monopolar_100mv_20ns_erf_tr5ns_sweep/testhex_stream
+.INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/zero/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/bipolar_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/polar_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_100ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_100ns_erf_tr100ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_50mv_50ns_erf_tr50ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_10mv_10ns_erf_tr10ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_50mv_20ns_erf_tr5ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_20ns_erf_tr5ns_sweep/scores_annotated.csv
+Matplotlib is building the font cache; this may take a moment.
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/bringup_score_summary.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/polar_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_100ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-oe1b3ds_/score_histogram.png
+..INFO: generated bipolar_sweep: 247 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-umr7zixy/bipolar_sweep/testhex_stream
+....INFO: generated monopolar_100mv_100ns_erf_tr100ns_sweep: 356 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-yktmof3x/monopolar_100mv_100ns_erf_tr100ns_sweep/testhex_stream
+.INFO: generated monopolar_100mv_100ns_sweep: 356 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-igx095mj/monopolar_100mv_100ns_sweep/testhex_stream
+.INFO: generated polar_sweep: 252 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-0nf6knun/polar_sweep/testhex_stream
+.INFO: generated monopolar_50mv_50ns_erf_tr50ns_sweep: 306 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-lwxs1dmy/monopolar_50mv_50ns_erf_tr50ns_sweep/testhex_stream
+INFO: generated monopolar_10mv_10ns_erf_tr10ns_sweep: 266 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-hkf9_y8x/monopolar_10mv_10ns_erf_tr10ns_sweep/testhex_stream
+.INFO: generated zero: 3 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-vh0b22hf/zero/testhex_stream
+.........Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-missing-event-lr6s_oix/out/testhex_stream
+.Prepared 7 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-j5cu7puv/out/testhex_stream
+Wrote 448 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-j5cu7puv/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-bad-handshake-zhkt6xor/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-slow-event-7_air9hv/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-uczqc_f1/out/testhex_stream
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-uczqc_f1/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/out/testhex_stream
+Running Vivado/XSim: /opt/homebrew/opt/python@3.14/bin/python3.14 /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/fake_vivado_runner.py --num-samples 2 --testhex-dir /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/out/testhex_stream --out-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/out/scores.csv --event-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/out/events.csv --score-threshold 0.0 --cnn-thresh-raw 0 --mirror-raw-channels 0
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-3zklk36s/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-jul-27-d77adu6j/out/testhex_stream
+............................................
+----------------------------------------------------------------------
+Ran 70 tests in 13.620s
+
+OK

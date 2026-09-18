@@ -1,6 +1,6 @@
 -------------------------------------
 | Tool Version : Vivado v.2023.2
-| Date         : Mon Jul  6 22:04:23 2026
+| Date         : Thu Aug 27 20:33:13 2026
 | Host         : AlbertsUbuntu
 | Design       : design_1
 | Device       : xcku5p-ffvb676-2-E-
@@ -19,16 +19,14 @@ Number of global clocks: 1
 	Number of BUFG_GT: 0
 	Number of BUFG_PS: 0
 	Number of BUFG_FABRIC: 0
-	Running suboptimal placement checker for 1 clocks (and their loads) which do not have the CLOCK_LOW_FANOUT property but have a fanout less than 2000...
-		No sub-optimality found
 ********************************
 Clock Net Route Info (CRP Input)
 ********************************
-Clock 1: u_CORE/u_RST_ADC/sync_ff[1]_bufg_place
+Clock 1: u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config4_config6_U0/p_0_in_bufg_place
 	Clock source type: BUFGCE
 	Clock source region: X0Y1
-	Clock regions with locked loads: (1, 0) (1, 1) (2, 0) (2, 1) 
-	initial rect ((0, 0), (2, 1))
+	Clock regions with locked loads: (2, 0) (3, 0) (3, 1) 
+	initial rect ((0, 0), (3, 1))
 
 
 
@@ -49,16 +47,70 @@ Number of global clocks: 1
 	Number of BUFG_GT: 0
 	Number of BUFG_PS: 0
 	Number of BUFG_FABRIC: 0
-	Running suboptimal placement checker for 1 clocks (and their loads) which do not have the CLOCK_LOW_FANOUT property but have a fanout less than 2000...
-		No sub-optimality found
 ********************************
 Clock Net Route Info (CRP Input)
 ********************************
-Clock 1: u_CORE/u_RST_ADC/sync_ff[1]
+Clock 1: u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config4_config6_U0/p_0_in
 	Clock source type: BUFGCE
 	Clock source region: X0Y1
-	Clock regions with locked loads: (1, 0) (1, 1) (2, 0) (2, 1) 
-	initial rect ((0, 0), (2, 1))
+	Clock regions with locked loads: (2, 0) (3, 0) (3, 1) 
+	initial rect ((0, 0), (3, 1))
+
+
+
+*****************
+User Constraints:
+*****************
+No user constraints found
+
+
+***********************
+Running Pre-CRP Checker
+***********************
+Number of global clocks: 1
+	Number of BUFGCE: 1
+	Number of BUFGCE_HDIO: 0
+	Number of BUFG_CTRL: 0
+	Number of BUFGCE_DIV: 0
+	Number of BUFG_GT: 0
+	Number of BUFG_PS: 0
+	Number of BUFG_FABRIC: 0
+********************************
+Clock Net Route Info (CRP Input)
+********************************
+Clock 1: u_CORE/gen_lanes[1].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config4_config6_U0/p_0_in_bufg_place
+	Clock source type: BUFGCE
+	Clock source region: X0Y2
+	Clock regions with locked loads: (2, 2) (2, 3) (3, 2) (3, 3) 
+	initial rect ((0, 2), (3, 3))
+
+
+
+*****************
+User Constraints:
+*****************
+No user constraints found
+
+
+***********************
+Running Pre-CRP Checker
+***********************
+Number of global clocks: 1
+	Number of BUFGCE: 1
+	Number of BUFGCE_HDIO: 0
+	Number of BUFG_CTRL: 0
+	Number of BUFGCE_DIV: 0
+	Number of BUFG_GT: 0
+	Number of BUFG_PS: 0
+	Number of BUFG_FABRIC: 0
+********************************
+Clock Net Route Info (CRP Input)
+********************************
+Clock 1: u_CORE/gen_lanes[1].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config4_config6_U0/p_0_in
+	Clock source type: BUFGCE
+	Clock source region: X0Y2
+	Clock regions with locked loads: (2, 2) (2, 3) (3, 2) (3, 3) 
+	initial rect ((0, 2), (3, 3))
 
 
 

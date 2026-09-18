@@ -1,3 +1,8 @@
+> Historical implementation notes for the previous five-lane CNN system.
+> The native two-lane interface, numerical format, validation commands and
+> current qualification evidence are in [NativeCNNQualification.md](NativeCNNQualification.md).
+> The resource, timing, score and lane-count figures below are not current results.
+
 # Implementation Notes
 
 This document summarizes implementation and report status for `AI_TRIGGER_TOP`.

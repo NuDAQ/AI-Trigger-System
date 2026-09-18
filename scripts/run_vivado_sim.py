@@ -148,7 +148,7 @@ def parse_args() -> argparse.Namespace:
         "--cnn-thresh-raw",
         type=int,
         default=0,
-        help="Pass +CNN_THRESH_RAW=<N> to the DUT threshold input. Default: 0.",
+        help="Signed external CNN_THRESH word (real threshold = N / 16). Default: 0.",
     )
     parser.add_argument(
         "--mirror-raw-channels",

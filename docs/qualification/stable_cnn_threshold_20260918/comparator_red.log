@@ -1,0 +1,7 @@
+[ RUN      ] tb_cnn_result_arbiter
+/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/tb_cnn_result_arbiter.vhd:59:13:@2001ps:(assertion failure): external threshold comparison mismatch: score raw=1024 threshold raw=32
+./tb_cnn_result_arbiter:error: assertion failed
+  instance: .tb_cnn_result_arbiter(sim).P1
+./tb_cnn_result_arbiter:error: simulation failed
+COMMAND: /opt/homebrew/bin/ghdl -r --std=08 -P/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-ezigdqc3 --workdir=/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-ezigdqc3 tb_cnn_result_arbiter --assert-level=error --ieee-asserts=disable-at-0 --stop-time=100us[  FAILED  ] tb_cnn_result_arbiter
+GHDL: 0 passed, 1 failed, 1 total

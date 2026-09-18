@@ -46,14 +46,53 @@ begin
         );
 
     process
+        procedure check_threshold(
+            native_score : integer;
+            external_threshold : integer;
+            expected_qualify : std_logic
+        ) is
+        begin
+            lane_score(0) <= std_logic_vector(to_unsigned(native_score mod 2097152, 32));
+            lane_thresh(0) <= std_logic_vector(to_signed(external_threshold, 32));
+            lane_valid(0) <= '1';
+            wait for 1 ps;
+            assert result_valid = '1' and result_qualifying = expected_qualify
+                report "external threshold comparison mismatch: score raw=" &
+                       integer'image(native_score) & " threshold raw=" &
+                       integer'image(external_threshold) severity failure;
+            lane_valid(0) <= '0';
+            wait for 1 ps;
+        end procedure;
     begin
         wait until rising_edge(clk);
         rst <= '0';
 
-        lane_score(0)  <= std_logic_vector(to_signed(50, 32));
-        lane_thresh(0) <= std_logic_vector(to_signed(100, 32));
-        lane_score(1)  <= std_logic_vector(to_signed(200, 32));
-        lane_thresh(1) <= std_logic_vector(to_signed(100, 32));
+        -- External 32 means 2.0, independently of the native 1/512 score unit.
+        check_threshold(1024, 32, '0');
+        check_threshold(1025, 32, '1');
+        check_threshold(1023, 32, '0');
+        -- One external step is 0.0625; retain native sub-step precision.
+        check_threshold(1055, 33, '0');
+        check_threshold(1056, 33, '0');
+        check_threshold(1057, 33, '1');
+        check_threshold(-1024, -32, '0');
+        check_threshold(-1023, -32, '1');
+        check_threshold(-1025, -32, '0');
+        check_threshold(0, 0, '0');
+        check_threshold(1, 0, '1');
+        check_threshold(-1, 0, '0');
+        -- Native limits and thresholds beyond them must not wrap or clamp.
+        check_threshold(-1048576, -32768, '0');
+        check_threshold(-1048575, -32768, '1');
+        check_threshold(-1048576, -32769, '1');
+        check_threshold(1048575, 32768, '0');
+        check_threshold(-1048576, -2147483648, '1');
+        check_threshold(1048575, 2147483647, '0');
+
+        lane_score(0)  <= std_logic_vector(to_signed(512, 32));
+        lane_thresh(0) <= std_logic_vector(to_signed(32, 32));
+        lane_score(1)  <= std_logic_vector(to_signed(1536, 32));
+        lane_thresh(1) <= std_logic_vector(to_signed(32, 32));
         lane_start_chunk(1)    <= to_unsigned(8, CHUNK_ID_WIDTH);
         lane_start_offset(1)   <= to_unsigned(45, BEAT_OFFSET_WIDTH);
         lane_timestamp(1)      <= to_unsigned(9, TIMESTAMP_WIDTH);
@@ -76,7 +115,7 @@ begin
                result_request.start_address.beat_offset = to_unsigned(45, BEAT_OFFSET_WIDTH) and
                result_request.event_timestamp = to_unsigned(9, TIMESTAMP_WIDTH) and
                result_request.trigger_offset = to_unsigned(12, BEAT_OFFSET_WIDTH) and
-               result_request.score = std_logic_vector(to_signed(200, 32))
+               result_request.score = std_logic_vector(to_signed(1536, 32))
             report "arbiter result metadata mismatch" severity failure;
 
         result_ready <= '1';
@@ -84,16 +123,16 @@ begin
         lane_valid(1) <= '0';
         result_ready <= '0';
 
-        lane_score(2)  <= std_logic_vector(to_signed(-20, 32));
-        lane_thresh(2) <= std_logic_vector(to_signed(0, 32));
-        lane_valid(2)  <= '1';
+        lane_score(0)  <= x"001FFE00"; -- native -1, zero-padded container
+        lane_thresh(0) <= std_logic_vector(to_signed(0, 32));
+        lane_valid(0)  <= '1';
         wait for 1 ps;
-        assert lane_ready(2) = '1' and result_valid = '1' and
+        assert lane_ready(0) = '1' and result_valid = '1' and
                result_qualifying = '0'
             report "rotation did not advance to the next completed lane" severity failure;
 
         wait until rising_edge(clk);
-        lane_valid(2) <= '0';
+        lane_valid(0) <= '0';
         wait until rising_edge(clk);
         wait for 1 ps;
         assert busy = '0'

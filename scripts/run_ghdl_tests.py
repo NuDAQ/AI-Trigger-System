@@ -33,6 +33,7 @@ def parse_args() -> argparse.Namespace:
         default="100us",
         help="Per-test simulation stop time. Default: 100us.",
     )
+    parser.add_argument("--generic", action="append", default=[], help="VHDL NAME=VALUE generic for selected tests.")
     parser.add_argument("--list", action="store_true", help="List tests and exit.")
     return parser.parse_args()
 
@@ -98,6 +99,7 @@ def run_test(
     sources: list[Path],
     test_path: Path,
     stop_time: str,
+    generics: list[str] | None = None,
 ) -> tuple[bool, str]:
     with tempfile.TemporaryDirectory(prefix=f"ai-trigger-ghdl-{test_path.stem}-") as tmp:
         workdir = Path(tmp)
@@ -121,6 +123,7 @@ def run_test(
                 "-r",
                 *common,
                 test_path.stem,
+                *("-g" + value for value in (generics or [])),
                 "--assert-level=error",
                 "--ieee-asserts=disable-at-0",
                 f"--stop-time={stop_time}",
@@ -160,7 +163,7 @@ def main() -> int:
     failures = 0
     for test_path in tests:
         print(f"[ RUN      ] {test_path.stem}", flush=True)
-        passed, output = run_test(ghdl, sources, test_path, args.stop_time)
+        passed, output = run_test(ghdl, sources, test_path, args.stop_time, args.generic)
         if passed:
             print(f"[       OK ] {test_path.stem}", flush=True)
         else:

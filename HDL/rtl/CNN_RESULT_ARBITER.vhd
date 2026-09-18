@@ -64,9 +64,8 @@ begin
         consume_v     := '0';
 
         if selected_v >= 0 then
-            qualifying :=
-                signed(LANE_SCORE(selected_v)(21 downto 0)) >
-                signed(LANE_THRESH(selected_v)(21 downto 0));
+            qualifying := cnn_score_above_threshold(
+                LANE_SCORE(selected_v), LANE_THRESH(selected_v));
             request_v.start_address.chunk_id := LANE_START_CHUNK(selected_v);
             request_v.start_address.beat_offset := LANE_START_OFFSET(selected_v);
             request_v.event_timestamp := LANE_TIMESTAMP(selected_v);
