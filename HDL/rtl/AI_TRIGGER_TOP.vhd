@@ -8,8 +8,8 @@
 --   * CLK_ADC domain runtime trigger configuration and operational status
 --   * CLK_ADC domain event stream: waveform batch, LAST, timestamp, and anchor
 --
--- CNN_THRESH is kept as a 32-bit DAQ-friendly word.  The core uses only
--- bits [20:0] as signed ap_fixed<21,12> raw threshold.
+-- CNN_THRESH is a signed 32-bit configuration word with four fractional bits:
+-- threshold = signed(CNN_THRESH) / 16. This interface is independent of CNN IP.
 -- =============================================================================
 
 library ieee;
