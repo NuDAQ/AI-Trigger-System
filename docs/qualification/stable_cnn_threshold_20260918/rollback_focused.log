@@ -1,0 +1,5 @@
+[ RUN      ] tb_gated_cnn_reader
+[       OK ] tb_gated_cnn_reader
+[ RUN      ] tb_cnn_result_arbiter
+[       OK ] tb_cnn_result_arbiter
+GHDL: 2 passed, 0 failed, 2 total

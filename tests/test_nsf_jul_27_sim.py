@@ -18,6 +18,33 @@ SCRIPT = ROOT / "scripts" / "run_nsf_jul_27_sim.py"
 
 
 class NsfJul27SimulationTest(unittest.TestCase):
+    def test_analyze_cli_compares_native_scores_with_external_sixteenths(self):
+        with tempfile.TemporaryDirectory() as folder:
+            work = Path(folder)
+            np.save(work/'x.npy', np.zeros((1,4,256,1), dtype=np.float32))
+            np.save(work/'y.npy', np.zeros(1, dtype=np.float32))
+            output = work/'out'
+            subprocess.run([sys.executable,str(SCRIPT),'--prepare-only',
+                            '--x-data',str(work/'x.npy'),'--labels',str(work/'y.npy'),
+                            '--out-dir',str(output)],check=True,capture_output=True)
+            (output/'scores.csv').write_text(
+                'sample_id,hex_out,float_out,label,prediction,correct,'
+                'latency_cycles_cnn,latency_us,input_first_fire_time_ns,'
+                'input_last_fire_time_ns,cnn_result_time_ns\n'
+                '0,0x00000300,1.500000,0,0,1,204,1.020,100,352,1120\n')
+            self.write_event_csv(output/'events.csv')
+            header = (output/'events.csv').read_text().splitlines()[0]
+            (output/'events.csv').write_text(header+'\n')
+            self.write_clean_log(output/'simulate.log')
+            result = subprocess.run([sys.executable,str(SCRIPT),'--analyze-only',
+                                     '--out-dir',str(output),'--cnn-thresh-raw','32'],
+                                    capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            with (output/'NSF_Jul_27_trigger_trace.csv').open() as stream:
+                row = next(csv.DictReader(stream))
+            self.assertEqual(row['trigger_decision'],'0')
+            self.assertEqual(row['cnn_threshold_float'],'2.000000')
+
     @staticmethod
     def write_score_csv(path: Path) -> None:
         path.write_text(

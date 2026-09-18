@@ -128,7 +128,7 @@ Each event contains one 256-sample chunk, output over 64 beats. When samples fro
 | `RST` | in | Active-high reset for the trigger system. |
 | `TRIGGER_MODE[3:0]` | in | Coherent runtime mode request, synchronous to `CLK_ADC`. |
 | `FORCE_TRIGGER` | in | Synchronous External-mode request; one low-to-high transition requests one event. |
-| `CNN_THRESH[31:0]` | in | Trigger threshold configuration. Only bits `[20:0]` are interpreted as signed `ap_fixed<21,12>` raw threshold data. `CNN_THRESH[31:21]` is ignored. Also `[MSB:LSB]`. |
+| `CNN_THRESH[31:0]` | in | Stable signed 32-bit two's-complement threshold word. Real threshold = signed word / 16; minimum step 0.0625. All bits are meaningful. |
 | `HL_THRESH[11:0]` | in | Non-negative Hi-Lo amplitude threshold, latched at safe Hi-Lo-mode entry. |
 | `HILO_WINDOW[4:0]` | in | Hi-Lo bipolar window configuration. |
 | `COINC_WINDOW[5:0]` | in | Hi-Lo coincidence window configuration. |
@@ -140,7 +140,7 @@ For the AI bring-up described below, configure `TRIGGER_MODE=0010` and
 ```
 use ieee.numeric_std.all;
 
-CNN_THRESH <= std_logic_vector(to_signed(4096, 32));  -- 32'h00001000
+CNN_THRESH <= std_logic_vector(to_signed(32, 32));  -- 32'h00000020 = 2.0
 TRIGGER_MODE <= "0010";
 ```
 
@@ -197,16 +197,21 @@ if EVENT_VALID && EVENT_READY:
 ## How to test?
 
 The native score is signed bits 20:0 divided by 512, with the upper eleven
-output bits zero. Encode a desired threshold in the same low 21-bit format.
-The comparison is strictly greater than: equal scores do not trigger.
-Historical thresholds and zero-input scores from wrapper v5 do not apply.
+output bits zero. External thresholds use the complete signed 32-bit word
+divided by 16, independent of the CNN IP. Their range is -134217728 through
+134217727.9375, with a step of 0.0625. The comparison is strictly greater than:
+equal scores do not trigger. The system widens before scaling, so thresholds
+outside the native score range do not wrap or saturate. Each AI work item keeps
+its threshold snapshot. Historical native /512 and wrapper-v5 /2048 threshold
+encodings must be migrated; native score data itself is unchanged.
 
 | Purpose | CNN_THRESH[31:0] | Raw threshold | Model threshold |
 | --- | --- | ---: | ---: |
 | Select positive scores | `32'h00000000` | 0 | 0 |
-| Example positive threshold | `32'h00000200` | 512 | 1 |
-| Suppress every representable score | `32'h000FFFFF` | 1048575 | 2047.998046875 |
-| Lowest threshold (equality still does not trigger) | `32'h00100000` | -1048576 | -2048 |
+| Example positive threshold | `32'h00000010` | 16 | 1 |
+| Suppress every current native score | `32'h00008000` | 32768 | 2048 |
+| Native lower bound (equality does not trigger) | `32'hFFFF8000` | -32768 | -2048 |
+| Accept every current native score | `32'hFFFF7FFF` | -32769 | -2048.0625 |
 
 The unchanged signed 12-bit ADC input is converted inside the system using
 `q = clamp(floor((raw + 1) / 2), -511, 511)` and sign-extended into 16-bit slots.

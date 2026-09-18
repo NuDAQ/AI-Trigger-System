@@ -38,7 +38,7 @@ begin
             else
                 trigger_valid_r <= '0';
                 if SCORE_VALID = '1' and
-                   signed(SCORE_DATA(20 downto 0)) > signed(CNN_THRESH(20 downto 0)) then
+                   cnn_score_above_threshold(SCORE_DATA, CNN_THRESH) then
                     trigger_valid_r    <= '1';
                     trigger_score_r    <= SCORE_DATA;
                     trigger_chunk_id_r <= SCORE_CHUNK_ID;

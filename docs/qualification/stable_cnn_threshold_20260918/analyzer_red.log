@@ -1,0 +1,29 @@
+FPrepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-missing-event-62ggt36i/out/testhex_stream
+.Prepared 7 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-jndzv1vu/out/testhex_stream
+Wrote 448 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-jndzv1vu/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-bad-handshake-qj_9je01/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-slow-event-dy87610l/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-mv7crimo/out/testhex_stream
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-mv7crimo/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/out/testhex_stream
+Running Vivado/XSim: /opt/homebrew/opt/python@3.14/bin/python3.14 /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/fake_vivado_runner.py --num-samples 2 --testhex-dir /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/out/testhex_stream --out-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/out/scores.csv --event-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/out/events.csv --score-threshold 0.0 --cnn-thresh-raw 0 --mirror-raw-channels 0
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-t3rtdlqp/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-jul-27-xeiizro2/out/testhex_stream
+..
+======================================================================
+FAIL: test_analyze_cli_compares_native_scores_with_external_sixteenths (test_nsf_jul_27_sim.NsfJul27SimulationTest.test_analyze_cli_compares_native_scores_with_external_sixteenths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_nsf_jul_27_sim.py", line 42, in test_analyze_cli_compares_native_scores_with_external_sixteenths
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : threshold decision mismatch for local chunk 0: score_csv=0, recomputed=1
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.156s
+
+FAILED (failures=1)

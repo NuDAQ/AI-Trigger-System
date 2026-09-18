@@ -196,7 +196,7 @@ def parse_args() -> argparse.Namespace:
         "--cnn-thresh-raw",
         type=int,
         default=0,
-        help="Raw signed CNN_THRESH value driven into the DUT.",
+        help="Signed external CNN_THRESH word driven into the DUT (unit 1/16).",
     )
     parser.add_argument(
         "--part",

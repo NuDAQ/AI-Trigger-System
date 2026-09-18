@@ -6,6 +6,9 @@ package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
     constant N_LANES    : integer := 2;    -- parallel CNN cores
+    constant CNN_THRESH_FRAC_BITS : natural := 4; -- stable external unit: 1/16
+    constant CNN_SCORE_WIDTH : positive := 21;
+    constant CNN_SCORE_FRAC_BITS : natural := 9; -- current native IP unit: 1/512
     constant N_ADC_CH   : integer := 8;    -- raw ADC channels captured into events
     constant N_TRIGGER_CH : integer := 4;  -- leading channels used by the CNN trigger
     constant N_CH       : integer := N_ADC_CH; -- historical alias for raw ADC channels
@@ -89,6 +92,13 @@ package AI_TRIGGER_PKG is
         sample_value : adc_sample_t
     ) return std_logic_vector;
 
+    -- Native score packing is private to this adapter. Thresholds retain all
+    -- 32 signed bits, including values outside the native score range.
+    function cnn_score_above_threshold(
+        score_value : std_logic_vector(31 downto 0);
+        threshold_value : std_logic_vector(31 downto 0)
+    ) return boolean;
+
     function pack_cnn_batch(
         batch_value : adc_data4_t
     ) return std_logic_vector;
@@ -103,6 +113,18 @@ package AI_TRIGGER_PKG is
 end package AI_TRIGGER_PKG;
 
 package body AI_TRIGGER_PKG is
+    function cnn_score_above_threshold(
+        score_value : std_logic_vector(31 downto 0);
+        threshold_value : std_logic_vector(31 downto 0)
+    ) return boolean is
+        constant SCALE_SHIFT : natural := CNN_SCORE_FRAC_BITS - CNN_THRESH_FRAC_BITS;
+        constant COMPARE_WIDTH : positive := 32 + SCALE_SHIFT;
+    begin
+        -- Widen before shifting: no overflow, saturation, or score rounding.
+        return resize(signed(score_value(CNN_SCORE_WIDTH - 1 downto 0)), COMPARE_WIDTH) >
+               shift_left(resize(signed(threshold_value), COMPARE_WIDTH), SCALE_SHIFT);
+    end function;
+
     function unpack_logical_beat(
         flat_value : unsigned(LOGICAL_BEAT_WIDTH - 1 downto 0)
     ) return logical_beat_t is

@@ -242,9 +242,9 @@ module tb_AI_TRIGGER_TOP;
             score_threshold = 0.0;
         has_cnn_thresh_raw_arg = $value$plusargs("CNN_THRESH_RAW=%d", cnn_thresh_raw);
         if (!has_cnn_thresh_raw_arg)
-            cnn_thresh_raw = 0;  // 0.0 in ap_fixed<21,12>
+            cnn_thresh_raw = 0;  // external signed word, unit 1/16
         if (!has_score_threshold_arg && has_cnn_thresh_raw_arg)
-            score_threshold = real'($signed(cnn_thresh_raw[20:0])) / 512.0;
+            score_threshold = real'($signed(cnn_thresh_raw)) / 16.0;
         if (!$value$plusargs("MIRROR_RAW_CHANNELS=%d", mirror_raw_channels))
             mirror_raw_channels = 1;
         if (!$value$plusargs("TRIGGER_MODE=%d", trigger_mode_raw))
@@ -326,7 +326,7 @@ module tb_AI_TRIGGER_TOP;
         $display("[%0t] Starting AI_TRIGGER_TOP test", $time);
         $display("[%0t] TESTHEX_DIR: %s", $time, testhex_dir);
         $display("[%0t] Samples: %0d  Threshold raw: %0d (%.4f)",
-                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw[20:0])) / 512.0);
+                 $time, num_samples, cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
         $display("[%0t] MIRROR_RAW_CHANNELS: %0d", $time, mirror_raw_channels);
         $display("[%0t] TRIGGER_MODE: 0x%0h", $time, trigger_mode);
         $display("[%0t] FORCE_TRIGGER: every %0d chunks at beat %0d",
@@ -679,7 +679,7 @@ module tb_AI_TRIGGER_TOP;
             $display("CLK_CNN:          %.1f MHz (%.3f ns period)",
                      1000.0/CLK_CNN_PERIOD, CLK_CNN_PERIOD);
             $display("CNN_THRESH:       %0d raw (%.4f float)",
-                     cnn_thresh_raw, real'($signed(cnn_thresh_raw[20:0])) / 512.0);
+                     cnn_thresh_raw, real'($signed(cnn_thresh_raw)) / 16.0);
             $display("Score threshold:  %.4f float", score_threshold);
             $display("Requested mode:   0x%0h", trigger_mode);
             $display("Hi-Lo config:     threshold=%0d hilo=%0d coincidence=%0d bin=%0d",

@@ -1,6 +1,10 @@
 # Native CNN two-lane qualification
 
-Status: native two-lane integration, functional regression and routed OOC qualification passed.
+Status: the native two-lane integration below passed functional and routed OOC
+qualification. Its threshold encoding is historical; the current fixed external
+format is specified in [CNNThresholdInterface.md](CNNThresholdInterface.md).
+The [accepted stable-threshold qualification](qualification/stable_cnn_threshold_20260918/README.md)
+supersedes the timing and functional results below for the current checkout.
 Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS 2023.2 on Ubuntu 22.04.5.
 
 ## Source and interface contract
@@ -12,13 +16,13 @@ Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS
 - Unchanged ADC boundary: eight channels, four signed 12-bit samples per channel per valid beat. No ADC backpressure. Raw event data remains unchanged.
 - CNN consumes channels 0–3 at nominal model scale `raw/64`. Native conversion is `clamp(floor((raw+1)/2), -511, 511)`, sign-extended into 16-bit slots.
 - Each lane widens two chronological 256-bit writes into one 512-bit word. An inference accepts 32 words, covering 256 times × four channels.
-- Native scores occupy signed bits 20:0, scale 512, zero upper eleven bits. Thresholds use the same low-bit format and strict greater-than comparison; thresholds are snapshotted per work item.
+- Native scores occupy signed bits 20:0, scale 512, zero upper eleven bits. This historical run used native-format thresholds. Current thresholds use the complete signed 32-bit word / 16; strict greater-than comparison and per-work snapshots remain unchanged.
 - Start acknowledgement, last-input transfer, and result consumption are separate lifecycle events. Sixteen metadata entries have explicit occupancy protection; input storage retains its previous 128 × 256-bit capacity.
 - Gated replay registers one raw batch before conversion to split the measured URAM-to-lane-BRAM critical path. Metadata and final-write completion remain aligned. Disabling Hi-Lo clears incomplete, unissued aggregates so mode drain cannot deadlock.
 
 Bender is the only source authority. The lockfile was resolved without local overrides. Native builds record compiled source hashes in `source_manifest.json`. Delivery includes the exact `.v`, `.vh`, and `.dat` assets and a `SHA256SUMS` file. Neither wrapper qualification fixtures nor wrapper OOC constraints are imported.
 
-The current qualified RTL is commit `ba888f65a7b3e03f6ef92c63167366c075880181`.
+The historical timing-qualified RTL below is commit `ba888f65a7b3e03f6ef92c63167366c075880181`.
 The system prepares gated-work metadata and event read payloads independently
 of the admission control chain; valid signals preserve the original grant,
 credit and window checks. No transaction latency or CNN IP change was added.

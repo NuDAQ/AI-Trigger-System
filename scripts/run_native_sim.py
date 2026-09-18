@@ -22,8 +22,11 @@ def main():
     parser.add_argument('--overload', action='store_true')
     parser.add_argument('--gap', type=int, default=0)
     parser.add_argument('--phase', type=float, default=0)
-    parser.add_argument('--threshold', type=lambda x:int(x,0), default=0)
+    parser.add_argument('--threshold', type=lambda x:int(x,0), default=0,
+                        help='Signed 32-bit external threshold word; real threshold = word / 16.')
     args = parser.parse_args()
+    if not -(1 << 31) <= args.threshold < (1 << 31):
+        parser.error('threshold must fit the signed 32-bit external format (unit 1/16)')
     reference, output = args.reference.resolve(), args.output.resolve()
     metadata = json.loads((reference/'reference.json').read_text())
     for name, digest in metadata['files'].items():
@@ -37,7 +40,7 @@ def main():
     files = subprocess.check_output(['bender','script','vivado','-t','vivado','-t','simulation'],cwd=ROOT,text=True)
     (output/'sources.tcl').write_text(files)
     q = tcl_quote
-    plusargs = f'-testplusarg REFERENCE={reference} -testplusarg WINDOWS={windows} -testplusarg OVERLOAD={int(args.overload)} -testplusarg GAP={args.gap} -testplusarg PHASE={args.phase} -testplusarg THRESHOLD={args.threshold & 0x1fffff:08x}'
+    plusargs = f'-testplusarg REFERENCE={reference} -testplusarg WINDOWS={windows} -testplusarg OVERLOAD={int(args.overload)} -testplusarg GAP={args.gap} -testplusarg PHASE={args.phase} -testplusarg THRESHOLD={args.threshold & 0xffffffff:08x}'
     script = f'''create_project native_system {q(output/'project')} -part xcku5p-ffvb676-2-e -force
 set_property target_language VHDL [current_project]
 set_property simulator_language Mixed [current_project]

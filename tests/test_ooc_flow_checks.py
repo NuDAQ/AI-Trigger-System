@@ -278,7 +278,6 @@ class OocFlowChecks(unittest.TestCase):
     def test_cnn_threshold_uses_config_cdc_and_lane_snapshot(self) -> None:
         core = read("HDL/rtl/AI_TRIGGER_CORE.vhd")
         lane = read("HDL/rtl/CNN_CORE_LANE.vhd")
-        arbiter = read("HDL/rtl/CNN_RESULT_ARBITER.vhd")
 
         self.assertIn("lane_thresh_common", core)
         self.assertRegex(core, r"LANE_THRESH\s*=>\s*lane_thresh\(lane_idx\)")
@@ -290,11 +289,7 @@ class OocFlowChecks(unittest.TestCase):
         self.assertRegex(lane, r"chunk_id_src_data\s*<=\s*CNN_THRESH\s*&")
         self.assertRegex(lane, r"score_thresh_mem\(score_id_wr_idx\)\s*<=\s*threshold_meta_data")
         self.assertRegex(lane, r"LANE_THRESH\s*<=\s*score_thresh_mem\(score_id_rd_idx\)")
-        self.assertRegex(
-            arbiter,
-            r"signed\(LANE_SCORE\(selected_v\)\(20 downto 0\)\)\s*>\s*"
-            r"signed\(LANE_THRESH\(selected_v\)\(20 downto 0\)\)",
-        )
+        # Numeric comparison behavior is checked at the arbiter's RTL ports.
 
     def test_core_synchronizes_external_reset_before_domain_fanout(self) -> None:
         bender = read("Bender.yml")
