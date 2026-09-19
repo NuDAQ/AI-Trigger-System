@@ -169,6 +169,7 @@ def write_version(package_dir: Path, version: str) -> None:
     branch = git_value(["branch", "--show-current"], "unknown")
     wrapper_revision = "unknown"
     core_revision = "unknown"
+    hilo_revision = "unknown"
     lock = ROOT / "Bender.lock"
     if lock.exists():
         match = re.search(r"cnn-core-wrapper:.*?revision:\s*([0-9a-f]+)", lock.read_text(encoding="utf-8"), re.S)
@@ -177,6 +178,9 @@ def write_version(package_dir: Path, version: str) -> None:
         match = re.search(r"cnn-core:.*?revision:\s*([0-9a-f]+)", lock.read_text(encoding="utf-8"), re.S)
         if match:
             core_revision = match.group(1)
+        match = re.search(r"hilo-trigger:.*?revision:\s*([0-9a-f]+)", lock.read_text(encoding="utf-8"), re.S)
+        if match:
+            hilo_revision = match.group(1)
 
     content = "\n".join(
         [
@@ -191,6 +195,8 @@ def write_version(package_dir: Path, version: str) -> None:
             "CLK_CNN target: 200 MHz",
             "cnn-core-wrapper revision: " + wrapper_revision,
             "cnn-core revision: " + core_revision,
+            "hilo-trigger revision: " + hilo_revision,
+            "Hi-Lo windows: unsigned 8-bit accepted-sample counts",
             "CNN lanes: 2",
             "CNN input: 32 x 512-bit transfers per 256 x 4 window",
             "Score format: signed low 21 bits / 512",
