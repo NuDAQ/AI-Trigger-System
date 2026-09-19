@@ -85,6 +85,7 @@ begin
 
     process
         variable wait_cycles : integer;
+        variable last_batch : integer;
     begin
         drive_trigger_batch(hl_adc_data4);
         wait until rising_edge(clk);
@@ -228,6 +229,84 @@ begin
                 report "one quiet rate window did not leave blanking while idle" severity failure;
         end loop;
         gated_work_ready <= '0';
+
+        -- The new dependency is qualified separately. Here check only its AI
+        -- boundary: all configuration bits are snapshotted, the qualified
+        -- result has the same latency, and the triggering aggregate owns the
+        -- metadata in both standalone and gated modes.
+        for selected_mode in 0 to 1 loop
+            for wide_window in 0 to 1 loop
+                if selected_mode = 0 then
+                    active_mode <= TRIGGER_MODE_HILO;
+                else
+                    active_mode <= TRIGGER_MODE_HILO_AI;
+                end if;
+                if wide_window = 0 then
+                    -- Hi@0 and Lo@254 overlap only at the end of a 255-sample
+                    -- Hi-Lo window. Sixteen accepted aggregates are required.
+                    hilo_window <= std_logic_vector(to_unsigned(255, HILO_WINDOW_WIDTH));
+                    coinc_window <= std_logic_vector(to_unsigned(1, HILO_WINDOW_WIDTH));
+                    bin_thr <= x"1";
+                    last_batch := 15;
+                else
+                    -- Channel 0 gates at 1..4; COINC=255 keeps it through 258.
+                    -- Channel 1 at 256/257 needs that full-width coincidence.
+                    hilo_window <= std_logic_vector(to_unsigned(5, HILO_WINDOW_WIDTH));
+                    coinc_window <= std_logic_vector(to_unsigned(255, HILO_WINDOW_WIDTH));
+                    bin_thr <= x"2";
+                    last_batch := 16;
+                end if;
+                mode_start <= '1';
+                wait until rising_edge(clk);
+                mode_start <= '0';
+                wait until rising_edge(clk);
+                wait for 1 ps;
+                -- Live changes after entry must not rewrite the active snapshot.
+                hilo_window <= std_logic_vector(to_unsigned(1, HILO_WINDOW_WIDTH));
+                coinc_window <= std_logic_vector(to_unsigned(1, HILO_WINDOW_WIDTH));
+                for batch_index in 0 to last_batch loop
+                    hl_adc_data4 <= (others => (others => (others => '0')));
+                    hl_anchor_chunk <= to_unsigned(1, CHUNK_ID_WIDTH);
+                    hl_anchor_offset <= to_unsigned(0, BEAT_OFFSET_WIDTH);
+                    hl_anchor_time <= to_unsigned(0, TIMESTAMP_WIDTH);
+                    if batch_index = 0 then
+                        hl_adc_data4(0)(0) <= std_logic_vector(to_signed(200, 12));
+                        if wide_window = 1 then
+                            hl_adc_data4(0)(1) <= std_logic_vector(to_signed(-200, 12));
+                        end if;
+                    elsif batch_index = last_batch then
+                        if wide_window = 0 then
+                            hl_adc_data4(0)(14) <= std_logic_vector(to_signed(-200, 12));
+                        else
+                            hl_adc_data4(1)(0) <= std_logic_vector(to_signed(200, 12));
+                            hl_adc_data4(1)(1) <= std_logic_vector(to_signed(-200, 12));
+                        end if;
+                        hl_anchor_chunk <= to_unsigned(7, CHUNK_ID_WIDTH);
+                        hl_anchor_offset <= to_unsigned(19, BEAT_OFFSET_WIDTH);
+                        hl_anchor_time <= to_unsigned(77, TIMESTAMP_WIDTH);
+                    end if;
+                    pulse_batch(hl_data_str);
+                    wait for 1 ps;
+                    assert event_request_valid = '0' and gated_work_valid = '0'
+                        report "wide-window decision was emitted early" severity failure;
+                end loop;
+                wait until rising_edge(clk);
+                wait for 1 ps;
+                assert event_request_valid = '0' and gated_work_valid = '0'
+                    report "wide-window result bypassed the existing pipeline" severity failure;
+                wait until rising_edge(clk);
+                wait for 1 ps;
+                assert (selected_mode = 0 and event_request_valid = '1' and gated_work_valid = '0') or
+                       (selected_mode = 1 and event_request_valid = '0' and gated_work_valid = '1')
+                    report "255-sample snapshot did not produce the correctly routed request" severity failure;
+                assert event_request.start_address.chunk_id = to_unsigned(6, CHUNK_ID_WIDTH) and
+                       event_request.start_address.beat_offset = to_unsigned(52, BEAT_OFFSET_WIDTH) and
+                       event_request.event_timestamp = to_unsigned(77, TIMESTAMP_WIDTH) and
+                       event_request.trigger_offset = to_unsigned(19, BEAT_OFFSET_WIDTH) and
+                       gated_work = event_request and config_error = '0'
+                    report "wide-window request lost the triggering aggregate's anchor" severity failure;
+            end loop;
+        end loop;
 
         report "tb_hilo_trigger_ctrl passed";
         stop;
