@@ -4,6 +4,9 @@ use ieee.numeric_std.all;
 
 package AI_TRIGGER_PKG is
 
+    -- Window width follows the canonical Hi-Lo source profile (8 bits in v3.0).
+    constant HILO_WINDOW_WIDTH : positive := work.PRE_TRIGGER_pkg.N_WIN_WIDTH;
+
     -- CNN cluster configuration
     constant N_LANES    : integer := 2;    -- parallel CNN cores
     constant CNN_THRESH_FRAC_BITS : natural := 4; -- stable external unit: 1/16

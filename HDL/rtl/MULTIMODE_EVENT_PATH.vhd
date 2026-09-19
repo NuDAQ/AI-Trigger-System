@@ -18,8 +18,8 @@ entity MULTIMODE_EVENT_PATH is
         FORCE_TRIGGER        : in  std_logic;
         CNN_THRESH           : in  std_logic_vector(31 downto 0);
         HL_THRESH            : in  std_logic_vector(11 downto 0);
-        HILO_WINDOW          : in  std_logic_vector(4 downto 0);
-        COINC_WINDOW         : in  std_logic_vector(5 downto 0);
+        HILO_WINDOW          : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
+        COINC_WINDOW         : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
         BIN_THR              : in  std_logic_vector(3 downto 0);
 
         CNN_RESULT_VALID     : in  std_logic;
@@ -85,7 +85,7 @@ architecture structural of MULTIMODE_EVENT_PATH is
     signal housekeeping_event_finished, housekeeping_request_failed : std_logic;
 
     signal hl_adapter_enable, hl_adapter_busy, hl_data_str : std_logic;
-    signal hl_adc_data4 : work.PRE_TRIGGER_pkg.adc_data4_type;
+    signal hl_adc_data4 : work.PRE_TRIGGER_pkg.adc_ch_data_type;
     signal hl_anchor_chunk : chunk_id_t;
     signal hl_anchor_offset : beat_offset_t;
     signal hl_anchor_time : timestamp_t;

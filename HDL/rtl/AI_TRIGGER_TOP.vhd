@@ -30,8 +30,8 @@ entity AI_TRIGGER_TOP is
         FORCE_TRIGGER  : in  std_logic;
         CNN_THRESH     : in  std_logic_vector(31 downto 0);
         HL_THRESH      : in  std_logic_vector(11 downto 0);
-        HILO_WINDOW    : in  std_logic_vector(4 downto 0);
-        COINC_WINDOW   : in  std_logic_vector(5 downto 0);
+        HILO_WINDOW    : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
+        COINC_WINDOW   : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
         BIN_THR        : in  std_logic_vector(3 downto 0);
 
         EVENT_VALID    : out std_logic;

@@ -44,8 +44,8 @@
 //   +FORCE_TRIGGER_BEAT=<0..63>
 //                           scheduled pulse position within each selected chunk
 //   +HL_THRESH=<0..2047>     Hi-Lo threshold in raw ADC codes (default 100)
-//   +HILO_WINDOW=<0..31>     Hi-Lo intra-channel window (default 5)
-//   +COINC_WINDOW=<0..63>    Hi-Lo coincidence window (default 3)
+//   +HILO_WINDOW=<0..255>    Hi-Lo intra-channel window (default 5)
+//   +COINC_WINDOW=<0..255>   Hi-Lo coincidence window (default 3)
 //   +BIN_THR=<1..4>          Hi-Lo channel multiplicity (default 1)
 //   +MIRROR_RAW_CHANNELS=<0|1>
 //                           mirror ch0..ch3 into raw event channels ch4..ch7
@@ -81,8 +81,8 @@ module tb_AI_TRIGGER_TOP;
     reg          force_trigger;
     reg  [31:0]  cnn_thresh;
     reg  [11:0]  hl_thresh;
-    reg  [4:0]   hilo_window;
-    reg  [5:0]   coinc_window;
+    reg  [7:0]   hilo_window;
+    reg  [7:0]   coinc_window;
     reg  [3:0]   bin_thr;
 
     wire         adc_src_ready;
@@ -266,8 +266,8 @@ module tb_AI_TRIGGER_TOP;
             force_trigger_interval < 0 ||
             force_trigger_beat < 0 || force_trigger_beat >= N_BATCHES ||
             hl_thresh_raw < 0 || hl_thresh_raw > 2047 ||
-            hilo_window_raw < 0 || hilo_window_raw > 31 ||
-            coinc_window_raw < 0 || coinc_window_raw > 63 ||
+            hilo_window_raw < 0 || hilo_window_raw > 255 ||
+            coinc_window_raw < 0 || coinc_window_raw > 255 ||
             bin_thr_raw < 1 || bin_thr_raw > 4) begin
             $fatal(1, "invalid multimode simulation configuration");
         end

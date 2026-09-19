@@ -14,14 +14,14 @@ entity HILO_TRIGGER_CTRL is
         MODE_START          : in  std_logic;
 
         HL_DATA_STR         : in  std_logic;
-        HL_ADC_DATA4        : in  work.PRE_TRIGGER_pkg.adc_data4_type;
+        HL_ADC_DATA4        : in  work.PRE_TRIGGER_pkg.adc_ch_data_type;
         HL_ANCHOR_CHUNK     : in  chunk_id_t;
         HL_ANCHOR_OFFSET    : in  beat_offset_t;
         HL_ANCHOR_TIME      : in  timestamp_t;
 
         HL_THRESH           : in  std_logic_vector(11 downto 0);
-        HILO_WINDOW         : in  std_logic_vector(4 downto 0);
-        COINC_WINDOW        : in  std_logic_vector(5 downto 0);
+        HILO_WINDOW         : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
+        COINC_WINDOW        : in  std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0);
         BIN_THR             : in  std_logic_vector(3 downto 0);
 
         EVENT_REQUEST_VALID : out std_logic;
@@ -49,8 +49,8 @@ architecture rtl of HILO_TRIGGER_CTRL is
     type timestamp_pipe_t is array (0 to 1) of timestamp_t;
 
     signal latched_thresh_r       : std_logic_vector(11 downto 0) := (others => '0');
-    signal latched_hilo_window_r  : std_logic_vector(4 downto 0) := (others => '0');
-    signal latched_coinc_window_r : std_logic_vector(5 downto 0) := (others => '0');
+    signal latched_hilo_window_r  : std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0) := (others => '0');
+    signal latched_coinc_window_r : std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0) := (others => '0');
     signal latched_bin_thr_r      : std_logic_vector(3 downto 0) := x"1";
     signal config_valid_r         : std_logic := '0';
 
@@ -100,7 +100,7 @@ begin
         end if;
     end process;
 
-    -- PRE_TRIGGER v2.2.4 treats BIN_THR=0 as an unconditional trigger.  Keep
+    -- PRE_TRIGGER (including v3.0) treats BIN_THR=0 as an unconditional trigger.  Keep
     -- its physical input fail-closed even while the externally supplied
     -- configuration is invalid; config_valid_r still reports and rejects it.
     pre_trigger_bin_thr <= latched_bin_thr_r when
@@ -115,7 +115,7 @@ begin
             CLK          => CLK,
             RESET        => pre_trigger_reset_r,
             DATA_STR     => pre_trigger_data_str,
-            ADC_DATA4    => HL_ADC_DATA4,
+            ADC_DATA     => HL_ADC_DATA4,
             THRESH       => latched_thresh_r,
             HILO_WINDOW  => latched_hilo_window_r,
             COINC_WINDOW => latched_coinc_window_r,

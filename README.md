@@ -105,8 +105,8 @@ the original 12-bit samples.
 | `FORCE_TRIGGER` | External housekeeping trigger pulse |
 | `CNN_THRESH[31:0]` | Stable signed 32-bit threshold word, unit 1/16 (step 0.0625) |
 | `HL_THRESH[11:0]` | Non-negative Hi-Lo threshold in raw ADC codes |
-| `HILO_WINDOW[4:0]` | Hi-Lo high/low coincidence window |
-| `COINC_WINDOW[5:0]` | Cross-channel coincidence window |
+| `HILO_WINDOW[7:0]` | Hi-Lo high/low window, 0–255 accepted samples |
+| `COINC_WINDOW[7:0]` | Cross-channel coincidence window, 0–255 accepted samples |
 | `BIN_THR[3:0]` | Required channel multiplicity, valid range 1-4 |
 
 CNN scores retain native `ap_fixed<21,12>`; the external threshold format is
@@ -120,6 +120,13 @@ CNN_THRESH_raw = threshold_float * 16
 
 Configuration is sampled with the work item so one inference uses one stable
 threshold. Hi-Lo configuration is latched at safe Hi-Lo mode entry.
+Both window inputs are now 8 bits and are no longer silently clamped to 16/32.
+The canonical Hi-Lo core still consumes 16 samples, assembled from four accepted
+ADC beats; aggregate order, fourth-beat anchor, result latency and the 256-sample
+event size are unchanged. Strobe gaps do not consume window samples. The existing
+AI wrapper configuration checks and blanking/busy/loss policy remain unchanged;
+in particular, AI still rejects `BIN_THR=0`, while the standalone dependency's
+original `BIN_THR=0` behavior is preserved.
 The comparison remains strictly greater than, with full-width handling of
 negative and out-of-native-range thresholds. See
 [CNNThresholdInterface.md](docs/CNNThresholdInterface.md) for the fixed contract
@@ -172,17 +179,19 @@ Main integration files:
 
 Bender pins the native wrapper at `a82a717403c8346d027f62b017295d8ea6fa3344`
 and CNN Core at `eca9b12f9f49f4b7324ed9ed241a44086ca9c842`, with Hi-Lo Trigger
-v2.2.4. Each of the two lanes sends 32 native 512-bit beats per window; the
+v3.0.0 (`047d14a25ca0df95d2219eded90e0b449574ae15`). Each of the two lanes sends 32 native 512-bit beats per window; the
 wrapper passes native control and scores through unchanged. The system owns
 ADC conversion, FIFO width conversion, work metadata, and scheduling.
 
 ```bash
 cargo install bender
-bender update
+bender checkout
 ```
 
 Vivado launchers regenerate their source list from the Bender graph. Do not add
 a parallel manual source list.
+The Hi-Lo upgrade uses the exact semantic-version requirement `=3.0.0` and the
+scoped `bender update hilo-trigger --fetch`; it does not update CNN dependencies.
 
 A normal checkout resolves the exact Git pins without local overrides. If using
 `Bender.local` during development, verify the resolved source hashes; an override
@@ -190,16 +199,19 @@ can change compiled code independently of the published pins.
 
 ## Native CNN validation
 
-See the [stable threshold qualification](docs/qualification/stable_cnn_threshold_20260918/README.md)
-for the accepted two-lane implementation, source audit and reproduction commands.
+See the [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
+for the current two-lane implementation, source audit and reproduction commands.
+The [stable threshold qualification](docs/qualification/stable_cnn_threshold_20260918/README.md)
+is the pre-upgrade comparison baseline.
 The earlier integration results remain in [NativeCNNQualification.md](docs/NativeCNNQualification.md).
 
 All nine actual-IP scenarios pass, including 1096 exact-score windows and 475
 complete eight-channel events at threshold zero, plus positive, negative and
 extreme external thresholds. Routed OOC meets 250/200 MHz with ADC/CNN setup
-WNS +0.191/+0.310 ns and overall WHS +0.007 ns, zero DRC errors and zero unsafe
-or unknown CDC endpoints. The user accepted this route without the previous
-additional +0.200 ns margin requirement. This is block-level qualification.
+WNS +0.311/+0.180 ns and overall WHS +0.007 ns, zero DRC errors and zero unsafe
+or unknown CDC endpoints. Relative to the pre-upgrade baseline, LUT/FF grow
+by 0.269%/0.090%, with no added DSP/BRAM/URAM. The accepted minimum setup margin
+is 0.0 ns. This is block-level qualification, not gateware or board validation.
 
 ## Historical validation (previous CNN)
 
@@ -260,7 +272,7 @@ Plots for 3.4 and 4 RMS are included in the full report.
 
 The figures below describe the previous five-lane system, not native two-lane
 qualification. Current evidence is recorded in
-`docs/qualification/stable_cnn_threshold_20260918/README.md`.
+`docs/qualification/hilo_v3_20260919/README.md`.
 
 The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
 `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.

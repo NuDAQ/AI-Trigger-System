@@ -19,7 +19,7 @@ architecture sim of tb_hilo_input_adapter is
     signal write_beat_offset : beat_offset_t := (others => '0');
     signal write_timestamp   : timestamp_t := (others => '0');
     signal hl_data_str       : std_logic;
-    signal hl_adc_data4      : adc_data4_type;
+    signal hl_adc_data4      : adc_ch_data_type;
     signal hl_anchor_chunk   : chunk_id_t;
     signal hl_anchor_offset  : beat_offset_t;
     signal hl_anchor_time    : timestamp_t;

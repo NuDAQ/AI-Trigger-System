@@ -1,0 +1,3 @@
+[ RUN      ] tb_cnn_input_conversion
+[       OK ] tb_cnn_input_conversion
+GHDL: 1 passed, 0 failed, 1 total

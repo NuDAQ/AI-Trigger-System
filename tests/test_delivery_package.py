@@ -63,6 +63,8 @@ class DeliveryPackageTest(unittest.TestCase):
             self.assertTrue((package / "assets" / "score_vs_offset.png").exists())
             version = (package / "VERSION.txt").read_text()
             self.assertIn("cnn-core revision: eca9b12f9f49f4b7324ed9ed241a44086ca9c842", version)
+            self.assertIn("hilo-trigger revision: 047d14a25ca0df95d2219eded90e0b449574ae15", version)
+            self.assertIn("Hi-Lo windows: unsigned 8-bit accepted-sample counts", version)
             self.assertIn("CNN lanes: 2", version)
             self.assertIn("Score format: signed low 21 bits / 512", version)
             self.assertTrue((package / "constraints" / "ai_trigger_ooc.xdc").exists())

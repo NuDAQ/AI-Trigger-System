@@ -192,14 +192,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--hilo-window",
         type=int,
-        choices=range(32),
+        choices=range(256),
         default=5,
         help="Hi-Lo intra-channel window input. Default: 5.",
     )
     parser.add_argument(
         "--coinc-window",
         type=int,
-        choices=range(64),
+        choices=range(256),
         default=3,
         help="Hi-Lo inter-channel coincidence window input. Default: 3.",
     )

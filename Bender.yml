@@ -14,7 +14,7 @@ package:
 dependencies:
   # Path dependency.
   cnn-core-wrapper: { git: "git@github.com:NuDAQ/CNN-Core-Wrapper.git", rev: "a82a717403c8346d027f62b017295d8ea6fa3344" }
-  hilo-trigger: { git: "git@github.com:NuDAQ/Hi-Lo-Trigger.git", version: "2.2.4" }
+  hilo-trigger: { git: "git@github.com:NuDAQ/Hi-Lo-Trigger.git", version: "=3.0.0" }
 
 sources:
   - HDL/rtl/AI_TRIGGER_PKG.vhd

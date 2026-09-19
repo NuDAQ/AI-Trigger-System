@@ -16,7 +16,7 @@ entity HILO_INPUT_ADAPTER is
         WRITE_TIMESTAMP   : in  timestamp_t;
 
         HL_DATA_STR       : out std_logic;
-        HL_ADC_DATA4      : out work.PRE_TRIGGER_pkg.adc_data4_type;
+        HL_ADC_DATA4      : out work.PRE_TRIGGER_pkg.adc_ch_data_type;
         HL_ANCHOR_CHUNK   : out chunk_id_t;
         HL_ANCHOR_OFFSET  : out beat_offset_t;
         HL_ANCHOR_TIME    : out timestamp_t;
@@ -25,7 +25,7 @@ entity HILO_INPUT_ADAPTER is
 end entity HILO_INPUT_ADAPTER;
 
 architecture rtl of HILO_INPUT_ADAPTER is
-    signal batch_r : work.PRE_TRIGGER_pkg.adc_data4_type :=
+    signal batch_r : work.PRE_TRIGGER_pkg.adc_ch_data_type :=
         (others => (others => (others => '0')));
     signal beat_count_r : integer range 0 to 3 := 0;
     signal hl_data_str_r : std_logic := '0';

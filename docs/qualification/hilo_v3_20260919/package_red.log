@@ -1,0 +1,14 @@
+..F
+======================================================================
+FAIL: test_package_generator_builds_self_contained_rtl_package (test_delivery_package.DeliveryPackageTest.test_package_generator_builds_self_contained_rtl_package)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_delivery_package.py", line 66, in test_package_generator_builds_self_contained_rtl_package
+    self.assertIn("hilo-trigger revision: 047d14a25ca0df95d2219eded90e0b449574ae15", version)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'hilo-trigger revision: 047d14a25ca0df95d2219eded90e0b449574ae15' not found in "Package: ai-trigger-daq-test-delivery\nSource commit: 713197b4e0e8-dirty\nSource branch: v3.5\nGenerated UTC: 2026-09-19T11:25:45+00:00\nTop: AI_TRIGGER_TOP\nVivado target: 2023.2\nDevice used for OOC reports: xcku5p-ffvb676-2-e\nCLK_ADC target: 250 MHz\nCLK_CNN target: 200 MHz\ncnn-core-wrapper revision: a82a717403c8346d027f62b017295d8ea6fa3344\ncnn-core revision: eca9b12f9f49f4b7324ed9ed241a44086ca9c842\nCNN lanes: 2\nCNN input: 32 x 512-bit transfers per 256 x 4 window\nScore format: signed low 21 bits / 512\nCNN_THRESH format: signed 32-bit two's-complement / 16 (step 0.0625)\n"
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.220s
+
+FAILED (failures=1)

@@ -1,0 +1,88 @@
+{
+  "rtl_test_snapshot": "713197b4e0e8",
+  "audited_checkout": "1384a5e9d6460c09f70e2fcc9c090e2bdfdabe38",
+  "bender_local_present": false,
+  "exact_ooc_source_hash_matches": 62,
+  "unchanged_cnn_dependency_assets": 31,
+  "changed_ooc_entries": [
+    [
+      "ai-trigger-system",
+      "AI_TRIGGER_CORE.vhd"
+    ],
+    [
+      "ai-trigger-system",
+      "AI_TRIGGER_PKG.vhd"
+    ],
+    [
+      "ai-trigger-system",
+      "AI_TRIGGER_TOP.vhd"
+    ],
+    [
+      "ai-trigger-system",
+      "HILO_INPUT_ADAPTER.vhd"
+    ],
+    [
+      "ai-trigger-system",
+      "HILO_TRIGGER_CTRL.vhd"
+    ],
+    [
+      "ai-trigger-system",
+      "MULTIMODE_EVENT_PATH.vhd"
+    ],
+    [
+      "hilo-trigger",
+      "Mult_to_bin.vhd"
+    ],
+    [
+      "hilo-trigger",
+      "PRE_TRIGGER_PKG.vhd"
+    ],
+    [
+      "hilo-trigger",
+      "Pre_trigger.vhd"
+    ],
+    [
+      "hilo-trigger",
+      "Pre_trigger_1ch.vhd"
+    ]
+  ],
+  "constraints_sha256": "f5cfb55f051f414573a6c01c6a5270a9384bade6b9e154d7f08c6db402f55e65",
+  "simulation": [
+    {
+      "case": "continuous",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "gaps",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "threshold-positive",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "threshold-negative",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "threshold-all",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "threshold-none",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "lane-reset",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "modes",
+      "exact_source_hash_matches": 66
+    },
+    {
+      "case": "overload",
+      "exact_source_hash_matches": 66
+    }
+  ]
+}

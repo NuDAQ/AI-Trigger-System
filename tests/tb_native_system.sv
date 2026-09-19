@@ -39,7 +39,7 @@ module tb_native_system;
         .CLK_ADC(clk_adc), .ADC_SRC_CLK(clk_adc), .CLK_CNN(clk_cnn), .RST(rst),
         .DATA_STR(data_str), .ADC_DATA4_FLAT(adc_data), .TRIGGER_MODE(4'd2),
         .FORCE_TRIGGER(1'b0), .CNN_THRESH(threshold), .HL_THRESH(12'd100),
-        .HILO_WINDOW(5'd5), .COINC_WINDOW(6'd3), .BIN_THR(4'd1),
+        .HILO_WINDOW(8'd5), .COINC_WINDOW(8'd3), .BIN_THR(4'd1),
         .CNN_OUT_DATA(score), .CNN_OUT_CHUNK_ID(score_id), .CNN_OUT_VALID(score_valid),
         .EVENT_VALID(event_valid), .EVENT_READY(event_ready), .EVENT_DATA(event_data),
         .EVENT_LAST(event_last), .EVENT_CHUNK_ID(event_id), .EVENT_TIMESTAMP(event_timestamp),

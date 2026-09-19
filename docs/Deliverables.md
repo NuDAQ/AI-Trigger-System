@@ -130,9 +130,18 @@ Each event contains one 256-sample chunk, output over 64 beats. When samples fro
 | `FORCE_TRIGGER` | in | Synchronous External-mode request; one low-to-high transition requests one event. |
 | `CNN_THRESH[31:0]` | in | Stable signed 32-bit two's-complement threshold word. Real threshold = signed word / 16; minimum step 0.0625. All bits are meaningful. |
 | `HL_THRESH[11:0]` | in | Non-negative Hi-Lo amplitude threshold, latched at safe Hi-Lo-mode entry. |
-| `HILO_WINDOW[4:0]` | in | Hi-Lo bipolar window configuration. |
-| `COINC_WINDOW[5:0]` | in | Hi-Lo coincidence window configuration. |
+| `HILO_WINDOW[7:0]` | in | Hi-Lo bipolar window, 0–255 accepted samples, latched at safe Hi-Lo-mode entry. |
+| `COINC_WINDOW[7:0]` | in | Hi-Lo coincidence window, 0–255 accepted samples, latched at safe Hi-Lo-mode entry. |
 | `BIN_THR[3:0]` | in | Hi-Lo multiplicity threshold, valid from 1 through 4. |
+
+For the v3.5 / Hi-Lo v3.0.0 interface, widen both window connections to 8 bits.
+There is no 16/32-sample clamp. To retain an old in-range configuration, extend
+its unsigned value with zeros; values previously above the old clamps now have
+their full meaning. Four accepted ADC beats still form a 16-sample Hi-Lo
+aggregate. Data gaps preserve carry, and the fourth beat still supplies the
+trigger anchor. Wider detection windows do not widen the 256-sample event or
+change its centering, latency, blanking, busy/loss policy, or configuration
+validation. `BIN_THR=0` remains invalid at this AI-system boundary.
 
 For the AI bring-up described below, configure `TRIGGER_MODE=0010` and
 `CNN_THRESH=2.0`. Specifically, give constant inputs:
