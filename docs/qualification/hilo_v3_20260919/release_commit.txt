@@ -1,0 +1,9 @@
+commit 047d14a25ca0df95d2219eded90e0b449574ae15
+Author:     Albert <albert.cheung@cern.ch>
+AuthorDate: Sat Sep 19 04:10:39 2026 -0700
+Commit:     GitHub <noreply@github.com>
+CommitDate: Sat Sep 19 04:10:39 2026 -0700
+
+    Merge pull request #11 from NuDAQ/v3.0
+    
+    v3.0.0

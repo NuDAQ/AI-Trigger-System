@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "firmware_exact_set_and_hashes": true,
+    "harness": true,
+    "baseline_96_windows": true,
+    "caller_npz_hash": true,
+    "all_reference_assets": true,
+    "additive_corpus": true
+  },
+  "firmware_files": 93,
+  "reference": "/home/work1/Works/_codex_ai_trigger_native_20260917/reference-v2",
+  "core": "/home/work1/Works/ai-trigger-hilo-v35.lHAri7/.bender/git/checkouts/cnn-core-338ad22ef78c637b"
+}

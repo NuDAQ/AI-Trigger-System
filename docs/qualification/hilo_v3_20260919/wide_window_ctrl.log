@@ -1,0 +1,3 @@
+[ RUN      ] tb_hilo_trigger_ctrl
+[       OK ] tb_hilo_trigger_ctrl
+GHDL: 1 passed, 0 failed, 1 total

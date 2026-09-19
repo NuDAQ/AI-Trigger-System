@@ -1,0 +1,22 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date              : Sat Sep 19 04:35:00 2026
+| Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_exceptions -coverage -file /home/work1/Works/ai-trigger-hilo-v35.lHAri7/build/hilo-v3-ooc/reports/post_route_exception_coverage.rpt
+| Design            : AI_TRIGGER_TOP
+| Device            : xcku5p-ffvb676
+| Speed File        : -2  PRODUCTION 1.29 05-01-2022
+| Design State      : Routed
+| Temperature Grade : E
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Exceptions Report
+
+Position  Type        Setup  Hold   From       Through  To  Endpoints  From (%)  Through (%)  To (%)
+--------  ----------  -----  -----  ---------  -------  --  ---------  --------  -----------  ------
+7         False Path  -      false  385 ports               3124       100.00                  
+8         False Path  -      false  1 ports                 460        100.00                  
+9         False Path  -      false  69 ports                201        100.00                  
+12        False Path  false  false  1 ports                 4          100.00                  
+

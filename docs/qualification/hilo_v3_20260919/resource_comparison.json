@@ -1,0 +1,117 @@
+{
+  "resources": {
+    "AI_TRIGGER_TOP": {
+      "baseline": {
+        "lut": 60862,
+        "ff": 45547,
+        "bram_tiles": 21.0,
+        "uram": 6,
+        "dsp": 128
+      },
+      "current": {
+        "lut": 61026,
+        "ff": 45588,
+        "bram_tiles": 21.0,
+        "uram": 6,
+        "dsp": 128
+      },
+      "delta": {
+        "lut": 164,
+        "ff": 41,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "percent": {
+        "lut": 0.2694620617133844,
+        "ff": 0.09001690561398117
+      }
+    },
+    "u_PRE_TRIGGER": {
+      "baseline": {
+        "lut": 2216,
+        "ff": 189,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "current": {
+        "lut": 2363,
+        "ff": 225,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "delta": {
+        "lut": 147,
+        "ff": 36,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "percent": {
+        "lut": 6.633574007220217,
+        "ff": 19.047619047619047
+      }
+    },
+    "u_HILO": {
+      "baseline": {
+        "lut": 2275,
+        "ff": 388,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "current": {
+        "lut": 2422,
+        "ff": 429,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "delta": {
+        "lut": 147,
+        "ff": 41,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "percent": {
+        "lut": 6.461538461538462,
+        "ff": 10.56701030927835
+      }
+    },
+    "u_HILO_ADAPTER": {
+      "baseline": {
+        "lut": 6,
+        "ff": 817,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "current": {
+        "lut": 6,
+        "ff": 817,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "delta": {
+        "lut": 0,
+        "ff": 0,
+        "bram_tiles": 0.0,
+        "uram": 0,
+        "dsp": 0
+      },
+      "percent": {
+        "lut": 0.0,
+        "ff": 0.0
+      }
+    }
+  },
+  "checks": {
+    "pre_trigger_lut_ff_within_25_percent": true,
+    "system_lut_ff_within_2_percent": true,
+    "no_added_dsp_bram_uram": true
+  }
+}

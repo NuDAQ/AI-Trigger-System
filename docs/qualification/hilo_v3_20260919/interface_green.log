@@ -1,0 +1,11 @@
+[ RUN      ] tb_hilo_input_adapter
+[       OK ] tb_hilo_input_adapter
+[ RUN      ] tb_hilo_trigger_ctrl
+[       OK ] tb_hilo_trigger_ctrl
+[ RUN      ] tb_multimode_hilo
+[       OK ] tb_multimode_hilo
+[ RUN      ] tb_multimode_hilo_ai
+[       OK ] tb_multimode_hilo_ai
+[ RUN      ] tb_multimode_hilo_drain
+[       OK ] tb_multimode_hilo_drain
+GHDL: 5 passed, 0 failed, 5 total
