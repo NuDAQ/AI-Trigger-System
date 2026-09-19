@@ -81,8 +81,8 @@ module tb_AI_TRIGGER_TOP;
     reg          force_trigger;
     reg  [31:0]  cnn_thresh;
     reg  [11:0]  hl_thresh;
-    reg  [4:0]   hilo_window;
-    reg  [5:0]   coinc_window;
+    reg  [7:0]   hilo_window;
+    reg  [7:0]   coinc_window;
     reg  [3:0]   bin_thr;
 
     wire         adc_src_ready;

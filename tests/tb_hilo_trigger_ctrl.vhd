@@ -14,13 +14,13 @@ architecture sim of tb_hilo_trigger_ctrl is
     signal active_mode         : std_logic_vector(3 downto 0) := TRIGGER_MODE_HILO;
     signal mode_start          : std_logic := '0';
     signal hl_data_str         : std_logic := '0';
-    signal hl_adc_data4        : adc_data4_type := (others => (others => (others => '0')));
+    signal hl_adc_data4        : adc_ch_data_type := (others => (others => (others => '0')));
     signal hl_anchor_chunk     : chunk_id_t := (others => '0');
     signal hl_anchor_offset    : beat_offset_t := (others => '0');
     signal hl_anchor_time      : timestamp_t := (others => '0');
     signal hl_thresh           : std_logic_vector(11 downto 0) := std_logic_vector(to_signed(100, 12));
-    signal hilo_window         : std_logic_vector(4 downto 0) := std_logic_vector(to_unsigned(5, 5));
-    signal coinc_window        : std_logic_vector(5 downto 0) := std_logic_vector(to_unsigned(3, 6));
+    signal hilo_window         : std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(5, HILO_WINDOW_WIDTH));
+    signal coinc_window        : std_logic_vector(HILO_WINDOW_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(3, HILO_WINDOW_WIDTH));
     signal bin_thr             : std_logic_vector(3 downto 0) := x"1";
     signal event_request_valid : std_logic;
     signal event_request_ready : std_logic := '0';
@@ -35,7 +35,7 @@ architecture sim of tb_hilo_trigger_ctrl is
     signal config_error        : std_logic;
     signal event_loss_pulse    : std_logic;
 
-    procedure drive_trigger_batch(signal target : out adc_data4_type) is
+    procedure drive_trigger_batch(signal target : out adc_ch_data_type) is
     begin
         target <= (others => (others => (others => '0')));
         target(0)(5) <= std_logic_vector(to_signed(200, 12));

@@ -22,7 +22,7 @@ module tb_native_modes;
         .CLK_ADC(clk_adc), .ADC_SRC_CLK(clk_adc), .CLK_CNN(clk_cnn), .RST(rst),
         .DATA_STR(data_str), .ADC_DATA4_FLAT(adc_data), .TRIGGER_MODE(mode),
         .FORCE_TRIGGER(force_trigger), .CNN_THRESH(cnn_thresh), .HL_THRESH(12'd100),
-        .HILO_WINDOW(5'd5), .COINC_WINDOW(6'd3), .BIN_THR(4'd1),
+        .HILO_WINDOW(8'd5), .COINC_WINDOW(8'd3), .BIN_THR(4'd1),
         .CNN_OUT_DATA(score), .CNN_OUT_VALID(score_valid),
         .EVENT_VALID(event_valid), .EVENT_READY(ready), .EVENT_DATA(event_data),
         .EVENT_LAST(event_last), .EVENT_TIMESTAMP(timestamp),
