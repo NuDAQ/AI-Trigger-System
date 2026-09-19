@@ -1,6 +1,7 @@
 import importlib.util
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -38,6 +39,17 @@ class RunVivadoSimLogValidationTest(unittest.TestCase):
 
 
 class RunVivadoSimMultimodeConfigurationTest(unittest.TestCase):
+    def test_cli_accepts_full_byte_windows_without_changing_defaults(self) -> None:
+        with patch("sys.argv", ["run_vivado_sim.py", "--hilo-window", "255", "--coinc-window", "255"]):
+            args = RUN_VIVADO_SIM.parse_args()
+        self.assertEqual((args.hilo_window, args.coinc_window), (255, 255))
+        tcl = RUN_VIVADO_SIM.build_tcl(args, ROOT, ROOT / "test.xpr")
+        self.assertIn("set ::RUN_SIM_HILO_WINDOW 255", tcl)
+        self.assertIn("set ::RUN_SIM_COINC_WINDOW 255", tcl)
+        with patch("sys.argv", ["run_vivado_sim.py"]):
+            defaults = RUN_VIVADO_SIM.parse_args()
+        self.assertEqual((defaults.hilo_window, defaults.coinc_window), (5, 3))
+
     def test_build_tcl_forwards_trigger_mode_hilo_and_force_schedule(self) -> None:
         args = SimpleNamespace(
             testhex_dir=None,
