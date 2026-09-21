@@ -17,7 +17,7 @@ dist/ai-trigger-daq-native-two-lane-test.zip
 
 Upload the zip file as a GitHub Release asset. The GitHub auto-generated source archives are full repository snapshots and are not the intended DAQ handoff package.
 
-The package contains one user-facing interface document, its image assets, all required RTL sources, the OOC constraint file, a Vivado `add_files.tcl`, and version/manifest/SHA256SUMS files. The copied RTL is self-contained for Vivado integration except for vendor-provided Xilinx XPM primitives.
+The package contains one user-facing interface document, all required RTL sources, the OOC constraint file, a Vivado `add_files.tcl`, and version/manifest/SHA256SUMS files. The copied RTL is self-contained for Vivado integration except for vendor-provided Xilinx XPM primitives.
 
 `scripts/add_files.tcl` imports the package RTL and constraints into the current Vivado project, but it intentionally does not set the project top. Keep the system top unchanged and instantiate `AI_TRIGGER_TOP` from that top, or set `AI_TRIGGER_TOP` manually only for standalone block-level checks.
 

@@ -1,0 +1,9 @@
+case_name,source_file,window_count,score_min,score_max,score_mean,score_threshold,triggered_windows,trigger_fraction
+noise_1_offset,noise_1_offset.csv,745,-3.166016,-3.130859,-3.149447,0.000000,0,0.000000
+noise_2_offset,noise_2_offset.csv,745,-3.164062,-3.130859,-3.148663,0.000000,0,0.000000
+noise_3_offset,noise_3_offset.csv,745,-3.171875,-3.134766,-3.151552,0.000000,0,0.000000
+noise_4_offset,noise_4_offset.csv,745,-3.175781,-3.132812,-3.153073,0.000000,0,0.000000
+signal_10rms_offset,signal_10rms_offset.csv,745,-3.212891,-1.431641,-2.974232,0.000000,0,0.000000
+signal_2rms_offset,signal_2rms_offset.csv,745,-3.169922,-3.130859,-3.150488,0.000000,0,0.000000
+signal_3rms_offset,signal_3rms_offset.csv,745,-3.167969,-3.134766,-3.153080,0.000000,0,0.000000
+signal_4rms_offset,signal_4rms_offset.csv,745,-3.187500,-3.126953,-3.152076,0.000000,0,0.000000

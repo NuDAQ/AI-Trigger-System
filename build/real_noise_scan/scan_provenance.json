@@ -1,0 +1,74 @@
+{
+  "ai_trigger_commit": "568e0a6cd0006001592758ae3aabeea44930cfc7",
+  "bender_lock_sha256": "7fdd2620bca1e297d62f7594fdd955c9cf52f598a4d4122f5e188f0c4d835017",
+  "dataset_files": [
+    {
+      "name": "noise_1_offset.csv",
+      "samples": 1000,
+      "sha256": "2ad5d87576babf98ae5a25ef9c392fa728dde3e4ea0b3c05353b9a69559b8805"
+    },
+    {
+      "name": "noise_2_offset.csv",
+      "samples": 1000,
+      "sha256": "1ca26a1188afc1a56152e402a8dd2c6da6a2ad12cac6245da6b6a83427c5d7f7"
+    },
+    {
+      "name": "noise_3_offset.csv",
+      "samples": 1000,
+      "sha256": "9b974bff431582e4bd76604a3e070609e09815ffb8082963ae85c4e824eb4d2a"
+    },
+    {
+      "name": "noise_4_offset.csv",
+      "samples": 1000,
+      "sha256": "bdff942cfd434c30e28f104ea22e88659dd7e9365c4ae337644dfcd5762df98b"
+    },
+    {
+      "name": "signal_10rms_offset.csv",
+      "samples": 1000,
+      "sha256": "65c403daed5969769f261e23f86043b5d4b5ce0f7176bcf5aee0257f024a3bbe"
+    },
+    {
+      "name": "signal_2rms_offset.csv",
+      "samples": 1000,
+      "sha256": "5ff371dec94342ce8bcfaf8bd3c038e6b6588d577b97e519147a30e961b71b6c"
+    },
+    {
+      "name": "signal_3rms_offset.csv",
+      "samples": 1000,
+      "sha256": "47c44ac5abd5fd1f8ef0cd1b9a1815aa553608e64dd94ab38a083af41369099b"
+    },
+    {
+      "name": "signal_4rms_offset.csv",
+      "samples": 1000,
+      "sha256": "cd1aecaca46283aebd17384238874262331621184df64a1346fab8db13e574a9"
+    }
+  ],
+  "dataset_root": "data/Amp_Scope_Data_3_Offsetted",
+  "dependency_revisions": {
+    "cnn-core": "eca9b12f9f49f4b7324ed9ed241a44086ca9c842",
+    "cnn-core-wrapper": "a82a717403c8346d027f62b017295d8ea6fa3344",
+    "hilo-trigger": "047d14a25ca0df95d2219eded90e0b449574ae15"
+  },
+  "scan": {
+    "adc_vfs_v": 0.8,
+    "cnn_thresh_raw": 0,
+    "input_schedule": "continuous_back_to_back_windows",
+    "other_raw_channels_zero": true,
+    "project": "AI_Trigger_System/AI_Trigger_System.xpr",
+    "samples_per_window": 256,
+    "score_threshold": 0.0,
+    "trigger_channel": 0,
+    "trigger_mode": 2,
+    "vivado_executable": "/tools/Xilinx/Vivado/2023.2/bin/vivado",
+    "window_stride_samples": 1
+  },
+  "schema_version": 1,
+  "tool_files": {
+    "HDL/sim/AI_TRIGGER_TOP_TB_WRAP.vhd": "05ba429d268cebdddc83480b0fb07e1570892e14678d0565b69bb7550ccdfb87",
+    "HDL/sim/tb_ai_trigger_top.sv": "35b7987849b70f573ed150f091f063bca14035dd3b576ba4028e8e14b8a3dfc1",
+    "run_sim.tcl": "51020379511ffe117180a3c3edafaf3ced0eda6730624e7d33e802cdb36529b4",
+    "scripts/run_real_noise_scan.py": "0b37c97e104b4b990170c756c12d6a5c31057184fe455d6012e0f523b278f6d7",
+    "scripts/run_vivado_sim.py": "5581590ff41c5665995a0dfb5a3bbc8299c8a20dd2e8d71616d6ed83e09d003e"
+  },
+  "tracked_worktree_dirty": true
+}

@@ -238,9 +238,7 @@ For testing purposes, please use bipolar square waves with intervals (the period
 The waveform generator voltage must be calibrated against the actual ADC setup;
 raw codes, not a voltage claim, define the digital integration contract above.
 
-The following figure is retained only as a historical wrapper-v5 experiment.
-Its score curve, pulse-position acceptance and threshold settings do not apply
-to the native CNN. Use the current ADC-aware reference and qualification report
-to assess the new model. Hardware validation is outside this delivery.
-
-![score_vs_offset](/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/docs/score_vs_offset.png)
+Legacy wrapper score-distribution results were removed because they do not
+describe the native CNN. Generate current-IP Data 3 score distributions with
+`scripts/run_real_noise_scan.sh`; hardware validation remains outside this
+delivery.

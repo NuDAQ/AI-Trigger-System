@@ -343,6 +343,36 @@ scripts/run_bringup_pulse_sweeps.sh
 python3 scripts/plot_bringup_scores.py --out-dir build/bringup_sim
 ```
 
+Scan the eight tracked offset-corrected oscilloscope records through the current
+native two-lane AI Trigger system:
+
+```bash
+scripts/run_real_noise_scan.sh
+```
+
+The input is always taken from `data/Amp_Scope_Data_3_Offsetted`; the launcher
+does not depend on a Downloads path. Each 1000-sample, 1 GSa/s record is scanned
+with all 745 complete 256-sample windows at one-sample stride. The measured
+waveform drives trigger channel 0 and the other raw ADC channels remain zero.
+The windows are streamed back-to-back through trigger mode `0010` using the
+current `AI_TRIGGER_TOP_TB_WRAP` interface and the Bender-locked native CNN.
+
+`CNN_THRESH` uses the current signed 32-bit external format with unit `1/16`.
+For example, run with a threshold of `1.0` using:
+
+```bash
+REAL_NOISE_CNN_THRESH_RAW=16 scripts/run_real_noise_scan.sh
+```
+
+Use `REAL_NOISE_PREPARE_ONLY=1` to generate manifests and test vectors without
+Vivado, or `REAL_NOISE_ANALYZE_ONLY=1` to rebuild summaries and plots from an
+existing completed scan. Final results are written under
+`build/real_noise_scan`, including `offset_scan_summary.csv`, per-record score
+CSVs and plots, each original 1000-sample input waveform, an eight-panel input
+overview, combined offset overlays, and `scan_provenance.json` with the AI
+Trigger commit, dependency revisions, and dataset hashes. Generated
+`testhex_stream` files remain ignored.
+
 The older `run_post_impl_saif.py` flow is retained as historical tooling. It
 has not been qualified for this native two-lane delivery; no activity-based
 power result is claimed here.
