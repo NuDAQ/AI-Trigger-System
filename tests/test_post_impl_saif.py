@@ -22,6 +22,35 @@ SPEC.loader.exec_module(RUN_SAIF)
 
 
 class PostImplementationSaifCliTest(unittest.TestCase):
+    def test_gate_testbench_uses_only_the_production_top_contract(self) -> None:
+        testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_power.sv").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("AI_TRIGGER_TOP dut", testbench)
+        self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP", testbench)
+        for plusarg in ("REFERENCE", "CHUNKS", "START_WINDOW", "THRESHOLD"):
+            self.assertIn(f'$value$plusargs("{plusarg}=', testbench)
+        self.assertIn('/adc.hex"}', testbench)
+        self.assertIn('/all_expected.hex"}', testbench)
+        self.assertIn("EVENT_LOSS", testbench)
+        self.assertIn("PASS production SAIF chunks=", testbench)
+
+    def test_vivado_flow_targets_current_production_hierarchy(self) -> None:
+        flow = (ROOT / "scripts" / "vivado_post_impl_saif.tcl").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("AI_TRIGGER_TOP_post_route.v", flow)
+        self.assertIn("HDL sim tb_ai_trigger_power.sv", flow)
+        self.assertIn("/tb_ai_trigger_power/dut/u_CORE/gen_lanes\\[0\\].u_LANE", flow)
+        self.assertIn("/tb_ai_trigger_power/dut/u_CORE/gen_lanes\\[1\\].u_LANE", flow)
+        self.assertNotIn("gen_lanes\\[2\\]", flow)
+        self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP", flow)
+        self.assertIn("read_saif -strip_path tb_ai_trigger_power/dut", flow)
+        for plusarg in ("REFERENCE", "CHUNKS", "START_WINDOW", "THRESHOLD"):
+            self.assertIn(f'-testplusarg "{plusarg}=', flow)
+
     def test_defaults_build_production_top_for_thirty_chunks(self) -> None:
         with patch.object(sys, "argv", ["run_post_impl_saif.py"]):
             args = RUN_SAIF.parse_args()
