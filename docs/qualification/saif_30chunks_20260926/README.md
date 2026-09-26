@@ -47,6 +47,15 @@ The routed design uses 61,026 CLB LUTs, 45,588 CLB registers, 21 block RAM
 tiles, 6 URAMs, and 128 DSPs. All 108,150 routable nets are fully routed and no
 routing errors are reported. All user timing constraints are met.
 
+## Post-route device overview
+
+![Post-route device overview](ai_trigger_post_route_device_overview.png)
+
+The production routed checkpoint is shown at full-device scale. CNN lane 0 is
+cyan, CNN lane 1 is magenta, and the multimode/event path is orange. The image
+was rendered by Vivado 2023.2 from the DCP recorded in this package; it is a
+placement overview rather than a signal-level routing diagram.
+
 ## Functional and activity checks
 
 XSim printed:
@@ -123,6 +132,8 @@ report.
   checkpoint.
 - `post_route_utilization_for_saif.rpt`: utilization for that checkpoint.
 - `post_route_status.rpt` and `post_route_drc.rpt`: route completeness and DRC.
+- `ai_trigger_post_route_device_overview.png`: highlighted full-device
+  post-route placement overview.
 - `xsim.log`: scope counts and functional completion marker.
 - `run_manifest.json`: inputs, tool, source identities, DCP hash, and output
   hashes.
