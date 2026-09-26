@@ -101,6 +101,37 @@ def validate_reference(
     return metadata
 
 
+def required_artifacts(out_dir: Path) -> list[Path]:
+    return [
+        out_dir / "activity" / "ai_trigger_post_impl.saif",
+        out_dir / "xsim" / "xsim.log",
+        out_dir / "reports" / "post_route_power_saif.rpt",
+        out_dir / "reports" / "post_route_utilization_for_saif.rpt",
+        out_dir / "reports" / "post_route_timing_summary_for_saif.rpt",
+    ]
+
+
+def clear_required_artifacts(out_dir: Path) -> None:
+    for path in required_artifacts(out_dir):
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def validate_outputs(out_dir: Path, chunks: int) -> None:
+    for path in required_artifacts(out_dir):
+        if not path.is_file() or path.stat().st_size == 0:
+            raise SystemExit(f"ERROR: missing required SAIF artifact: {path}")
+
+    transcript = (out_dir / "xsim" / "xsim.log").read_text(
+        encoding="utf-8", errors="replace"
+    )
+    marker = f"PASS production SAIF chunks={chunks}"
+    if marker not in transcript:
+        raise SystemExit(f"ERROR: XSim completion marker not found: {marker}")
+
+
 def run_process(cmd: list[str], cwd: Path, env: dict[str, str]) -> int:
     print("INFO: running:", " ".join(cmd), flush=True)
     proc = subprocess.Popen(cmd, cwd=cwd, env=env)
@@ -354,13 +385,17 @@ def main() -> int:
         build_saif_launcher(args, repo_root, dcp, out_dir, reference),
         encoding="utf-8",
     )
+    clear_required_artifacts(out_dir)
     ret = run_process([vivado, "-mode", "batch", "-source", str(saif_tcl)], repo_root, env)
     if not args.keep_tcl:
         try:
             saif_tcl.unlink()
         except OSError:
             pass
-    return ret
+    if ret != 0:
+        return ret
+    validate_outputs(out_dir, args.chunks)
+    return 0
 
 
 if __name__ == "__main__":

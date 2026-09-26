@@ -5,7 +5,9 @@ from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
+import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -120,7 +122,7 @@ class PostImplementationSaifCliTest(unittest.TestCase):
             )
             vivado.chmod(0o755)
 
-            env = dict(**__import__("os").environ, VIVADO_INVOKED=str(invoked))
+            env = dict(**os.environ, VIVADO_INVOKED=str(invoked))
             result = subprocess.run(
                 [
                     sys.executable,
@@ -150,6 +152,66 @@ class PostImplementationSaifCliTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("reference npz_sha256 does not match --npz", result.stderr)
             self.assertFalse(invoked.exists())
+
+    def test_cli_rejects_a_zero_exit_without_fresh_saif_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            tmp = Path(folder)
+            reference = tmp / "reference"
+            reference.mkdir()
+            npz = tmp / "verification.npz"
+            npz.write_bytes(b"same corpus")
+            adc = reference / "adc.hex"
+            expected = reference / "all_expected.hex"
+            adc.write_text("0\n", encoding="utf-8")
+            expected.write_text("0\n", encoding="utf-8")
+            digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+            (reference / "reference.json").write_text(
+                json.dumps(
+                    {
+                        "windows": 1,
+                        "builtin_windows": 0,
+                        "npz_sha256": digest(npz),
+                        "files": {
+                            "adc.hex": digest(adc),
+                            "all_expected.hex": digest(expected),
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            dcp = tmp / "post_route.dcp"
+            dcp.write_bytes(b"checkpoint")
+            vivado = tmp / "vivado"
+            vivado.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            vivado.chmod(0o755)
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "run_post_impl_saif.py"),
+                    "--skip-build",
+                    "--dcp",
+                    str(dcp),
+                    "--reference",
+                    str(reference),
+                    "--npz",
+                    str(npz),
+                    "--chunks",
+                    "1",
+                    "--start-window",
+                    "0",
+                    "--vivado",
+                    str(vivado),
+                    "--out-dir",
+                    str(tmp / "out"),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing required SAIF artifact", result.stderr)
 
 
 if __name__ == "__main__":
