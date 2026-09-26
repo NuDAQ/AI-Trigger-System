@@ -28,8 +28,8 @@ The build uses Bender for RTL source collection, applies
 build/vivado_ooc_ai_trigger/reports/
 ```
 
-The post-implementation SAIF flow uses the flat-port simulation wrapper and the
-routed checkpoint:
+The post-implementation SAIF flow uses the production `AI_TRIGGER_TOP` routed
+checkpoint and a dedicated production-port testbench:
 
 ```bash
 python3 scripts/run_post_impl_saif.py
@@ -49,14 +49,14 @@ Current interface target:
 | Item | Value |
 | --- | --- |
 | Build style | Out-of-context block implementation |
-| CNN lanes | 5 |
+| CNN lanes | 2 |
 | `CLK_ADC` | 250 MHz target |
 | `CLK_CNN` | 200.000 MHz |
 | Input beat | `ADC_DATA[383:0]` = 8 channels x 4 samples/channel x 12 bits |
 | Event beat | `EVENT_DATA[383:0]`, same packing as `ADC_DATA` |
 | Event length | 64 beats for one 256-sample chunk |
 | Event output FIFO target | 128 beats |
-| Trigger source | CNN trigger wrapper only |
+| Trigger source | Runtime-selectable housekeeping, AI, Hi-Lo, or gated AI |
 
 Interface semantics:
 
@@ -248,10 +248,10 @@ timed, while the `CLK_ADC` to `CLK_CNN` and `CLK_CNN` to `CLK_ADC` crossings are
 intentionally ignored by asynchronous clock groups and covered by explicit FIFO
 or handshake CDC structures.
 
-## SAIF Power Result
+## Historical SAIF Power Result
 
-The current routed OOC power report is vectorless and should be treated as an
-estimate until a fresh 250 MHz-interface SAIF run is available:
+The values in this section are retained from the previous five-lane design and
+must not be used as the current two-lane power estimate:
 
 | Metric | Value |
 | --- | ---: |
@@ -261,7 +261,7 @@ estimate until a fresh 250 MHz-interface SAIF run is available:
 | Confidence | Medium |
 | Design nets matched | NA |
 
-The current hierarchy report shows power dominated by the five CNN lanes:
+That historical hierarchy report was dominated by five CNN lanes:
 
 | Component | Power |
 | --- | ---: |
@@ -273,11 +273,12 @@ The current hierarchy report shows power dominated by the five CNN lanes:
 | `u_EVENT_PATH` | 0.073 W |
 | `u_DIST` | 0.005 W |
 
-The SAIF logging script first tries explicit hierarchy scopes, then falls back
-to full-DUT recursive logging if too few objects are matched. Previous SAIF
-runs produced high-confidence power estimates, but those reports predate the
-latest CDC, input FIFO, event output FIFO, and OOC placement-flow fixes and
-should not be treated as the current power sign-off result.
+The current flow logs the two production CNN lanes, live distributor, result
+arbiter, multimode event path and reset logic as separate scopes. This avoids
+the previous full-DUT recursive enumeration bottleneck while covering the
+current production hierarchy. By default it checks 30 acquisition chunks from
+the supplied NPZ reference and writes reports under
+`build/vivado_post_impl_saif_30chunks`.
 
 The full-DUT `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` enumeration dominated
 runtime. On the reference Ubuntu run it took about 100 minutes; the actual
@@ -298,7 +299,7 @@ Before treating the implementation as sign-off quality:
 1. Confirm whether the remaining input/output delay warnings are acceptable for
    this OOC block context.
 2. Confirm `CLK_ADC` closes at 250 MHz and `CLK_CNN` closes at 200 MHz.
-3. Confirm hierarchical utilization still shows five CNN lanes and 20 DSPs
+3. Confirm hierarchical utilization still shows two CNN lanes and 128 DSPs
    after any RTL or constraint change.
 4. Confirm the event path emits only the triggered chunk itself: 64 beats per
    triggered 256-sample chunk, no pre/post chunks.

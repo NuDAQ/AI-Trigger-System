@@ -24,6 +24,19 @@ SPEC.loader.exec_module(RUN_SAIF)
 
 
 class PostImplementationSaifCliTest(unittest.TestCase):
+    def test_readme_documents_the_current_thirty_chunk_power_flow(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("Post-route SAIF power", readme)
+        self.assertIn("python3 scripts/run_post_impl_saif.py", readme)
+        self.assertIn("30 acquisition chunks", readme)
+        self.assertIn("AI_TRIGGER_TOP", readme)
+        self.assertIn("build/vivado_post_impl_saif_30chunks", readme)
+        self.assertNotIn(
+            "The older `run_post_impl_saif.py` flow is retained as historical tooling",
+            readme,
+        )
+
     def test_gate_testbench_uses_only_the_production_top_contract(self) -> None:
         testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_power.sv").read_text(
             encoding="utf-8"
@@ -36,6 +49,9 @@ class PostImplementationSaifCliTest(unittest.TestCase):
         self.assertIn('/adc.hex"}', testbench)
         self.assertIn('/all_expected.hex"}', testbench)
         self.assertIn("EVENT_LOSS", testbench)
+        self.assertIn("if (i == chunks * BEATS_PER_CHUNK - 1)", testbench)
+        self.assertIn("while (active_trigger_mode != 4'hf)", testbench)
+        self.assertIn("drain_boundaries", testbench)
         self.assertIn("PASS production SAIF chunks=", testbench)
 
     def test_vivado_flow_targets_current_production_hierarchy(self) -> None:

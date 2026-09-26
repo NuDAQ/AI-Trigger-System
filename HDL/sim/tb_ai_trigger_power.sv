@@ -40,6 +40,8 @@ module tb_ai_trigger_power;
     integer event_beat = 0;
     integer local_chunk;
     integer reference_chunk;
+    integer drain_boundaries = 0;
+    bit switch_requested = 0;
 
     function automatic bit qualifies(
         input reg [31:0] native_score,
@@ -78,7 +80,8 @@ module tb_ai_trigger_power;
 
     always @(posedge clk_adc) begin
         if (!rst && active_trigger_mode == 4'd2) begin
-            if (event_loss || invalid_trigger_mode || hilo_blanking || hilo_config_error)
+            if (event_loss || hilo_blanking || hilo_config_error ||
+                (invalid_trigger_mode && !switch_requested))
                 $fatal(1, "unexpected production status during measured activity");
 
             if (event_valid) begin
@@ -142,13 +145,26 @@ module tb_ai_trigger_power;
         for (integer i = 0; i < chunks * BEATS_PER_CHUNK; i = i + 1) begin
             adc_data = adc_words[start_window * BEATS_PER_CHUNK + i];
             data_str = 1;
+            if (i == chunks * BEATS_PER_CHUNK - 1) begin
+                trigger_mode = 4'hf;
+                switch_requested = 1;
+            end
             @(negedge clk_adc);
         end
         data_str = 0;
 
-        // A fail-closed mode request becomes active only after CNN and event work drains.
-        trigger_mode = 4'hf;
-        wait (active_trigger_mode == 4'hf);
+        // Draining suppresses new CNN work. Supply boundaries until the mode
+        // controller can finish the pending switch after all measured work.
+        while (active_trigger_mode != 4'hf) begin
+            drain_boundaries = drain_boundaries + 1;
+            if (drain_boundaries > 16)
+                $fatal(1, "mode drain did not complete");
+            adc_data = 0;
+            data_str = 1;
+            repeat (BEATS_PER_CHUNK) @(negedge clk_adc);
+            data_str = 0;
+            repeat (4) @(negedge clk_adc);
+        end
         repeat (20) @(negedge clk_adc);
 
         if (event_loss || event_beat != 0 || event_count != expected_events)

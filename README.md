@@ -24,7 +24,7 @@ two CNN lanes, and Hi-Lo engine are shared across modes.
 AI_TRIGGER_TOP
   AI_TRIGGER_CORE
     ADC_CHUNK_DISTRIBUTOR          continuous AI input
-    CNN_CORE_LANE x 5              shared CNN inference lanes
+    CNN_CORE_LANE x 2              shared CNN inference lanes
     CNN_RESULT_ARBITER
     MULTIMODE_EVENT_PATH
       TRIGGER_MODE_CTRL            safe runtime switching
@@ -373,9 +373,34 @@ overview, combined offset overlays, and `scan_provenance.json` with the AI
 Trigger commit, dependency revisions, and dataset hashes. Generated
 `testhex_stream` files remain ignored.
 
-The older `run_post_impl_saif.py` flow is retained as historical tooling. It
-has not been qualified for this native two-lane delivery; no activity-based
-power result is claimed here.
+### Post-route SAIF power
+
+Generate an activity-based OOC power estimate for the production
+`AI_TRIGGER_TOP` boundary with:
+
+```bash
+python3 scripts/run_post_impl_saif.py \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
+  --bender /home/work1/.cargo/bin/bender
+```
+
+The default run builds a fresh routed production checkpoint, then drives 30 acquisition chunks
+from the supplied CNN verification NPZ through continuous
+AI mode. It selects reference windows 96 through 125 because the ADC-aware
+reference prepends 96 built-in Vitis cross-check windows. The default is a
+post-route functional simulation without SDF; this keeps the run focused on
+switching activity rather than timing annotation.
+
+Before Vivado starts, the launcher verifies the NPZ, `reference.json`,
+`adc.hex`, and `all_expected.hex` hashes. The production-port testbench checks
+the expected event decisions and complete raw event waveforms, and rejects any
+reported event loss. A zero Vivado exit without the XSim PASS marker, SAIF, or
+power/timing/utilization reports is still treated as a failure.
+
+Outputs are written under `build/vivado_post_impl_saif_30chunks`. The raw SAIF
+is intentionally ignored because of its size; the reports, XSim log, generated
+launcher and hashed `run_manifest.json` are suitable for qualification
+packaging after a successful run.
 
 ## Delivery
 
