@@ -3,8 +3,12 @@
 
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
+import json
+import subprocess
 import sys
+import tempfile
 import unittest
 
 
@@ -33,6 +37,90 @@ class PostImplementationSaifCliTest(unittest.TestCase):
         )
         self.assertIn("set ::RUN_BUILD_TOP AI_TRIGGER_TOP", launcher)
         self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP", launcher)
+
+    def test_saif_launcher_selects_thirty_npz_chunks_from_reference(self) -> None:
+        args = SimpleNamespace(
+            chunks=30,
+            start_window=96,
+            cnn_thresh_raw=0,
+            sdf="none",
+            saif_start_us=0.5,
+            saif_min_objects=1000,
+            threads=8,
+        )
+        reference = ROOT / "build" / "native_validation" / "reference"
+        launcher = RUN_SAIF.build_saif_launcher(
+            args,
+            ROOT,
+            ROOT / "build" / "vivado_ooc_ai_trigger" / "checkpoints" / "post_route.dcp",
+            ROOT / "build" / "vivado_post_impl_saif_30chunks",
+            reference,
+        )
+
+        self.assertIn(f"set ::RUN_SAIF_REFERENCE {{{reference}}}", launcher)
+        self.assertIn("set ::RUN_SAIF_CHUNKS 30", launcher)
+        self.assertIn("set ::RUN_SAIF_START_WINDOW 96", launcher)
+        self.assertNotIn("RUN_SAIF_TESTHEX_DIR", launcher)
+        self.assertNotIn("RUN_SAIF_NUM_SAMPLES", launcher)
+
+    def test_cli_rejects_reference_built_from_a_different_npz(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            tmp = Path(folder)
+            reference = tmp / "reference"
+            reference.mkdir()
+            (reference / "reference.json").write_text(
+                json.dumps(
+                    {
+                        "windows": 30,
+                        "builtin_windows": 0,
+                        "npz_sha256": "0" * 64,
+                        "files": {},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            npz = tmp / "verification.npz"
+            npz.write_bytes(b"not the recorded NPZ")
+            dcp = tmp / "post_route.dcp"
+            dcp.write_bytes(b"checkpoint")
+            invoked = tmp / "vivado_was_invoked"
+            vivado = tmp / "vivado"
+            vivado.write_text(
+                "#!/bin/sh\ntouch \"$VIVADO_INVOKED\"\nexit 0\n",
+                encoding="utf-8",
+            )
+            vivado.chmod(0o755)
+
+            env = dict(**__import__("os").environ, VIVADO_INVOKED=str(invoked))
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "run_post_impl_saif.py"),
+                    "--skip-build",
+                    "--dcp",
+                    str(dcp),
+                    "--reference",
+                    str(reference),
+                    "--npz",
+                    str(npz),
+                    "--chunks",
+                    "1",
+                    "--start-window",
+                    "0",
+                    "--vivado",
+                    str(vivado),
+                    "--out-dir",
+                    str(tmp / "out"),
+                ],
+                cwd=ROOT,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("reference npz_sha256 does not match --npz", result.stderr)
+            self.assertFalse(invoked.exists())
 
 
 if __name__ == "__main__":
