@@ -73,6 +73,11 @@ class PostImplementationSaifCliTest(unittest.TestCase):
         self.assertIn('/all_expected.hex"}', testbench)
         self.assertIn("EVENT_LOSS", testbench)
         self.assertIn("if (i == chunks * BEATS_PER_CHUNK - 1)", testbench)
+        self.assertRegex(
+            testbench,
+            r"data_str\s*=\s*0;\s*repeat\s*\(2\)\s*@\(negedge clk_adc\);\s*"
+            r"// Draining suppresses new CNN work",
+        )
         self.assertIn("while (active_trigger_mode != 4'hf)", testbench)
         self.assertIn("drain_boundaries", testbench)
         self.assertIn("PASS production SAIF chunks=", testbench)
@@ -84,9 +89,12 @@ class PostImplementationSaifCliTest(unittest.TestCase):
 
         self.assertIn("AI_TRIGGER_TOP_post_route.v", flow)
         self.assertIn("HDL sim tb_ai_trigger_power.sv", flow)
-        self.assertIn("/tb_ai_trigger_power/dut/u_CORE/gen_lanes\\[0\\].u_LANE", flow)
-        self.assertIn("/tb_ai_trigger_power/dut/u_CORE/gen_lanes\\[1\\].u_LANE", flow)
-        self.assertNotIn("gen_lanes\\[2\\]", flow)
+        self.assertIn("proc saif_log_child_scope", flow)
+        self.assertIn("get_scopes", flow)
+        self.assertIn("{gen_lanes[0].u_LANE}", flow)
+        self.assertIn("{gen_lanes[1].u_LANE}", flow)
+        self.assertIn("SAIF child scope", flow)
+        self.assertNotIn("gen_lanes[2]", flow)
         self.assertNotIn("AI_TRIGGER_TOP_TB_WRAP", flow)
         self.assertIn("read_saif -strip_path tb_ai_trigger_power/dut", flow)
         for plusarg in ("REFERENCE", "CHUNKS", "START_WINDOW", "THRESHOLD"):
