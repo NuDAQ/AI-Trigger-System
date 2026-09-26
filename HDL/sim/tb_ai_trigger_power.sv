@@ -152,6 +152,7 @@ module tb_ai_trigger_power;
             @(negedge clk_adc);
         end
         data_str = 0;
+        repeat (2) @(negedge clk_adc);
 
         // Draining suppresses new CNN work. Supply boundaries until the mode
         // controller can finish the pending switch after all measured work.

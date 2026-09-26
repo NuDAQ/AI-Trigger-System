@@ -95,34 +95,57 @@ if {$::RUN_SAIF_START_US > 0.0} {
 puts $fp "open_saif {$saif}"
 puts $fp "set saif_total_objects 0"
 puts $fp {
-proc saif_log_scope {scope recursive} {
+proc saif_record_objects {label objects minimum} {
     global saif_total_objects
-    if {$recursive} {
-        set objects [get_objects -r $scope]
-    } else {
-        set objects [get_objects $scope]
-    }
     set count [llength $objects]
-    incr saif_total_objects $count
-    puts "INFO: SAIF scope=$scope recursive=$recursive objects=$count"
+    puts "INFO: SAIF scope=$label objects=$count"
     flush stdout
-    if {$count > 0} {
-        log_saif $objects
+    if {$count < $minimum} {
+        error "SAIF scope $label has $count objects, below required minimum $minimum"
     }
+    incr saif_total_objects $count
+    log_saif $objects
+}
+
+proc saif_log_pattern {label pattern recursive minimum} {
+    if {$recursive} {
+        set objects [get_objects -r $pattern]
+    } else {
+        set objects [get_objects $pattern]
+    }
+    saif_record_objects $label $objects $minimum
+}
+
+proc saif_log_child_scope {label parent fragment minimum} {
+    set matches {}
+    foreach scope [get_scopes "${parent}/*"] {
+        if {[string first $fragment $scope] >= 0} {
+            lappend matches $scope
+        }
+    }
+    if {[llength $matches] != 1} {
+        error "SAIF child scope $label matched [llength $matches] scopes under $parent"
+    }
+
+    set saved_scope [current_scope]
+    current_scope [lindex $matches 0]
+    set objects [get_objects -r *]
+    current_scope $saved_scope
+    saif_record_objects $label $objects $minimum
 }
 }
 
 # Cover every current production block without recursively enumerating the
 # complete DUT in one very slow get_objects call.
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/*} 0}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/*} 0}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/u_RST_ADC/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/u_RST_CNN/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/u_LIVE_DISTRIBUTOR/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/gen_lanes\[0\].u_LANE/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/gen_lanes\[1\].u_LANE/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/u_RESULT_ARBITER/*} 1}
-puts $fp {saif_log_scope {/tb_ai_trigger_power/dut/u_CORE/u_MULTIMODE_PATH/*} 1}
+puts $fp {saif_log_pattern top {/tb_ai_trigger_power/dut/*} 0 1}
+puts $fp {saif_log_pattern core {/tb_ai_trigger_power/dut/u_CORE/*} 0 1}
+puts $fp {saif_log_pattern reset_adc {/tb_ai_trigger_power/dut/u_CORE/u_RST_ADC/*} 1 1}
+puts $fp {saif_log_pattern reset_cnn {/tb_ai_trigger_power/dut/u_CORE/u_RST_CNN/*} 1 1}
+puts $fp {saif_log_pattern distributor {/tb_ai_trigger_power/dut/u_CORE/u_LIVE_DISTRIBUTOR/*} 1 1}
+puts $fp [format {saif_log_child_scope lane0 {/tb_ai_trigger_power/dut/u_CORE} {gen_lanes[0].u_LANE} %d} $::RUN_SAIF_MIN_OBJECTS]
+puts $fp [format {saif_log_child_scope lane1 {/tb_ai_trigger_power/dut/u_CORE} {gen_lanes[1].u_LANE} %d} $::RUN_SAIF_MIN_OBJECTS]
+puts $fp {saif_log_pattern result_arbiter {/tb_ai_trigger_power/dut/u_CORE/u_RESULT_ARBITER/*} 1 1}
+puts $fp {saif_log_pattern multimode_path {/tb_ai_trigger_power/dut/u_CORE/u_MULTIMODE_PATH/*} 1 1}
 puts $fp "puts \"INFO: SAIF total objects=\$saif_total_objects\""
 puts $fp "if {\$saif_total_objects < $::RUN_SAIF_MIN_OBJECTS} {"
 puts $fp "    error \"SAIF object count \$saif_total_objects is below required minimum $::RUN_SAIF_MIN_OBJECTS\""
