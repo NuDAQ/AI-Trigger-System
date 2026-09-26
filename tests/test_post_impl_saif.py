@@ -24,6 +24,29 @@ SPEC.loader.exec_module(RUN_SAIF)
 
 
 class PostImplementationSaifCliTest(unittest.TestCase):
+    def test_git_tracks_small_saif_evidence_but_ignores_large_products(self) -> None:
+        tracked = [
+            "build/vivado_post_impl_saif_30chunks/run_manifest.json",
+            "build/vivado_post_impl_saif_30chunks/reports/post_route_power_saif.rpt",
+            "build/vivado_post_impl_saif_30chunks/xsim/xsim.log",
+            "build/vivado_post_impl_saif_30chunks/generated/run_vivado_post_impl_saif.tcl",
+        ]
+        ignored = [
+            "build/vivado_post_impl_saif_30chunks/activity/ai_trigger_post_impl.saif",
+            "build/vivado_post_impl_saif_30chunks/netlist/AI_TRIGGER_TOP_post_route.v",
+        ]
+
+        for path in tracked:
+            result = subprocess.run(
+                ["git", "check-ignore", "-q", path], cwd=ROOT
+            )
+            self.assertNotEqual(result.returncode, 0, path)
+        for path in ignored:
+            result = subprocess.run(
+                ["git", "check-ignore", "-q", path], cwd=ROOT
+            )
+            self.assertEqual(result.returncode, 0, path)
+
     def test_readme_documents_the_current_thirty_chunk_power_flow(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
