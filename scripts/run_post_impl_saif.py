@@ -4,9 +4,9 @@
 Default flow:
     python3 scripts/run_post_impl_saif.py
 
-The script first builds an OOC routed checkpoint with the flat-port simulation
-wrapper as top, then runs the existing testbench against the routed netlist,
-writes SAIF activity, and feeds that SAIF into Vivado report_power.
+The script first builds a routed OOC checkpoint for the production top, then
+runs a production-port testbench against the routed netlist, writes SAIF
+activity, and feeds that SAIF into Vivado report_power.
 """
 
 from __future__ import annotations
@@ -68,7 +68,7 @@ def build_ooc_launcher(args: argparse.Namespace, repo_root: Path, build_dir: Pat
             f"set ::RUN_BUILD_REPO_ROOT {tcl_quote(repo_root)}",
             f"set ::RUN_BUILD_OUT_DIR {tcl_quote(build_dir)}",
             f"set ::RUN_BUILD_PART {args.part}",
-            "set ::RUN_BUILD_TOP AI_TRIGGER_TOP_TB_WRAP",
+            "set ::RUN_BUILD_TOP AI_TRIGGER_TOP",
             "set ::RUN_BUILD_IMPL 1",
             f"set ::RUN_BUILD_THREADS {args.threads}",
             f"cd {tcl_quote(repo_root)}",
@@ -91,7 +91,7 @@ def build_saif_launcher(
         f"set ::RUN_SAIF_REPO_ROOT {tcl_quote(repo_root)}",
         f"set ::RUN_SAIF_DCP {tcl_quote(dcp)}",
         f"set ::RUN_SAIF_OUT_DIR {tcl_quote(out_dir)}",
-        f"set ::RUN_SAIF_NUM_SAMPLES {args.samples}",
+        f"set ::RUN_SAIF_NUM_SAMPLES {args.chunks}",
         f"set ::RUN_SAIF_SCORE_THRESHOLD {args.score_threshold}",
         f"set ::RUN_SAIF_CNN_THRESH_RAW {args.cnn_thresh_raw}",
         f"set ::RUN_SAIF_SDF_MODE {args.sdf}",
@@ -130,12 +130,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--build-dir",
-        default="build/vivado_ooc_ai_trigger_wrap",
-        help="OOC implementation directory for the flat-port wrapper checkpoint.",
+        default="build/vivado_ooc_ai_trigger",
+        help="OOC implementation directory for the production AI_TRIGGER_TOP checkpoint.",
     )
     parser.add_argument(
         "--out-dir",
-        default="build/vivado_post_impl_saif",
+        default="build/vivado_post_impl_saif_30chunks",
         help="Output directory for netlist, xsim files, SAIF, and reports.",
     )
     parser.add_argument(
@@ -148,10 +148,12 @@ def parse_args() -> argparse.Namespace:
         help="Do not build the wrapper checkpoint before running gate simulation.",
     )
     parser.add_argument(
+        "--chunks",
         "--samples",
+        dest="chunks",
         type=int,
-        default=16,
-        help="Number of samples to run in gate-level simulation. Default: 16.",
+        default=30,
+        help="Number of 256-sample acquisition chunks to simulate. Default: 30.",
     )
     parser.add_argument(
         "--sdf",
