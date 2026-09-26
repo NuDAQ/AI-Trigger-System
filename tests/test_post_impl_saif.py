@@ -60,6 +60,10 @@ class PostImplementationSaifCliTest(unittest.TestCase):
         self.assertEqual(args.chunks, 30)
         self.assertEqual(args.build_dir, "build/vivado_ooc_ai_trigger")
         self.assertEqual(args.out_dir, "build/vivado_post_impl_saif_30chunks")
+        self.assertEqual(args.saif_start_us, 0.5)
+        self.assertFalse(hasattr(args, "saif_scope"))
+        self.assertFalse(hasattr(args, "testhex_dir"))
+        self.assertFalse(hasattr(args, "score_threshold"))
 
         launcher = RUN_SAIF.build_ooc_launcher(
             args,
@@ -212,6 +216,97 @@ class PostImplementationSaifCliTest(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("missing required SAIF artifact", result.stderr)
+
+    def test_cli_writes_a_hashed_manifest_after_a_complete_run(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            tmp = Path(folder)
+            reference = tmp / "reference"
+            reference.mkdir()
+            npz = tmp / "verification.npz"
+            npz.write_bytes(b"same corpus")
+            adc = reference / "adc.hex"
+            expected = reference / "all_expected.hex"
+            adc.write_text("0\n", encoding="utf-8")
+            expected.write_text("0\n", encoding="utf-8")
+            digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+            (reference / "reference.json").write_text(
+                json.dumps(
+                    {
+                        "windows": 1,
+                        "builtin_windows": 0,
+                        "npz_sha256": digest(npz),
+                        "files": {
+                            "adc.hex": digest(adc),
+                            "all_expected.hex": digest(expected),
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            dcp = tmp / "post_route.dcp"
+            dcp.write_bytes(b"checkpoint")
+            vivado = tmp / "vivado"
+            vivado.write_text(
+                """#!/usr/bin/env python3
+from pathlib import Path
+import re
+import sys
+
+launcher = Path(sys.argv[sys.argv.index("-source") + 1]).read_text()
+out = Path(re.search(r"RUN_SAIF_OUT_DIR \\{([^}]*)\\}", launcher).group(1))
+files = {
+    "activity/ai_trigger_post_impl.saif": "(SAIFILE)\\n",
+    "xsim/xsim.log": "PASS production SAIF chunks=1 events=0 start_window=0\\n",
+    "reports/post_route_power_saif.rpt": "Total On-Chip Power (W) | 1.0\\nConfidence Level | High\\n",
+    "reports/post_route_utilization_for_saif.rpt": "utilization\\n",
+    "reports/post_route_timing_summary_for_saif.rpt": "timing\\n",
+}
+for name, content in files.items():
+    path = out / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content)
+""",
+                encoding="utf-8",
+            )
+            vivado.chmod(0o755)
+            out = tmp / "out"
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "run_post_impl_saif.py"),
+                    "--skip-build",
+                    "--dcp",
+                    str(dcp),
+                    "--reference",
+                    str(reference),
+                    "--npz",
+                    str(npz),
+                    "--chunks",
+                    "1",
+                    "--start-window",
+                    "0",
+                    "--vivado",
+                    str(vivado),
+                    "--out-dir",
+                    str(out),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            manifest = json.loads((out / "run_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["top"], "AI_TRIGGER_TOP")
+            self.assertEqual(manifest["activity"]["chunks"], 1)
+            self.assertEqual(manifest["activity"]["start_window"], 0)
+            self.assertEqual(manifest["inputs"]["npz_sha256"], digest(npz))
+            self.assertEqual(manifest["inputs"]["dcp_sha256"], digest(dcp))
+            self.assertEqual(
+                manifest["outputs"]["reports/post_route_power_saif.rpt"],
+                digest(out / "reports" / "post_route_power_saif.rpt"),
+            )
 
 
 if __name__ == "__main__":

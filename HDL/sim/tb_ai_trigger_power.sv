@@ -82,7 +82,7 @@ module tb_ai_trigger_power;
                 $fatal(1, "unexpected production status during measured activity");
 
             if (event_valid) begin
-                local_chunk = event_timestamp;
+                local_chunk = int'(event_timestamp);
                 if (local_chunk < 1 || local_chunk > chunks)
                     $fatal(1, "event timestamp outside measured chunks: %0d", local_chunk);
                 reference_chunk = start_window + local_chunk - 1;

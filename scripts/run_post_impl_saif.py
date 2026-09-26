@@ -19,6 +19,7 @@ import signal
 import shutil
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -132,6 +133,80 @@ def validate_outputs(out_dir: Path, chunks: int) -> None:
         raise SystemExit(f"ERROR: XSim completion marker not found: {marker}")
 
 
+def git_text(repo_root: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=repo_root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.stdout.strip() if result.returncode == 0 else "unknown"
+
+
+def write_run_manifest(
+    args: argparse.Namespace,
+    repo_root: Path,
+    out_dir: Path,
+    dcp: Path,
+    npz: Path,
+    reference: Path,
+    reference_metadata: dict[str, object],
+    vivado: str,
+) -> None:
+    source_paths = [
+        repo_root / "Bender.lock",
+        repo_root / "HDL" / "constraints" / "ai_trigger_ooc.xdc",
+        repo_root / "HDL" / "sim" / "tb_ai_trigger_power.sv",
+        repo_root / "scripts" / "run_post_impl_saif.py",
+        repo_root / "scripts" / "vivado_ooc_build.tcl",
+        repo_root / "scripts" / "vivado_post_impl_saif.tcl",
+    ]
+    outputs = {
+        str(path.relative_to(out_dir)): sha256(path)
+        for path in required_artifacts(out_dir)
+    }
+    manifest = {
+        "schema_version": 1,
+        "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "top": "AI_TRIGGER_TOP",
+        "part": args.part,
+        "clocks_mhz": {"CLK_ADC": 250, "CLK_CNN": 200},
+        "git": {
+            "commit": git_text(repo_root, "rev-parse", "HEAD"),
+            "branch": git_text(repo_root, "branch", "--show-current"),
+            "tracked_worktree_dirty": bool(git_text(repo_root, "status", "--short", "--untracked-files=no")),
+        },
+        "activity": {
+            "chunks": args.chunks,
+            "start_window": args.start_window,
+            "cnn_thresh_raw": args.cnn_thresh_raw,
+            "sdf_mode": args.sdf,
+            "saif_start_us": args.saif_start_us,
+        },
+        "inputs": {
+            "npz": str(npz),
+            "npz_sha256": sha256(npz),
+            "reference": str(reference),
+            "reference_manifest_sha256": sha256(reference / "reference.json"),
+            "reference_windows": reference_metadata.get("windows"),
+            "dcp": str(dcp),
+            "dcp_sha256": sha256(dcp),
+        },
+        "tools": {"vivado": vivado},
+        "sources": {
+            str(path.relative_to(repo_root)): sha256(path)
+            for path in source_paths
+            if path.is_file()
+        },
+        "outputs": outputs,
+    }
+    (out_dir / "run_manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
 def run_process(cmd: list[str], cwd: Path, env: dict[str, str]) -> int:
     print("INFO: running:", " ".join(cmd), flush=True)
     proc = subprocess.Popen(cmd, cwd=cwd, env=env)
@@ -225,12 +300,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--dcp",
-        help="Use an existing routed checkpoint instead of the default wrapper checkpoint.",
+        help="Use an existing routed AI_TRIGGER_TOP checkpoint instead of rebuilding it.",
     )
     parser.add_argument(
         "--skip-build",
         action="store_true",
-        help="Do not build the wrapper checkpoint before running gate simulation.",
+        help="Do not rebuild the production OOC checkpoint before gate simulation.",
     )
     parser.add_argument(
         "--chunks",
@@ -265,35 +340,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--saif-start-us",
         type=float,
-        default=2.0,
-        help="Delay before SAIF recording starts, in microseconds. Default: 2.0.",
-    )
-    parser.add_argument(
-        "--saif-scope",
-        choices=["top", "lane0", "lanes2", "lanes4", "all"],
-        default="all",
-        help="SAIF logging scope. Default logs top, distributor, and all five lanes in separate chunks.",
+        default=0.5,
+        help="Delay before SAIF recording starts, in microseconds. Default: 0.5.",
     )
     parser.add_argument(
         "--saif-min-objects",
         type=int,
         default=1000,
         help="Fail if SAIF logging matches fewer objects than this. Default: 1000.",
-    )
-    parser.add_argument(
-        "--no-saif-fallback-all",
-        action="store_true",
-        help="Disable raw full-DUT recursive SAIF fallback when scoped logging matches too few objects.",
-    )
-    parser.add_argument(
-        "--testhex-dir",
-        help="Directory containing testhex_stream files. Defaults to the Bender checkout.",
-    )
-    parser.add_argument(
-        "--score-threshold",
-        type=float,
-        default=0.0,
-        help="Classification threshold for the testbench checker.",
     )
     parser.add_argument(
         "--cnn-thresh-raw",
@@ -304,7 +358,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--part",
         default="xcku5p-ffvb676-2-e",
-        help="Target FPGA part used when building the wrapper checkpoint.",
+        help="Target FPGA part used when building the production checkpoint.",
     )
     parser.add_argument(
         "--threads",
@@ -343,7 +397,9 @@ def main() -> int:
     if not npz.is_absolute():
         npz = repo_root / npz
     npz = npz.resolve()
-    validate_reference(reference, npz, args.start_window, args.chunks)
+    reference_metadata = validate_reference(
+        reference, npz, args.start_window, args.chunks
+    )
 
     if args.dcp:
         dcp = Path(args.dcp).expanduser()
@@ -364,7 +420,7 @@ def main() -> int:
 
         build_gen_dir = build_dir / "generated"
         build_gen_dir.mkdir(parents=True, exist_ok=True)
-        build_tcl = build_gen_dir / "run_vivado_ooc_wrapper_build.tcl"
+        build_tcl = build_gen_dir / "run_vivado_ooc_build.tcl"
         build_tcl.write_text(build_ooc_launcher(args, repo_root, build_dir), encoding="utf-8")
         ret = run_process([vivado, "-mode", "batch", "-source", str(build_tcl)], repo_root, env)
         if ret != 0:
@@ -395,6 +451,16 @@ def main() -> int:
     if ret != 0:
         return ret
     validate_outputs(out_dir, args.chunks)
+    write_run_manifest(
+        args,
+        repo_root,
+        out_dir,
+        dcp.resolve(),
+        npz,
+        reference,
+        reference_metadata,
+        vivado,
+    )
     return 0
 
 
