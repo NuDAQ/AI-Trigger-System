@@ -248,6 +248,34 @@ timed, while the `CLK_ADC` to `CLK_CNN` and `CLK_CNN` to `CLK_ADC` crossings are
 intentionally ignored by asynchronous clock groups and covered by explicit FIFO
 or handshake CDC structures.
 
+## Current 30-Chunk SAIF Power Result
+
+The production two-lane `AI_TRIGGER_TOP` was rebuilt, fully routed, simulated
+for 30 supplied-NPZ chunks, and re-opened for SAIF-based power analysis with
+Vivado 2023.2. The functional post-route simulation passed all expected event
+and waveform checks and emitted 10 events.
+
+| Metric | Result |
+| --- | ---: |
+| Total on-chip power | 1.972 W |
+| Dynamic power | 1.510 W |
+| Device static power | 0.463 W |
+| Confidence | High |
+| Design nets matched | 173,782 / 174,661 (99.497%) |
+| Setup WNS / TNS | 0.180 ns / 0 ns |
+| Hold WHS / THS | 0.007 ns / 0 ns |
+
+The retained report breaks dynamic power into 0.545 W for signals, 0.520 W for
+CLB logic, 0.261 W for clocks, 0.082 W for block RAM, 0.054 W for URAM, and
+0.047 W for DSPs. The testbench logged 108,477 SAIF objects, including 50,312
+in lane 0 and 50,285 in lane 1. Full evidence and limitations are recorded in
+[the 30-chunk qualification](qualification/saif_30chunks_20260926/README.md).
+
+This is a short OOC workload estimate, not board or system power. It uses a
+functional post-route simulation without SDF, starts SAIF capture after 0.5 us,
+and retains the Vivado high-fanout reset-activity warning. The routed timing
+report is a separate static timing check.
+
 ## Historical SAIF Power Result
 
 The values in this section are retained from the previous five-lane design and
@@ -280,10 +308,11 @@ current production hierarchy. By default it checks 30 acquisition chunks from
 the supplied NPZ reference and writes reports under
 `build/vivado_post_impl_saif_30chunks`.
 
-The full-DUT `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` enumeration dominated
-runtime. On the reference Ubuntu run it took about 100 minutes; the actual
-post-implementation simulation completed in less than one minute after the SAIF
-objects were registered.
+The old full-DUT `get_objects -r /tb_AI_TRIGGER_TOP/dut/*` enumeration dominated
+runtime. On the previous Ubuntu run it took about 100 minutes. The current
+hierarchy-aware logger avoids that path; the qualified post-implementation
+simulation completed in about two minutes after its SAIF objects were
+registered.
 
 ## Sign-Off Checklist
 

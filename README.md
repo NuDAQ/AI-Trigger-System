@@ -384,8 +384,8 @@ python3 scripts/run_post_impl_saif.py \
   --bender /home/work1/.cargo/bin/bender
 ```
 
-The default run builds a fresh routed production checkpoint, then drives 30 acquisition chunks
-from the supplied CNN verification NPZ through continuous
+The default run builds a fresh routed production checkpoint, then drives
+30 acquisition chunks from the supplied CNN verification NPZ through continuous
 AI mode. It selects reference windows 96 through 125 because the ADC-aware
 reference prepends 96 built-in Vitis cross-check windows. The default is a
 post-route functional simulation without SDF; this keeps the run focused on
@@ -401,6 +401,13 @@ Outputs are written under `build/vivado_post_impl_saif_30chunks`. The raw SAIF
 is intentionally ignored because of its size; the reports, XSim log, generated
 launcher and hashed `run_manifest.json` are suitable for qualification
 packaging after a successful run.
+
+The qualified 30-chunk run measured 1.972 W total on-chip power: 1.510 W
+dynamic and 0.463 W device static, with 173,782 of 174,661 design nets matched
+and Vivado confidence `High`. See the
+[30-chunk routed SAIF qualification](docs/qualification/saif_30chunks_20260926/README.md)
+for the complete scope, timing result, warnings, provenance, and retained
+reports.
 
 ## Delivery
 

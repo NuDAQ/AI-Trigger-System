@@ -60,6 +60,15 @@ class PostImplementationSaifCliTest(unittest.TestCase):
             readme,
         )
 
+    def test_readme_links_the_qualified_thirty_chunk_result(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("1.972 W", readme)
+        self.assertIn(
+            "docs/qualification/saif_30chunks_20260926/README.md",
+            readme,
+        )
+
     def test_gate_testbench_uses_only_the_production_top_contract(self) -> None:
         testbench = (ROOT / "HDL" / "sim" / "tb_ai_trigger_power.sv").read_text(
             encoding="utf-8"
