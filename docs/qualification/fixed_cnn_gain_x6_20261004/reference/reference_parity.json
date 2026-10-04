@@ -1,0 +1,11 @@
+{
+  "equal": true,
+  "assets": {
+    "adc.hex": "cab1ad8b4ece2e8dc0719412ace71ccc395ed2442421841deefb0731fc08b96d",
+    "all_input.hex": "f2de5a336f8f4b71f3655ab82d664a14e20bcdd88aabe728a25d17f41619d4ff",
+    "all_expected.hex": "72e502977fdc5d9695752a2411f746bf1b848dc1a69abfdc2c4b579286ec0ed1",
+    "adc_conversion.txt": "168aab6fd8d45b8d41f360281d44a91d6033cbb54c25e6219a3f80005d2e5d86",
+    "gated/adc.hex": "667248087c8b5c197a2ea0e00187fa60659a14d94a2e622bdc7c7df473a053b7",
+    "gated/all_expected.hex": "9703621fd073b19b5f799d7059288c9b356a8b4cd6ca076167fc102f52e6c786"
+  }
+}

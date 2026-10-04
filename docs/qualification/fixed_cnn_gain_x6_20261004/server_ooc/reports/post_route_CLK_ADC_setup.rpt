@@ -1,0 +1,1702 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date              : Sun Oct  4 07:00:44 2026
+| Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_timing -from [get_clocks CLK_ADC] -to [get_clocks CLK_ADC] -max_paths 20 -nworst 1 -file /home/work1/Works/_codex_ai_trigger_x6_20261004_149506e/build/x6_gain_20261004/server_ooc/reports/post_route_CLK_ADC_setup.rpt
+| Design            : AI_TRIGGER_TOP
+| Device            : xcku5p-ffvb676
+| Speed File        : -2  PRODUCTION 1.29 05-01-2022
+| Design State      : Routed
+| Temperature Grade : E
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             0.415ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[6]/D
+                            (rising edge-triggered cell FDCE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.567ns  (logic 0.985ns (27.615%)  route 2.582ns (72.385%))
+  Logic Levels:           9  (CARRY8=1 LUT5=1 LUT6=7)
+  Clock Path Skew:        -0.008ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 4.021 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.029     0.029    u_CORE/u_MULTIMODE_PATH/u_HILO/CLK
+    SLICE_X47Y159        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X47Y159        FDRE (Prop_EFF2_SLICEL_C_Q)
+                                                      0.081     0.110 f  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/Q
+                         net (fo=396, routed)         0.363     0.473    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/THRESH[1]
+    SLICE_X46Y155        LUT6 (Prop_G6LUT_SLICEL_I3_O)
+                                                      0.149     0.622 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/GATE[1]_i_24/O
+                         net (fo=34, routed)          0.216     0.838    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_24_n_3_alias
+    SLICE_X43Y156        LUT5 (Prop_B6LUT_SLICEL_I2_O)
+                                                      0.098     0.936 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20/O
+                         net (fo=31, routed)          0.448     1.384    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20_n_3
+    SLICE_X40Y158        LUT6 (Prop_H6LUT_SLICEL_I2_O)
+                                                      0.090     1.474 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30/O
+                         net (fo=1, routed)           0.171     1.645    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30_n_3
+    SLICE_X41Y158        CARRY8 (Prop_CARRY8_SLICEL_DI[5]_CO[5])
+                                                      0.069     1.714 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE_reg[14]_i_10/CO[5]
+                         net (fo=7, routed)           0.537     2.251    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/p_7_out[2]
+    SLICE_X50Y159        LUT6 (Prop_C6LUT_SLICEM_I5_O)
+                                                      0.123     2.374 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5/O
+                         net (fo=4, routed)           0.199     2.573    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5_n_3
+    SLICE_X49Y159        LUT6 (Prop_F6LUT_SLICEM_I4_O)
+                                                      0.051     2.624 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4/O
+                         net (fo=4, routed)           0.240     2.864    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4_n_3
+    SLICE_X52Y159        LUT6 (Prop_B6LUT_SLICEM_I2_O)
+                                                      0.125     2.989 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8/O
+                         net (fo=4, routed)           0.097     3.086    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8_n_3
+    SLICE_X52Y159        LUT6 (Prop_C6LUT_SLICEM_I4_O)
+                                                      0.051     3.137 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_5/O
+                         net (fo=8, routed)           0.244     3.381    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_5_n_3
+    SLICE_X55Y159        LUT6 (Prop_F6LUT_SLICEM_I4_O)
+                                                      0.148     3.529 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[6]_i_1/O
+                         net (fo=1, routed)           0.067     3.596    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[6]_i_1_n_3
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[6]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.021     4.021    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/CLK
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[6]/C
+                         clock pessimism              0.000     4.021    
+                         clock uncertainty           -0.035     3.986    
+    SLICE_X55Y159        FDCE (Setup_FFF_SLICEM_C_D)
+                                                      0.025     4.011    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[6]
+  -------------------------------------------------------------------
+                         required time                          4.011    
+                         arrival time                          -3.596    
+  -------------------------------------------------------------------
+                         slack                                  0.415    
+
+Slack (MET) :             0.422ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[4]/D
+                            (rising edge-triggered cell FDCE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.560ns  (logic 0.949ns (26.657%)  route 2.611ns (73.343%))
+  Logic Levels:           9  (CARRY8=1 LUT3=1 LUT5=1 LUT6=6)
+  Clock Path Skew:        -0.008ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 4.021 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.029     0.029    u_CORE/u_MULTIMODE_PATH/u_HILO/CLK
+    SLICE_X47Y159        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X47Y159        FDRE (Prop_EFF2_SLICEL_C_Q)
+                                                      0.081     0.110 f  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/Q
+                         net (fo=396, routed)         0.363     0.473    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/THRESH[1]
+    SLICE_X46Y155        LUT6 (Prop_G6LUT_SLICEL_I3_O)
+                                                      0.149     0.622 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/GATE[1]_i_24/O
+                         net (fo=34, routed)          0.216     0.838    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_24_n_3_alias
+    SLICE_X43Y156        LUT5 (Prop_B6LUT_SLICEL_I2_O)
+                                                      0.098     0.936 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20/O
+                         net (fo=31, routed)          0.448     1.384    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20_n_3
+    SLICE_X40Y158        LUT6 (Prop_H6LUT_SLICEL_I2_O)
+                                                      0.090     1.474 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30/O
+                         net (fo=1, routed)           0.171     1.645    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30_n_3
+    SLICE_X41Y158        CARRY8 (Prop_CARRY8_SLICEL_DI[5]_CO[5])
+                                                      0.069     1.714 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE_reg[14]_i_10/CO[5]
+                         net (fo=7, routed)           0.537     2.251    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/p_7_out[2]
+    SLICE_X50Y159        LUT6 (Prop_C6LUT_SLICEM_I5_O)
+                                                      0.123     2.374 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5/O
+                         net (fo=4, routed)           0.199     2.573    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5_n_3
+    SLICE_X49Y159        LUT6 (Prop_F6LUT_SLICEM_I4_O)
+                                                      0.051     2.624 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4/O
+                         net (fo=4, routed)           0.240     2.864    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4_n_3
+    SLICE_X52Y159        LUT6 (Prop_B6LUT_SLICEM_I2_O)
+                                                      0.125     2.989 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8/O
+                         net (fo=4, routed)           0.164     3.153    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8_n_3
+    SLICE_X54Y159        LUT3 (Prop_G5LUT_SLICEL_I0_O)
+                                                      0.111     3.264 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[4]_i_2/O
+                         net (fo=1, routed)           0.214     3.478    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[4]_i_2_n_3
+    SLICE_X55Y159        LUT6 (Prop_B6LUT_SLICEM_I1_O)
+                                                      0.052     3.530 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[4]_i_1/O
+                         net (fo=1, routed)           0.059     3.589    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[4]_i_1_n_3
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.021     4.021    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/CLK
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[4]/C
+                         clock pessimism              0.000     4.021    
+                         clock uncertainty           -0.035     3.986    
+    SLICE_X55Y159        FDCE (Setup_BFF_SLICEM_C_D)
+                                                      0.025     4.011    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[4]
+  -------------------------------------------------------------------
+                         required time                          4.011    
+                         arrival time                          -3.589    
+  -------------------------------------------------------------------
+                         slack                                  0.422    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[5]/D
+                            (rising edge-triggered cell FDCE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.557ns  (logic 0.989ns (27.803%)  route 2.568ns (72.197%))
+  Logic Levels:           9  (CARRY8=1 LUT5=2 LUT6=6)
+  Clock Path Skew:        -0.008ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 4.021 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.029     0.029    u_CORE/u_MULTIMODE_PATH/u_HILO/CLK
+    SLICE_X47Y159        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X47Y159        FDRE (Prop_EFF2_SLICEL_C_Q)
+                                                      0.081     0.110 f  u_CORE/u_MULTIMODE_PATH/u_HILO/latched_thresh_r_reg[1]/Q
+                         net (fo=396, routed)         0.363     0.473    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/THRESH[1]
+    SLICE_X46Y155        LUT6 (Prop_G6LUT_SLICEL_I3_O)
+                                                      0.149     0.622 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[2].U_CH/GATE[1]_i_24/O
+                         net (fo=34, routed)          0.216     0.838    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_24_n_3_alias
+    SLICE_X43Y156        LUT5 (Prop_B6LUT_SLICEL_I2_O)
+                                                      0.098     0.936 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20/O
+                         net (fo=31, routed)          0.448     1.384    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[1]_i_20_n_3
+    SLICE_X40Y158        LUT6 (Prop_H6LUT_SLICEL_I2_O)
+                                                      0.090     1.474 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30/O
+                         net (fo=1, routed)           0.171     1.645    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE[14]_i_30_n_3
+    SLICE_X41Y158        CARRY8 (Prop_CARRY8_SLICEL_DI[5]_CO[5])
+                                                      0.069     1.714 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/GATE_reg[14]_i_10/CO[5]
+                         net (fo=7, routed)           0.537     2.251    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/p_7_out[2]
+    SLICE_X50Y159        LUT6 (Prop_C6LUT_SLICEM_I5_O)
+                                                      0.123     2.374 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5/O
+                         net (fo=4, routed)           0.199     2.573    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[0]_i_5_n_3
+    SLICE_X49Y159        LUT6 (Prop_F6LUT_SLICEM_I4_O)
+                                                      0.051     2.624 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4/O
+                         net (fo=4, routed)           0.240     2.864    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[2]_i_4_n_3
+    SLICE_X52Y159        LUT6 (Prop_B6LUT_SLICEM_I2_O)
+                                                      0.125     2.989 f  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8/O
+                         net (fo=4, routed)           0.097     3.086    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_8_n_3
+    SLICE_X52Y159        LUT6 (Prop_C6LUT_SLICEM_I4_O)
+                                                      0.051     3.137 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_5/O
+                         net (fo=8, routed)           0.239     3.376    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[7]_i_5_n_3
+    SLICE_X55Y159        LUT5 (Prop_H6LUT_SLICEM_I3_O)
+                                                      0.152     3.528 r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[5]_i_1/O
+                         net (fo=1, routed)           0.058     3.586    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d[5]_i_1_n_3
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.021     4.021    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/CLK
+    SLICE_X55Y159        FDCE                                         r  u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[5]/C
+                         clock pessimism              0.000     4.021    
+                         clock uncertainty           -0.035     3.986    
+    SLICE_X55Y159        FDCE (Setup_HFF_SLICEM_C_D)
+                                                      0.025     4.011    u_CORE/u_MULTIMODE_PATH/u_HILO/u_PRE_TRIGGER/chan_gen[3].U_CH/carry_count_lo_d_reg[5]
+  -------------------------------------------------------------------
+                         required time                          4.011    
+                         arrival time                          -3.586    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[1]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.470ns  (logic 1.281ns (36.920%)  route 2.189ns (63.080%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.210     3.500    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[1]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[1]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_DFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[1]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.500    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[3]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.470ns  (logic 1.281ns (36.920%)  route 2.189ns (63.080%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.210     3.500    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[3]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[3]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_AFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[3]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.500    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[5]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.470ns  (logic 1.281ns (36.920%)  route 2.189ns (63.080%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.210     3.500    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[5]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[5]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_BFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[5]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.500    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[2]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.471ns  (logic 1.281ns (36.909%)  route 2.190ns (63.091%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.211     3.501    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[2]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[2]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_DFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[2]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.501    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[4]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.471ns  (logic 1.281ns (36.909%)  route 2.190ns (63.091%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.211     3.501    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[4]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[4]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_AFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[4]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.501    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.425ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[6]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.471ns  (logic 1.281ns (36.909%)  route 2.190ns (63.091%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.211     3.501    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[6]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y139        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[6]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y139        FDRE (Setup_BFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[6]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.501    
+  -------------------------------------------------------------------
+                         slack                                  0.425    
+
+Slack (MET) :             0.443ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[0]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.453ns  (logic 1.281ns (37.099%)  route 2.172ns (62.901%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 4.021 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.193     3.483    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X50Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[0]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.021     4.021    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X50Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[0]/C
+                         clock pessimism              0.000     4.021    
+                         clock uncertainty           -0.035     3.986    
+    SLICE_X50Y140        FDRE (Setup_BFF2_SLICEM_C_CE)
+                                                     -0.060     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[0]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.483    
+  -------------------------------------------------------------------
+                         slack                                  0.443    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[5]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.448ns  (logic 1.281ns (37.153%)  route 2.167ns (62.847%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.188     3.478    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[5]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[5]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_CFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[5]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.478    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[0]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.449ns  (logic 1.281ns (37.142%)  route 2.168ns (62.858%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.189     3.479    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[0]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[0]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_CFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[0]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.479    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[10]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.448ns  (logic 1.281ns (37.153%)  route 2.167ns (62.847%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.188     3.478    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[10]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[10]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_BFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[10]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.478    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[11]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.448ns  (logic 1.281ns (37.153%)  route 2.167ns (62.847%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.188     3.478    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[11]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[11]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_AFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[11]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.478    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[12]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.449ns  (logic 1.281ns (37.142%)  route 2.168ns (62.858%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.189     3.479    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[12]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[12]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_AFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[12]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.479    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[13]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.448ns  (logic 1.281ns (37.153%)  route 2.167ns (62.847%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.188     3.478    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[13]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[13]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_DFF_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[13]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.478    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[14]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.449ns  (logic 1.281ns (37.142%)  route 2.168ns (62.858%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.189     3.479    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[14]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[14]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_DFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[14]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.479    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.447ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[8]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.449ns  (logic 1.281ns (37.142%)  route 2.168ns (62.858%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.189     3.479    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[8]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[8]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_BFF2_SLICEL_C_CE)
+                                                     -0.059     3.926    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[8]
+  -------------------------------------------------------------------
+                         required time                          3.926    
+                         arrival time                          -3.479    
+  -------------------------------------------------------------------
+                         slack                                  0.447    
+
+Slack (MET) :             0.461ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[4]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.434ns  (logic 1.281ns (37.305%)  route 2.153ns (62.695%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.174     3.464    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[4]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[4]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_EFF2_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_batch_idx_r_reg[4]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.464    
+  -------------------------------------------------------------------
+                         slack                                  0.461    
+
+Slack (MET) :             0.461ns  (required time - arrival time)
+  Source:                 u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Destination:            u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[2]/CE
+                            (rising edge-triggered cell FDRE clocked by CLK_ADC  {rise@0.000ns fall@2.000ns period=4.000ns})
+  Path Group:             CLK_ADC
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            4.000ns  (CLK_ADC rise@4.000ns - CLK_ADC rise@0.000ns)
+  Data Path Delay:        3.434ns  (logic 1.281ns (37.305%)  route 2.153ns (62.695%))
+  Logic Levels:           13  (LUT2=1 LUT3=2 LUT4=2 LUT5=2 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 4.020 - 4.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_ADC rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.030     0.030    u_CORE/u_MULTIMODE_PATH/u_RECORDER/CLK
+    SLICE_X53Y151        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y151        FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.078     0.108 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id][0]/Q
+                         net (fo=4, routed)           0.113     0.221    u_CORE/u_MULTIMODE_PATH/u_RECORDER/active_request_r_reg[start_address][chunk_id_n_3_][0]
+    SLICE_X54Y151        LUT2 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.149     0.370 r  u_CORE/u_MULTIMODE_PATH/u_RECORDER/CHECK_START_CHUNK_ID[0]_INST_0/O
+                         net (fo=1, routed)           0.181     0.551    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/EVENT_CHECK_CHUNK[0]
+    SLICE_X54Y146        LUT3 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.097     0.648 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_CHUNK[0]_INST_0/O
+                         net (fo=40, routed)          0.321     0.969    u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/ADDRE0
+    SLICE_X53Y145        RAMD64E (Prop_E6LUT_SLICEM_RADR0_O)
+                                                      0.148     1.117 r  u_CORE/u_MULTIMODE_PATH/u_RING/tag_mem_reg_r1_0_63_0_6/RAME/O
+                         net (fo=1, routed)           0.258     1.375    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT4[4]
+    SLICE_X52Y147        LUT4 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152     1.527 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65/O
+                         net (fo=1, routed)           0.144     1.671    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_65_n_3
+    SLICE_X52Y147        LUT5 (Prop_A6LUT_SLICEM_I4_O)
+                                                      0.125     1.796 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45/O
+                         net (fo=1, routed)           0.092     1.888    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_45_n_3
+    SLICE_X52Y147        LUT6 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.037     1.925 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17/O
+                         net (fo=1, routed)           0.104     2.029    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_17_n_3
+    SLICE_X50Y147        LUT6 (Prop_H6LUT_SLICEM_I5_O)
+                                                      0.053     2.082 f  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4/O
+                         net (fo=3, routed)           0.292     2.374    u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0_i_4_n_3
+    SLICE_X49Y143        LUT5 (Prop_B6LUT_SLICEM_I3_O)
+                                                      0.089     2.463 r  u_CORE/u_MULTIMODE_PATH/u_RING/CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.047     2.510    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/SHARED_CHECK_PRESENT
+    SLICE_X49Y143        LUT3 (Prop_F6LUT_SLICEM_I2_O)
+                                                      0.037     2.547 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_CHECK_PRESENT_INST_0/O
+                         net (fo=2, routed)           0.135     2.682    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CHECK_PRESENT
+    SLICE_X49Y141        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.090     2.772 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_REQUEST_INST_0/O
+                         net (fo=2, routed)           0.051     2.823    u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_REQUEST
+    SLICE_X49Y141        LUT4 (Prop_H6LUT_SLICEM_I1_O)
+                                                      0.101     2.924 r  u_CORE/u_MULTIMODE_PATH/u_RING_ARBITER/GATED_GRANT_INST_0/O
+                         net (fo=1, routed)           0.041     2.965    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/RING_GRANT
+    SLICE_X49Y141        LUT6 (Prop_F6LUT_SLICEM_I5_O)
+                                                      0.088     3.053 f  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2/O
+                         net (fo=4, routed)           0.200     3.253    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_2_n_3
+    SLICE_X50Y140        LUT6 (Prop_G6LUT_SLICEM_I2_O)
+                                                      0.037     3.290 r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r_i_1/O
+                         net (fo=23, routed)          0.174     3.464    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_en_r
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[2]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_ADC rise edge)    4.000     4.000 r  
+                                                      0.000     4.000 r  CLK_ADC (IN)
+                         net (fo=3236, unset)         0.020     4.020    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/CLK
+    SLICE_X51Y140        FDRE                                         r  u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[2]/C
+                         clock pessimism              0.000     4.020    
+                         clock uncertainty           -0.035     3.985    
+    SLICE_X51Y140        FDRE (Setup_HFF2_SLICEL_C_CE)
+                                                     -0.060     3.925    u_CORE/u_MULTIMODE_PATH/u_GATED_READER/rb_rd_chunk_id_r_reg[2]
+  -------------------------------------------------------------------
+                         required time                          3.925    
+                         arrival time                          -3.464    
+  -------------------------------------------------------------------
+                         slack                                  0.461    
+
+
+
+

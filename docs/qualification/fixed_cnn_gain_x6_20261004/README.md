@@ -2,8 +2,9 @@
 
 Branch: `v3.6`. Starting point: `8e2ee979c651dc28a9d477ea60562bdc9f70569c`.
 RTL change: `cdeee8c`; normalized fixture adaptation: `02a5f9f`.
-Status: local numerical, GHDL and generated-CNN RTL checks pass. Server Vivado
-actual-XPM system simulation and routed OOC qualification are in progress.
+Status: local numerical, GHDL and generated-CNN RTL checks pass. All nine
+server Vivado actual-XPM system cases pass, and routed OOC meets the unchanged
+250/200 MHz constraints.
 
 ## Behavior and scope
 
@@ -77,8 +78,58 @@ canonical dependency files are unchanged. The patch and hashes are retained.
 Verilator uses byte-identical generated RTL in a temporary path without
 spaces, with `--converge-limit 10000` for 2229 HLS initialization delta delays.
 Its testbench observes the native CNN ports; it does not include vendor XPMs.
-Local GHDL uses the existing test support models. These results therefore do
-not substitute for the pending Vivado system and timing checks.
+Local GHDL uses the existing test support models. The separate Vivado results
+below cover actual XPM integration and routed timing.
+
+## Vivado system and routed OOC evidence
+
+Vivado/Vitis HLS 2023.2 ran in an isolated source snapshot on `100.71.11.92`,
+at implementation commit `149506e`, with the exact three Bender lockfile pins.
+Existing server checkouts were not used as mutable build inputs. All six
+reference assets generated with official Linux HLS headers are byte-identical
+to the local reference assets, including every ADC code and expected score.
+Production source hashes match between all nine simulation cases, routed OOC
+and the local checkout; manifests and parity checks are retained.
+
+| Actual native-IP / XPM case | Result |
+| --- | --- |
+| Continuous, threshold 0 | 1096 exact scores; 474 complete events |
+| Input gaps and clock phase offset | 1096 exact scores; 474 complete events |
+| Threshold +2 / -2 | 428 / 628 complete events |
+| Minimum / maximum threshold words | 1096 / 0 complete events |
+| Lane resets and held results | Pass |
+| Capture-All, external, Hi-Lo, Hi-Lo gated AI | Pass; raw event samples preserved |
+| Gated adjacent thresholds and mode switch | Pass; threshold snapshot preserved |
+| Overload and recovery | Pass; loss reported, then 1096 exact scores and 474 events |
+
+System and mode benches compare every accepted event beat with the original
+eight-channel ADC words, including event-sink stalls. Hi-Lo still uses raw
+threshold 100 in the mode fixture. Its original raw +/-200 excursions are
+unchanged; only the selected CNN window receives gain six.
+
+| Routed OOC metric | Result |
+| --- | ---: |
+| ADC setup WNS / hold WHS | +0.415 / +0.042 ns |
+| CNN setup WNS / hold WHS | +0.250 / +0.004 ns |
+| Overall TNS / THS | 0 / 0 ns |
+| Overall pulse-width slack | +1.300 ns |
+| LUT / FF | 61302 / 45589 |
+| BRAM tiles / URAM / DSP | 21 / 6 / 128 |
+| CDC unsafe / unknown endpoints | 0 / 0 |
+| Missing clocks / unconstrained internal endpoints | 0 / 0 |
+| DRC errors | 0 |
+
+Relative to the pre-gain Hi-Lo v3 routed baseline, LUT/FF increase by 276/1;
+DSP, BRAM and URAM counts are unchanged. Routed results depend on placement
+and are not a guarantee of better timing for later gateware integration.
+DRC retains 559 warnings: 302 DSP input-pipeline, 128 DSP PREG, 128 DSP MREG,
+and one no-routable-load warning. The complete DRC and CDC reports are saved.
+
+The routed checkpoint is preserved on the server and locally under ignored
+`build/x6_gain_20261004/post_route.dcp`; its SHA256 and server path are in
+`server_ooc/summary.json`. `SHA256.json` covers this qualification directory.
+This qualifies the block; gateware integration and board validation remain
+separate work.
 
 ## Reproduction
 

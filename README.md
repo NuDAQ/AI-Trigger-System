@@ -205,6 +205,9 @@ See the [fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004
 for the v3.6 change and its validation limits. Normalized model fixtures are
 encoded as `round(X*64/6)` before gain; physical-voltage CSVs retain their
 original ADC scale. CNN Core Generator data and model weights are unchanged.
+All nine actual-IP/XPM cases pass. Routed OOC meets ADC/CNN 250/200 MHz with
+setup WNS +0.415/+0.250 ns and overall hold WHS +0.004 ns. DRC has zero errors
+and CDC has zero unsafe or unknown endpoints. This is block-level validation.
 
 The [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
 is the pre-gain two-lane implementation baseline, with its source audit and reproduction commands.
@@ -279,7 +282,7 @@ Plots for 3.4 and 4 RMS are included in the full report.
 
 The figures below describe the previous five-lane system, not native two-lane
 qualification. Current evidence is recorded in
-`docs/qualification/hilo_v3_20260919/README.md`.
+[fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004/README.md).
 
 The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
 `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.
