@@ -49,6 +49,35 @@ def write_scope(path: Path, samples: int = 257) -> None:
 
 
 class RealNoiseScanTest(unittest.TestCase):
+    def test_threshold_scan_uses_strict_native_comparison(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-threshold-scan-") as work:
+            root = Path(work)
+            case = root / "case"
+            case.mkdir()
+            (case / "scores_annotated.csv").write_text(
+                "sample_id,hex_out,float_out\n0,0x00000300,1.500000\n1,0x001fff80,-0.250000\n")
+            scan.write_threshold_scan(root, [case], 24)
+            with (root / "threshold_scan.csv").open() as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(len(rows), 25)
+            self.assertEqual(rows[0]["triggered_windows"], "1")
+            self.assertEqual(rows[0]["observed_window_fraction"], "0.500000")
+            self.assertEqual(rows[24]["score_threshold"], "1.500000")
+            self.assertEqual(rows[24]["triggered_windows"], "0")
+
+    def test_analysis_rejects_a_different_native_reference_score(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-template-reference-") as work:
+            root = Path(work)
+            write_scope(root / "scope.csv", samples=256)
+            case = scan.prepare_scope_csv(root / "scope.csv", root / "out", 0.8)
+            (case / "simulate.log").write_text(HEALTH_LOG)
+            (case / "scores.csv").write_text(
+                "sample_id,hex_out,float_out\n0,0x00000320,1.562500\n")
+            (case / "reference_scores.csv").write_text(
+                "window_start_index,score_input0_only\n0,1.500000\n")
+            with self.assertRaisesRegex(SystemExit, "reference score mismatch"):
+                scan.annotate_case(case, 0.0)
+
     def test_template_cli_preserves_physical_adc_scale(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ai-trigger-template-") as work:
             out_dir = Path(work) / "out"

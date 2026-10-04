@@ -332,6 +332,17 @@ def annotate_case(case_dir: Path, score_threshold: float) -> dict[str, str]:
             f"missing={missing_ids[:8]}; unexpected={unexpected_ids[:8]}"
         )
 
+    reference_path = case_dir / "reference_scores.csv"
+    if reference_path.exists():
+        reference_rows = read_csv_rows(reference_path)
+        reference = {row["window_start_index"]: row for row in reference_rows}
+        if len(reference) != len(reference_rows) or set(reference) != manifest_id_set:
+            raise SystemExit(f"reference window IDs differ from manifest: {reference_path}")
+        for sample_id, row in score_by_id.items():
+            expected = round(float(reference[sample_id]["score_input0_only"]) * 512)
+            if int(row["hex_out"], 16) & 0x1FFFFF != expected & 0x1FFFFF:
+                raise SystemExit(f"reference score mismatch at window {sample_id}: {case_dir.name}")
+
     annotated_rows = []
     for manifest_row in manifest_rows:
         combined = dict(manifest_row)
@@ -347,7 +358,7 @@ def annotate_case(case_dir: Path, score_threshold: float) -> dict[str, str]:
 
     scores = [float(row["float_out"]) for row in annotated_rows]
     triggered_windows = sum(score > score_threshold for score in scores)
-    return {
+    summary = {
         "case_name": case_dir.name,
         "source_file": manifest_rows[0]["source_file"],
         "window_count": str(len(scores)),
@@ -358,6 +369,9 @@ def annotate_case(case_dir: Path, score_threshold: float) -> dict[str, str]:
         "triggered_windows": str(triggered_windows),
         "trigger_fraction": f"{triggered_windows / len(scores):.6f}",
     }
+    if reference_path.exists():
+        summary["reference_matched_windows"] = str(len(scores))
+    return summary
 
 
 def analyze_results(
@@ -402,6 +416,25 @@ def analyze_results(
     build_score_plots(out_root, case_dirs, score_threshold)
     print(f"Wrote {summary_path}")
     return summary_path
+
+
+def write_threshold_scan(out_root: Path, case_dirs: list[Path], max_raw: int = 800) -> Path:
+    """Sweep external threshold words over saved native scores, without rerunning CNN."""
+    path = out_root / "threshold_scan.csv"
+    with path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=["case_name", "threshold_raw", "score_threshold",
+                                                    "window_count", "triggered_windows", "observed_window_fraction"])
+        writer.writeheader()
+        for case_dir in case_dirs:
+            words = [int(row["hex_out"], 16) & 0x1FFFFF
+                     for row in read_csv_rows(case_dir / "scores_annotated.csv")]
+            scores = [word - 0x200000 if word & 0x100000 else word for word in words]
+            for threshold in range(max_raw + 1):
+                count = sum(score > threshold * 32 for score in scores)
+                writer.writerow({"case_name": case_dir.name, "threshold_raw": threshold,
+                                 "score_threshold": f"{threshold / 16:.6f}", "window_count": len(scores),
+                                 "triggered_windows": count, "observed_window_fraction": f"{count / len(scores):.6f}"})
+    return path
 
 
 def build_score_plots(
@@ -573,6 +606,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", choices=("data3", "templates"), default="data3")
     parser.add_argument("--isolated", action="store_true",
                         help="Use a fresh Bender-resolved native/XPM project for each case.")
+    parser.add_argument("--threshold-scan", action="store_true",
+                        help="Sweep saved scores with external threshold words from zero to --threshold-max-raw.")
+    parser.add_argument("--threshold-max-raw", type=int, default=800)
     parser.add_argument(
         "--case",
         action="append",
@@ -613,6 +649,8 @@ def main() -> None:
         raise SystemExit("--prepare-only and --analyze-only are mutually exclusive")
     if args.adc_vfs_v <= 0:
         raise SystemExit("--adc-vfs-v must be positive")
+    if not 0 <= args.threshold_max_raw <= 32768:
+        raise SystemExit("--threshold-max-raw must be between 0 and 32768")
     if not -(1 << 31) <= args.cnn_thresh_raw < (1 << 31):
         raise SystemExit("--cnn-thresh-raw must fit the signed 32-bit v3.5 interface")
     score_threshold = args.cnn_thresh_raw / 16.0
@@ -622,6 +660,9 @@ def main() -> None:
     out_root = out_root.resolve()
     if args.analyze_only:
         analyze_results(out_root, score_threshold)
+        if args.threshold_scan:
+            write_threshold_scan(out_root, sorted(p for p in out_root.iterdir()
+                                                 if (p / "scores_annotated.csv").is_file()), args.threshold_max_raw)
         return
     if args.case and len(set(args.case)) != len(args.case):
         raise SystemExit("duplicate --case selection")
@@ -660,9 +701,11 @@ def main() -> None:
 
     case_dirs = []
     for input_csv in resolved_input_paths:
-        case_dirs.append(
-            prepare_scope_csv(input_csv, out_root, args.adc_vfs_v)
-        )
+        case_dir = prepare_scope_csv(input_csv, out_root, args.adc_vfs_v)
+        if args.dataset == "templates":
+            reference_path = input_csv.with_name(input_csv.stem.removesuffix("_noisy") + "_scores.csv")
+            shutil.copy2(reference_path, case_dir / "reference_scores.csv")
+        case_dirs.append(case_dir)
     build_input_waveform_plots(resolved_input_paths, out_root)
 
     if args.prepare_only:
@@ -708,6 +751,8 @@ def main() -> None:
         shutil.copy2(case_log, case_dir / "simulate.log")
 
     analyze_results(out_root, score_threshold, case_dirs)
+    if args.threshold_scan:
+        write_threshold_scan(out_root, case_dirs, args.threshold_max_raw)
 
 
 if __name__ == "__main__":
