@@ -12,6 +12,22 @@ from scripts import run_template_stream_scan as stream
 
 
 class TemplateStreamScanTest(unittest.TestCase):
+    def test_gated_results_cannot_disappear_from_the_saved_score_csv(self):
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-gated-missing-") as work:
+            root = Path(work)
+            source = root / "source.csv"
+            source.write_text("x-axis,1\nsecond,Volt\n" + "\n".join(
+                f"{i * 1e-9:.12e},0" for i in range(256)) + "\n")
+            case = scope.prepare_scope_csv(source, root / "out", .8, schedule="stream")
+            (case / "scores.csv").write_text("sample_id,hex_out,float_out\n")
+            (case / "events.csv").write_text("event_index,event_chunk_id\n")
+            (case / "simulate.log").write_text(
+                "Results received: 1\nEvents saved: 0\n"
+                "Chunk overflows: 0\nADC input overflows: 0\nDropped triggers: 0\n"
+                "Ring misses: 0\nHi-Lo blanking: 0\nEvent loss: 0\n")
+            with self.assertRaisesRegex(SystemExit, "score rows differ from simulator"):
+                stream.analyze_stream(case, mode=4, threshold_raw=45)
+
     def test_continuous_stream_cannot_succeed_with_missing_scores(self):
         with tempfile.TemporaryDirectory(prefix="ai-trigger-stream-missing-") as work:
             root = Path(work)
@@ -22,6 +38,7 @@ class TemplateStreamScanTest(unittest.TestCase):
             (case / "scores.csv").write_text("sample_id,hex_out,float_out\n0,0x001fff80,-.25\n")
             (case / "events.csv").write_text("event_index,event_chunk_id\n")
             (case / "simulate.log").write_text(
+                "Results received: 1\nEvents saved: 0\n"
                 "Chunk overflows: 0\nADC input overflows: 0\nDropped triggers: 0\n"
                 "Ring misses: 0\nHi-Lo blanking: 0\nEvent loss: 0\n")
             with self.assertRaisesRegex(SystemExit, "incomplete continuous scores"):
@@ -96,6 +113,7 @@ class TemplateStreamScanTest(unittest.TestCase):
                                             schedule="stream", pad_before=3)
             (case / "scores.csv").write_text("sample_id,hex_out,float_out\n")
             (case / "simulate.log").write_text(
+                "Results received: 0\nEvents saved: 1\n"
                 "Chunk overflows: 0\nADC input overflows: 0\nDropped triggers: 0\n"
                 "Ring misses: 0\nHi-Lo blanking: 0\nEvent loss: 0\n")
             events = case / "events.csv"

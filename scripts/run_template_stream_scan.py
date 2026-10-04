@@ -77,6 +77,9 @@ def analyze_stream(case_dir: Path, *, mode: int, threshold_raw: int) -> dict:
         raise SystemExit(f"incomplete continuous scores: {case_dir}")
     source_origin = int(scope.read_csv_rows(case_dir / "manifest.csv")[0]["window_start_index"])
     log = (case_dir / "simulate.log").read_text()
+    received = re.search(r"^Results received:\s+(\d+)", log, re.MULTILINE)
+    if not received or int(received.group(1)) != len(scores):
+        raise SystemExit(f"score rows differ from simulator results: {case_dir}")
     health = {}
     for name in ("Chunk overflows", "ADC input overflows", "Dropped triggers", "Ring misses",
                  "Hi-Lo blanking", "Event loss"):
@@ -89,6 +92,9 @@ def analyze_stream(case_dir: Path, *, mode: int, threshold_raw: int) -> dict:
     groups = defaultdict(list)
     for row in event_rows:
         groups[int(row["event_index"])].append(row)
+    saved = re.search(r"^Events saved:\s+(\d+)", log, re.MULTILINE)
+    if not saved or int(saved.group(1)) != len(groups):
+        raise SystemExit(f"event frames differ from simulator results: {case_dir}")
     events = []
     for event_index, rows in sorted(groups.items()):
         first = rows[0]
