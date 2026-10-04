@@ -1,0 +1,5 @@
+template,continuous_firing_phases,continuous_phases,continuous_peak_covered_phases,default_gated_firing_phases,selected_gated_firing_phases,gated_phases,selected_gated_peak_covered_phases,selected_gated_score_min,selected_gated_score_max
+nu_3m_2sigma_ev1,0,256,0,0,0,16,0,-0.771484375,1.212890625
+nu_3m_3sigma_ev5,163,256,163,0,15,16,15,2.296875,5.66015625
+nu_3m_4sigma_ev4,191,256,191,0,16,16,16,6.720703125,9.78515625
+nu_3m_10sigma_ev1,233,256,225,16,16,16,16,28.564453125,42.68359375

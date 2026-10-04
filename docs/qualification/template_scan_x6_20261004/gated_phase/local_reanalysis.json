@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "scenarios_checked": 196,
+  "exact_reference_scores": 135,
+  "raw_events_checked": 175,
+  "rejected_reference_scores": 17,
+  "rejected_reference_ambiguous": 0,
+  "unique_reference_windows": 392,
+  "analysis_script_sha256": "7250489fc03fa9cc8d09cd07a391ecda6b8caed9aa3cdbb1916bb8523efcf1fa",
+  "analysis_commit": "7bf9480229d846ae867dc483b90c7dfe63cf2f90",
+  "reference_binary_sha256": "cfe356c4193dfab18075938fea22e5a7e623e0836cb053a05b026e1e99ca1d6d"
+}

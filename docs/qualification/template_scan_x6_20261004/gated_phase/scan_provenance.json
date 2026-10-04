@@ -1,0 +1,12 @@
+{
+  "ai_trigger_commit": "7bf9480229d846ae867dc483b90c7dfe63cf2f90",
+  "script_sha256": "7250489fc03fa9cc8d09cd07a391ecda6b8caed9aa3cdbb1916bb8523efcf1fa",
+  "scope_script_sha256": "89a2de92996845e390da0b27aae8c1b752967465e36bb53aeff919c01df80996",
+  "reference_binary_sha256": "60233b10abd092026c21fb6af5f4312a938318dacbbc9532d2275929adc4dfed",
+  "snapshot_dir": "/home/work1/Works/_codex_template_scan_x6_20261004_3eca61e/build/template_scan_x6_20261004/sliding/nu_3m_2sigma_ev1_noisy/vendor/project/ai_trigger_scan.sim/sim_1/behav/xsim",
+  "compiled_source_manifest_sha256": "0bc4f87c827c19ffbbf0831a11c30029c9ff52561767392281e8ee5dfce9c4e1",
+  "xsim": "/tools/Xilinx/Vivado/2023.2/bin/xsim",
+  "cnn_input_gain": 6,
+  "adc_vfs_v": 0.8,
+  "workers": 4
+}

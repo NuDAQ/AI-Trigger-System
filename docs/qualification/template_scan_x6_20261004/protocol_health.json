@@ -1,0 +1,18 @@
+{
+  "stream": {
+    "scenarios_checked": 1536,
+    "active_modes_and_configuration_valid": true,
+    "runs_with_busy_drops": 219,
+    "maximum_dropped_requests_in_one_run": 32,
+    "runs_with_sticky_event_loss": 219,
+    "final_blanking_flags_set": 0
+  },
+  "gated_phase": {
+    "scenarios_checked": 196,
+    "active_modes_and_configuration_valid": true,
+    "runs_with_busy_drops": 132,
+    "maximum_dropped_requests_in_one_run": 4,
+    "runs_with_sticky_event_loss": 132,
+    "final_blanking_flags_set": 0
+  }
+}

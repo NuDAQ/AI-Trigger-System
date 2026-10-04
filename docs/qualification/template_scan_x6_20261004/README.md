@@ -1,8 +1,12 @@
 # Single-channel template simulation and scans, fixed CNN gain x6
 
 Branch: `v3.6`. Sliding simulation source export: `3eca61e`; continuous-stream
-scan driver: `f40d77e`. Native CNN, Wrapper and Hi-Lo pins remain `eca9b12`,
-`a82a717` and `047d14a`. Server: `100.71.11.92`, Vivado/Vitis HLS 2023.2.
+scan driver: `f40d77e`; selectable Hi-Lo phase scan and final analysis: `7bf9480`.
+Completed on 2026-10-05 (Asia/Taipei). Native CNN, Wrapper and Hi-Lo pins remain
+`eca9b12`, `a82a717` and `047d14a`. Server: `100.71.11.92`, Vivado/Vitis HLS 2023.2.
+
+Status: all 1536 main scenarios and 196 follow-up scenarios completed, with
+independent numerical and raw-frame checks. Busy-path drops are measured below.
 
 ## Input and reference boundary
 
@@ -23,6 +27,9 @@ No samples in these four noisy examples clip at either boundary.
 input hashes. The `noise` stream variant is `noisy - noiseless` in volts,
 followed by ADC quantization; it is not the subtraction of two quantized
 records. The four residual records contain only 4 microseconds of noise.
+Bench label files contain zero placeholders. Its printed accuracy and
+throughput summaries are not physics efficiency or hardware-rate measurements;
+this report uses native score words, complete frames and loss counters.
 
 ## Completed sliding scan
 
@@ -90,13 +97,100 @@ in that chunk; equal quantized scores can leave the input position ambiguous.
 Those ambiguities are explicitly counted. Accepted raw-event windows and
 continuous chunks have exact positions and independent HLS comparisons.
 
-Full parameter-scan results will be retained in this directory after completion.
+## Completed stream scans and observations
+
+| Check | Main scan | Follow-up, raw threshold 30 / window 8 |
+| --- | ---: | ---: |
+| Scenarios completed | 1536 | 196 |
+| Saved native CNN results | 7316 | 152 |
+| Exact-position HLS score comparisons | 7276 | 135 |
+| Rejected scores matching feasible windows | 40 | 17 |
+| Rejected scores with ambiguous input positions | 8 | 0 |
+| Complete raw event frames checked | 847 | 175 |
+| Raw event beats checked | 54,208 | 11,200 |
+| Distinct raw windows evaluated by HLS | 5043 | 392 |
+
+The follow-up includes 16 phases for modes 3 and 4, both gated CNN thresholds,
+and one baseline continuous run per example, for 49 scenarios per example.
+Local analysis regenerates every input manifest, compares it byte for byte
+with the server manifest, checks every raw frame again, and reruns both scans'
+HLS comparisons with the qualified local executable. All counts and scores
+match the server. See `stream/local_reanalysis.json` and
+`gated_phase/local_reanalysis.json`.
+
+The following counts describe arrival phases of one fixed waveform and one
+fixed noise realization. CNN word 45 is used throughout. A firing phase means
+at least one complete event, not an independent noise draw or physical event.
+
+| Example | Continuous firing / 256 | Continuous peak present / 256 | Gated 35 / 5 firing / 16 | Gated 30 / 8 firing / 16 |
+| --- | ---: | ---: | ---: | ---: |
+| 2 sigma | 0 | 0 | 0 | 0 |
+| 3 sigma | 163 | 163 | 0 | 15 |
+| 4 sigma | 191 | 191 | 0 | 16 |
+| 10 sigma | 233 | 225 | 16 | 16 |
+
+All firing phases in the selected gated 30 / 8 scan contain peak index 500.
+`phase_comparison.csv` records both firing and peak coverage, so a CNN trigger
+is not assumed to retain the main pulse peak. At continuous phase zero the
+peak is at sample 244 of its chunk; all four examples fail word 45. The 10-sigma
+maximum score there is only 0.537109375, despite the sliding maximum of
+47.525390625. In phases 4..11 its accepted continuous frame starts at original
+indices 508..501, retaining the pulse tail while excluding the main peak.
+
+![Continuous arrival phases](continuous_phase_scores.png)
+
+The baseline Hi-Lo settings 35 / 5 admit no CNN work for the 2-, 3- or 4-sigma
+noisy examples, including the 16 tested aggregate phases. Threshold 30 means
+5.859375 mV in raw ADC units; changing to 30 / 8 admits one centered window
+per phase in all four examples. The 3-sigma native scores span
+2.296875..5.66015625; phase 6 fails word 45 after successful raw admission.
+Its remaining phase gap therefore comes from CNN rejection. From these saved
+scores, word 36 (2.25) would accept all 16 admitted 3-sigma windows with the
+same inputs. This is an inferred bench setting, not a tested word-36 run or a
+noise-rate calibration. The 2-sigma gated scores span -0.771484375..1.212890625
+and all fail word 45.
+
+![Selected gated arrival phases](gated_phase_scores.png)
+
+The phase-zero threshold/window grid is not monotonic in raw threshold.
+For example, the 10-sigma 25 / 4 run admits a window starting at source index
+96, ending at 351, with native score -3.123046875; it excludes the peak at 500
+and reports four busy-path drops. The 30 / 8 run admits the window 368..623,
+scores 35.900390625 and captures the peak. A more permissive raw setting can
+therefore admit earlier work and prevent later useful requests from entering.
+The selected 30 / 8 setting is useful for comparing these examples on the
+bench; it is not a population-optimal operating point.
+
+![Phase-zero Hi-Lo grid](hilo_grid_peak_events.png)
+
+`hilo_grid.csv` retains raw-only and gated counts, peak coverage, scores and
+drops; `baseline_comparison.csv` retains noisy/noiseless/residual controls.
+Noiseless and residual controls at phase zero do not characterize all phases.
+The residual-noise controls have no events at word 45 under baseline 35 / 5.
+Calibrating a one-channel background threshold needs longer independent noise
+records; measuring efficiency needs the full event set and multiple noise draws.
+
+All 1732 runs have the requested active mode, valid configuration, zero input
+and chunk overflows, and zero ring misses. Numerical/frame checks pass, while
+219 main scenarios and 132 follow-up scenarios report busy-path drops and
+sticky event loss; the maximum is 32 and 4 dropped requests in one run,
+respectively. `protocol_health.json` records those counts. Final blanking flags
+are zero, but these short inputs do not measure sustained rate blanking.
+
+`stream/native_results.tar.gz` and `gated_phase/native_results.tar.gz` contain
+every score/event CSV, input manifest, simulation log, command, per-run summary,
+rejected-score match list, full run plan, HLS raw-window reference and file hashes.
+The archives omit compiled workers, generated hex and reference binaries.
+Each `artifact_index.json` records the archive checksum, captured row counts
+and the actual launch command. Simulator result/event counters match saved
+CSV rows for every scenario. Local copies verify every archived file checksum.
 
 ## Provenance and reproduction
 
 Use the commands under the repository README's scan section. The source
-archive checksums are in `sliding_source_snapshot.json` and
-`stream_source_snapshot.json`; `sliding_source_export.json` records the actual
+archive checksums are in `sliding_source_snapshot.json`,
+`stream_source_snapshot.json` and `gated_phase_source_snapshot.json`;
+`sliding_source_export.json` records the actual
 archive root commit and dependency pins. The archives omit `.git`; the original
 sliding runtime's unavailable Git fields are not used as provenance. Four
 compiled file lists match, as recorded in `sliding/source_parity.json`.
@@ -105,11 +199,18 @@ Server sliding artifacts:
 `/home/work1/Works/_codex_template_scan_x6_20261004_3eca61e/build/template_scan_x6_20261004/sliding`.
 Server stream artifacts:
 `/home/work1/Works/_codex_template_stream_x6_20261004_f40d77e/build/full_scan`.
+Server follow-up artifacts:
+`/home/work1/Works/_codex_template_stream_x6_20261004_7bf9480/build/gated_phase_scan`.
 Heavy projects, generated input hex, reference binaries and full runtime outputs
 remain in ignored local/server `build/` directories.
 
-The 103-test local Python suite passes using the existing Homebrew Python
+The 105-test local Python suite passes using the existing Homebrew Python
 environment with NumPy and Matplotlib. Production HDL is unchanged by the
 scan commits, so routed OOC timing remains the source-matched result in
 `../fixed_cnn_gain_x6_20261004/README.md`; this scan is not a new routed run or
 board qualification.
+`routed_source_parity.json` records the compiled-source comparison with that
+routed OOC manifest.
+
+TDD red/green and regression logs are retained in `tdd_logs.tar.gz`.
+`SHA256.json` covers all files in this qualification directory.

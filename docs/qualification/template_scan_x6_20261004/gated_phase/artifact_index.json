@@ -1,0 +1,32 @@
+{
+  "archive_sha256": "fdc4328e48cbb37ae7c3816aae7d4c2faebfa37e2718bc4f2e62b64effdca5de",
+  "archive_bytes": 584684,
+  "score_csv_rows": 152,
+  "complete_event_frames": 175,
+  "raw_event_beats": 11200,
+  "unique_hls_raw_windows": 392,
+  "files": 1313,
+  "job": {
+    "pid": 839838,
+    "command": [
+      "python3",
+      "scripts/run_template_stream_scan.py",
+      "--variants",
+      "noisy",
+      "--gated-phase-scan",
+      "--hl-threshold-raw",
+      "30",
+      "--hilo-window",
+      "8",
+      "--out-dir",
+      "/home/work1/Works/_codex_template_stream_x6_20261004_7bf9480/build/gated_phase_scan",
+      "--snapshot-dir",
+      "/home/work1/Works/_codex_template_scan_x6_20261004_3eca61e/build/template_scan_x6_20261004/sliding/nu_3m_2sigma_ev1_noisy/vendor/project/ai_trigger_scan.sim/sim_1/behav/xsim",
+      "--reference-engine",
+      "/home/work1/Works/_codex_ai_trigger_x6_20261004_149506e/build/x6_gain_20261004/server_reference/native_reference",
+      "--workers",
+      "4"
+    ],
+    "start_unix": 1791130162.551999
+  }
+}

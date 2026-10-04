@@ -409,7 +409,10 @@ The reference executable must have its `weights/` directory and `reference.json`
 beside it. The stream scan checks captured raw events and uses that independent
 HLS reference for continuous chunks and centered gated windows. Its output
 directory must be empty. Use `--prepare-only` to inspect inputs and the plan;
-use `--case`, `--variants` and `--limit` for a smaller run. The four examples
+use `--case`, `--variants` and `--limit` for a smaller run. Select raw Hi-Lo
+settings with `--hl-threshold-raw` and `--hilo-window`; `--gated-phase-scan`
+scans its 16 aggregate phases without repeating 256 continuous-AI phases.
+The four examples
 support waveform characterization, not population efficiency or noise-rate
 claims. Results and measurement limits are recorded in
 [the template scan report](docs/qualification/template_scan_x6_20261004/README.md).
