@@ -92,10 +92,20 @@ def build_tcl(args: argparse.Namespace, repo_root: Path, project: Path) -> str:
         ]
     )
 
+    lines.append(f"cd {tcl_quote(repo_root)}")
+    if getattr(args, "isolated_output", None):
+        lines.extend([
+            f"create_project ai_trigger_scan {tcl_quote(project.parent)} -part xcku5p-ffvb676-2-e -force",
+            "set_property target_language VHDL [current_project]",
+            "set_property simulator_language Mixed [current_project]",
+            "set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY XPM_FIFO} [current_project]",
+            "set_property top tb_AI_TRIGGER_TOP [get_filesets sim_1]",
+            f"set ::RUN_SIM_PROJECT {tcl_quote(project)}",
+        ])
+    else:
+        lines.append(f"open_project {tcl_quote(project)}")
     lines.extend(
         [
-            f"cd {tcl_quote(repo_root)}",
-            f"open_project {tcl_quote(project)}",
             "update_compile_order -fileset sources_1",
             "update_compile_order -fileset sim_1",
             f"source {tcl_quote(repo_root / 'run_sim.tcl')}",
@@ -111,6 +121,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run AI_TRIGGER_TOP xsim through Vivado batch mode."
     )
+    parser.add_argument("--isolated-output", type=Path,
+                        help="Create a fresh native/XPM project and logs in this empty directory.")
     parser.add_argument(
         "--project",
         default="AI_Trigger_System/AI_Trigger_System.xpr",
@@ -226,8 +238,21 @@ def main() -> int:
         project = repo_root / project
     project = project.resolve()
 
-    if not project.exists():
+    if not args.isolated_output and not project.exists():
         raise SystemExit(f"ERROR: Vivado project not found: {project}")
+
+    if args.isolated_output:
+        work_dir = args.isolated_output.resolve()
+        if work_dir.exists() and any(work_dir.iterdir()):
+            raise SystemExit(f"ERROR: isolated output must be empty: {work_dir}")
+        work_dir.mkdir(parents=True, exist_ok=True)
+        project = work_dir / "project" / "ai_trigger_scan.xpr"
+        from source_manifest import capture
+        capture(repo_root, work_dir, ["vivado", "simulation"],
+                [Path(__file__), repo_root / "run_sim.tcl"])
+    else:
+        work_dir = repo_root / ".sim_batch"
+        work_dir.mkdir(exist_ok=True)
 
     vivado = find_vivado(args.vivado)
     simulation_log = (
@@ -238,12 +263,12 @@ def main() -> int:
         / "xsim"
         / "simulate.log"
     )
-    work_dir = repo_root / ".sim_batch"
-    work_dir.mkdir(exist_ok=True)
     tcl_path = work_dir / "run_vivado_sim_batch.tcl"
     tcl_path.write_text(build_tcl(args, repo_root, project), encoding="utf-8")
 
     cmd = [vivado, "-mode", "batch", "-source", str(tcl_path)]
+    if args.isolated_output:
+        cmd += ["-log", str(work_dir / "vivado.log"), "-journal", str(work_dir / "vivado.jou")]
     print("INFO: running:", " ".join(cmd), flush=True)
     proc = subprocess.Popen(cmd, cwd=repo_root)
     try:

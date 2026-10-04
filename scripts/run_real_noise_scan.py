@@ -571,6 +571,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--analyze-only", action="store_true")
     parser.add_argument("--dataset", choices=("data3", "templates"), default="data3")
+    parser.add_argument("--isolated", action="store_true",
+                        help="Use a fresh Bender-resolved native/XPM project for each case.")
     parser.add_argument(
         "--case",
         action="append",
@@ -695,11 +697,15 @@ def main() -> None:
         ]
         if args.vivado:
             command.extend(["--vivado", args.vivado])
+        if args.isolated:
+            command.extend(["--isolated-output", str(case_dir / "vendor")])
         print("Running current v3.5 AI Trigger simulation:", " ".join(command))
         subprocess.run(command, cwd=repo_root, check=True)
-        if not xsim_log.exists():
-            raise SystemExit(f"XSim log not found after simulation: {xsim_log}")
-        shutil.copy2(xsim_log, case_dir / "simulate.log")
+        case_log = (case_dir / "vendor/project/ai_trigger_scan.sim/sim_1/behav/xsim/simulate.log"
+                    if args.isolated else xsim_log)
+        if not case_log.exists():
+            raise SystemExit(f"XSim log not found after simulation: {case_log}")
+        shutil.copy2(case_log, case_dir / "simulate.log")
 
     analyze_results(out_root, score_threshold, case_dirs)
 

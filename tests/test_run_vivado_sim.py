@@ -39,6 +39,18 @@ class RunVivadoSimLogValidationTest(unittest.TestCase):
 
 
 class RunVivadoSimMultimodeConfigurationTest(unittest.TestCase):
+    def test_isolated_simulation_creates_a_native_xpm_project(self) -> None:
+        with patch("sys.argv", ["run_vivado_sim.py", "--isolated-output", "/tmp/scan-vendor"]):
+            args = RUN_VIVADO_SIM.parse_args()
+        project = Path("/tmp/scan-vendor/project/ai_trigger_scan.xpr")
+        tcl = RUN_VIVADO_SIM.build_tcl(args, ROOT, project)
+        self.assertIn("create_project ai_trigger_scan {/tmp/scan-vendor/project}", tcl)
+        self.assertIn("-part xcku5p-ffvb676-2-e", tcl)
+        self.assertIn("set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY XPM_FIFO}", tcl)
+        self.assertIn("set_property top tb_AI_TRIGGER_TOP", tcl)
+        self.assertIn("set ::RUN_SIM_PROJECT {/tmp/scan-vendor/project/ai_trigger_scan.xpr}", tcl)
+        self.assertNotIn("open_project", tcl)
+
     def test_cli_accepts_full_byte_windows_without_changing_defaults(self) -> None:
         with patch("sys.argv", ["run_vivado_sim.py", "--hilo-window", "255", "--coinc-window", "255"]):
             args = RUN_VIVADO_SIM.parse_args()
