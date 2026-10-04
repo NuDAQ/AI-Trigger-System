@@ -27,7 +27,7 @@ architecture sim of tb_adc_chunk_distributor_timestamp is
 
     function axis_sample(value : integer) return std_logic_vector is
     begin
-        return std_logic_vector(to_signed(value / 2, 16));
+        return std_logic_vector(to_signed(value, 16));
     end function;
 begin
     clk <= not clk after 5 ns;
@@ -93,25 +93,25 @@ begin
                 severity failure;
 
             if batch = 0 then
-                assert batch_data(15 downto 0) = axis_sample(2)
+                assert batch_data(15 downto 0) = axis_sample(6)
                     report "CNN packed row0 ch0 must come from input ch0"
                     severity failure;
-                assert batch_data(31 downto 16) = axis_sample(4)
+                assert batch_data(31 downto 16) = axis_sample(12)
                     report "CNN packed row0 ch1 must come from input ch1"
                     severity failure;
-                assert batch_data(47 downto 32) = axis_sample(6)
+                assert batch_data(47 downto 32) = axis_sample(18)
                     report "CNN packed row0 ch2 must come from input ch2"
                     severity failure;
-                assert batch_data(63 downto 48) = axis_sample(8)
+                assert batch_data(63 downto 48) = axis_sample(24)
                     report "CNN packed row0 ch3 must come from input ch3"
                     severity failure;
-                assert batch_data(79 downto 64) = axis_sample(10)
+                assert batch_data(79 downto 64) = axis_sample(30)
                     report "CNN packed row1 ch0 must follow row0 in low segment"
                     severity failure;
-                assert batch_data(143 downto 128) = axis_sample(18)
+                assert batch_data(143 downto 128) = axis_sample(54)
                     report "CNN packed row2 ch0 must start the high segment"
                     severity failure;
-                assert batch_data(207 downto 192) = axis_sample(26)
+                assert batch_data(207 downto 192) = axis_sample(78)
                     report "CNN packed row3 ch0 must follow row2 in high segment"
                     severity failure;
             end if;

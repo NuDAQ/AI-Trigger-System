@@ -14,12 +14,13 @@ size_t trace_type_size = sizeof(double);
 
 int main(int argc, char **argv) {
     if (argc != 2) return 2;
+    constexpr int cnn_input_gain = 6;
     // Independently exercise the actual generated native input type for every
     // raw ADC code, including negative ties and both saturation limits.
     std::ofstream conversion("adc_conversion.txt");
     for (int raw = -2048; raw <= 2047; ++raw) {
         waveform_x8_t word;
-        word[0] = static_cast<double>(raw) / 64.0;
+        word[0] = static_cast<double>(raw) * cnn_input_gain / 64.0;
         ap_int<10> code = word[0].range(9, 0);
         conversion << code.to_int() << '\n';
     }
