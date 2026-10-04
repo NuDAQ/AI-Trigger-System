@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scan the repository Data 3 waveforms through the current AI Trigger RTL."""
+"""Scan repository scope waveforms through the current AI Trigger RTL."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from statistics import mean
 SAMPLES_PER_CHUNK = 256
 DEFAULT_ADC_VFS_V = 0.8
 DATASET_RELATIVE_DIR = Path("data/Amp_Scope_Data_3_Offsetted")
+TEMPLATE_RELATIVE_DIR = Path("data/noise_2mV_for_x480_Sep_30")
 DATASET_CASES = (
     "noise_1_offset",
     "noise_2_offset",
@@ -160,6 +161,7 @@ def write_provenance(
     cnn_thresh_raw: int,
     project: str,
     vivado: str | None,
+    dataset_relative_dir: Path = DATASET_RELATIVE_DIR,
 ) -> Path:
     lock_path = repo_root / "Bender.lock"
     status = git_value(repo_root, "status", "--porcelain", "--untracked-files=no")
@@ -180,7 +182,7 @@ def write_provenance(
             str(path): sha256(repo_root / path)
             for path in tool_paths
         },
-        "dataset_root": str(DATASET_RELATIVE_DIR),
+        "dataset_root": str(dataset_relative_dir),
         "dataset_files": [
             {
                 "name": path.name,
@@ -568,13 +570,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--analyze-only", action="store_true")
+    parser.add_argument("--dataset", choices=("data3", "templates"), default="data3")
     parser.add_argument(
         "--case",
         action="append",
-        choices=DATASET_CASES,
         help=(
-            "Scan one named repository Data 3 case; repeat to select more. "
-            "Defaults to all eight tracked cases."
+            "Scan one named case in the selected dataset; repeat to select more. "
+            "Defaults to all Data 3 cases or the four noisy template examples."
         ),
     )
     parser.add_argument("--out-dir", type=Path, default=Path("build/real_noise_scan"))
@@ -621,13 +623,22 @@ def main() -> None:
         return
     if args.case and len(set(args.case)) != len(args.case):
         raise SystemExit("duplicate --case selection")
-    selected_cases = args.case or list(DATASET_CASES)
-    dataset_dir = (repo_root / DATASET_RELATIVE_DIR).resolve()
-    expected_paths = {case: dataset_dir / f"{case}.csv" for case in DATASET_CASES}
+    dataset_relative_dir = (TEMPLATE_RELATIVE_DIR if args.dataset == "templates"
+                            else DATASET_RELATIVE_DIR)
+    dataset_dir = (repo_root / dataset_relative_dir).resolve()
+    cases = DATASET_CASES
+    if args.dataset == "templates":
+        cases = tuple(row["template"] + "_noisy"
+                      for row in read_csv_rows(dataset_dir / "manifest_examples.csv"))
+    selected_cases = args.case or list(cases)
+    unknown = set(selected_cases) - set(cases)
+    if unknown:
+        raise SystemExit("unknown case in selected dataset: " + ", ".join(sorted(unknown)))
+    expected_paths = {case: dataset_dir / f"{case}.csv" for case in cases}
     missing_paths = [path for path in expected_paths.values() if not path.is_file()]
     if missing_paths:
         raise SystemExit(
-            "repository Data 3 dataset is incomplete; missing: "
+            "repository dataset is incomplete; missing: "
             + ", ".join(str(path) for path in missing_paths)
         )
     resolved_input_paths = [expected_paths[case] for case in selected_cases]
@@ -641,6 +652,7 @@ def main() -> None:
         args.cnn_thresh_raw,
         args.project,
         args.vivado,
+        dataset_relative_dir,
     )
     print(f"Wrote {provenance}")
 

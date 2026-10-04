@@ -11,6 +11,7 @@ prepare_only="${REAL_NOISE_PREPARE_ONLY:-0}"
 analyze_only="${REAL_NOISE_ANALYZE_ONLY:-0}"
 adc_vfs_v="${REAL_NOISE_ADC_VFS_V:-0.8}"
 cnn_thresh_raw="${REAL_NOISE_CNN_THRESH_RAW:-0}"
+dataset="${REAL_NOISE_DATASET:-data3}"
 project="${REAL_NOISE_PROJECT:-AI_Trigger_System/AI_Trigger_System.xpr}"
 
 for value_name in prepare_only analyze_only; do
@@ -26,6 +27,7 @@ if [[ "${prepare_only}" == "1" && "${analyze_only}" == "1" ]]; then
 fi
 
 args=(
+    --dataset "${dataset}"
     --out-dir "${out_dir}"
     --adc-vfs-v "${adc_vfs_v}"
     --cnn-thresh-raw "${cnn_thresh_raw}"
@@ -41,6 +43,6 @@ if [[ -n "${REAL_NOISE_VIVADO:-}" ]]; then
 fi
 
 echo "INFO: real-noise scan output: ${out_dir}"
-echo "INFO: scope dataset: data/Amp_Scope_Data_3_Offsetted"
+echo "INFO: selected scope dataset: ${dataset}"
 echo "INFO: ADC full-scale: ${adc_vfs_v} V; CNN threshold word: ${cnn_thresh_raw} (unit 1/16)"
 "${python_bin}" scripts/run_real_noise_scan.py "${args[@]}"

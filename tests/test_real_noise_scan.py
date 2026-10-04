@@ -49,6 +49,28 @@ def write_scope(path: Path, samples: int = 257) -> None:
 
 
 class RealNoiseScanTest(unittest.TestCase):
+    def test_template_cli_preserves_physical_adc_scale(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-template-") as work:
+            out_dir = Path(work) / "out"
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "--dataset", "templates",
+                 "--case", "nu_3m_2sigma_ev1_noisy", "--prepare-only",
+                 "--out-dir", str(out_dir)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            case = out_dir / "nu_3m_2sigma_ev1_noisy"
+            words = (case / "testhex_stream/test_input_sample0.hex").read_text().splitlines()
+            # The first 2.452225922 mV sample is 13 ADC codes at 0.8 Vpp.
+            self.assertEqual(words[:3], ["000000000000000d", "0000000000000002",
+                                         "000000000000000a"])
+            with (case / "manifest.csv").open() as stream:
+                self.assertEqual(len(list(csv.DictReader(stream))), 745)
+            provenance = json.loads((out_dir / "scan_provenance.json").read_text())
+            self.assertEqual(provenance["dataset_root"],
+                             "data/noise_2mV_for_x480_Sep_30")
+            self.assertEqual(len(provenance["dataset_files"]), 1)
+
     def test_shell_launcher_prepares_only_tracked_data3_files(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ai-trigger-data3-") as work:
             out_dir = Path(work) / "out"
