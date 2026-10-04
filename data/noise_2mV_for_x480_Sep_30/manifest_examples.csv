@@ -1,0 +1,5 @@
+template,depth,event_class,target_sigma,channel_used,sigma_this_channel,flavor,interaction,log10_energy_eV,weight,score_4ch_typical,fire_frac_4ch,score_1ch_typical,fire_frac_1ch,file_max_score_x480,noise_rms_mV_x480,file_max_score_x80,noise_rms_mV_x80
+nu_3m_2sigma_ev1,3m,main,2.0,0,2.049,nu_mu_bar,cc,18.5,0.1341,5.391,0.812,1.646,0.188,1.365,1.994,1.268,11.932
+nu_3m_3sigma_ev5,3m,main,3.0,0,2.884,nu_mu_bar,cc,18.0,0.9917,19.774,1.0,5.324,1.0,6.697,2.037,6.434,12.188
+nu_3m_4sigma_ev4,3m,main,4.0,3,3.874,nu_mu_bar,cc,18.0,0.9566,29.926,1.0,9.67,1.0,10.531,2.031,10.363,12.157
+nu_3m_10sigma_ev1,3m,main,10.0,1,9.587,nu_e,nc,18.0,0.9945,113.732,1.0,44.427,1.0,47.525,2.014,44.877,12.05
