@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "total_complete_events": 587,
+  "total_raw_beats_checked": 37568,
+  "cases": {
+    "nu_3m_10sigma_ev1_noisy": {
+      "complete_events": 233,
+      "raw_beats_checked": 14912,
+      "health": {
+        "Chunk overflows": 0,
+        "ADC input overflows": 0,
+        "Dropped triggers": 0,
+        "Ring misses": 0,
+        "Event loss": 0
+      },
+      "source_sha256": "ddcb18db330f5cefa888349c5a74335c0c8363f2bb022e225a60dad36a66178b",
+      "events_sha256": "5465be7fda3ff853d94fb08c145c21719b6167baacdf3dc3f32b7b73b13dd9bd"
+    },
+    "nu_3m_2sigma_ev1_noisy": {
+      "complete_events": 0,
+      "raw_beats_checked": 0,
+      "health": {
+        "Chunk overflows": 0,
+        "ADC input overflows": 0,
+        "Dropped triggers": 0,
+        "Ring misses": 0,
+        "Event loss": 0
+      },
+      "source_sha256": "3f521c8ced07d6e7480e96b6a8a8aa9e09963333e59cd88b3e8526911db2d7fa",
+      "events_sha256": "9e1c07e4c5d3c6e7d114849898a8a1eac2f3f4e0ea0208d75c5a7d817b8d225c"
+    },
+    "nu_3m_3sigma_ev5_noisy": {
+      "complete_events": 163,
+      "raw_beats_checked": 10432,
+      "health": {
+        "Chunk overflows": 0,
+        "ADC input overflows": 0,
+        "Dropped triggers": 0,
+        "Ring misses": 0,
+        "Event loss": 0
+      },
+      "source_sha256": "2e24112f0fe0a6d69b1c0ae1231da73d50329e9f15cd765950964ea1d3f9a855",
+      "events_sha256": "653b7d87a81908b3b5eced826cdb278905700267bb77aaa66ae17caff8aa3d08"
+    },
+    "nu_3m_4sigma_ev4_noisy": {
+      "complete_events": 191,
+      "raw_beats_checked": 12224,
+      "health": {
+        "Chunk overflows": 0,
+        "ADC input overflows": 0,
+        "Dropped triggers": 0,
+        "Ring misses": 0,
+        "Event loss": 0
+      },
+      "source_sha256": "e7ed3effc3049db9e938a3ce93e0aeae254e4906f5d6299352fa2cf104f136b2",
+      "events_sha256": "811ab0113c59c15101a3b9674a1f911b005cd475c6364c0987ced50be57b2ba6"
+    }
+  }
+}

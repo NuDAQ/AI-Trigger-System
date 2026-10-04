@@ -1,0 +1,11 @@
+{
+  "ai_trigger_commit": "149506e5c413d0a455da7c8f9f2ed06938b99309",
+  "ai_trigger_tree": "3d90075e8ef4e90feb4e25acb878da2acf51614c",
+  "dependencies": {
+    "cnn-core": "eca9b12f9f49f4b7324ed9ed241a44086ca9c842",
+    "cnn-core-wrapper": "a82a717403c8346d027f62b017295d8ea6fa3344",
+    "hilo-trigger": "047d14a25ca0df95d2219eded90e0b449574ae15"
+  },
+  "root_commit": "f40d77ee9f3f7aee33db05c8101a9b73bb598345",
+  "root_tree": "5c4480498936b62631735a1f107a77696a4cb95f"
+}

@@ -1,0 +1,5 @@
+case_name,source_file,window_count,score_min,score_max,score_mean,score_threshold,triggered_windows,trigger_fraction,reference_matched_windows
+nu_3m_10sigma_ev1_noisy,nu_3m_10sigma_ev1_noisy.csv,745,-3.164062,47.525391,7.828875,2.812500,233,0.312752,745
+nu_3m_2sigma_ev1_noisy,nu_3m_2sigma_ev1_noisy.csv,745,-3.154297,1.365234,-2.144675,2.812500,0,0.000000,745
+nu_3m_3sigma_ev5_noisy,nu_3m_3sigma_ev5_noisy.csv,745,-3.142578,6.697266,-0.839448,2.812500,163,0.218792,745
+nu_3m_4sigma_ev4_noisy,nu_3m_4sigma_ev4_noisy.csv,745,-3.123047,10.531250,-0.057957,2.812500,191,0.256376,745

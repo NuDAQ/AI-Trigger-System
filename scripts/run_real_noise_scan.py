@@ -294,7 +294,7 @@ def build_input_waveform_plots(input_paths: list[Path], out_root: Path) -> None:
         axis.set_xlabel("Time (ns)")
     for axis in axes.flat[len(waveforms):]:
         axis.set_visible(False)
-    figure.suptitle("Original Data 3 waveforms (1000 samples each)")
+    figure.suptitle("Original input waveforms (1000 samples each)")
     figure.tight_layout(rect=(0.0, 0.0, 1.0, 0.98))
     figure.savefig(out_root / "input_waveforms_overview.png", dpi=160)
     plt.close(figure)

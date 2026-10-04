@@ -1,0 +1,5 @@
+template,variant,phase,mode,hl_threshold_raw,hilo_window,threshold_raw,cnn_evaluations,raw_events_checked,score_max,exact_reference_scores,rejected_reference_scores,rejected_reference_ambiguous,dropped_triggers,event_loss,hilo_blanking
+nu_3m_10sigma_ev1,noisy,0,2,35,5,45,6,0,0.537109375,6,0,0,0,0,0
+nu_3m_10sigma_ev1,noisy,0,3,35,5,45,0,1,,0,0,0,2,1,0
+nu_3m_10sigma_ev1,noisy,0,4,35,5,-2147483648,1,1,35.900390625,1,0,0,2,1,0
+nu_3m_10sigma_ev1,noisy,0,4,35,5,45,1,1,35.900390625,1,0,0,2,1,0

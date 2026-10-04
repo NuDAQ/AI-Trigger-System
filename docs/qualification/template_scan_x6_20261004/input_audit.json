@@ -1,0 +1,54 @@
+[
+  {
+    "template": "nu_3m_2sigma_ev1",
+    "samples": 1000,
+    "noise_rms_mV": 2.036077202717422,
+    "signal_peak_mV": 4.186277743,
+    "raw_noisy_min": -38,
+    "raw_noisy_max": 34,
+    "adc_clipped_samples": 0,
+    "cnn_clipped_samples": 0,
+    "noisy_sha256": "3f521c8ced07d6e7480e96b6a8a8aa9e09963333e59cd88b3e8526911db2d7fa",
+    "noiseless_sha256": "6b14b99a925a1f8dc9e2631c55760d78e03b5d84c662e1e63c82fcaf7a43fa93",
+    "golden_sha256": "71e053311de18d641d7dabc0b85ac83be2242e5a143c818f0c0d45d19c755e7e"
+  },
+  {
+    "template": "nu_3m_3sigma_ev5",
+    "samples": 1000,
+    "noise_rms_mV": 2.1110038476443047,
+    "signal_peak_mV": 5.893446971,
+    "raw_noisy_min": -42,
+    "raw_noisy_max": 36,
+    "adc_clipped_samples": 0,
+    "cnn_clipped_samples": 0,
+    "noisy_sha256": "2e24112f0fe0a6d69b1c0ae1231da73d50329e9f15cd765950964ea1d3f9a855",
+    "noiseless_sha256": "58da53751537a58c1f0d6b294db35f142b503549133c7ffc354fc0dec578e7d3",
+    "golden_sha256": "c43b758d5f1c144a52c4300130aea45bf4af8d7770970b788a7f4ae430f8f3ca"
+  },
+  {
+    "template": "nu_3m_4sigma_ev4",
+    "samples": 1000,
+    "noise_rms_mV": 2.022581582815797,
+    "signal_peak_mV": 7.9167848450000005,
+    "raw_noisy_min": -52,
+    "raw_noisy_max": 39,
+    "adc_clipped_samples": 0,
+    "cnn_clipped_samples": 0,
+    "noisy_sha256": "e7ed3effc3049db9e938a3ce93e0aeae254e4906f5d6299352fa2cf104f136b2",
+    "noiseless_sha256": "7b005acc6850e09d7e998ebf268237969ea8fc096455239ef5794e3ef67e3eb7",
+    "golden_sha256": "1d9de5fc904e1db53fb47e01547480a12ea3119fa0c223f1e25e511a0a970d92"
+  },
+  {
+    "template": "nu_3m_10sigma_ev1",
+    "samples": 1000,
+    "noise_rms_mV": 1.9597614537833445,
+    "signal_peak_mV": 19.591303540000002,
+    "raw_noisy_min": -109,
+    "raw_noisy_max": 107,
+    "adc_clipped_samples": 0,
+    "cnn_clipped_samples": 0,
+    "noisy_sha256": "ddcb18db330f5cefa888349c5a74335c0c8363f2bb022e225a60dad36a66178b",
+    "noiseless_sha256": "12f9c6ce5ae8f3eb28c39fb1bfaa3405bfef63ff96bca8b170bd7f23011f15fe",
+    "golden_sha256": "6bcaa194e4f6329c49afd12cf550d0673367f29164b04058c6febf63058c1e93"
+  }
+]

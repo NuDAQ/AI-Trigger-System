@@ -360,7 +360,7 @@ native two-lane AI Trigger system:
 scripts/run_real_noise_scan.sh
 ```
 
-The input is always taken from `data/Amp_Scope_Data_3_Offsetted`; the launcher
+By default the input is taken from `data/Amp_Scope_Data_3_Offsetted`; the launcher
 does not depend on a Downloads path. Each 1000-sample, 1 GSa/s record is scanned
 with all 745 complete 256-sample windows at one-sample stride. The measured
 waveform drives trigger channel 0 and the other raw ADC channels remain zero.
@@ -382,6 +382,37 @@ CSVs and plots, each original 1000-sample input waveform, an eight-panel input
 overview, combined offset overlays, and `scan_provenance.json` with the AI
 Trigger commit, dependency revisions, and dataset hashes. Generated
 `testhex_stream` files remain ignored.
+
+Scan the four single-channel neutrino examples with fixed CNN ingress gain six
+and native threshold word 45 (`2.8125`):
+
+```bash
+python3 scripts/run_real_noise_scan.py --dataset templates --isolated \
+  --cnn-thresh-raw 45 --threshold-scan \
+  --out-dir build/template_sliding_scan \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado
+```
+
+The physical CSV amplitude is preserved. Each saved native score is compared
+with the supplied `_scores.csv`; the threshold sweep reuses those scores with
+the hardware's strict `>` comparison. Complete-stream scans in modes 2, 3 and 4
+reuse an isolated compiled XSim snapshot, with a fresh reset per scenario:
+
+```bash
+python3 scripts/run_template_stream_scan.py --phase-scan --hilo-scan \
+  --snapshot-dir build/template_sliding_scan/nu_3m_2sigma_ev1_noisy/vendor/project/ai_trigger_scan.sim/sim_1/behav/xsim \
+  --reference-engine build/native_reference/native_reference \
+  --workers 4 --out-dir build/template_stream_scan
+```
+
+The reference executable must have its `weights/` directory and `reference.json`
+beside it. The stream scan checks captured raw events and uses that independent
+HLS reference for continuous chunks and centered gated windows. Its output
+directory must be empty. Use `--prepare-only` to inspect inputs and the plan;
+use `--case`, `--variants` and `--limit` for a smaller run. The four examples
+support waveform characterization, not population efficiency or noise-rate
+claims. Results and measurement limits are recorded in
+[the template scan report](docs/qualification/template_scan_x6_20261004/README.md).
 
 ### Post-route SAIF power
 
