@@ -101,6 +101,21 @@ class TemplateStreamScanTest(unittest.TestCase):
             self.assertEqual([c["threshold_raw"] for c in plan["cases"]], [45, 45, -2147483648, 45])
             self.assertEqual(len(list((out / "inputs").rglob("test_input_sample*.hex"))), 6)
 
+    def test_cli_scans_gated_phases_with_selected_raw_threshold_and_window(self):
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-gated-phases-") as work:
+            out = Path(work) / "out"
+            result = subprocess.run([sys.executable, str(root / "scripts/run_template_stream_scan.py"),
+                                     "--prepare-only", "--case", "nu_3m_3sigma_ev5", "--variants", "noisy",
+                                     "--gated-phase-scan", "--hl-threshold-raw", "30", "--hilo-window", "8",
+                                     "--out-dir", str(out)], text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            cases = json.loads((out / "run_plan.json").read_text())["cases"]
+            self.assertEqual(len(cases), 49)
+            self.assertEqual(sum(c["mode"] == 2 for c in cases), 1)
+            self.assertEqual({c["phase"] for c in cases}, set(range(16)))
+            self.assertTrue(all(c["hl_threshold_raw"] == 30 and c["hilo_window"] == 8 for c in cases))
+
     def test_centered_event_is_mapped_and_checked_against_original_adc(self):
         with tempfile.TemporaryDirectory(prefix="ai-trigger-centered-") as work:
             root = Path(work)

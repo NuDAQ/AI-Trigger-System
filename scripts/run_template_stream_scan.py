@@ -146,7 +146,9 @@ def prepare_plan(args) -> dict:
     output.mkdir(parents=True, exist_ok=True)
     cases, seen, inputs = [], set(), {}
 
-    def add(template, variant, phase, mode, hl=35, hilo=5, threshold=45):
+    def add(template, variant, phase, mode, hl=None, hilo=None, threshold=45):
+        hl = args.hl_threshold_raw if hl is None else hl
+        hilo = args.hilo_window if hilo is None else hilo
         key = (template, variant, phase, mode, hl, hilo, threshold)
         if key in seen:
             return
@@ -177,6 +179,7 @@ def prepare_plan(args) -> dict:
         if args.phase_scan:
             for phase in range(256):
                 add(template, "noisy", phase, 2)
+        if args.phase_scan or args.gated_phase_scan:
             for phase in range(16):
                 add(template, "noisy", phase, 3)
                 add(template, "noisy", phase, 4, threshold=-2147483648)
@@ -363,6 +366,12 @@ def main() -> int:
                         default=["noisy", "noiseless", "noise"])
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--phase-scan", action="store_true")
+    parser.add_argument("--gated-phase-scan", action="store_true",
+                        help="Scan 16 Hi-Lo aggregate phases without the 256 continuous-AI phases.")
+    parser.add_argument("--hl-threshold-raw", type=int, default=35,
+                        help="Raw ADC threshold for baseline and phase scans (default 35).")
+    parser.add_argument("--hilo-window", type=int, default=5,
+                        help="Hi-Lo window for baseline and phase scans (default 5).")
     parser.add_argument("--hilo-scan", action="store_true")
     parser.add_argument("--snapshot-dir", type=Path, help="XSim directory from a qualified isolated native simulation.")
     parser.add_argument("--reference-engine", type=Path, help="Qualified native_reference executable beside its weights and manifest.")
@@ -372,6 +381,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.limit < 0:
         parser.error("--limit must be nonnegative")
+    if not 1 <= args.hl_threshold_raw <= 2047 or not 0 <= args.hilo_window <= 255:
+        parser.error("raw Hi-Lo threshold must be 1..2047 and window 0..255")
     if not args.prepare_only and (not args.snapshot_dir or not args.reference_engine):
         parser.error("simulation needs --snapshot-dir and --reference-engine")
     if args.out_dir.exists() and any(args.out_dir.iterdir()):
