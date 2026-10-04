@@ -49,6 +49,25 @@ def write_scope(path: Path, samples: int = 257) -> None:
 
 
 class RealNoiseScanTest(unittest.TestCase):
+    def test_stream_preparation_keeps_chunk_boundaries_contiguous(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ai-trigger-stream-") as work:
+            root = Path(work)
+            values = [0.0] * 257
+            values[0], values[1], values[253] = 0.05, -0.05, 0.025
+            (root / "scope.csv").write_text("x-axis,1\nsecond,Volt\n" + "\n".join(
+                f"{i * 1e-9:.12e},{v:.12e}" for i, v in enumerate(values)) + "\n")
+            case = scan.prepare_scope_csv(root / "scope.csv", root / "out", 0.8,
+                                          schedule="stream", pad_before=3)
+            first = (case / "testhex_stream/test_input_sample0.hex").read_text().splitlines()
+            second = (case / "testhex_stream/test_input_sample1.hex").read_text().splitlines()
+            self.assertEqual(first[:5], ["0000000000000000"] * 3 +
+                             ["0000000000000100", "0000000000000f00"])
+            self.assertEqual(second[0], "0000000000000080")
+            with (case / "manifest.csv").open() as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual([int(r["window_start_index"]) for r in rows], [-3, 253, 509])
+            self.assertEqual(len(rows), 3)  # Includes a complete trailing guard chunk.
+
     def test_threshold_scan_uses_strict_native_comparison(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ai-trigger-threshold-scan-") as work:
             root = Path(work)

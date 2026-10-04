@@ -74,10 +74,25 @@ def load_scope_csv(path: Path) -> tuple[list[float], list[float]]:
     return times_s, voltages_v
 
 
-def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path:
+def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float,
+                      *, schedule: str = "sliding", pad_before: int = 256) -> Path:
     times_s, voltages_v = load_scope_csv(input_csv)
     raw_codes = [round(voltage * 4096.0 / adc_vfs_v) for voltage in voltages_v]
     codes = [voltage_to_adc_code(voltage, adc_vfs_v) for voltage in voltages_v]
+    stride = 1
+    source_time_start = times_s[0]
+    if schedule == "stream":
+        if pad_before < 0:
+            raise SystemExit("stream padding must be nonnegative")
+        # A trailing zero chunk makes the final centered requests readable.
+        padded_length = math.ceil((pad_before + len(codes) + 256) / 256) * 256
+        tail = padded_length - pad_before - len(codes)
+        codes = [0] * pad_before + codes + [0] * tail
+        raw_codes = [0] * pad_before + raw_codes + [0] * tail
+        times_s = [source_time_start + (i - pad_before) * 1e-9 for i in range(padded_length)]
+        stride = 256
+    elif schedule != "sliding":
+        raise SystemExit("schedule must be sliding or stream")
     window_count = len(codes) - SAMPLES_PER_CHUNK + 1
 
     case_dir = out_root / input_csv.stem
@@ -85,9 +100,9 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
     testhex_dir.mkdir(parents=True, exist_ok=True)
 
     manifest_rows: list[dict[str, str]] = []
-    for sample_id in range(window_count):
-        window = codes[sample_id : sample_id + SAMPLES_PER_CHUNK]
-        raw_window = raw_codes[sample_id : sample_id + SAMPLES_PER_CHUNK]
+    for sample_id, start in enumerate(range(0, window_count, stride)):
+        window = codes[start : start + SAMPLES_PER_CHUNK]
+        raw_window = raw_codes[start : start + SAMPLES_PER_CHUNK]
         (testhex_dir / f"test_input_sample{sample_id}.hex").write_text(
             "\n".join(pack_ch0_timestep(code) for code in window) + "\n",
             encoding="utf-8",
@@ -96,11 +111,11 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
             {
                 "sample_id": str(sample_id),
                 "source_file": input_csv.name,
-                "window_start_index": str(sample_id),
-                "window_end_index": str(sample_id + SAMPLES_PER_CHUNK - 1),
-                "window_start_ns": f"{times_s[sample_id] * 1e9:.6f}",
+                "window_start_index": str(start - (pad_before if schedule == "stream" else 0)),
+                "window_end_index": str(start + SAMPLES_PER_CHUNK - 1 - (pad_before if schedule == "stream" else 0)),
+                "window_start_ns": f"{times_s[start] * 1e9:.6f}",
                 "window_end_ns": (
-                    f"{times_s[sample_id + SAMPLES_PER_CHUNK - 1] * 1e9:.6f}"
+                    f"{times_s[start + SAMPLES_PER_CHUNK - 1] * 1e9:.6f}"
                 ),
                 "adc_vfs_v": f"{adc_vfs_v:.6f}",
                 "adc_code_min": str(min(window)),
@@ -112,7 +127,7 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
         )
 
     (testhex_dir / "labels.hex").write_text(
-        "\n".join("0" for _ in range(window_count)) + "\n",
+        "\n".join("0" for _ in manifest_rows) + "\n",
         encoding="utf-8",
     )
     with (case_dir / "manifest.csv").open("w", newline="", encoding="utf-8") as csv_file:
@@ -120,7 +135,7 @@ def prepare_scope_csv(input_csv: Path, out_root: Path, adc_vfs_v: float) -> Path
         writer.writeheader()
         writer.writerows(manifest_rows)
 
-    print(f"Prepared {window_count} windows from {input_csv} in {case_dir}")
+    print(f"Prepared {len(manifest_rows)} windows from {input_csv} in {case_dir}")
     return case_dir
 
 
