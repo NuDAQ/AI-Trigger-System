@@ -184,6 +184,8 @@ The archives omit compiled workers, generated hex and reference binaries.
 Each `artifact_index.json` records the archive checksum, captured row counts
 and the actual launch command. Simulator result/event counters match saved
 CSV rows for every scenario. Local copies verify every archived file checksum.
+Standalone CSV views use LF line endings; their parsed rows are unchanged.
+Archives and compressed event evidence retain the original simulator bytes.
 
 ## Provenance and reproduction
 
