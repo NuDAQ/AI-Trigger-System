@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_normalized_inputs_are_encoded_before_the_fixed_gain (test_native_reference.NativeReferenceInputTest.test_normalized_inputs_are_encoded_before_the_fixed_gain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_native_reference.py", line 18, in test_normalized_inputs_are_encoded_before_the_fixed_gain
+    raw = REFERENCE.normalized_to_adc(model)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'build_native_reference' has no attribute 'normalized_to_adc'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

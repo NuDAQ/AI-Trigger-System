@@ -1,0 +1,34 @@
+[
+  {
+    "case": "nu_3m_10sigma_ev1_noisy",
+    "samples": 1000,
+    "source_sha256": "ddcb18db330f5cefa888349c5a74335c0c8363f2bb022e225a60dad36a66178b",
+    "physical_noise_rms_mV": 1.9597614537833445,
+    "cnn_noise_rms": 0.9424556521396643,
+    "cnn_clipped_samples": 0
+  },
+  {
+    "case": "nu_3m_2sigma_ev1_noisy",
+    "samples": 1000,
+    "source_sha256": "3f521c8ced07d6e7480e96b6a8a8aa9e09963333e59cd88b3e8526911db2d7fa",
+    "physical_noise_rms_mV": 2.036077202717422,
+    "cnn_noise_rms": 0.9770936055785546,
+    "cnn_clipped_samples": 0
+  },
+  {
+    "case": "nu_3m_3sigma_ev5_noisy",
+    "samples": 1000,
+    "source_sha256": "2e24112f0fe0a6d69b1c0ae1231da73d50329e9f15cd765950964ea1d3f9a855",
+    "physical_noise_rms_mV": 2.1110038476443047,
+    "cnn_noise_rms": 1.0146548250821557,
+    "cnn_clipped_samples": 0
+  },
+  {
+    "case": "nu_3m_4sigma_ev4_noisy",
+    "samples": 1000,
+    "source_sha256": "e7ed3effc3049db9e938a3ce93e0aeae254e4906f5d6299352fa2cf104f136b2",
+    "physical_noise_rms_mV": 2.022581582815797,
+    "cnn_noise_rms": 0.9726534262007203,
+    "cnn_clipped_samples": 0
+  }
+]

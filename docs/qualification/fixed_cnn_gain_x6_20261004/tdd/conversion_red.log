@@ -1,0 +1,11 @@
+[ RUN      ] tb_cnn_input_conversion
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34/e~tb_cnn_input_conversion.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34/PRE_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34/AI_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34/tb_cnn_input_conversion.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/tb_cnn_input_conversion.vhd:29:13:@0ms:(assertion failure): Native CNN conversion mismatch at raw=-171
+./tb_cnn_input_conversion:error: assertion failed
+  instance: .tb_cnn_input_conversion(test).P0
+./tb_cnn_input_conversion:error: simulation failed
+COMMAND: /opt/homebrew/bin/ghdl -r --std=08 -P/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34 --workdir=/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_input_conversion-jwyzop34 tb_cnn_input_conversion --assert-level=error --ieee-asserts=disable-at-0 --stop-time=100us[  FAILED  ] tb_cnn_input_conversion
+GHDL: 0 passed, 1 failed, 1 total

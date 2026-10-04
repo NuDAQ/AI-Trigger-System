@@ -91,11 +91,13 @@ ADC_DATA[(ch * 4 + sample) * 12 +: 12] = ADC_DATA4(ch)(sample)
 `DATA_STR` is the beat-valid signal. There is no ADC backpressure port; every
 beat with `DATA_STR=1` is accepted.
 
-The CNN uses channels 0-3 at the existing model scale `raw/64`. Conversion to
-native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
-`q = clamp(floor((raw + 1)/2), -511, 511)`, sign-extended into each 16-bit slot.
+The CNN uses channels 0-3 with a fixed bench gain of six, at model scale
+`6*raw/64`. Conversion to native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
+`q = clamp(3*raw, -511, 511)`, sign-extended into each 16-bit slot.
 Two chronological ADC writes form a 512-bit native beat. The event path keeps
-the original 12-bit samples.
+the original 12-bit samples. Hi-Lo also evaluates the original samples; gated
+AI applies gain only when replaying its selected window into the CNN.
+The gain is currently a compile-time constant, not an online configuration port.
 
 ### Configuration
 
@@ -199,13 +201,18 @@ can change compiled code independently of the published pins.
 
 ## Native CNN validation
 
-See the [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
-for the current two-lane implementation, source audit and reproduction commands.
+See the [fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004/README.md)
+for the v3.6 change and its validation limits. Normalized model fixtures are
+encoded as `round(X*64/6)` before gain; physical-voltage CSVs retain their
+original ADC scale. CNN Core Generator data and model weights are unchanged.
+
+The [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
+is the pre-gain two-lane implementation baseline, with its source audit and reproduction commands.
 The [stable threshold qualification](docs/qualification/stable_cnn_threshold_20260918/README.md)
 is the pre-upgrade comparison baseline.
 The earlier integration results remain in [NativeCNNQualification.md](docs/NativeCNNQualification.md).
 
-All nine actual-IP scenarios pass, including 1096 exact-score windows and 475
+For that pre-gain baseline, all nine actual-IP scenarios pass, including 1096 exact-score windows and 475
 complete eight-channel events at threshold zero, plus positive, negative and
 extreme external thresholds. Routed OOC meets 250/200 MHz with ADC/CNN setup
 WNS +0.311/+0.180 ns and overall WHS +0.007 ns, zero DRC errors and zero unsafe

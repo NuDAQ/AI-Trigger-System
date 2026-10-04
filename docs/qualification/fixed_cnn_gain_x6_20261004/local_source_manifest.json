@@ -1,0 +1,134 @@
+[
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/HDL/rtl/AI_TRIGGER_PKG.vhd",
+    "sha256": "1789c93e19e4b9c19f6e6cb84817b8cfee39bbb5c4c1f163ca256c8e6eb66dea"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/scripts/build_native_reference.py",
+    "sha256": "68efa8766c19eee28aa8190b60fc56f0ba2ddd970a6cfb080139e27afa996be8"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/scripts/native_reference.cpp",
+    "sha256": "ba46d5439fcd6dc95b84b149c08c11bfed05667792bd3070674874f7e2a01e52"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core.v",
+    "sha256": "59f1dbb32a7d87cedc386cdcd959a52a6027d3c84875fcc0f619d943f9178186"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v",
+    "sha256": "b467ef1942f6773ab7e98dbeb44a9205b98b82884bb7330b487821ebbca0b7ce"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.dat",
+    "sha256": "36d633f214617952c7bdb9a06094d361f35262f5b3c0c633417fa9d67ed8d9b6"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v",
+    "sha256": "94736fe3304f9f2050eb43fac55f773af22b5eb9d99dc6e688b1aac4838788c1"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_s.v",
+    "sha256": "6ac6517cf87d6f315aa843fd068c4d3ec15c97d2bf3b000d47546f1f8ef2dfa6"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w480_d4_A.v",
+    "sha256": "a2dde849abe1c85653d7a61a2149e852c5c0bbf4297eec9b0dab60692c361afe"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w816_d4_A.v",
+    "sha256": "cd4e1e9d3749ba9af55f7549a354343071894f3daa474885fc3c9f1addcf4325"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w864_d4_A.v",
+    "sha256": "91c82cacc91389aeecfe862284f0600c392a1cd3a5fdf2f0ce89b9310ae05f26"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v",
+    "sha256": "596c69e8d271e05f225495f7e9f0035dfebcc5eba6334f0281cadcc1144cd91b"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v",
+    "sha256": "6e2ad6efc3694745d72562e4e2a8366323ff33df6212d32a03c0ff473979ddca"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detection_unit.v",
+    "sha256": "02e16596a1b339b0b43178094f49d0b02251498cbe5e55f318ca0df00d643871"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detector.vh",
+    "sha256": "f28ca44b1214dec2de225f0874aeac617be1e353ddf6230aacb93cf8d00925ec"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_idx0_monitor.v",
+    "sha256": "162c6911b41ea46e9d49446ce908ba77abd5bbe8acc3d05d6e37dafb2294181e"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_kernel_monitor_top.vh",
+    "sha256": "275d2f0b3ddd6dd2fa047e66a6f415c1e5f1c2ecaa26f198c2747c7be3771826"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_report_unit.vh",
+    "sha256": "8419c7331277403ad42b4266c88d6b47025328e08f44813fb06dcad1954c1e5f"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_4ns_13s_15_1_1.v",
+    "sha256": "64925695caec8887c171d3b84de7e00eac87e99fae26bc749ebbfe0c8ef52cae"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_4ns_15s_15_1_1.v",
+    "sha256": "1a383215f607ae0466fec86a58d7950087147b051e64e076ed014fc5931d9419"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_5s_15s_16_1_1.v",
+    "sha256": "27a35054dd90e876b59acf3c22d96a423ae5645573e2156969b951c8f908878e"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_5s_16s_16_1_1.v",
+    "sha256": "36dc17e2f552c71d4e86d609f9e8a91f38e6eb3261c5fc25847c6e949e9578e4"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_10s_5s_15_1_1.v",
+    "sha256": "5f5e11d685e143bdd20d0aa133d8a506ff1526a419663301e67f84cd609abd36"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v",
+    "sha256": "ca90c2630e5bf0a444ccb7f07ec9bc820e7878366ff91a4fb7802709b9d97a1a"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v",
+    "sha256": "7a3224dbeb831791f952f1c4a566fa57e3e0bfaf394d110a4eb381249c32c30a"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8_s.v",
+    "sha256": "21393f202d2b3cd190ce59968056c93471de7746b2413bf5c6b391e2400bb3c2"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v",
+    "sha256": "643be0b5d135647853c7d039cf4fc85539576ebb6fd93672ed788594155dd31d"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v",
+    "sha256": "537bda4a4225a18efec3c63ac43facbbf7bf25f87792c873b07a6ecbe611dfe8"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_17_3_10_1_1.v",
+    "sha256": "4b0262f8b9982712672e27690edf33d09a13806691c35f9631efc005e565cfe6"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_12_5_3_0_1u_config12_U0.v",
+    "sha256": "4b5e6f835233ec0c252ceadc3365a5210355dda5d413853fa5eaabbe36e1ffdb"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_17_8_5_3_0_48u_relu_config8dEe.v",
+    "sha256": "b23167f4125e0cfd0f8b4b4244536e410efc65de6db041332e769211841b1dea"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v",
+    "sha256": "beddb7e4e93ead15bc47e3cca39bb22cc99e56f55df9acdc89a9ed93a1e6915e"
+  },
+  {
+    "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v",
+    "sha256": "d9e5147b5a7512df63c365974d5910946e98e0ec425a062babd9de4a63a02066"
+  }
+]

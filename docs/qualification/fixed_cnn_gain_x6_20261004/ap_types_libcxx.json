@@ -1,0 +1,12 @@
+[
+  {
+    "file": "ap_int_special.h",
+    "original_sha256": "1c8bd146e88a1a90270a98a05115f470e4145fcf1d6e9de51a4516a5b8253022",
+    "overlay_sha256": "4f7404e792983b9249cbbb74189a379304e68508758a3a8193231bf4bd0714fd"
+  },
+  {
+    "file": "ap_fixed_special.h",
+    "original_sha256": "c977d09e301cf2f26fe53e91f5ae0bfde03453f6b4ca9ccafd14a7f32ab3b7fb",
+    "overlay_sha256": "27b2c6abbe32178e2156046fd32726053e3db3f09a4fe8642da9e7f64d7dd22e"
+  }
+]

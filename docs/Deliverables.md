@@ -223,8 +223,10 @@ encodings must be migrated; native score data itself is unchanged.
 | Accept every current native score | `32'hFFFF7FFF` | -32769 | -2048.0625 |
 
 The unchanged signed 12-bit ADC input is converted inside the system using
-`q = clamp(floor((raw + 1) / 2), -511, 511)` and sign-extended into 16-bit slots.
-This implements native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` at model scale `raw/64`.
+`q = clamp(3 * raw, -511, 511)` and sign-extended into 16-bit slots.
+This implements native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` at model scale `6*raw/64`.
+The fixed bench gain applies only at CNN ingress, including gated replay.
+Hi-Lo inputs and raw event samples retain their original ADC scale.
 Two chronological ADC writes form each 512-bit CNN input beat; earliest time
 and lowest channel occupy the low bits. Raw event samples are not quantized.
 

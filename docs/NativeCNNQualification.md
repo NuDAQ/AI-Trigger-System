@@ -4,7 +4,9 @@ Status: the native two-lane integration below passed functional and routed OOC
 qualification. Its threshold encoding is historical; the current fixed external
 format is specified in [CNNThresholdInterface.md](CNNThresholdInterface.md).
 The [Hi-Lo v3 integration qualification](qualification/hilo_v3_20260919/README.md)
-supersedes the timing and functional results below for the current checkout.
+supersedes the timing and functional results below for the pre-gain baseline.
+The v3.6 fixed x6 input change is tracked separately in
+[fixed gain validation](qualification/fixed_cnn_gain_x6_20261004/README.md).
 Date: 2026-09-17. Device: `xcku5p-ffvb676-2-e`. Vendor tools: Vivado / Vitis HLS 2023.2 on Ubuntu 22.04.5.
 
 ## Source and interface contract
