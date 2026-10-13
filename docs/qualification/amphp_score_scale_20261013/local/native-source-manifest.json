@@ -1,0 +1,162 @@
+{
+  "sources": [
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core.v",
+      "sha256": "b3e1cc029c9194a51965547d5e49295faec52915d2b96dcf1dce073e0b0aea2c"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v",
+      "sha256": "aa5b385a60628c36c2322f5cdf267bd2ffa589bcfa3c1d86c07a3e85d663faa3"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.dat",
+      "sha256": "9d188501e73dd3c821f467ff56748eea017ca1e971cca5f2f3d959dfa341d47e"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v",
+      "sha256": "9217e66640917aaea6950b90609d12f5dd579b26e3f2c19bcea5dc9831318b07"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_dense_wide_stream_array_array_ap_fixed_21_11_5_3_0_1u_config12_s.v",
+      "sha256": "e6af1300bb7faf020af77cf806e8acfc4adfd5b3ac350d2e049077906f2f611a"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w480_d4_A.v",
+      "sha256": "a2dde849abe1c85653d7a61a2149e852c5c0bbf4297eec9b0dab60692c361afe"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w864_d4_A.v",
+      "sha256": "91c82cacc91389aeecfe862284f0600c392a1cd3a5fdf2f0ce89b9310ae05f26"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_fifo_w912_d4_A.v",
+      "sha256": "79d225b0ccf600231b1def78987eb59ada4ae75207808ced271a0e43eb13b6cc"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe.v",
+      "sha256": "596c69e8d271e05f225495f7e9f0035dfebcc5eba6334f0281cadcc1144cd91b"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_flow_control_loop_pipe_sequential_init.v",
+      "sha256": "6e2ad6efc3694745d72562e4e2a8366323ff33df6212d32a03c0ff473979ddca"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detection_unit.v",
+      "sha256": "02e16596a1b339b0b43178094f49d0b02251498cbe5e55f318ca0df00d643871"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_detector.vh",
+      "sha256": "a7ff6a818a8da6ecfa1bee324696750f2fb4535d61c6b5e3227357f2810434a3"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_idx0_monitor.v",
+      "sha256": "162c6911b41ea46e9d49446ce908ba77abd5bbe8acc3d05d6e37dafb2294181e"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_kernel_monitor_top.vh",
+      "sha256": "befd069e3be3281503e9587f7d211e75b10459fd838d98a36521d9b001c34375"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_hls_deadlock_report_unit.vh",
+      "sha256": "68c18af5c6c574877fc0f6b2e8cd664cf2b82dd027770dd007821fb3b808c132"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_6s_11s_16_1_1.v",
+      "sha256": "b01ee18dbef79d054bc8c4f61dbbfee664aac2b2dbcacfbd07559417dc6bf85c"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_6s_16s_17_1_1.v",
+      "sha256": "652182371a8f82d02219c8a1700f8647791ab4603a7930f19eecae53af3b5c4e"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mac_muladd_10s_6s_17s_17_1_1.v",
+      "sha256": "c0241d011777e55dab03e4272e7835503d6def19553d91e42fb88dbe67115a54"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_mul_10s_6s_16_1_1.v",
+      "sha256": "7e7f982809c660fd68b6938d3a6ffd9b1f57608f45cbe3fd0e8fc9cf7412baca"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v",
+      "sha256": "1caf0d4c6f35b0fabe2479992446a7202cb70a7dd8d57b65d57e6de02b8eb8f7"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_regslice_both.v",
+      "sha256": "7a3224dbeb831791f952f1c4a566fa57e3e0bfaf394d110a4eb381249c32c30a"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_18_8_5_3_0_48u_relu_config8_s.v",
+      "sha256": "939c0702336f5eae0a7ebb09918b9b27ae9dfe0f54018c33636aa69f602f92cb"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v",
+      "sha256": "6162004181f6c43c829116145adb8d14d7169af7b3cd34f81d0ed477f8ad5f19"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v",
+      "sha256": "e13bebb2b25cca23c06fdfdbbeee7093a57ceba5240c57da362e98cc52a5336d"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_sparsemux_17_3_10_1_1.v",
+      "sha256": "4b0262f8b9982712672e27690edf33d09a13806691c35f9631efc005e565cfe6"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_11_5_3_0_1u_config12_U0.v",
+      "sha256": "5282c17b5afc506d5780f0af73b44f1025cae83058797cea184640108457941e"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_18_8_5_3_0_48u_relu_config8dEe.v",
+      "sha256": "0bfbbabbd97f8bb92c6bd32fca60a4dd1dc6bddf9c99095a6095b1a87491c290"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v",
+      "sha256": "beddb7e4e93ead15bc47e3cca39bb22cc99e56f55df9acdc89a9ed93a1e6915e"
+    },
+    {
+      "path": "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator/cnn_core/cnn_core_prj/solution1/impl/verilog/cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v",
+      "sha256": "d9e5147b5a7512df63c365974d5910946e98e0ec425a062babd9de4a63a02066"
+    }
+  ],
+  "testbench_sha256": "505e25ccf548e4d5e8b9ed85753c92e365cb53dc3d638f14f154e42cdc766871",
+  "command": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "--top-module",
+    "tb_native_core",
+    "--converge-limit",
+    "10000",
+    "-Wno-fatal",
+    "-j",
+    "4",
+    "--Mdir",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/obj_dir",
+    "-I/private/tmp/ai-native-score-v4-u9_nkobs",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/tb_native_core.sv",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_dense_wide_stream_array_array_ap_fixed_1u_config12_Pipeline_DenseValues_w12_rbkb.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_dense_wide_stream_array_array_ap_fixed_21_11_5_3_0_1u_config12_s.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_fifo_w480_d4_A.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_fifo_w864_d4_A.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_fifo_w912_d4_A.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_flow_control_loop_pipe.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_flow_control_loop_pipe_sequential_init.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_hls_deadlock_detection_unit.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_hls_deadlock_idx0_monitor.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_mac_muladd_10s_6s_11s_16_1_1.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_mac_muladd_10s_6s_16s_17_1_1.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_mac_muladd_10s_6s_17s_17_1_1.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_mul_10s_6s_16_1_1.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_s.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_regslice_both.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_relu_array_ap_fixed_48u_array_ap_ufixed_18_8_5_3_0_48u_relu_config8_s.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_s.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2d_1_2u_s.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_sparsemux_17_3_10_1_1.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_start_for_dense_wide_stream_array_array_ap_fixed_21_11_5_3_0_1u_config12_U0.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_start_for_relu_array_ap_fixed_48u_array_ap_ufixed_18_8_5_3_0_48u_relu_config8dEe.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_start_for_scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0.v",
+    "/private/tmp/ai-native-score-v4-u9_nkobs/cnn_core_start_for_shared_conv_array_array_ap_fixed_48u_config7_4u_ravel_matrix_conv2dcud.v"
+  ]
+}

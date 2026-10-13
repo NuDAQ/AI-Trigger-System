@@ -1,0 +1,17 @@
+PASS continuous: PASS native system windows=1096 events=326 gap=0 phase=0.000000
+PASS gaps: PASS native system windows=1096 events=326 gap=9 phase=1.300000
+PASS threshold-positive: PASS native system windows=1096 events=143 gap=0 phase=0.000000
+PASS threshold-negative: PASS native system windows=1096 events=1056 gap=0 phase=0.000000
+PASS threshold-all: PASS native system windows=1096 events=1096 gap=0 phase=0.000000
+PASS threshold-none: PASS native system windows=1096 events=0 gap=0 phase=0.000000
+PASS lane-reset: PASS native lane input/compute/output resets, gaps and held results
+PASS modes: PASS native mode=0 events=2 CNN=0
+PASS native mode=1 events=1 CNN=0
+PASS native mode=3 events=1 CNN=0
+PASS native mode=4 events=1 CNN=1
+PASS native mode=4 events=1 CNN=1
+PASS native mode=4 events=0 CNN=1
+PASS native runtime mode switch gated AI to Capture-All
+PASS native modes complete
+PASS overload: PASS native overload accepted_scores=36 complete_events=2
+PASS native system windows=1096 events=326 gap=0 phase=0.000000

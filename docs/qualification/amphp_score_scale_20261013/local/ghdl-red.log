@@ -1,0 +1,12 @@
+[ RUN      ] tb_trigger_decision
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby/e~tb_trigger_decision.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby/PRE_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby/AI_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby/tb_trigger_decision.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby/TRIGGER_DECISION.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/tb_trigger_decision.vhd:65:9:@55ns:(assertion failure): native score 2.0 must not exceed external threshold 2.0
+./tb_trigger_decision:error: assertion failed
+  instance: .tb_trigger_decision(sim).P1
+./tb_trigger_decision:error: simulation failed
+COMMAND: /opt/homebrew/bin/ghdl -r --std=08 -P/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby --workdir=/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_trigger_decision-05h8jxby tb_trigger_decision --assert-level=error --ieee-asserts=disable-at-0 --stop-time=100us[  FAILED  ] tb_trigger_decision
+GHDL: 0 passed, 1 failed, 1 total

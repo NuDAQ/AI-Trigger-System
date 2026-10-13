@@ -1,0 +1,14 @@
+F.
+======================================================================
+FAIL: test_amphp_zero_score_uses_the_reported_native_unit (test_native_reference.NativeReferenceInputTest.test_amphp_zero_score_uses_the_reported_native_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/test_native_reference.py", line 35, in test_amphp_zero_score_uses_the_reported_native_unit
+    self.assertEqual(code / metadata['native_score_scale'], -2.1181640625)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -4.236328125 != -2.1181640625
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.022s
+
+FAILED (failures=1)

@@ -1,0 +1,10 @@
+warning[W02]: Using config at /home/work1/tmp/codex-score-v4-20261013-edcb9a6-4cac4f/src/Bender.local for overrides.
+warning[W22]: Dependency cnn-core has source path /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Generator which does not exist.
+ ╰─› help: Please check that the path exists and is correct.
+warning[W22]: Dependency cnn-core-wrapper has source path /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/CNN-Core-Wrapper which does not exist.
+ ╰─› help: Please check that the path exists and is correct.
+      Updating hilo-trigger:  3.0.0  -> path
+
+          Info Checked out 3 dependencies in 0ms
+PASS ADC-aware reference: 1096 windows; 4096 native ADC conversions
+FAIL native simulation; inspect /home/work1/tmp/codex-score-v4-20261013-edcb9a6-4cac4f/red-positive/console.log and project/**/simulate.log

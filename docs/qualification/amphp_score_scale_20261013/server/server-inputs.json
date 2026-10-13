@@ -1,0 +1,8 @@
+{
+  "trigger_commit": "edcb9a680acb4eed0520a483874f99a419a5d416",
+  "core_commit": "897567c339abad7709cc395a878615ea68634d4d",
+  "wrapper_commit": "a78d1b74f9b11bac21af61dd8290f5ad91a823a8",
+  "hilo_commit": "047d14a25ca0df95d2219eded90e0b449574ae15",
+  "core_top_sha256": "b3e1cc029c9194a51965547d5e49295faec52915d2b96dcf1dce073e0b0aea2c",
+  "remote_root": "/home/work1/tmp/codex-score-v4-20261013-edcb9a6-4cac4f"
+}

@@ -1,0 +1,3 @@
+[463000] %Fatal: tb_native_core.sv:21: Assertion failed in tb_native_core: native score window=0 got=001ff787 expected=001ff9c3
+%Error: /private/tmp/ai-native-score-v4-u9_nkobs/tb_native_core.sv:21: Verilog $stop
+Aborting...

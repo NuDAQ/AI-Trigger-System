@@ -1,0 +1,12 @@
+[ RUN      ] tb_cnn_result_arbiter
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c/e~tb_cnn_result_arbiter.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c/PRE_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c/AI_TRIGGER_PKG.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c/tb_cnn_result_arbiter.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c/CNN_RESULT_ARBITER.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+/Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/tests/tb_cnn_result_arbiter.vhd:59:13:@2003ps:(assertion failure): external threshold comparison mismatch: score raw=1025 threshold raw=32
+./tb_cnn_result_arbiter:error: assertion failed
+  instance: .tb_cnn_result_arbiter(sim).P1
+./tb_cnn_result_arbiter:error: simulation failed
+COMMAND: /opt/homebrew/bin/ghdl -r --std=08 -P/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c --workdir=/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-ghdl-tb_cnn_result_arbiter-3w6sze3c tb_cnn_result_arbiter --assert-level=error --ieee-asserts=disable-at-0 --stop-time=100us[  FAILED  ] tb_cnn_result_arbiter
+GHDL: 0 passed, 1 failed, 1 total

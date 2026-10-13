@@ -1,0 +1,35 @@
+[
+  {
+    "case": "old-reference-red",
+    "windows": 1,
+    "expected_pass": false,
+    "exit_code": 1,
+    "command": [
+      "/private/tmp/ai-native-score-v4-u9_nkobs/obj_dir/Vtb_native_core",
+      "+REFERENCE=/private/tmp/ai-native-score-v4-u9_nkobs/reference-old",
+      "+WINDOWS=1"
+    ]
+  },
+  {
+    "case": "new-reference-green",
+    "windows": 1096,
+    "expected_pass": true,
+    "exit_code": 0,
+    "command": [
+      "/private/tmp/ai-native-score-v4-u9_nkobs/obj_dir/Vtb_native_core",
+      "+REFERENCE=/private/tmp/ai-native-score-v4-u9_nkobs/reference",
+      "+WINDOWS=1096"
+    ]
+  },
+  {
+    "case": "gated-green",
+    "windows": 1,
+    "expected_pass": true,
+    "exit_code": 0,
+    "command": [
+      "/private/tmp/ai-native-score-v4-u9_nkobs/obj_dir/Vtb_native_core",
+      "+REFERENCE=/private/tmp/ai-native-score-v4-u9_nkobs/reference/gated",
+      "+WINDOWS=1"
+    ]
+  }
+]
