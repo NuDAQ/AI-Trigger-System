@@ -1,0 +1,7 @@
+[ RUN      ] tb_cnn_input_conversion
+[       OK ] tb_cnn_input_conversion
+[ RUN      ] tb_hilo_input_adapter
+[       OK ] tb_hilo_input_adapter
+[ RUN      ] tb_multimode_hilo_ai
+[       OK ] tb_multimode_hilo_ai
+GHDL: 3 passed, 0 failed, 3 total

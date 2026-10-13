@@ -18,9 +18,6 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_PREFIX = "ai-trigger-daq"
-DELIVERY_ASSETS = [
-    ROOT / "docs" / "score_vs_offset.png",
-]
 HILO_RTL_ORDER = [
     "PRE_TRIGGER_PKG.vhd",
     "Mult_to_bin.vhd",
@@ -224,22 +221,8 @@ def write_manifest(package_dir: Path, files: list[Path]) -> None:
 
 def write_package_readme(package_dir: Path) -> list[Path]:
     readme_text = (ROOT / "docs" / "Deliverables.md").read_text(encoding="utf-8")
-    copied: list[Path] = []
-
-    for source in DELIVERY_ASSETS:
-        if not source.exists():
-            raise FileNotFoundError(f"Missing delivery asset: {source}")
-        asset_rel = Path("assets") / source.name
-        asset_dest = package_dir / asset_rel
-        asset_dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, asset_dest)
-        copied.append(asset_rel)
-
-        source_text = str(source)
-        readme_text = readme_text.replace(source_text, asset_rel.as_posix())
-
     (package_dir / "README.md").write_text(readme_text, encoding="utf-8")
-    return [Path("README.md"), *copied]
+    return [Path("README.md")]
 
 
 def create_zip(package_dir: Path) -> Path:

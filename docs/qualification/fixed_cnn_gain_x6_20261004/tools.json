@@ -1,0 +1,9 @@
+{
+  "ghdl": "6.0.0 LLVM",
+  "python": "Homebrew Python 3.14",
+  "verilator": "5.046",
+  "compiler": "Apple clang (g++ driver), libc++",
+  "core_revision": "eca9b12f9f49f4b7324ed9ed241a44086ca9c842",
+  "wrapper_revision": "a82a717403c8346d027f62b017295d8ea6fa3344",
+  "hilo_revision": "047d14a25ca0df95d2219eded90e0b449574ae15"
+}

@@ -9,6 +9,7 @@ package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
     constant N_LANES    : integer := 2;    -- parallel CNN cores
+    constant CNN_INPUT_GAIN : positive := 6; -- fixed bench gain, CNN branch only
     constant CNN_THRESH_FRAC_BITS : natural := 4; -- stable external unit: 1/16
     constant CNN_SCORE_WIDTH : positive := 21;
     constant CNN_SCORE_FRAC_BITS : natural := 9; -- current native IP unit: 1/512
@@ -166,13 +167,14 @@ package body AI_TRIGGER_PKG is
         sample_value : adc_sample_t
     ) return std_logic_vector is
         variable raw_value    : signed(11 downto 0);
-        variable scaled_value : signed(12 downto 0);
+        variable scaled_value : signed(14 downto 0);
         variable fixed_value  : signed(9 downto 0);
     begin
         raw_value := signed(sample_value);
-        -- model = raw / 64; native ap_fixed<10,5,AP_RND,AP_SAT_SYM>.
-        -- Widen before adding the rounding bias, including raw=2047.
-        scaled_value := shift_right(resize(raw_value, 13) + 1, 1);
+        -- model = raw * gain / 64; native ap_fixed<10,5,AP_RND,AP_SAT_SYM>.
+        -- Gain precedes quantization. Fifteen bits hold the full x6 product
+        -- and rounding bias; the fixed gain gives exact q=3*raw before clipping.
+        scaled_value := shift_right(resize(raw_value * CNN_INPUT_GAIN, 15) + 1, 1);
         if scaled_value > to_signed(511, scaled_value'length) then
             fixed_value := to_signed(511, fixed_value'length);
         elsif scaled_value < to_signed(-511, scaled_value'length) then

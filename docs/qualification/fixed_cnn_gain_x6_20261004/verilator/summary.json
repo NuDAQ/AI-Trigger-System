@@ -1,0 +1,32 @@
+[
+  {
+    "case": "gated",
+    "windows": 1,
+    "passed": true,
+    "return_code": 0
+  },
+  {
+    "case": "nu_3m_10sigma_ev1_noisy",
+    "windows": 745,
+    "passed": true,
+    "return_code": 0
+  },
+  {
+    "case": "nu_3m_2sigma_ev1_noisy",
+    "windows": 745,
+    "passed": true,
+    "return_code": 0
+  },
+  {
+    "case": "nu_3m_3sigma_ev5_noisy",
+    "windows": 745,
+    "passed": true,
+    "return_code": 0
+  },
+  {
+    "case": "nu_3m_4sigma_ev4_noisy",
+    "windows": 745,
+    "passed": true,
+    "return_code": 0
+  }
+]

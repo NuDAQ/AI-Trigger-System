@@ -1,0 +1,1006 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date              : Sun Oct  4 07:00:44 2026
+| Host              : AlbertsUbuntu running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_timing -from [get_clocks CLK_CNN] -to [get_clocks CLK_CNN] -max_paths 20 -nworst 1 -file /home/work1/Works/_codex_ai_trigger_x6_20261004_149506e/build/x6_gain_20261004/server_ooc/reports/post_route_CLK_CNN_setup.rpt
+| Design            : AI_TRIGGER_TOP
+| Device            : xcku5p-ffvb676
+| Speed File        : -2  PRODUCTION 1.29 05-01-2022
+| Design State      : Routed
+| Temperature Grade : E
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[340]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/reset
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[340]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[340]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_HFF2_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[340]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[770]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/reset
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[770]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[770]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_GFF2_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer7_out_U/U_cnn_core_fifo_w864_d4_A_ram/mem_reg_reg[770]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[10]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_rst
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[10]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[10]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_FFF_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[10]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[14]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_rst
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[14]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[14]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_EFF_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[14]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[15]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_rst
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[15]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[15]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_HFF_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[15]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.250ns  (required time - arrival time)
+  Source:                 u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+                            (rising edge-triggered cell FDPE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[16]/R
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.631ns  (logic 0.203ns (4.384%)  route 4.428ns (95.616%))
+  Logic Levels:           1  (LUT1=1)
+  Clock Path Skew:        -0.010ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.020ns = ( 5.020 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.030     0.030    u_CORE/u_RST_CNN/CLK
+    SLICE_X62Y148        FDPE                                         r  u_CORE/u_RST_CNN/sync_ff_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X62Y148        FDPE (Prop_AFF2_SLICEM_C_Q)
+                                                      0.080     0.110 r  u_CORE/u_RST_CNN/sync_ff_reg[1]/Q
+                         net (fo=303, routed)         0.194     0.304    u_CORE/gen_lanes[0].u_LANE/RST_CNN
+    SLICE_X63Y149        LUT1 (Prop_C6LUT_SLICEL_I0_O)
+                                                      0.123     0.427 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER_i_1/O
+                         net (fo=19845, routed)       4.234     4.661    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_rst
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[16]/R  (IS_INVERTED)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.020     5.020    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/ap_clk
+    SLICE_X104Y7         FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[16]/C
+                         clock pessimism              0.000     5.020    
+                         clock uncertainty           -0.035     4.985    
+    SLICE_X104Y7         FDRE (Setup_GFF_SLICEL_C_R)
+                                                     -0.074     4.911    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/scheduled_pool_array_array_ap_fixed_10_5_0_2_0_48u_config9_4u_U0/maxima_44_fu_436_reg[16]
+  -------------------------------------------------------------------
+                         required time                          4.911    
+                         arrival time                          -4.661    
+  -------------------------------------------------------------------
+                         slack                                  0.250    
+
+Slack (MET) :             0.292ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_x4_input_code_reg_16291_reg[3]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686_reg[14]/D
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.691ns  (logic 2.124ns (45.277%)  route 2.567ns (54.723%))
+  Logic Levels:           10  (CARRY8=1 DSP_A_B_DATA=1 DSP_ALU=1 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=1 DSP_PREADD_DATA=1 LUT2=1 LUT6=2)
+  Clock Path Skew:        -0.007ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.028ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.028     0.028    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/ap_clk
+    SLICE_X60Y115        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_x4_input_code_reg_16291_reg[3]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X60Y115        FDRE (Prop_BFF_SLICEL_C_Q)
+                                                      0.079     0.107 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_x4_input_code_reg_16291_reg[3]/Q
+                         net (fo=59, routed)          1.775     1.882    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/A[3]
+    DSP48E2_X17Y38       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[3]_A2_DATA[3])
+                                                      0.192     2.074 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_A_B_DATA_INST/A2_DATA[3]
+                         net (fo=1, routed)           0.000     2.074    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_A_B_DATA.A2_DATA<3>
+    DSP48E2_X17Y38       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[3]_A2A1[3])
+                                                      0.076     2.150 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_PREADD_DATA_INST/A2A1[3]
+                         net (fo=1, routed)           0.000     2.150    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_PREADD_DATA.A2A1<3>
+    DSP48E2_X17Y38       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[3]_U[11])
+                                                      0.505     2.655 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_MULTIPLIER_INST/U[11]
+                         net (fo=1, routed)           0.000     2.655    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_MULTIPLIER.U<11>
+    DSP48E2_X17Y38       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[11]_U_DATA[11])
+                                                      0.047     2.702 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_M_DATA_INST/U_DATA[11]
+                         net (fo=1, routed)           0.000     2.702    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_M_DATA.U_DATA<11>
+    DSP48E2_X17Y38       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[11]_ALU_OUT[11])
+                                                      0.585     3.287 f  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_ALU_INST/ALU_OUT[11]
+                         net (fo=1, routed)           0.000     3.287    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_ALU.ALU_OUT<11>
+    DSP48E2_X17Y38       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[11]_P[11])
+                                                      0.109     3.396 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_10s_5s_15_1_1_U34/tmp_product/DSP_OUTPUT_INST/P[11]
+                         net (fo=5, routed)           0.307     3.703    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/mul_ln456_fu_3815_p2[11]
+    SLICE_X108Y94        LUT2 (Prop_C5LUT_SLICEL_I1_O)
+                                                      0.110     3.813 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_26/O
+                         net (fo=1, routed)           0.133     3.946    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_26_n_3
+    SLICE_X108Y94        LUT6 (Prop_H6LUT_SLICEL_I5_O)
+                                                      0.150     4.096 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_14/O
+                         net (fo=2, routed)           0.043     4.139    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_14_n_3
+    SLICE_X108Y94        LUT6 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.089     4.228 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_3/O
+                         net (fo=1, routed)           0.284     4.512    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686[14]_i_3_n_3
+    SLICE_X107Y94        CARRY8 (Prop_CARRY8_SLICEM_DI[3]_O[5])
+                                                      0.182     4.694 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686_reg[14]_i_1/O[5]
+                         net (fo=1, routed)           0.025     4.719    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_fu_4615_p2[14]
+    SLICE_X107Y94        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686_reg[14]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.021     5.021    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/ap_clk
+    SLICE_X107Y94        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686_reg[14]/C
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+    SLICE_X107Y94        FDRE (Setup_FFF_SLICEM_C_D)
+                                                      0.025     5.011    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/phara_pool_aligned_hybrid_p8_cl_array_array_array_array_config3_config5_U0/phara_y1_5f_f2_5f_tree0_5f_0_reg_16686_reg[14]
+  -------------------------------------------------------------------
+                         required time                          5.011    
+                         arrival time                          -4.719    
+  -------------------------------------------------------------------
+                         slack                                  0.292    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_A5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_A6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMA_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_B5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_B6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMB_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_C5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_C6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMC_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_D5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_D6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMD_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_E5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_E6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAME_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_F5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF_D1/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF_D1/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF_D1/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_F6LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMF_D1
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+Slack (MET) :             0.300ns  (required time - arrival time)
+  Source:                 u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMG/WADR1
+                            (rising edge-triggered cell RAMD32 clocked by CLK_CNN  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             CLK_CNN
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (CLK_CNN rise@5.000ns - CLK_CNN rise@0.000ns)
+  Data Path Delay:        4.565ns  (logic 0.079ns (1.731%)  route 4.486ns (98.269%))
+  Logic Levels:           0  
+  Clock Path Skew:        0.014ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.043ns = ( 5.043 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.029ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock CLK_CNN rise edge)    0.000     0.000 r  
+                                                      0.000     0.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.029     0.029    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/clk
+    SLICE_X104Y43        FDRE                                         r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X104Y43        FDRE (Prop_GFF_SLICEL_C_Q)
+                                                      0.079     0.108 r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/waddr_reg[1]/Q
+                         net (fo=938, routed)         4.486     4.594    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/ADDRH1
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMG/WADR1
+  -------------------------------------------------------------------    -------------------
+
+                         (clock CLK_CNN rise edge)    5.000     5.000 r  
+                                                      0.000     5.000 r  CLK_CNN (IN)
+                         net (fo=48789, unset)        0.043     5.043    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/WCLK
+    SLICE_X98Y4          RAMD32                                       r  u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMG/CLK
+                         clock pessimism              0.000     5.043    
+                         clock uncertainty           -0.035     5.008    
+    SLICE_X98Y4          RAMD32 (Setup_G5LUT_SLICEM_CLK_WADR1)
+                                                     -0.114     4.894    u_CORE/gen_lanes[0].u_LANE/u_WRAPPER/cnn_core_inst/layer8_out_U/U_cnn_core_fifo_w816_d4_A_ram/mem_reg_0_3_784_797/RAMG
+  -------------------------------------------------------------------
+                         required time                          4.894    
+                         arrival time                          -4.594    
+  -------------------------------------------------------------------
+                         slack                                  0.300    
+
+
+
+

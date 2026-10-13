@@ -1,0 +1,26 @@
+{
+  "nu_3m_10sigma_ev1_noisy": {
+    "windows": 745,
+    "score_min": -3.1640625,
+    "score_max": 47.525390625,
+    "score_gt_0": 240
+  },
+  "nu_3m_2sigma_ev1_noisy": {
+    "windows": 745,
+    "score_min": -3.154296875,
+    "score_max": 1.365234375,
+    "score_gt_0": 63
+  },
+  "nu_3m_3sigma_ev5_noisy": {
+    "windows": 745,
+    "score_min": -3.142578125,
+    "score_max": 6.697265625,
+    "score_gt_0": 215
+  },
+  "nu_3m_4sigma_ev4_noisy": {
+    "windows": 745,
+    "score_min": -3.123046875,
+    "score_max": 10.53125,
+    "score_gt_0": 233
+  }
+}

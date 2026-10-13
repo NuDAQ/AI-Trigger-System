@@ -9,6 +9,12 @@ import subprocess
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+CNN_INPUT_GAIN = 6
+
+
+def normalized_to_adc(features):
+    """Encode normalized fixtures for the system's fixed CNN-only gain."""
+    return np.clip(np.rint(features * 64 / CNN_INPUT_GAIN), -2048, 2047).astype(np.int16)
 
 
 def sha(path):
@@ -38,10 +44,10 @@ def main():
     if not np.isfinite(features).all():
         parser.error('non-finite model input')
     output.mkdir(parents=True, exist_ok=True)
-    # Existing ADC stimulus convention: nearest integer, ties to even. The
-    # golden model sees these exact ADC samples, before native quantization.
-    raw = np.clip(np.rint(features * 64), -2048, 2047).astype(np.int16)
-    (raw.astype('<f4') / 64).tofile(output / 'features.f32')
+    # Preserve normalized fixture amplitude after the fixed input gain. The
+    # golden model sees the exact ADC-representable samples after gain.
+    raw = normalized_to_adc(features)
+    (raw.astype('<f4') * CNN_INPUT_GAIN / 64).tofile(output / 'features.f32')
     with (output / 'adc.hex').open('w') as stream:
         for window in raw.reshape(-1, 256, 4):
             for beat in window.reshape(64, 4, 4):
@@ -65,7 +71,7 @@ def main():
     if len(words) != len(raw)*32 or len(scores) != len(raw):
         raise SystemExit('reference did not produce all windows')
     quantized = np.loadtxt(output/'adc_conversion.txt', dtype=np.int64)
-    proposed = np.clip((np.arange(-2048, 2048)+1)//2, -511, 511)
+    proposed = np.clip(3 * np.arange(-2048, 2048), -511, 511)
     if not np.array_equal(quantized, proposed):
         raise SystemExit('ADC conversion differs from native fixed-point reference')
     # Fixed centered-window regression inherited from tb_multimode_hilo_ai:
@@ -82,7 +88,7 @@ def main():
     stream_raw[67,0,1] = 200
     stream_raw[68,0,0] = -200
     centered = stream_raw[38:102,:4,:].transpose(0,2,1).reshape(1,1024)
-    (centered.astype('<f4')/64).tofile(gated/'features.f32')
+    (centered.astype('<f4') * CNN_INPUT_GAIN / 64).tofile(gated/'features.f32')
     shutil.copytree(firmware/'weights', gated/'weights')
     with (gated/'adc.hex').open('w') as stream:
         for beat in stream_raw:
@@ -92,7 +98,9 @@ def main():
         subprocess.run([str(output/'native_reference'),'1'],cwd=gated,stdout=log,stderr=subprocess.STDOUT,check=True)
     manifest = {'windows': len(raw), 'builtin_windows': 96, 'npz_windows': len(x),
                 'npz_sha256': sha(args.npz), 'baseline_sha256': sha(baseline_path),
-                'adc_scale': 64, 'native_score_scale': 512, 'quantization_codes_checked': 4096,
+                'adc_scale': 64, 'cnn_input_gain': CNN_INPUT_GAIN,
+                'normalized_adc_scale': 64 / CNN_INPUT_GAIN,
+                'native_score_scale': 512, 'quantization_codes_checked': 4096,
                 'compile_command': command, 'harness_sha256': sha(harness),
                 'firmware': {str(p.relative_to(firmware)):sha(p) for p in sorted(firmware.rglob('*')) if p.is_file()},
                 'files': {n:sha(output/n) for n in ['adc.hex','all_input.hex','all_expected.hex','adc_conversion.txt','gated/adc.hex','gated/all_expected.hex']}}

@@ -24,7 +24,7 @@ two CNN lanes, and Hi-Lo engine are shared across modes.
 AI_TRIGGER_TOP
   AI_TRIGGER_CORE
     ADC_CHUNK_DISTRIBUTOR          continuous AI input
-    CNN_CORE_LANE x 5              shared CNN inference lanes
+    CNN_CORE_LANE x 2              shared CNN inference lanes
     CNN_RESULT_ARBITER
     MULTIMODE_EVENT_PATH
       TRIGGER_MODE_CTRL            safe runtime switching
@@ -91,11 +91,13 @@ ADC_DATA[(ch * 4 + sample) * 12 +: 12] = ADC_DATA4(ch)(sample)
 `DATA_STR` is the beat-valid signal. There is no ADC backpressure port; every
 beat with `DATA_STR=1` is accepted.
 
-The CNN uses channels 0-3 at the existing model scale `raw/64`. Conversion to
-native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
-`q = clamp(floor((raw + 1)/2), -511, 511)`, sign-extended into each 16-bit slot.
+The CNN uses channels 0-3 with a fixed bench gain of six, at model scale
+`6*raw/64`. Conversion to native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
+`q = clamp(3*raw, -511, 511)`, sign-extended into each 16-bit slot.
 Two chronological ADC writes form a 512-bit native beat. The event path keeps
-the original 12-bit samples.
+the original 12-bit samples. Hi-Lo also evaluates the original samples; gated
+AI applies gain only when replaying its selected window into the CNN.
+The gain is currently a compile-time constant, not an online configuration port.
 
 ### Configuration
 
@@ -199,13 +201,21 @@ can change compiled code independently of the published pins.
 
 ## Native CNN validation
 
-See the [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
-for the current two-lane implementation, source audit and reproduction commands.
+See the [fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004/README.md)
+for the v3.6 change and its validation limits. Normalized model fixtures are
+encoded as `round(X*64/6)` before gain; physical-voltage CSVs retain their
+original ADC scale. CNN Core Generator data and model weights are unchanged.
+All nine actual-IP/XPM cases pass. Routed OOC meets ADC/CNN 250/200 MHz with
+setup WNS +0.415/+0.250 ns and overall hold WHS +0.004 ns. DRC has zero errors
+and CDC has zero unsafe or unknown endpoints. This is block-level validation.
+
+The [Hi-Lo v3 integration qualification](docs/qualification/hilo_v3_20260919/README.md)
+is the pre-gain two-lane implementation baseline, with its source audit and reproduction commands.
 The [stable threshold qualification](docs/qualification/stable_cnn_threshold_20260918/README.md)
 is the pre-upgrade comparison baseline.
 The earlier integration results remain in [NativeCNNQualification.md](docs/NativeCNNQualification.md).
 
-All nine actual-IP scenarios pass, including 1096 exact-score windows and 475
+For that pre-gain baseline, all nine actual-IP scenarios pass, including 1096 exact-score windows and 475
 complete eight-channel events at threshold zero, plus positive, negative and
 extreme external thresholds. Routed OOC meets 250/200 MHz with ADC/CNN setup
 WNS +0.311/+0.180 ns and overall WHS +0.007 ns, zero DRC errors and zero unsafe
@@ -272,7 +282,7 @@ Plots for 3.4 and 4 RMS are included in the full report.
 
 The figures below describe the previous five-lane system, not native two-lane
 qualification. Current evidence is recorded in
-`docs/qualification/hilo_v3_20260919/README.md`.
+[fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004/README.md).
 
 The Wrapper v5.0.0 and CNN Core v4.1.0 OOC run closes timing at
 `CLK_ADC=250 MHz` and `CLK_CNN=200 MHz` with no routing errors.
@@ -343,9 +353,105 @@ scripts/run_bringup_pulse_sweeps.sh
 python3 scripts/plot_bringup_scores.py --out-dir build/bringup_sim
 ```
 
-The older `run_post_impl_saif.py` flow is retained as historical tooling. It
-has not been qualified for this native two-lane delivery; no activity-based
-power result is claimed here.
+Scan the eight tracked offset-corrected oscilloscope records through the current
+native two-lane AI Trigger system:
+
+```bash
+scripts/run_real_noise_scan.sh
+```
+
+By default the input is taken from `data/Amp_Scope_Data_3_Offsetted`; the launcher
+does not depend on a Downloads path. Each 1000-sample, 1 GSa/s record is scanned
+with all 745 complete 256-sample windows at one-sample stride. The measured
+waveform drives trigger channel 0 and the other raw ADC channels remain zero.
+The windows are streamed back-to-back through trigger mode `0010` using the
+current `AI_TRIGGER_TOP_TB_WRAP` interface and the Bender-locked native CNN.
+
+`CNN_THRESH` uses the current signed 32-bit external format with unit `1/16`.
+For example, run with a threshold of `1.0` using:
+
+```bash
+REAL_NOISE_CNN_THRESH_RAW=16 scripts/run_real_noise_scan.sh
+```
+
+Use `REAL_NOISE_PREPARE_ONLY=1` to generate manifests and test vectors without
+Vivado, or `REAL_NOISE_ANALYZE_ONLY=1` to rebuild summaries and plots from an
+existing completed scan. Final results are written under
+`build/real_noise_scan`, including `offset_scan_summary.csv`, per-record score
+CSVs and plots, each original 1000-sample input waveform, an eight-panel input
+overview, combined offset overlays, and `scan_provenance.json` with the AI
+Trigger commit, dependency revisions, and dataset hashes. Generated
+`testhex_stream` files remain ignored.
+
+Scan the four single-channel neutrino examples with fixed CNN ingress gain six
+and native threshold word 45 (`2.8125`):
+
+```bash
+python3 scripts/run_real_noise_scan.py --dataset templates --isolated \
+  --cnn-thresh-raw 45 --threshold-scan \
+  --out-dir build/template_sliding_scan \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado
+```
+
+The physical CSV amplitude is preserved. Each saved native score is compared
+with the supplied `_scores.csv`; the threshold sweep reuses those scores with
+the hardware's strict `>` comparison. Complete-stream scans in modes 2, 3 and 4
+reuse an isolated compiled XSim snapshot, with a fresh reset per scenario:
+
+```bash
+python3 scripts/run_template_stream_scan.py --phase-scan --hilo-scan \
+  --snapshot-dir build/template_sliding_scan/nu_3m_2sigma_ev1_noisy/vendor/project/ai_trigger_scan.sim/sim_1/behav/xsim \
+  --reference-engine build/native_reference/native_reference \
+  --workers 4 --out-dir build/template_stream_scan
+```
+
+The reference executable must have its `weights/` directory and `reference.json`
+beside it. The stream scan checks captured raw events and uses that independent
+HLS reference for continuous chunks and centered gated windows. Its output
+directory must be empty. Use `--prepare-only` to inspect inputs and the plan;
+use `--case`, `--variants` and `--limit` for a smaller run. Select raw Hi-Lo
+settings with `--hl-threshold-raw` and `--hilo-window`; `--gated-phase-scan`
+scans its 16 aggregate phases without repeating 256 continuous-AI phases.
+The four examples
+support waveform characterization, not population efficiency or noise-rate
+claims. Results and measurement limits are recorded in
+[the template scan report](docs/qualification/template_scan_x6_20261004/README.md).
+
+### Post-route SAIF power
+
+Generate an activity-based OOC power estimate for the production
+`AI_TRIGGER_TOP` boundary with:
+
+```bash
+python3 scripts/run_post_impl_saif.py \
+  --vivado /tools/Xilinx/Vivado/2023.2/bin/vivado \
+  --bender /home/work1/.cargo/bin/bender
+```
+
+The default run builds a fresh routed production checkpoint, then drives
+30 acquisition chunks from the supplied CNN verification NPZ through continuous
+AI mode. It selects reference windows 96 through 125 because the ADC-aware
+reference prepends 96 built-in Vitis cross-check windows. The default is a
+post-route functional simulation without SDF; this keeps the run focused on
+switching activity rather than timing annotation.
+
+Before Vivado starts, the launcher verifies the NPZ, `reference.json`,
+`adc.hex`, and `all_expected.hex` hashes. The production-port testbench checks
+the expected event decisions and complete raw event waveforms, and rejects any
+reported event loss. A zero Vivado exit without the XSim PASS marker, SAIF, or
+power/timing/utilization reports is still treated as a failure.
+
+Outputs are written under `build/vivado_post_impl_saif_30chunks`. The raw SAIF
+is intentionally ignored because of its size; the reports, XSim log, generated
+launcher and hashed `run_manifest.json` are suitable for qualification
+packaging after a successful run.
+
+The qualified 30-chunk run measured 1.972 W total on-chip power: 1.510 W
+dynamic and 0.463 W device static, with 173,782 of 174,661 design nets matched
+and Vivado confidence `High`. See the
+[30-chunk routed SAIF qualification](docs/qualification/saif_30chunks_20260926/README.md)
+for the complete scope, timing result, warnings, provenance, and retained
+reports.
 
 ## Delivery
 

@@ -1,0 +1,71 @@
+INFO: generated monopolar_50mv_20ns_erf_tr5ns_sweep: 276 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-20bu3t06/monopolar_50mv_20ns_erf_tr5ns_sweep/testhex_stream
+INFO: generated monopolar_100mv_20ns_erf_tr5ns_sweep: 276 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-_ppspra4/monopolar_100mv_20ns_erf_tr5ns_sweep/testhex_stream
+.INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/zero/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/bipolar_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/polar_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_100ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_100ns_erf_tr100ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_50mv_50ns_erf_tr50ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_10mv_10ns_erf_tr10ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_50mv_20ns_erf_tr5ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_20ns_erf_tr5ns_sweep/scores_annotated.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/bringup_score_summary.csv
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/polar_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_100ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_100ns_erf_tr100ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_50mv_50ns_erf_tr50ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_10mv_10ns_erf_tr10ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_50mv_20ns_erf_tr5ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/monopolar_100mv_20ns_erf_tr5ns_score_vs_offset.png
+INFO: wrote /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-results-yjjji7gt/score_histogram.png
+..INFO: generated bipolar_sweep: 247 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-u83c_zom/bipolar_sweep/testhex_stream
+....INFO: generated monopolar_100mv_100ns_erf_tr100ns_sweep: 356 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-gidmaj8y/monopolar_100mv_100ns_erf_tr100ns_sweep/testhex_stream
+.INFO: generated monopolar_100mv_100ns_sweep: 356 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-jvxfvmd8/monopolar_100mv_100ns_sweep/testhex_stream
+.INFO: generated polar_sweep: 252 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-6mqyjnoc/polar_sweep/testhex_stream
+.INFO: generated monopolar_50mv_50ns_erf_tr50ns_sweep: 306 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-6rtnvz1c/monopolar_50mv_50ns_erf_tr50ns_sweep/testhex_stream
+INFO: generated monopolar_10mv_10ns_erf_tr10ns_sweep: 266 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-zdckp7qc/monopolar_10mv_10ns_erf_tr10ns_sweep/testhex_stream
+.INFO: generated zero: 3 samples -> /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-bringup-n3dhakid/zero/testhex_stream
+............Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-missing-event-34b30_xb/out/testhex_stream
+.Prepared 7 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-eod8dut5/out/testhex_stream
+Wrote 448 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-continuous-eod8dut5/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-bad-handshake-rdoxip2h/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-slow-event-9xxez9ss/out/testhex_stream
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-ydc_4xro/out/testhex_stream
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-report-ydc_4xro/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/out/testhex_stream
+Running Vivado/XSim: /opt/homebrew/opt/python@3.14/bin/python3.14 /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/fake_vivado_runner.py --num-samples 2 --testhex-dir /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/out/testhex_stream --out-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/out/scores.csv --event-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/out/events.csv --score-threshold 0.0 --cnn-thresh-raw 0 --mirror-raw-channels 0
+Wrote 128 beat rows to /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-full-cli-839i7wjz/out/NSF_Jul_27_trigger_trace.csv
+PASS: complete signal readout, noise rejection, and all adjacent-signal continuous-readout requirements are satisfied.
+.Prepared 2 chunks in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-nsf-jul-27-5odijdhg/out/testhex_stream
+...........................................Wrote /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/scan_provenance.json
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/noise_1_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/noise_1_offset
+Running current v3.5 AI Trigger simulation: /opt/homebrew/opt/python@3.14/bin/python3.14 /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/fake_runner.py --num-samples 745 --testhex-dir /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/noise_1_offset/testhex_stream --out-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/noise_1_offset/scores.csv --event-csv /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/noise_1_offset/events.csv --score-threshold 1.0 --cnn-thresh-raw 16 --mirror-raw-channels 0 --trigger-mode 2 --project AI_Trigger_System/AI_Trigger_System.xpr
+Wrote /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-full-qg7bkgtx/out/scan_summary.csv
+.....INFO: real-noise scan output: /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out
+INFO: selected scope dataset: data3
+INFO: ADC full-scale: 0.8 V; CNN threshold word: 0 (unit 1/16)
+Wrote /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/scan_provenance.json
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/noise_1_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/noise_1_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/noise_2_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/noise_2_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/noise_3_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/noise_3_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/noise_4_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/noise_4_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/signal_10rms_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/signal_10rms_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/signal_2rms_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/signal_2rms_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/signal_3rms_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/signal_3rms_offset
+Prepared 745 windows from /Users/albert/Library/Mobile Documents/com~apple~CloudDocs/Works/UC_Irvine_Group/AI-Trigger-System/data/Amp_Scope_Data_3_Offsetted/signal_4rms_offset.csv in /private/var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-xprhf2mw/out/signal_4rms_offset
+............................
+----------------------------------------------------------------------
+Ran 105 tests in 12.540s
+
+OK
+Prepared 1 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-template-reference-58djkw7q/scope.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-template-reference-58djkw7q/out/scope
+Prepared 1 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-health-gkeh5miz/noise_1_offset.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-health-gkeh5miz/out/noise_1_offset
+Prepared 2 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-small-dus0f1b7/scope.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-data3-small-dus0f1b7/out/scope
+Prepared 3 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-stream-1wbmnmbp/scope.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-stream-1wbmnmbp/out/scope
+Prepared 3 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-centered-gv4lhue0/source.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-centered-gv4lhue0/out/source
+Prepared 3 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-stream-missing-t0jrrsop/source.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-stream-missing-t0jrrsop/out/source
+Prepared 3 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-gated-missing-rjye34lf/source.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-gated-missing-rjye34lf/out/source
+Prepared 3 windows from /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-xsim-replay-5mip9h2j/source.csv in /var/folders/yh/1wn0n7d17tx1_ccyq6h68f2c0000gn/T/ai-trigger-xsim-replay-5mip9h2j/inputs/source

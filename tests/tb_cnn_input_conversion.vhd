@@ -16,13 +16,14 @@ begin
         variable row : line;
         variable expected : integer;
         type integer_array_t is array (natural range <>) of integer;
-        -- Worked AP_RND (ties toward +infinity), AP_SAT_SYM examples at raw/64.
+        -- Worked fixed x6 examples: raw=32 gives model=3, encoded as 96.
+        -- Odd raw codes retain their precision; +/-171 first exceed the range.
         constant raw_codes : integer_array_t :=
-            (-2048, -1024, -1023, -1022, -1021, -513, -3, -2, -1,
-             0, 1, 2, 3, 511, 512, 513, 1020, 1021, 1022, 1023, 2047);
+            (-2048, -1024, -171, -170, -169, -32, -3, -2, -1,
+             0, 1, 2, 3, 32, 169, 170, 171, 1024, 2047);
         constant native_codes : integer_array_t :=
-            (-511, -511, -511, -511, -510, -256, -1, -1, 0,
-             0, 1, 1, 2, 256, 256, 257, 510, 511, 511, 511, 511);
+            (-511, -511, -511, -510, -507, -96, -9, -6, -3,
+             0, 3, 6, 9, 96, 507, 510, 511, 511, 511);
     begin
         for i in raw_codes'range loop
             assert signed(adc_to_axis16(std_logic_vector(to_signed(raw_codes(i), 12)))) =

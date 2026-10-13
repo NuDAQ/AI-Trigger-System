@@ -1,0 +1,11 @@
+{
+  "complete": true,
+  "passed": true,
+  "scenarios_planned": 1536,
+  "scenarios_completed": 1536,
+  "error": null,
+  "exact_reference_scores": 7276,
+  "raw_events_checked": 847,
+  "rejected_reference_scores": 40,
+  "rejected_reference_ambiguous": 8
+}

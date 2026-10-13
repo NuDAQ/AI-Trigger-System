@@ -1,0 +1,3 @@
+[ RUN      ] tb_adc_chunk_distributor_timestamp
+[       OK ] tb_adc_chunk_distributor_timestamp
+GHDL: 1 passed, 0 failed, 1 total

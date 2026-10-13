@@ -1,0 +1,22 @@
+[
+  {
+    "case": "nu_3m_10sigma_ev1_noisy",
+    "source_manifest_sha256": "0bc4f87c827c19ffbbf0831a11c30029c9ff52561767392281e8ee5dfce9c4e1",
+    "identical_compiled_files": true
+  },
+  {
+    "case": "nu_3m_2sigma_ev1_noisy",
+    "source_manifest_sha256": "0bc4f87c827c19ffbbf0831a11c30029c9ff52561767392281e8ee5dfce9c4e1",
+    "identical_compiled_files": true
+  },
+  {
+    "case": "nu_3m_3sigma_ev5_noisy",
+    "source_manifest_sha256": "0bc4f87c827c19ffbbf0831a11c30029c9ff52561767392281e8ee5dfce9c4e1",
+    "identical_compiled_files": true
+  },
+  {
+    "case": "nu_3m_4sigma_ev4_noisy",
+    "source_manifest_sha256": "0bc4f87c827c19ffbbf0831a11c30029c9ff52561767392281e8ee5dfce9c4e1",
+    "identical_compiled_files": true
+  }
+]
