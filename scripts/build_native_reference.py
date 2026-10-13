@@ -100,7 +100,7 @@ def main():
                 'npz_sha256': sha(args.npz), 'baseline_sha256': sha(baseline_path),
                 'adc_scale': 64, 'cnn_input_gain': CNN_INPUT_GAIN,
                 'normalized_adc_scale': 64 / CNN_INPUT_GAIN,
-                'native_score_scale': 512, 'quantization_codes_checked': 4096,
+                'native_score_scale': 1024, 'quantization_codes_checked': 4096,
                 'compile_command': command, 'harness_sha256': sha(harness),
                 'firmware': {str(p.relative_to(firmware)):sha(p) for p in sorted(firmware.rglob('*')) if p.is_file()},
                 'files': {n:sha(output/n) for n in ['adc.hex','all_input.hex','all_expected.hex','adc_conversion.txt','gated/adc.hex','gated/all_expected.hex']}}
