@@ -83,9 +83,9 @@ module tb_native_modes;
         $readmemh({reference,"/gated/adc.hex"},waveform);
         $readmemh({reference,"/gated/all_expected.hex"},expected);
         run_mode(0); run_mode(1); run_mode(3); run_mode(4);
-        // The fixed x6 reference score is 121370/512 = 237.05078125.
+        // The amphp fixed x6 reference score is 33912/1024 = 33.1171875.
         // Adjacent external thresholds must respectively accept and reject it.
-        run_mode(4, 3792, 1); run_mode(4, 3793, 0);
+        run_mode(4, 529, 1); run_mode(4, 530, 0);
         // Switch from gated AI to Capture-All without resetting waveform
         // history; the request applies only at the next complete chunk.
         @(negedge clk_adc); mode=0; expected_beats=0; event_beats=0; score_count=0;
