@@ -1,0 +1,64 @@
+--- ap_int_special.h
++++ ap_int_special.h
+@@ -28,9 +28,9 @@
+ // FIXME AP_AUTOCC cannot handle many standard headers, so declare instead of
+ // include.
+ // #include <complex>
+-namespace std {
++_LIBCPP_BEGIN_NAMESPACE_STD
+ template<typename _Tp> class complex;
+-}
++_LIBCPP_END_NAMESPACE_STD
+ 
+ /*
+   TODO: Modernize the code using C++11/C++14
+@@ -38,7 +38,7 @@
+   2. move constructor
+ */
+ 
+-namespace std {
++_LIBCPP_BEGIN_NAMESPACE_STD
+ /*
+    Specialize std::complex<ap_int> to zero initialization ap_int.
+ 
+@@ -216,7 +216,7 @@
+          0 != __y.imag();
+ }
+ 
+-}  // namespace std
++_LIBCPP_END_NAMESPACE_STD
+ 
+ #endif  // ifndef __AP_INT_SPECIAL_H__
+ 
+--- ap_fixed_special.h
++++ ap_fixed_special.h
+@@ -28,9 +28,9 @@
+ // FIXME AP_AUTOCC cannot handle many standard headers, so declare instead of
+ // include.
+ // #include <complex>
+-namespace std {
++_LIBCPP_BEGIN_NAMESPACE_STD
+ template<typename _Tp> class complex;
+-}
++_LIBCPP_END_NAMESPACE_STD
+ 
+ /*
+   TODO: Modernize the code using C++11/C++14
+@@ -38,7 +38,7 @@
+   2. move constructor
+ */
+ 
+-namespace std {
++_LIBCPP_BEGIN_NAMESPACE_STD
+ /*
+    Specialize std::complex<ap_fixed> to zero initialization ap_fixed.
+ 
+@@ -223,7 +223,7 @@
+          0 != __y.imag();
+ }
+ 
+-}  // namespace std
++_LIBCPP_END_NAMESPACE_STD
+ 
+ #endif  // ifndef __AP_FIXED_SPECIAL_H__
+ 

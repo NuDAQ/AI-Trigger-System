@@ -34,19 +34,19 @@ silently round a requested real value because its input is already an integer.
 
 ## Native score adaptation
 
-The current CNN still returns signed bits `[20:0]` in a 32-bit container, with
-eleven zero padding bits. Its score unit remains 1/512 and its representable
-range is -2048 through 2047.998046875. Score transport and CNN arithmetic are
-unchanged; only the interpretation of the threshold configuration changes.
+The amphp CNN returns signed bits `[20:0]` in a 32-bit container, with eleven
+zero padding bits. Its native `ap_fixed<21,11>` score unit is 1/1024 and its
+representable range is -1024 through 1023.9990234375. The external threshold
+encoding remains independent of the generated model's binary point.
 
 `AI_TRIGGER_PKG.cnn_score_above_threshold` owns the conversion used by both
 `CNN_RESULT_ARBITER` and `TRIGGER_DECISION`. It sign-extends both operands and
-shifts the external threshold left by five before a strict signed comparison.
-The 37-bit comparison preserves the complete external range. There is no
+shifts the external threshold left by six before a strict signed comparison.
+The 38-bit comparison preserves the complete external range. There is no
 multiplier, rounding, saturation, wraparound, or extra transaction latency.
 
-A threshold below -2048 accepts every representable native score; a threshold
-at or above 2048 rejects every representable native score. At exactly -2048,
+A threshold below -1024 accepts every representable native score; a threshold
+at or above 1024 rejects every representable native score. At exactly -1024,
 an equal native score is still rejected. These are mathematical comparisons,
 not special encodings. Backpressure, capacity loss, and Trigger Mode selection
 retain their existing behavior.

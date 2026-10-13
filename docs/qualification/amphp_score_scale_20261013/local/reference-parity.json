@@ -1,0 +1,13 @@
+{
+  "identical": true,
+  "files": {
+    "adc.hex": true,
+    "all_input.hex": true,
+    "all_expected.hex": true,
+    "adc_conversion.txt": true,
+    "gated/adc.hex": true,
+    "gated/all_expected.hex": true
+  },
+  "local_score_scale": 1024,
+  "server_score_scale": 1024
+}

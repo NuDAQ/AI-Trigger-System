@@ -111,11 +111,11 @@ The gain is currently a compile-time constant, not an online configuration port.
 | `COINC_WINDOW[7:0]` | Cross-channel coincidence window, 0–255 accepted samples |
 | `BIN_THR[3:0]` | Required channel multiplicity, valid range 1-4 |
 
-CNN scores retain native `ap_fixed<21,12>`; the external threshold format is
+CNN scores retain native `ap_fixed<21,11>`; the external threshold format is
 independent of the IP:
 
 ```text
-score_float = signed(score[20:0]) / 512
+score_float = signed(score[20:0]) / 1024
 threshold_float = signed(CNN_THRESH[31:0]) / 16
 CNN_THRESH_raw = threshold_float * 16
 ```

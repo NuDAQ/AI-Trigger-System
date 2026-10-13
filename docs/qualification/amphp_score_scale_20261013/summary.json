@@ -1,0 +1,143 @@
+{
+  "implementation_commit": "e9eab03",
+  "core_commit": "897567c339abad7709cc395a878615ea68634d4d",
+  "scope": "AI_TRIGGER_TOP OOC; gateware unchanged",
+  "clocks_mhz": {
+    "CLK_ADC": 250,
+    "CLK_CNN": 200
+  },
+  "setup_wns_ns": 0.231,
+  "hold_whs_ns": 0.004,
+  "tns_ns": 0.0,
+  "ths_ns": 0.0,
+  "cdc_unsafe": 0,
+  "cdc_unknown": 0,
+  "unconstrained_internal_endpoints": 0,
+  "routable_nets": 130039,
+  "fully_routed_nets": 130039,
+  "routing_errors": 0,
+  "resource_utilization": {
+    "LUT": 74868,
+    "FF": 52062,
+    "DSP": 64,
+    "BRAM_tiles": 21,
+    "URAM": 6
+  },
+  "server_cases": 9,
+  "ghdl_benches": 39,
+  "verilator_windows": 1096,
+  "verilator_gated_windows": 1,
+  "adc_codes_checked": 4096,
+  "validated_rtl_sources": [
+    {
+      "path": "HDL/rtl/AI_TRIGGER_PKG.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/RESET_SYNC.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/TRIGGER_MODE_CTRL.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/HOUSEKEEPING_TRIGGER_CTRL.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/HILO_INPUT_ADAPTER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/HILO_TRIGGER_CTRL.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/GATED_CNN_READER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/TRIGGER_DECISION.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/ADC_INPUT_CDC_FIFO.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/CHUNK_ID_CDC_FIFO.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/TRIGGER_CDC_FIFO.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/WAVEFORM_RING_BUFFER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/RING_READ_ARBITER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/EVENT_RECORDER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/EVENT_CAPTURE_CTRL.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/EVENT_OUTPUT_FIFO.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/EVENT_CAPTURE_PATH.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/MULTIMODE_EVENT_PATH.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/ADC_CHUNK_DISTRIBUTOR.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/CNN_CORE_LANE.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/CNN_RESULT_ARBITER.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/AI_TRIGGER_CORE.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/rtl/AI_TRIGGER_TOP.vhd",
+      "matches": true
+    },
+    {
+      "path": "HDL/constraints/ai_trigger_ooc.xdc",
+      "matches": true
+    },
+    {
+      "path": "scripts/vivado_ooc_build.tcl",
+      "matches": true
+    },
+    {
+      "path": "scripts/vivado_timing_gate.tcl",
+      "matches": true
+    },
+    {
+      "path": "scripts/run_vivado_build.py",
+      "matches": true
+    }
+  ],
+  "wrapper_commit": "a78d1b74f9b11bac21af61dd8290f5ad91a823a8",
+  "server_root": "/home/work1/tmp/codex-score-v4-20261013-edcb9a6-4cac4f"
+}

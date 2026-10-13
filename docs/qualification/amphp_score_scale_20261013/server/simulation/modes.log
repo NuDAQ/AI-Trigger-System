@@ -1,0 +1,8 @@
+PASS native mode=0 events=2 CNN=0
+PASS native mode=1 events=1 CNN=0
+PASS native mode=3 events=1 CNN=0
+PASS native mode=4 events=1 CNN=1
+PASS native mode=4 events=1 CNN=1
+PASS native mode=4 events=0 CNN=1
+PASS native runtime mode switch gated AI to Capture-All
+PASS native modes complete

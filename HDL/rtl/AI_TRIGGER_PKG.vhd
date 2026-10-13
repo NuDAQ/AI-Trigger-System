@@ -12,7 +12,7 @@ package AI_TRIGGER_PKG is
     constant CNN_INPUT_GAIN : positive := 6; -- fixed bench gain, CNN branch only
     constant CNN_THRESH_FRAC_BITS : natural := 4; -- stable external unit: 1/16
     constant CNN_SCORE_WIDTH : positive := 21;
-    constant CNN_SCORE_FRAC_BITS : natural := 9; -- current native IP unit: 1/512
+    constant CNN_SCORE_FRAC_BITS : natural := 10; -- current native IP unit: 1/1024
     constant N_ADC_CH   : integer := 8;    -- raw ADC channels captured into events
     constant N_TRIGGER_CH : integer := 4;  -- leading channels used by the CNN trigger
     constant N_CH       : integer := N_ADC_CH; -- historical alias for raw ADC channels

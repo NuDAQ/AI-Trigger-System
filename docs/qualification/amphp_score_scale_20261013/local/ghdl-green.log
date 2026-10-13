@@ -1,0 +1,3 @@
+[ RUN      ] tb_trigger_decision
+[       OK ] tb_trigger_decision
+GHDL: 1 passed, 0 failed, 1 total

@@ -32,7 +32,7 @@ module tb_native_system;
     // Independent real-valued checker for the fixed external configuration.
     function automatic bit qualifies(input reg [31:0] native_score,
                                      input reg [31:0] external_threshold);
-        qualifies = ($itor($signed(native_score[20:0])) / 512.0) >
+        qualifies = ($itor($signed(native_score[20:0])) / 1024.0) >
                     ($itor($signed(external_threshold)) / 16.0);
     endfunction
     AI_TRIGGER_TOP_TB_WRAP #(.DIRECT_ADC(1)) dut (

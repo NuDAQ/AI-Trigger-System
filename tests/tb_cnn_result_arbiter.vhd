@@ -67,31 +67,31 @@ begin
         wait until rising_edge(clk);
         rst <= '0';
 
-        -- External 32 means 2.0, independently of the native 1/512 score unit.
-        check_threshold(1024, 32, '0');
-        check_threshold(1025, 32, '1');
-        check_threshold(1023, 32, '0');
+        -- External 32 means 2.0, independently of the native 1/1024 score unit.
+        check_threshold(2048, 32, '0');
+        check_threshold(2049, 32, '1');
+        check_threshold(2047, 32, '0');
         -- One external step is 0.0625; retain native sub-step precision.
-        check_threshold(1055, 33, '0');
-        check_threshold(1056, 33, '0');
-        check_threshold(1057, 33, '1');
-        check_threshold(-1024, -32, '0');
-        check_threshold(-1023, -32, '1');
-        check_threshold(-1025, -32, '0');
+        check_threshold(2111, 33, '0');
+        check_threshold(2112, 33, '0');
+        check_threshold(2113, 33, '1');
+        check_threshold(-2048, -32, '0');
+        check_threshold(-2047, -32, '1');
+        check_threshold(-2049, -32, '0');
         check_threshold(0, 0, '0');
         check_threshold(1, 0, '1');
         check_threshold(-1, 0, '0');
         -- Native limits and thresholds beyond them must not wrap or clamp.
-        check_threshold(-1048576, -32768, '0');
-        check_threshold(-1048575, -32768, '1');
-        check_threshold(-1048576, -32769, '1');
-        check_threshold(1048575, 32768, '0');
+        check_threshold(-1048576, -16384, '0');
+        check_threshold(-1048575, -16384, '1');
+        check_threshold(-1048576, -16385, '1');
+        check_threshold(1048575, 16384, '0');
         check_threshold(-1048576, -2147483648, '1');
         check_threshold(1048575, 2147483647, '0');
 
-        lane_score(0)  <= std_logic_vector(to_signed(512, 32));
+        lane_score(0)  <= std_logic_vector(to_signed(1024, 32));
         lane_thresh(0) <= std_logic_vector(to_signed(32, 32));
-        lane_score(1)  <= std_logic_vector(to_signed(1536, 32));
+        lane_score(1)  <= std_logic_vector(to_signed(3072, 32));
         lane_thresh(1) <= std_logic_vector(to_signed(32, 32));
         lane_start_chunk(1)    <= to_unsigned(8, CHUNK_ID_WIDTH);
         lane_start_offset(1)   <= to_unsigned(45, BEAT_OFFSET_WIDTH);
@@ -115,7 +115,7 @@ begin
                result_request.start_address.beat_offset = to_unsigned(45, BEAT_OFFSET_WIDTH) and
                result_request.event_timestamp = to_unsigned(9, TIMESTAMP_WIDTH) and
                result_request.trigger_offset = to_unsigned(12, BEAT_OFFSET_WIDTH) and
-               result_request.score = std_logic_vector(to_signed(1536, 32))
+               result_request.score = std_logic_vector(to_signed(3072, 32))
             report "arbiter result metadata mismatch" severity failure;
 
         result_ready <= '1';
@@ -123,7 +123,7 @@ begin
         lane_valid(1) <= '0';
         result_ready <= '0';
 
-        lane_score(0)  <= x"001FFE00"; -- native -1, zero-padded container
+        lane_score(0)  <= x"001FFC00"; -- native -1, zero-padded container
         lane_thresh(0) <= std_logic_vector(to_signed(0, 32));
         lane_valid(0)  <= '1';
         wait for 1 ps;
