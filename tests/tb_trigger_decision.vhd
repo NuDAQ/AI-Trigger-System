@@ -46,7 +46,7 @@ begin
         wait until rising_edge(clk);
 
         score_valid    <= '1';
-        score_data     <= std_logic_vector(to_signed(512, 32));
+        score_data     <= std_logic_vector(to_signed(1024, 32)); -- native 1.0
         score_chunk_id <= to_unsigned(7, CHUNK_ID_WIDTH);
         score_timestamp <= to_unsigned(107, TIMESTAMP_WIDTH);
         wait until rising_edge(clk);
@@ -56,8 +56,18 @@ begin
             report "score below threshold must be discarded"
             severity failure;
 
+        -- Native 2048 / 1024 equals external 32 / 16: strict equality rejects.
+        score_valid <= '1';
+        score_data <= std_logic_vector(to_signed(2048, 32));
+        wait until rising_edge(clk);
+        score_valid <= '0';
+        wait until rising_edge(clk);
+        assert trigger_valid = '0'
+            report "native score 2.0 must not exceed external threshold 2.0"
+            severity failure;
+
         score_valid    <= '1';
-        score_data     <= std_logic_vector(to_signed(2048, 32));
+        score_data     <= std_logic_vector(to_signed(3072, 32)); -- native 3.0
         score_chunk_id <= to_unsigned(8, CHUNK_ID_WIDTH);
         score_timestamp <= to_unsigned(108, TIMESTAMP_WIDTH);
         wait until rising_edge(clk);
@@ -66,7 +76,7 @@ begin
         assert trigger_valid = '1'
             report "score above threshold must raise trigger_valid"
             severity failure;
-        assert trigger_score = std_logic_vector(to_signed(2048, 32))
+        assert trigger_score = std_logic_vector(to_signed(3072, 32))
             report "trigger must preserve the score"
             severity failure;
         assert trigger_chunk_id = to_unsigned(8, CHUNK_ID_WIDTH)
