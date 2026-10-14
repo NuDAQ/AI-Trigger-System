@@ -80,12 +80,15 @@ module tb_native_modes;
     endtask
     initial begin
         if (!$value$plusargs("REFERENCE=%s",reference)) $fatal(1,"missing reference");
-        $readmemh({reference,"/gated/adc.hex"},waveform);
-        $readmemh({reference,"/gated/all_expected.hex"},expected);
+        $readmemh($sformatf("%s/gated/adc.hex",reference),waveform);
+        $readmemh($sformatf("%s/gated/all_expected.hex",reference),expected);
+        if ($isunknown(expected[0])) $fatal(1,"missing gated reference score");
+        for (integer i=0;i<192;i++)
+            if ($isunknown(waveform[i])) $fatal(1,"missing gated ADC reference %0d",i);
         run_mode(0); run_mode(1); run_mode(3); run_mode(4);
-        // The amphp fixed x6 reference score is 33912/1024 = 33.1171875.
+        // Independent amphp x4.4 HLS reference: 18002/1024 = 17.580078125.
         // Adjacent external thresholds must respectively accept and reject it.
-        run_mode(4, 529, 1); run_mode(4, 530, 0);
+        run_mode(4, 281, 1); run_mode(4, 282, 0);
         // Switch from gated AI to Capture-All without resetting waveform
         // history; the request applies only at the next complete chunk.
         @(negedge clk_adc); mode=0; expected_beats=0; event_beats=0; score_count=0;

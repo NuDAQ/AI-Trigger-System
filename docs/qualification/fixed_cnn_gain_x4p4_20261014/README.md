@@ -33,6 +33,25 @@ and testbench hash matches its archived compile manifest, including runtime
 ROM contents. No generated core or wrapper source was edited.
 `native_reference_logs.tar.gz` retains the reference and numerical logs.
 
-Mac C++ retains the prior build-only libc++ header overlay. Server validation
-will independently rebuild with original Vitis headers. System/gateware
-qualification will be recorded as those stages complete.
+Mac C++ retains the prior build-only libc++ header overlay. Server validation independently rebuilt with original Vitis 2022.2 headers;
+all six reference data-file hashes match the local build. All nine real-XPM
+system cases pass in Vivado 2022.2: continuous, gaps/phase, positive/negative/
+extreme thresholds, lane resets/backpressure, modes and overload. The gated
+raw window gives 18002/1024=17.580078125; external words 281/282 respectively
+accept/reject it. A valid old-threshold negative control fails at mode 4,
+with zero events after one CNN result.
+
+Existing SV string-concatenation file paths were not read correctly by XSim
+2022.2. The three system fixtures now use formatted paths and reject missing/
+unknown reference data before simulation. These are test-only changes. The
+initial failed runs are retained and are not counted as numerical passes.
+OOC's Bender child uses a task-local wrapper that clears Vivado's old C++
+library path; the launcher prefixes that wrapper after Vivado startup. No
+installed tool or shell profile was changed.
+
+OOC implementation also passes in Vivado 2022.2, KU5P -2, with unchanged
+ADC/CNN 250/200 MHz constraints: WNS +0.020 ns, WHS +0.024 ns,
+TNS/THS zero. All 23 current trigger RTL hashes match the OOC source manifest.
+`server/` retains per-case and routed reports, source provenance, and original
+header reference metadata. Gateware qualification will follow this validated
+trigger implementation.
