@@ -9,7 +9,8 @@ package AI_TRIGGER_PKG is
 
     -- CNN cluster configuration
     constant N_LANES    : integer := 2;    -- parallel CNN cores
-    constant CNN_INPUT_GAIN : positive := 6; -- fixed bench gain, CNN branch only
+    constant CNN_INPUT_GAIN_NUMERATOR : positive := 22; -- exact fixed 4.4x, CNN branch only
+    constant CNN_INPUT_GAIN_DENOMINATOR : positive := 5;
     constant CNN_THRESH_FRAC_BITS : natural := 4; -- stable external unit: 1/16
     constant CNN_SCORE_WIDTH : positive := 21;
     constant CNN_SCORE_FRAC_BITS : natural := 10; -- current native IP unit: 1/1024
@@ -166,21 +167,34 @@ package body AI_TRIGGER_PKG is
     function adc_to_axis16(
         sample_value : adc_sample_t
     ) return std_logic_vector is
+        constant NATIVE_GAIN_NUMERATOR : positive := CNN_INPUT_GAIN_NUMERATOR / 2;
+        constant SATURATION_RAW_CODE : positive :=
+            (511 * CNN_INPUT_GAIN_DENOMINATOR) / NATIVE_GAIN_NUMERATOR + 1;
         variable raw_value    : signed(11 downto 0);
-        variable scaled_value : signed(14 downto 0);
+        variable magnitude    : unsigned(12 downto 0);
+        variable scaled_value : unsigned(11 downto 0);
         variable fixed_value  : signed(9 downto 0);
     begin
         raw_value := signed(sample_value);
         -- model = raw * gain / 64; native ap_fixed<10,5,AP_RND,AP_SAT_SYM>.
-        -- Gain precedes quantization. Fifteen bits hold the full x6 product
-        -- and rounding bias; the fixed gain gives exact q=3*raw before clipping.
-        scaled_value := shift_right(resize(raw_value * CNN_INPUT_GAIN, 15) + 1, 1);
-        if scaled_value > to_signed(511, scaled_value'length) then
+        -- Exact q=round(11*raw/5), clipped symmetrically to +/-511.
+        -- Fifths never land on a half-code, so magnitude rounding also matches
+        -- AP_RND for negative inputs. Extend before abs to preserve raw=-2048.
+        magnitude := unsigned(abs(resize(raw_value, magnitude'length)));
+        if magnitude >= SATURATION_RAW_CODE then
             fixed_value := to_signed(511, fixed_value'length);
-        elsif scaled_value < to_signed(-511, scaled_value'length) then
-            fixed_value := to_signed(-511, fixed_value'length);
         else
-            fixed_value := resize(scaled_value, fixed_value'length);
+            -- Only magnitudes 0..232 reach this branch; keep constant divide
+            -- arithmetic narrow without changing the native input latency.
+            scaled_value := resize(magnitude(7 downto 0) * NATIVE_GAIN_NUMERATOR,
+                                   scaled_value'length) +
+                            to_unsigned(CNN_INPUT_GAIN_DENOMINATOR / 2,
+                                        scaled_value'length);
+            fixed_value := signed(resize(scaled_value / CNN_INPUT_GAIN_DENOMINATOR,
+                                         fixed_value'length));
+        end if;
+        if raw_value < 0 then
+            fixed_value := -fixed_value;
         end if;
         return std_logic_vector(resize(fixed_value, 16));
     end function;
