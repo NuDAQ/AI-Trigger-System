@@ -22,3 +22,8 @@ Continuous/gaps produce 323 events, threshold +32 produces 142, threshold
 -32 produces 1056, and minimum/maximum words accept all/reject all. Gated
 281/282, resets/backpressure, mode switching and overload recovery pass.
 `server/simulation_reports.tar.gz` retains the fresh compilation and logs.
+
+Lookup OOC qualification passes in Vivado 2022.2 at unchanged 250/200 MHz,
+KU5P -2: final WNS +0.238 ns, WHS +0.005 ns, TNS/THS zero.
+All 23 current trigger RTL hashes match the captured OOC closure.
+`server/server_reports.tar.gz` retains routed reports and orchestration.

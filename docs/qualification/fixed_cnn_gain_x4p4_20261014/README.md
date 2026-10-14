@@ -55,3 +55,9 @@ TNS/THS zero. All 23 current trigger RTL hashes match the OOC source manifest.
 `server/` retains per-case and routed reports, source provenance, and original
 header reference metadata. Gateware qualification will follow this validated
 trigger implementation.
+
+The initial integer-divider version later missed full-board ADC setup by
+0.068 ns. The exact combinational lookup in `timing_fix/` preserves every
+ADC code and latency; 39 local benches, all 4096 HLS conversions and all nine
+real-XPM cases pass again. Its final OOC WNS/WHS are +0.238/+0.005 ns.
+The original stage reports above are retained as historical evidence.
