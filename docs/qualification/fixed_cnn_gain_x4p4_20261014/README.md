@@ -21,5 +21,18 @@ saturation boundary. Targeted conversion/Hi-Lo/gated tests pass. The complete
 local GHDL suite passes 39/39. `conversion_logs.tar.gz` preserves the logs.
 
 The conversion also matches independent HLS native quantization for all
-4096 signed ADC codes. Numerical/system/gateware qualification will be
-recorded as those stages complete.
+4096 signed ADC codes. The regenerated reference preserves normalized fixture
+amplitude through ADC encoding round(X*64/4.4), and separately applies exact
+4.4 gain to raw gated waveforms. The amphp NPZ hash remains unchanged.
+
+Local checks pass: four native Python tests; 1096 real-CNN Verilator windows
+and one gated window match independent HLS C++ scores exactly. The old x6
+golden fails at window 12 against the new input stream. The reused Verilator
+binary is from the prior amphp qualification; every current RTL/header/ROM
+and testbench hash matches its archived compile manifest, including runtime
+ROM contents. No generated core or wrapper source was edited.
+`native_reference_logs.tar.gz` retains the reference and numerical logs.
+
+Mac C++ retains the prior build-only libc++ header overlay. Server validation
+will independently rebuild with original Vitis headers. System/gateware
+qualification will be recorded as those stages complete.

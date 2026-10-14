@@ -91,9 +91,9 @@ ADC_DATA[(ch * 4 + sample) * 12 +: 12] = ADC_DATA4(ch)(sample)
 `DATA_STR` is the beat-valid signal. There is no ADC backpressure port; every
 beat with `DATA_STR=1` is accepted.
 
-The CNN uses channels 0-3 with a fixed bench gain of six, at model scale
-`6*raw/64`. Conversion to native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>` is
-`q = clamp(3*raw, -511, 511)`, sign-extended into each 16-bit slot.
+The CNN uses channels 0-3 with a fixed bench gain of 4.4 (exactly 22/5), at
+model scale `4.4*raw/64`. Conversion to native `ap_fixed<10,5,AP_RND,AP_SAT_SYM>`
+is `q = clamp(round(11*raw/5), -511, 511)`, sign-extended into each 16-bit slot.
 Two chronological ADC writes form a 512-bit native beat. The event path keeps
 the original 12-bit samples. Hi-Lo also evaluates the original samples; gated
 AI applies gain only when replaying its selected window into the CNN.
@@ -200,6 +200,10 @@ A normal checkout resolves the exact Git pins without local overrides. If using
 can change compiled code independently of the published pins.
 
 ## Native CNN validation
+
+Current normalized fixtures use `round(X*64/4.4)` before the fixed gain;
+physical-voltage CSVs retain their original ADC scale. See the
+[fixed 4.4 gain qualification](docs/qualification/fixed_cnn_gain_x4p4_20261014/README.md).
 
 See the [fixed x6 gain validation](docs/qualification/fixed_cnn_gain_x6_20261004/README.md)
 for the v3.6 change and its validation limits. Normalized model fixtures are
