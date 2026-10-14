@@ -170,9 +170,23 @@ package body AI_TRIGGER_PKG is
         constant NATIVE_GAIN_NUMERATOR : positive := CNN_INPUT_GAIN_NUMERATOR / 2;
         constant SATURATION_RAW_CODE : positive :=
             (511 * CNN_INPUT_GAIN_DENOMINATOR) / NATIVE_GAIN_NUMERATOR + 1;
+        type conversion_table_t is array (0 to 255) of unsigned(8 downto 0);
+        function make_conversion_table return conversion_table_t is
+            variable result : conversion_table_t;
+            variable code : natural;
+        begin
+            for raw_code in result'range loop
+                code := (raw_code * NATIVE_GAIN_NUMERATOR +
+                         CNN_INPUT_GAIN_DENOMINATOR / 2) /
+                        CNN_INPUT_GAIN_DENOMINATOR;
+                if code > 511 then code := 511; end if;
+                result(raw_code) := to_unsigned(code, 9);
+            end loop;
+            return result;
+        end function;
+        constant CONVERSION_TABLE : conversion_table_t := make_conversion_table;
         variable raw_value    : signed(11 downto 0);
         variable magnitude    : unsigned(12 downto 0);
-        variable scaled_value : unsigned(11 downto 0);
         variable fixed_value  : signed(9 downto 0);
     begin
         raw_value := signed(sample_value);
@@ -184,14 +198,10 @@ package body AI_TRIGGER_PKG is
         if magnitude >= SATURATION_RAW_CODE then
             fixed_value := to_signed(511, fixed_value'length);
         else
-            -- Only magnitudes 0..232 reach this branch; keep constant divide
-            -- arithmetic narrow without changing the native input latency.
-            scaled_value := resize(magnitude(7 downto 0) * NATIVE_GAIN_NUMERATOR,
-                                   scaled_value'length) +
-                            to_unsigned(CNN_INPUT_GAIN_DENOMINATOR / 2,
-                                        scaled_value'length);
-            fixed_value := signed(resize(scaled_value / CNN_INPUT_GAIN_DENOMINATOR,
-                                         fixed_value'length));
+            -- Only magnitudes 0..232 reach this branch. Evaluate the exact
+            -- constant division at elaboration, keeping the ADC path shallow
+            -- without adding a register or changing native input latency.
+            fixed_value := signed('0' & CONVERSION_TABLE(to_integer(magnitude(7 downto 0))));
         end if;
         if raw_value < 0 then
             fixed_value := -fixed_value;
