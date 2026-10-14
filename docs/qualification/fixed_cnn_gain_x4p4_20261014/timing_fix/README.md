@@ -16,3 +16,9 @@ All 4096 signed ADC codes still match the original independent native HLS
 reference exactly, and all 39 GHDL benches pass. The HLS/Verilator reference
 input and score files remain byte-identical. Server real-XPM simulations,
 OOC and a fresh full-board build will qualify this implementation next.
+
+All nine real-XPM Vivado 2022.2 cases pass again for the lookup version.
+Continuous/gaps produce 323 events, threshold +32 produces 142, threshold
+-32 produces 1056, and minimum/maximum words accept all/reject all. Gated
+281/282, resets/backpressure, mode switching and overload recovery pass.
+`server/simulation_reports.tar.gz` retains the fresh compilation and logs.
