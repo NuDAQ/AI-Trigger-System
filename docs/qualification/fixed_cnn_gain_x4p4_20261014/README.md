@@ -61,3 +61,7 @@ The initial integer-divider version later missed full-board ADC setup by
 ADC code and latency; 39 local benches, all 4096 HLS conversions and all nine
 real-XPM cases pass again. Its final OOC WNS/WHS are +0.238/+0.005 ns.
 The original stage reports above are retained as historical evidence.
+
+The final lookup passes the full-board 260/195 MHz build and bitgen at
+WNS +0.372 ns / WHS +0.010 ns; see `timing_fix/` and gateware delivery
+commit 69fae94. The initial divider failure and all stage reports are retained.

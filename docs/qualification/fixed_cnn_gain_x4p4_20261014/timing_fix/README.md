@@ -27,3 +27,15 @@ Lookup OOC qualification passes in Vivado 2022.2 at unchanged 250/200 MHz,
 KU5P -2: final WNS +0.238 ns, WHS +0.005 ns, TNS/THS zero.
 All 23 current trigger RTL hashes match the captured OOC closure.
 `server/server_reports.tar.gz` retains routed reports and orchestration.
+
+Final full-board qualification also passes in Vivado 2022.2, KU5P -3,
+ADC 260 MHz / CNN 195 MHz. WNS/WHS are +0.372/+0.010 ns, TNS/THS zero;
+ADC/CNN setup margins are +0.372/+0.431 ns. All 138229 routable nets route;
+DRC has no errors/critical warnings, and all 44 bus-skew checks pass.
+Board simulation, synthesis, implementation, bitgen and matching LTX export
+are complete. Gateware implementation 4138e6f copies the qualified lookup
+verbatim; delivery commit 69fae94 retains the reports and artifact manifest
+in `gateware/validation/vivado-2022.2/fixed-gain4p4-20261014/`. Existing unsafe
+CDC counts are unchanged; no normalized CDC rows are added. The initial
+-0.068 ns divider timing miss remains preserved. No push or programming
+was performed. Both repositories remain on `oct_13_only_upgrade_cnn`.
