@@ -52,3 +52,21 @@ All event payload assertions compare the full eight-channel raw ADC words.
 Routed OOC passes in Vivado 2022.2 on KU5P -2 at unchanged ADC/CNN
 250/200 MHz: WNS +0.188 ns, WHS +0.024 ns, TNS/THS zero.
 No pipeline, clock, constraint, model or raw-event-path change was needed.
+
+Gateware delivery is complete on `oct_15_gain_offset`, delivery commit
+`950ff61` (build input commit `efb00fd`). Local integration passes and all
+60 production RTL/ROM files match this OOC source closure. All other 349
+existing source/model/wrapper/Hi-Lo/IP/constraint/build-script inputs remain
+byte-identical; only necessary source-list additions and delivery metadata
+accompany the calibration packages.
+
+Vivado 2022.2 full-board synthesis, implementation and bitgen pass at the
+unchanged 260 MHz ADC / 195 MHz CNN clocks: WNS +0.268 ns, WHS +0.005 ns,
+TNS/THS zero. The matching bitstream, LTX and routed DCP are retrieved and
+SHA-256 verified locally in sibling gateware `build/qualification-gain-offset/`.
+Full reports and CDC qualification are in the sibling gateware repository's
+`validation/vivado-2022.2/gain-offset-20261015/` directory. Exactly 23 known
+legacy DAQ reset CDC rows return to the previously documented baseline;
+Trigger/configuration has no new CDC rows. No unrelated DAQ fix was made.
+Both repositories retain default Albert commits. No push or programming
+was performed; functional hardware testing is outside this build evidence.
