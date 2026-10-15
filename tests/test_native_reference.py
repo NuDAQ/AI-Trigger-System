@@ -1,4 +1,4 @@
-"""Normalized model fixtures must keep their scale through fixed x4.4 ingress."""
+"""Normalized model fixtures must keep their scale through per-channel calibrated ingress."""
 import importlib.util
 import json
 import os
@@ -16,14 +16,10 @@ SPEC.loader.exec_module(REFERENCE)
 
 class NativeReferenceInputTest(unittest.TestCase):
     def test_normalized_inputs_are_encoded_before_the_fixed_gain(self):
-        model = np.array([1., -1., 3., -3., .1875, -.1875, 0.])
+        model = np.array([[0., 0., 0., 0.], [1., 1., 1., 1.], [-1., -1., -1., -1.]])
         raw = REFERENCE.normalized_to_adc(model)
-        # Worked x4.4 ADC encodings: +/-1 -> +/-15, +/-3 -> +/-44.
-        np.testing.assert_array_equal(raw, [15, -15, 44, -44, 3, -3, 0])
-        np.testing.assert_allclose(
-            raw.astype(float) * REFERENCE.CNN_INPUT_GAIN / 64,
-            [1.03125, -1.03125, 3.025, -3.025, .20625, -.20625, 0.],
-            rtol=0, atol=1e-15)
+        # Worked inverse encodings include each channel's fractional baseline.
+        np.testing.assert_array_equal(raw, [[-2, 0, 6, 3], [12, 14, 20, 18], [-17, -14, -9, -12]])
 
     @unittest.skipUnless(os.environ.get('AI_NATIVE_REFERENCE'),
                          'Set AI_NATIVE_REFERENCE to a generated amphp reference bundle')
