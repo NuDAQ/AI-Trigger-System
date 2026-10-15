@@ -93,25 +93,26 @@ begin
                 severity failure;
 
             if batch = 0 then
-                assert batch_data(15 downto 0) = axis_sample(6)
+                -- Independent x4.4 native codes for raw 2,4,6,8,10,18,26.
+                assert batch_data(15 downto 0) = axis_sample(4)
                     report "CNN packed row0 ch0 must come from input ch0"
                     severity failure;
-                assert batch_data(31 downto 16) = axis_sample(12)
+                assert batch_data(31 downto 16) = axis_sample(9)
                     report "CNN packed row0 ch1 must come from input ch1"
                     severity failure;
-                assert batch_data(47 downto 32) = axis_sample(18)
+                assert batch_data(47 downto 32) = axis_sample(13)
                     report "CNN packed row0 ch2 must come from input ch2"
                     severity failure;
-                assert batch_data(63 downto 48) = axis_sample(24)
+                assert batch_data(63 downto 48) = axis_sample(18)
                     report "CNN packed row0 ch3 must come from input ch3"
                     severity failure;
-                assert batch_data(79 downto 64) = axis_sample(30)
+                assert batch_data(79 downto 64) = axis_sample(22)
                     report "CNN packed row1 ch0 must follow row0 in low segment"
                     severity failure;
-                assert batch_data(143 downto 128) = axis_sample(54)
+                assert batch_data(143 downto 128) = axis_sample(40)
                     report "CNN packed row2 ch0 must start the high segment"
                     severity failure;
-                assert batch_data(207 downto 192) = axis_sample(78)
+                assert batch_data(207 downto 192) = axis_sample(57)
                     report "CNN packed row3 ch0 must follow row2 in high segment"
                     severity failure;
             end if;
