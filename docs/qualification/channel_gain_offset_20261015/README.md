@@ -28,3 +28,16 @@ The existing latency, model, score /1024 and external threshold /16 remain.
 Work proceeds in red/green slices, then local GHDL/Verilator qualification,
 server Vivado real-XPM simulation and routed OOC, then gateware integration,
 synthesis, implementation and bitgen. Reports will distinguish each stage.
+
+Local qualification: 40/40 GHDL benches pass. All 16,384 conversions match
+independent native HLS quantization, and 1,096 normalized windows plus one
+gated window match the real CNN in Verilator exactly. Every cached Verilator
+RTL/ROM/testbench hash and executable hash was rechecked. The old gain-4.4
+score reference fails at window 0 against the new inputs. Unity/zero-baseline
+and replacement gain/baseline profiles pass through the public input packer.
+
+Two Python provenance tests also fail on the untouched 9d5023c baseline with
+the existing local path overrides: one pins an old dependency commit, and one
+expects a Git revision for a null-revision path dependency. These unrelated
+scripts and lock configuration were left unchanged. Logs retain the full
+suite failure and the isolated baseline reproductions.
