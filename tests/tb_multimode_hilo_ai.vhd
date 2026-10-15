@@ -116,12 +116,12 @@ begin
             absolute_beat := 38 + gated_count;
             expected_sample := std_logic_vector(to_signed(
                 (absolute_beat + 7) mod 32, 12));
-            assert gated_batch_data(31 downto 16) = adc_to_axis16(expected_sample)
+            assert gated_batch_data(31 downto 16) = adc_to_axis16(expected_sample, 1)
                 report "gated CNN reader changed the selected waveform order at beat " &
                        integer'image(gated_count) & ": got " &
                        integer'image(to_integer(signed(gated_batch_data(31 downto 16)))) &
                        ", expected " &
-                       integer'image(to_integer(signed(adc_to_axis16(expected_sample))))
+                       integer'image(to_integer(signed(adc_to_axis16(expected_sample, 1))))
                 severity failure;
             if gated_count < N_BATCHES then
                 gated_count <= gated_count + 1;

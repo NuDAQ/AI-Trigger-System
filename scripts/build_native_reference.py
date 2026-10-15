@@ -4,19 +4,42 @@ from pathlib import Path
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-CNN_INPUT_GAIN_NUMERATOR = 22
-CNN_INPUT_GAIN_DENOMINATOR = 5
-CNN_INPUT_GAIN = CNN_INPUT_GAIN_NUMERATOR / CNN_INPUT_GAIN_DENOMINATOR
+def calibration_values(filename, constant):
+    source = (ROOT / 'HDL/rtl' / filename).read_text()
+    match = re.search(r'constant\s+' + constant + r'\s*:.*?:=\s*\((.*?)\);', source, re.S)
+    if not match:
+        raise ValueError('missing calibration constant: ' + constant)
+    entries = {int(ch): int(value.replace('_', '')) for ch, value in
+               re.findall(r'(\d+)\s*=>\s*(-?[\d_]+)', match.group(1))}
+    if set(entries) != set(range(4)):
+        raise ValueError('calibration requires exactly channels 0..3')
+    return np.array([entries[ch] for ch in range(4)], dtype=np.int64)
+
+
+GAIN_PPM = calibration_values('CNN_INPUT_GAIN_PKG.vhd', 'CNN_INPUT_GAIN_PPM')
+BASELINE_UV = calibration_values('CNN_INPUT_OFFSET_PKG.vhd', 'CNN_INPUT_OFFSET_UV')
+SCALE_SOURCE = (ROOT / 'HDL/rtl/CNN_INPUT_OFFSET_PKG.vhd').read_text()
+ADC_FULL_SCALE_UV_PP = int(re.search(r'CNN_ADC_FULL_SCALE_UV_PP\s*:.*?:=\s*([\d_]+)', SCALE_SOURCE).group(1).replace('_', ''))
+GAINS = GAIN_PPM / 1_000_000.0
+BASELINE_CODES = BASELINE_UV * 4096.0 / ADC_FULL_SCALE_UV_PP
 
 
 def normalized_to_adc(features):
-    """Encode normalized fixtures for the system's fixed CNN-only gain."""
-    return np.clip(np.rint(features * 64 / CNN_INPUT_GAIN), -2048, 2047).astype(np.int16)
+    """Encode normalized fixtures through the inverse four-channel calibration."""
+    values = np.asarray(features)
+    raw = np.rint(values.reshape(-1, 4) * 64 / GAINS + BASELINE_CODES)
+    return np.clip(raw, -2048, 2047).astype(np.int16).reshape(values.shape)
+
+
+def adc_to_normalized(raw):
+    values = np.asarray(raw)
+    return ((values.reshape(-1, 4) - BASELINE_CODES) * GAINS / 64).reshape(values.shape)
 
 
 def sha(path):
@@ -49,7 +72,7 @@ def main():
     # Preserve normalized fixture amplitude after the fixed input gain. The
     # golden model sees the exact ADC-representable samples after gain.
     raw = normalized_to_adc(features)
-    (raw.astype('<f4') * CNN_INPUT_GAIN / 64).tofile(output / 'features.f32')
+    adc_to_normalized(raw).astype('<f4').tofile(output / 'features.f32')
     with (output / 'adc.hex').open('w') as stream:
         for window in raw.reshape(-1, 256, 4):
             for beat in window.reshape(64, 4, 4):
@@ -60,8 +83,11 @@ def main():
     firmware = core / 'cnn_core/firmware'
     shutil.copytree(firmware / 'weights', output / 'weights')
     harness = ROOT / 'scripts/native_reference.cpp'
+    (output / 'calibration_reference.h').write_text(
+        'constexpr double calibration_gains[4] = {' + ','.join(format(v, '.17g') for v in GAINS) + '};\n' +
+        'constexpr double calibration_baselines[4] = {' + ','.join(format(v, '.17g') for v in BASELINE_CODES) + '};\n')
     command = ['g++', '-std=c++14', '-O2', '-Wno-unknown-pragmas',
-               '-I'+str(args.hls_include.resolve()), '-I'+str(firmware),
+               '-I'+str(output), '-I'+str(args.hls_include.resolve()), '-I'+str(firmware),
                str(firmware/'cnn_core.cpp'), str(harness), '-lgmp', '-o', str(output/'native_reference')]
     for name, cmd in [('compile', command), ('csim', [str(output/'native_reference'), str(len(raw))])]:
         with (output/f'{name}.log').open('w') as log:
@@ -73,9 +99,9 @@ def main():
     if len(words) != len(raw)*32 or len(scores) != len(raw):
         raise SystemExit('reference did not produce all windows')
     quantized = np.loadtxt(output/'adc_conversion.txt', dtype=np.int64)
-    proposed = np.clip(np.floor(np.arange(-2048, 2048) * CNN_INPUT_GAIN / 2 + .5),
+    proposed = np.clip(np.floor((np.arange(-2048, 2048)[None, :] - BASELINE_CODES[:, None]) * GAINS[:, None] / 2 + .5),
                        -511, 511).astype(np.int64)
-    if not np.array_equal(quantized, proposed):
+    if not np.array_equal(quantized, proposed.reshape(-1)):
         raise SystemExit('ADC conversion differs from native fixed-point reference')
     # Fixed centered-window regression inherited from tb_multimode_hilo_ai:
     # positive pulse at beat 67/sample 1, negative at beat 68/sample 0;
@@ -91,7 +117,7 @@ def main():
     stream_raw[67,0,1] = 200
     stream_raw[68,0,0] = -200
     centered = stream_raw[38:102,:4,:].transpose(0,2,1).reshape(1,1024)
-    (centered.astype('<f4') * CNN_INPUT_GAIN / 64).tofile(gated/'features.f32')
+    adc_to_normalized(centered).astype('<f4').tofile(gated/'features.f32')
     shutil.copytree(firmware/'weights', gated/'weights')
     with (gated/'adc.hex').open('w') as stream:
         for beat in stream_raw:
@@ -101,16 +127,17 @@ def main():
         subprocess.run([str(output/'native_reference'),'1'],cwd=gated,stdout=log,stderr=subprocess.STDOUT,check=True)
     manifest = {'windows': len(raw), 'builtin_windows': 96, 'npz_windows': len(x),
                 'npz_sha256': sha(args.npz), 'baseline_sha256': sha(baseline_path),
-                'adc_scale': 64, 'cnn_input_gain': CNN_INPUT_GAIN,
-                'cnn_input_gain_numerator': CNN_INPUT_GAIN_NUMERATOR,
-                'cnn_input_gain_denominator': CNN_INPUT_GAIN_DENOMINATOR,
-                'normalized_adc_scale': 64 / CNN_INPUT_GAIN,
-                'native_score_scale': 1024, 'quantization_codes_checked': 4096,
+                'adc_scale': 64, 'cnn_input_gain': GAINS.tolist(),
+                'cnn_input_gain_ppm': GAIN_PPM.tolist(),
+                'cnn_input_baseline_uv': BASELINE_UV.tolist(),
+                'cnn_input_baseline_codes': BASELINE_CODES.tolist(),
+                'adc_full_scale_uv_pp': ADC_FULL_SCALE_UV_PP,
+                'native_score_scale': 1024, 'quantization_codes_checked': 4 * 4096,
                 'compile_command': command, 'harness_sha256': sha(harness),
                 'firmware': {str(p.relative_to(firmware)):sha(p) for p in sorted(firmware.rglob('*')) if p.is_file()},
                 'files': {n:sha(output/n) for n in ['adc.hex','all_input.hex','all_expected.hex','adc_conversion.txt','gated/adc.hex','gated/all_expected.hex']}}
     (output/'reference.json').write_text(json.dumps(manifest, indent=2)+'\n')
-    print(f'PASS ADC-aware reference: {len(raw)} windows; 4096 native ADC conversions')
+    print(f'PASS ADC-aware reference: {len(raw)} windows; 16384 native ADC conversions')
 
 
 if __name__ == '__main__':

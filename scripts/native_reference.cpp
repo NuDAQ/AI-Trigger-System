@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include "cnn_core.h"
+#include "calibration_reference.h"
 
 namespace nnet {
 bool trace_enabled = false;
@@ -14,15 +15,16 @@ size_t trace_type_size = sizeof(double);
 
 int main(int argc, char **argv) {
     if (argc != 2) return 2;
-    constexpr double cnn_input_gain = 22.0 / 5.0;
     // Independently exercise the actual generated native input type for every
     // raw ADC code, including negative ties and both saturation limits.
     std::ofstream conversion("adc_conversion.txt");
+    for (unsigned channel = 0; channel < 4; ++channel) {
     for (int raw = -2048; raw <= 2047; ++raw) {
         waveform_x8_t word;
-        word[0] = static_cast<double>(raw) * cnn_input_gain / 64.0;
+        word[0] = (static_cast<double>(raw) - calibration_baselines[channel]) * calibration_gains[channel] / 64.0;
         ap_int<10> code = word[0].range(9, 0);
         conversion << code.to_int() << '\n';
+    }
     }
     const unsigned windows = std::stoul(argv[1]);
     std::ifstream source("features.f32", std::ios::binary);

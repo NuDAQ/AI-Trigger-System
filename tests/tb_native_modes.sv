@@ -86,9 +86,10 @@ module tb_native_modes;
         for (integer i=0;i<192;i++)
             if ($isunknown(waveform[i])) $fatal(1,"missing gated ADC reference %0d",i);
         run_mode(0); run_mode(1); run_mode(3); run_mode(4);
-        // Independent amphp x4.4 HLS reference: 18002/1024 = 17.580078125.
-        // Adjacent external thresholds must respectively accept and reject it.
-        run_mode(4, 281, 1); run_mode(4, 282, 0);
+        // Bracket the independently generated gated score using adjacent
+        // external threshold words. Conversion from score /1024 to /16 is 64.
+        run_mode(4, ($signed(expected[0])-1) >>> 6, 1);
+        run_mode(4, (($signed(expected[0])-1) >>> 6)+1, 0);
         // Switch from gated AI to Capture-All without resetting waveform
         // history; the request applies only at the next complete chunk.
         @(negedge clk_adc); mode=0; expected_beats=0; event_beats=0; score_count=0;
