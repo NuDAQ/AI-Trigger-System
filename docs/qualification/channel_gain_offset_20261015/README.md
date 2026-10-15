@@ -36,8 +36,17 @@ RTL/ROM/testbench hash and executable hash was rechecked. The old gain-4.4
 score reference fails at window 0 against the new inputs. Unity/zero-baseline
 and replacement gain/baseline profiles pass through the public input packer.
 
-Two Python provenance tests also fail on the untouched 9d5023c baseline with
+All other 105 Python checks pass. Two Python provenance tests also fail on the untouched 9d5023c baseline with
 the existing local path overrides: one pins an old dependency commit, and one
 expects a Git revision for a null-revision path dependency. These unrelated
 scripts and lock configuration were left unchanged. Logs retain the full
 suite failure and the isolated baseline reproductions.
+
+Server Vivado 2022.2 rebuilt the reference with original Vitis HLS headers;
+all six data-file hashes match the local reference exactly. All nine real-XPM
+system cases pass: continuous, gaps/phase, positive/negative/extreme thresholds,
+lane reset/backpressure, modes and overload. Continuous/gaps yield 324 events;
+external word +32 yields 143 and word -32 yields 1056. Gated score is
+16584/1024 = 16.1953125; adjacent threshold words 259/260 accept/reject it.
+All event payload assertions compare the full eight-channel raw ADC words.
+Routed OOC is running and is not yet qualified.

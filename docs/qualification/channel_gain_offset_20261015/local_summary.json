@@ -178,5 +178,6 @@
       "gated/adc.hex": "667248087c8b5c197a2ea0e00187fa60659a14d94a2e622bdc7c7df473a053b7",
       "gated/all_expected.hex": "3ff487a02165ad3d8db1cb805e1671a3129d33084a0758d2d9f0bd4b0f9e17b1"
     }
-  }
+  },
+  "python_nonbaseline_tests_passed": 105
 }
