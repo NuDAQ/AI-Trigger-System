@@ -49,4 +49,6 @@ lane reset/backpressure, modes and overload. Continuous/gaps yield 324 events;
 external word +32 yields 143 and word -32 yields 1056. Gated score is
 16584/1024 = 16.1953125; adjacent threshold words 259/260 accept/reject it.
 All event payload assertions compare the full eight-channel raw ADC words.
-Routed OOC is running and is not yet qualified.
+Routed OOC passes in Vivado 2022.2 on KU5P -2 at unchanged ADC/CNN
+250/200 MHz: WNS +0.188 ns, WHS +0.024 ns, TNS/THS zero.
+No pipeline, clock, constraint, model or raw-event-path change was needed.

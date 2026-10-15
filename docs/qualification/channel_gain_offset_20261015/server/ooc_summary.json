@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "implementation_source_commit": "526a78d",
+  "server_root": "/home/work1/tmp/codex-channel-calibration-20261015-526a78d",
+  "vivado": "2022.2",
+  "part": "xcku5p-ffvb676-2-e",
+  "adc_mhz": 250,
+  "cnn_mhz": 200,
+  "wns_ns": 0.188,
+  "whs_ns": 0.024,
+  "tns_ns": 0.0,
+  "ths_ns": 0.0,
+  "all_nine_system_cases_passed": true,
+  "all_source_hashes_match_local": true,
+  "reference_hashes_match_local": true
+}
