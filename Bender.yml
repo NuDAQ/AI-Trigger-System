@@ -17,6 +17,9 @@ dependencies:
   hilo-trigger: { git: "git@github.com:NuDAQ/Hi-Lo-Trigger.git", version: "=3.0.0" }
 
 sources:
+  - HDL/rtl/CNN_INPUT_GAIN_PKG.vhd
+  - HDL/rtl/CNN_INPUT_OFFSET_PKG.vhd
+  - HDL/rtl/CNN_INPUT_CALIBRATION_PKG.vhd
   - HDL/rtl/AI_TRIGGER_PKG.vhd
   - HDL/rtl/RESET_SYNC.vhd
   - HDL/rtl/TRIGGER_MODE_CTRL.vhd

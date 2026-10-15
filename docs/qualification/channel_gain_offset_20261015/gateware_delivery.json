@@ -1,0 +1,40 @@
+{
+  "gateware_delivery_commit": "950ff61",
+  "gateware_implementation_commit": "efb00fddc7058bb483b3bd34a652084b60ee7e58",
+  "gateware_branch": "oct_15_gain_offset",
+  "vivado": "2022.2",
+  "adc_mhz": 260,
+  "cnn_mhz": 195,
+  "setup_wns_ns": 0.268,
+  "hold_whs_ns": 0.005,
+  "setup_tns_ns": 0.0,
+  "hold_ths_ns": 0.0,
+  "raw_event_samples_preserved": true,
+  "artifact_checksums_verified": 3,
+  "artifacts": [
+    {
+      "file": "NuRadioDAQ_top.bit",
+      "server_path": "/home/work1/tmp/codex-gateware-gain-offset-20261015/src/build/v35-bitgen-20261015-084043/project/NuRadioDAQ.runs/impl_1/NuRadioDAQ_top.bit",
+      "bytes": 15431249,
+      "sha256": "c992a140be207bae789b460a8a5df6dfd90e0bca1f40a8d48cad683d2ae12c3a",
+      "local_path": "build/qualification-gain-offset/NuRadioDAQ_top.bit"
+    },
+    {
+      "file": "NuRadioDAQ_top.ltx",
+      "server_path": "/home/work1/tmp/codex-gateware-gain-offset-20261015/inspection/NuRadioDAQ_top.ltx",
+      "bytes": 49455,
+      "sha256": "5dee5e50f518d2abd12485d80cd2aeb292e46c74747cdef05e28bba8cd967610",
+      "local_path": "build/qualification-gain-offset/NuRadioDAQ_top.ltx"
+    },
+    {
+      "file": "NuRadioDAQ_top_routed.dcp",
+      "server_path": "/home/work1/tmp/codex-gateware-gain-offset-20261015/src/build/v35-bitgen-20261015-084043/project/NuRadioDAQ.runs/impl_1/NuRadioDAQ_top_routed.dcp",
+      "bytes": 71206679,
+      "sha256": "7d5d89afd03d5389099d5ecd088f59049ba84ca2c2df688dcc4719a55c64638b",
+      "local_path": "build/qualification-gain-offset/NuRadioDAQ_top_routed.dcp"
+    }
+  ],
+  "cdc_note": "Exactly the same 23 legacy DAQ asynchronous-reset CLR paths removed by physical optimization in the prior gain4.4 build reappear. All are outside AI Trigger/configuration; all unrelated DAQ RTL is byte-identical.",
+  "push_performed": false,
+  "board_programming_performed": false
+}
