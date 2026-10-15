@@ -64,8 +64,12 @@ module tb_native_lane;
     endtask
     initial begin
         if (!$value$plusargs("REFERENCE=%s",reference)) $fatal(1,"missing reference");
-        $readmemh({reference,"/all_input.hex"},input_words,0,511);
-        $readmemh({reference,"/all_expected.hex"},expected,0,15);
+        $readmemh($sformatf("%s/all_input.hex",reference),input_words,0,511);
+        $readmemh($sformatf("%s/all_expected.hex",reference),expected,0,15);
+        for (integer i=0;i<512;i++)
+            if ($isunknown(input_words[i])) $fatal(1,"missing native input word %0d",i);
+        for (integer i=0;i<16;i++)
+            if ($isunknown(expected[i])) $fatal(1,"missing native reference score %0d",i);
         reset_lane();
         feed(0,17,0); // reset while acquiring/streaming a partial window
         reset_lane(); feed(1,64,1); consume(1);

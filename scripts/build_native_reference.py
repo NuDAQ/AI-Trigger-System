@@ -9,7 +9,9 @@ import subprocess
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-CNN_INPUT_GAIN = 6
+CNN_INPUT_GAIN_NUMERATOR = 22
+CNN_INPUT_GAIN_DENOMINATOR = 5
+CNN_INPUT_GAIN = CNN_INPUT_GAIN_NUMERATOR / CNN_INPUT_GAIN_DENOMINATOR
 
 
 def normalized_to_adc(features):
@@ -71,7 +73,8 @@ def main():
     if len(words) != len(raw)*32 or len(scores) != len(raw):
         raise SystemExit('reference did not produce all windows')
     quantized = np.loadtxt(output/'adc_conversion.txt', dtype=np.int64)
-    proposed = np.clip(3 * np.arange(-2048, 2048), -511, 511)
+    proposed = np.clip(np.floor(np.arange(-2048, 2048) * CNN_INPUT_GAIN / 2 + .5),
+                       -511, 511).astype(np.int64)
     if not np.array_equal(quantized, proposed):
         raise SystemExit('ADC conversion differs from native fixed-point reference')
     # Fixed centered-window regression inherited from tb_multimode_hilo_ai:
@@ -99,6 +102,8 @@ def main():
     manifest = {'windows': len(raw), 'builtin_windows': 96, 'npz_windows': len(x),
                 'npz_sha256': sha(args.npz), 'baseline_sha256': sha(baseline_path),
                 'adc_scale': 64, 'cnn_input_gain': CNN_INPUT_GAIN,
+                'cnn_input_gain_numerator': CNN_INPUT_GAIN_NUMERATOR,
+                'cnn_input_gain_denominator': CNN_INPUT_GAIN_DENOMINATOR,
                 'normalized_adc_scale': 64 / CNN_INPUT_GAIN,
                 'native_score_scale': 1024, 'quantization_codes_checked': 4096,
                 'compile_command': command, 'harness_sha256': sha(harness),

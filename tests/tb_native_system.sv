@@ -79,8 +79,13 @@ module tb_native_system;
         void'($value$plusargs("OVERLOAD=%d",overload));
         void'($value$plusargs("THRESHOLD=%h",threshold));
         if (windows < 1 || windows > MAX_WINDOWS) $fatal(1,"window count out of range");
-        $readmemh({reference,"/adc.hex"},adc_words,0,windows*64-1);
-        $readmemh({reference,"/all_expected.hex"},expected,0,windows-1);
+        $readmemh($sformatf("%s/adc.hex",reference),adc_words,0,windows*64-1);
+        $readmemh($sformatf("%s/all_expected.hex",reference),expected,0,windows-1);
+        for (integer i=0;i<windows;i++) begin
+            if ($isunknown(expected[i])) $fatal(1,"missing reference score %0d",i);
+            for (integer b=0;b<64;b++)
+                if ($isunknown(adc_words[i*64+b])) $fatal(1,"missing ADC reference %0d/%0d",i,b);
+        end
         for (integer i=0;i<windows;i++) begin
             seen[i]=0; event_seen[i]=0;
             if (qualifies(expected[i], threshold)) expected_events++;
